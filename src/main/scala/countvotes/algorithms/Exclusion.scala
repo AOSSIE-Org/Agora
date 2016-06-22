@@ -42,7 +42,6 @@ trait SimpleExclusion extends GenericSTVMethod[WeightedBallot] {
       if (b.preferences.head == candidate ) { 
         if (b.preferences.tail.nonEmpty) list = WeightedBallot(b.preferences.tail,  b.id,  b.weight)::list
       }
-      //else Ballot(b.preferences filter {_ != ctv._1}, b.weight, b.id)
       else list = WeightedBallot(b.preferences.head :: b.preferences.tail filter {_!= candidate}, b.id,  b.weight)::list 
    }
     

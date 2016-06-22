@@ -59,7 +59,7 @@ object SimpleSTVMethod extends GenericSTVMethod[WeightedBallot]
             } 
         case false =>  
           val leastVotedCandidate = chooseCandidateForExclusion(totals)
-          println("Excluding " + leastVotedCandidate )
+          println("Excluding " + leastVotedCandidate)
           result.addExcludedCandidate(leastVotedCandidate._1, leastVotedCandidate._2)
           val newElection = exclusion(election, leastVotedCandidate._1, numVacancies)
           printElection(newElection)

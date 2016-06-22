@@ -8,8 +8,6 @@ import java.io._
 
 
 
-
-
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // * ACT Electoral act 1992: 
 //
@@ -35,8 +33,6 @@ trait ACTSurplusDistribution extends GenericSTVMethod[ACTBallot]{
   
   
  def distributeSurplusVotes(election: Election[ACTBallot], candidate: Candidate, total:Rational, markings: Option[Set[Int]], pendingWinners: List[Candidate], transferValue: Rational):  Election[ACTBallot] = {  
-   //var modifiedBallots: Set[Int] = Set()
-   //var modifiedCandidates: Set[Candidate] = Set(ctv)
     var list: Election[ACTBallot] = Nil
     markings match {
      case None => throw new Exception("Last parcel is undetermined.")
@@ -55,8 +51,6 @@ trait ACTSurplusDistribution extends GenericSTVMethod[ACTBallot]{
                else {
                  list = ACTBallot(continuingPreferences, b.id, true, transferValue, transferValue)::list //take care of b.weight  (4th argument) here
                }
-               //modifiedBallots += b.id
-               //modifiedCandidates+=continuingPreferences.head
             }
           }
         }
@@ -71,7 +65,6 @@ trait ACTSurplusDistribution extends GenericSTVMethod[ACTBallot]{
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
 
 trait ScrutinyWithAllContinuingBallotsInSurplusDistribution extends GenericSTVMethod[WeightedBallot]{
