@@ -21,6 +21,5 @@ trait ACTExclusionTieResolution {
   def resolveExclusionTie(totals: Map[Candidate, Rational]): (Candidate, Rational)  = {
     ???
   }
-  
 }
 

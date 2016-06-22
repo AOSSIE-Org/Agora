@@ -31,7 +31,7 @@ abstract class GenericSTVMethod[B <: Ballot with Weight] {
 
   def returnNewWinners(totals: Map[Candidate, Rational], quota: Rational): List[(Candidate,Rational)] 
   
-  def computeTransferValue(surplus: Rational, election: Election[Ballot], pendingWinners:  List[Candidate], candidate: Candidate, markings: Option[Set[Int]]): Rational
+  def computeTransferValue(surplus: Rational, election: Election[B], pendingWinners:  List[Candidate], candidate: Candidate, markings: Option[Set[Int]]): Rational
  
   def distributeSurplusVotes(election: Election[B], candidate: Candidate, total:Rational, markings: Option[Set[Int]], pendingWinners: List[Candidate], transferValue: Rational): Election[B]
   
@@ -39,7 +39,7 @@ abstract class GenericSTVMethod[B <: Ballot with Weight] {
   
   def resolveExclusionTie(totals: Map[Candidate, Rational]): (Candidate, Rational)
   
-  def exclude(election: Election[B], candidate: Candidate, value: Rational, newWinners: List[Candidate]): Election[B]
+  def exclude(election: Election[B], candidate: Candidate, value: Option[Rational], newWinners: Option[List[Candidate]]): Election[B]
 
   
   def getCandidates(election: Election[B]): List[Candidate] = {
@@ -76,7 +76,7 @@ abstract class GenericSTVMethod[B <: Ballot with Weight] {
     numWinners >= numVacancies
     
     
-  def ballotsAreContinuing(c: Candidate, election: Election[Ballot], pendingWinners:  List[Candidate]): Boolean = {
+  def ballotsAreContinuing(c: Candidate, election: Election[B], pendingWinners:  List[Candidate]): Boolean = {
     var el = election
     var ballotsC = false
     while (ballotsC==false && el.nonEmpty){

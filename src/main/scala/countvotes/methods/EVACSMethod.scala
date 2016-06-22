@@ -46,7 +46,7 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
           println("The quota is reached.")
           val winners: List[(Candidate, Rational)] = returnNewWinners(totals, result.getQuota) // sorted!
           println("New winners: " + winners)
-          result.addPendingWinners(winners.toList, extractMarkings(election)) 
+          result.addPendingWinners(winners.toList, Some(extractMarkings(election))) 
       
           vacanciesFilled(winners.length, numVacancies) match {
               case false =>  {
@@ -95,14 +95,14 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
   
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  def surplusesDistribution(election: Election[ACTBallot], numVacancies: Int): (Election[ACTBallot], List[(Candidate,Rational)]) = {
+ def surplusesDistribution(election: Election[ACTBallot], numVacancies: Int): (Election[ACTBallot], List[(Candidate,Rational)]) = {
   println("Distribution of surpluses.")
    var newws: List[(Candidate, Rational)] = List() 
    var newElection = election
    while (result.getPendingWinners.nonEmpty && newws.length != numVacancies){
-    val (cand, ctotal, markings) = result.takeFirstPendingWinner
+    val (cand, ctotal, markings) = result.takeAndRemoveFirstPendingWinner
     
-    val res = tryToDistributeSurplusVotes(newElection, cand, ctotal, Some(markings))
+    val res = tryToDistributeSurplusVotes(newElection, cand, ctotal, markings)
     newElection = res._1
     newws = newws ::: res._2
     println("res._2 = " + res._2)
@@ -140,7 +140,7 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
     var ws:  List[(Candidate,Rational)] = List()
     if (quotaReached(newtotals, result.getQuota)){
      ws = returnNewWinners(newtotals, result.getQuota) // sorted!
-     result.addPendingWinners(ws.toList, extractMarkings(newElection)) 
+     result.addPendingWinners(ws.toList, Some(extractMarkings(newElection))) 
     }
     (newElectionWithoutFractionInTotals, ws)
   }
@@ -159,13 +159,13 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
     val step = steps.head
     println("Step of exclusion " + step)
     steps = steps.tail // any better way to do this?
-    newElection = loseFraction(exclude(newElection, step._1, step._2, newws.map(x => x._1))) // perhaps it is better  to get rid of newws in a separate function
+    newElection = loseFraction(exclude(newElection, step._1, Some(step._2), Some(newws.map(x => x._1)))) // perhaps it is better  to get rid of newws in a separate function
     val totals = computeTotals(newElection).clone().retain((k,v) => !ws.map(_._1).contains(k)) // excluding winners that are already identified in the while-loop
     println("totals " + totals)
     if (quotaReached(totals, result.getQuota) ) {
       newws = returnNewWinners(totals, result.getQuota) // sorted!
       println("New winners as a result of the current partial exclusion: " + newws)
-      result.addPendingWinners(newws.toList, extractMarkings(newElection)) 
+      result.addPendingWinners(newws.toList, Some(extractMarkings(newElection))) 
       ws = ws ::: newws // check that the order is correct here!!!
     }
    }

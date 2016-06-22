@@ -26,6 +26,9 @@ object WeightedBallot {
   def apply(p: List[Candidate], id: Int, w: Rational) = new WeightedBallot(p, id, w)
   //def apply(p: List[Candidate], id: Int, w: Rational = new Rational(1,1)) = new SimpleBallot(p, id, w)
   //def apply(p: List[Candidate], id: Int) = new SimpleBallot(p, id, new Rational(1,1))
+ // implicit def fromBallot(b: Ballot) = {
+ //   new WeightedBallot(b.preferences, b.id, 1) // note that the weight is assigned 1 here
+ // }
 }
 
 
@@ -35,4 +38,7 @@ extends WeightedBallot(p, id, w) with Marking {
 }
 object MarkedWeightedBallot{
   def apply(p: List[Candidate], id: Int, m:Boolean, w: Rational) = new MarkedWeightedBallot(p, id, m, w)
+ // implicit def fromWeightedBallot(b: WeightedBallot) = {
+ //   new MarkedWeightedBallot(b.preferences, b.id, true, b.weight) // note that the marking is assigned true here
+ // }
 }

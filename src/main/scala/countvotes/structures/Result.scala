@@ -8,7 +8,7 @@ import collection.mutable.{HashMap => Map}
    
     private var excludedCandidates: List[(Candidate, Rational)] = Nil
    // private var continuingCandidates: List[Candidate] = Nil
-    private var pendingWinners: List[(Candidate, Rational, Set[Int])] = Nil
+    private var pendingWinners: List[(Candidate, Rational, Option[Set[Int]])] = Nil
           
     
     def setQuota(q: Rational) = {
@@ -22,7 +22,7 @@ import collection.mutable.{HashMap => Map}
       }
     }
     
-    def addPendingWinners(pendWinners: List[(Candidate, Rational)], markings: Set[Int]) = {
+    def addPendingWinners(pendWinners: List[(Candidate, Rational)], markings: Option[Set[Int]]) = {
      if (pendWinners.nonEmpty)
       for (w <- pendWinners)  
        if (!pendingWinners.contains(w)) {
@@ -31,16 +31,20 @@ import collection.mutable.{HashMap => Map}
        }
     }
     
-    def addPendingWinner(candidate: Candidate, total: Rational, markings: Set[Int]) = {
+    def addPendingWinner(candidate: Candidate, total: Rational, markings: Option[Set[Int]]) = {
+      //markings match {
+     //   case Some(mrks) => pendingWinners = pendingWinners :+ (candidate, total, mrks) // !!! is it adding at the end of the list?
+      //  case None => pendingWinners = pendingWinners :+ (candidate, total, None) // !!! is it adding at the end of the list?
+      //}
       pendingWinners = pendingWinners :+ (candidate, total, markings) // !!! is it adding at the end of the list?
     }
     
      
-    def getPendingWinners: List[(Candidate, Rational, Set[Int])] = {
+    def getPendingWinners: List[(Candidate, Rational, Option[Set[Int]])] = {
      pendingWinners
     }
   
-    def takeFirstPendingWinner: (Candidate, Rational, Set[Int]) = {
+    def takeAndRemoveFirstPendingWinner: (Candidate, Rational, Option[Set[Int]]) = {
      val h = pendingWinners.head
      pendingWinners = pendingWinners.tail
      h

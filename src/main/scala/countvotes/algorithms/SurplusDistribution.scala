@@ -74,4 +74,26 @@ trait ACTSurplusDistribution extends GenericSTVMethod[ACTBallot]{
 
 
 
+trait ScrutinyWithAllContinuingBallotsInSurplusDistribution extends GenericSTVMethod[WeightedBallot]{
+
+ def distributeSurplusVotes(election: Election[WeightedBallot], candidate: Candidate, total:Rational, markings: Option[Set[Int]], pendingWinners: List[Candidate], transferValue: Rational):  Election[WeightedBallot] = {  
+   
+    var list: Election[WeightedBallot] = Nil
+      
+    for (b <- election if !b.preferences.isEmpty){
+     
+        if (b.preferences.head == candidate) { 
+          val continuingPreferences = filterPreferences(b.preferences.tail, pendingWinners)
+          if (continuingPreferences.nonEmpty)
+            list = WeightedBallot(continuingPreferences, b.id,  b.weight * transferValue)::list 
+        }
+        else 
+        list = WeightedBallot(b.preferences.head::filterPreferences(b.preferences.tail filter {_!= candidate}, pendingWinners), b.id, b.weight)::list
+      }
+   list
+ }
+   
+}
+
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

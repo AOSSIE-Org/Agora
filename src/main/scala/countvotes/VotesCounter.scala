@@ -66,6 +66,9 @@ object Main {
        case "EVACS" =>  {
          r = EVACSMethod.runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
        }
+       case "Simple" =>  {
+         r = SimpleSTVMethod.runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
+       }
        case "" =>  println("Please, specify which algorithm should be used. Only option -a \"EVACS\" is currently available.")
      }
     

@@ -1,13 +1,30 @@
+This software implements some STV algorithms in a recursive way.
+Common components are implemented as traits.
+
+
+Currently the following STV methods are implemented:
+
+1) EVACSMethod (imitation of ACT's EVACS system)
+2) SimpleSTVMetod (a simple STV counting algorithm)
+
+-----------------------------------------------------------------
 TODO:
 
+EVACS:
 1) Surplus distribution tie resolution for EVACS (history of scrutiny is required)
 2) Exclusion tie resolution for EVACS (history of scrutiny is required)
 3) Imitation of EVACS's wrong totals that appear in their scrutiny
-4) Distribution of votes of the last excluded candidate when the number of continuing candidates becomes equal to the number of remaining vacancies 
-5) Output the scrutiny as a table
+4) Distribution of votes of the last excluded candidate when the number of continuing candidates becomes equal to the number of remaining vacancies
 
+GENERAL:
+ 
+1) Output the scrutiny as a table
+2) In the following line of tryToDistributeSurplusVotes
+  val newElection = removeWinnerFromElection(election, winner) 
+the candidate should be removed from all preferences in ballots
+3) Take care in TransferValue traits that also winners are taken into account when we check continuing ballots....
 -----------------------------------------------------------------
-Terminal commands to run:
+Terminal commands to run the code:
 
 
 sbt -J-Xmx4G -J-Xms4G 
@@ -26,3 +43,4 @@ run -d /home/users/u1017108/Code/PreferenceData/ACT/2012/ -f Preferences_ACT_Mol
 
 
 run -d /home/users/u1017108/ownCloud/Code/files/wikipedia/ -f wikipedia.txt -a EVACS -n 3
+run -d /home/users/u1017108/ownCloud/Code/files/wikipedia/ -f wikipedia.txt -a Simple -n 3
