@@ -31,9 +31,9 @@ abstract class GenericSTVMethod[B <: Ballot with Weight] {
 
   def returnNewWinners(totals: Map[Candidate, Rational], quota: Rational): List[(Candidate,Rational)] 
   
-  def computeTransferValue(surplus: Rational, election: Election[Ballot], pendingWinners:  List[Candidate], candidate: Candidate, markings: Set[Int]): Rational
+  def computeTransferValue(surplus: Rational, election: Election[Ballot], pendingWinners:  List[Candidate], candidate: Candidate, markings: Option[Set[Int]]): Rational
  
-  def distributeSurplusVotes(election: Election[B], candidate: Candidate, total:Rational, markings: Set[Int], pendingWinners: List[Candidate], transferValue: Rational): Election[B]
+  def distributeSurplusVotes(election: Election[B], candidate: Candidate, total:Rational, markings: Option[Set[Int]], pendingWinners: List[Candidate], transferValue: Rational): Election[B]
   
   def chooseCandidateForExclusion(totals: Map[Candidate, Rational]): (Candidate, Rational)
   

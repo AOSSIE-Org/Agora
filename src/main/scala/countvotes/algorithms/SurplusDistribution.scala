@@ -34,34 +34,35 @@ import java.io._
 trait ACTSurplusDistribution extends GenericSTVMethod[ACTBallot]{
   
   
- def distributeSurplusVotes(election: Election[ACTBallot], candidate: Candidate, total:Rational, markings: Set[Int], pendingWinners: List[Candidate], transferValue: Rational):  Election[ACTBallot] = {  
+ def distributeSurplusVotes(election: Election[ACTBallot], candidate: Candidate, total:Rational, markings: Option[Set[Int]], pendingWinners: List[Candidate], transferValue: Rational):  Election[ACTBallot] = {  
    //var modifiedBallots: Set[Int] = Set()
    //var modifiedCandidates: Set[Candidate] = Set(ctv)
     var list: Election[ACTBallot] = Nil
-    
-    for (b <- election if !b.preferences.isEmpty){
+    markings match {
+     case None => throw new Exception("Last parcel is undetermined.")
+     case Some(mrks) =>
+      for (b <- election if !b.preferences.isEmpty){
      
-      if (b.preferences.head == candidate) { 
+        if (b.preferences.head == candidate) { 
 
-        val continuingPreferences = filterPreferences(b.preferences.tail, pendingWinners)
-        if (continuingPreferences.nonEmpty){
-        // NOTE: HERE WE IGNORE BALLOTS THAT HAVE candidate AS FP BUT ARE NOT MARKED. THESE BALLOTS BECOME OUT OF SCRUTINY:
-         if (markings.contains(b.id)){
-         
-          if (transferValue > b.value ) { // 1C(4) of the ACT Electoral act 1992 Schedule 4
-              
-            list = ACTBallot(continuingPreferences, b.id, true, b.value, b.value)::list //take care of b.weight (4th argument) here
+          val continuingPreferences = filterPreferences(b.preferences.tail, pendingWinners)
+          if (continuingPreferences.nonEmpty){
+            // NOTE: HERE WE IGNORE BALLOTS THAT HAVE candidate AS FP BUT ARE NOT MARKED. THESE BALLOTS BECOME OUT OF SCRUTINY:
+            if (mrks.contains(b.id)){
+               if (transferValue > b.value ) { // 1C(4) of the ACT Electoral act 1992 Schedule 4 
+                 list = ACTBallot(continuingPreferences, b.id, true, b.value, b.value)::list //take care of b.weight (4th argument) here
+               }
+               else {
+                 list = ACTBallot(continuingPreferences, b.id, true, transferValue, transferValue)::list //take care of b.weight  (4th argument) here
+               }
+               //modifiedBallots += b.id
+               //modifiedCandidates+=continuingPreferences.head
+            }
           }
-          else {
-            list = ACTBallot(continuingPreferences, b.id, true, transferValue, transferValue)::list //take care of b.weight  (4th argument) here
-          }
-          //modifiedBallots += b.id
-          //modifiedCandidates+=continuingPreferences.head
-         }
         }
+        else 
+        list = ACTBallot(b.preferences.head::filterPreferences(b.preferences.tail filter {_!= candidate}, pendingWinners), b.id, false, b.weight, b.value)::list
       }
-      else 
-      list = ACTBallot(b.preferences.head::filterPreferences(b.preferences.tail filter {_!= candidate}, pendingWinners), b.id, false, b.weight, b.value)::list
     }
   list
  }

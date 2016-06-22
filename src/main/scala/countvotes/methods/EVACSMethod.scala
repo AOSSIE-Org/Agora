@@ -60,7 +60,7 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
                 if (nws == numVacancies) { winners:::newWinners }
                 else computeWinners(newElection, numVacancies-nws):::winners:::newWinners   // TODO: care should be taken that newElection is not empty?!
               }
-              case true =>  winners
+              case true => winners
             }
           
       case false =>  
@@ -102,7 +102,7 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
    while (result.getPendingWinners.nonEmpty && newws.length != numVacancies){
     val (cand, ctotal, markings) = result.takeFirstPendingWinner
     
-    val res = tryToDistributeSurplusVotes(newElection, cand, ctotal, markings)
+    val res = tryToDistributeSurplusVotes(newElection, cand, ctotal, Some(markings))
     newElection = res._1
     newws = newws ::: res._2
     println("res._2 = " + res._2)
@@ -113,7 +113,7 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
   
  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
- def tryToDistributeSurplusVotes(election: Election[ACTBallot], winner: Candidate, ctotal:Rational, markings: Set[Int] ): (Election[ACTBallot], List[(Candidate,Rational)]) = {
+ def tryToDistributeSurplusVotes(election: Election[ACTBallot], winner: Candidate, ctotal:Rational, markings: Option[Set[Int]] ): (Election[ACTBallot], List[(Candidate,Rational)]) = {
  
   val pendingWinners = result.getPendingWinners.map(x => x._1)
   
