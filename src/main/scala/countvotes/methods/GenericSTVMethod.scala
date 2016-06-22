@@ -70,6 +70,15 @@ abstract class GenericSTVMethod[B <: Ballot with Weight] {
       }
      m
   }
+  
+    
+  def computeTotal(election: Election[WeightedBallot], candidate: Candidate): Rational = {
+     var r: Rational = 0
+     for (b <- election if (!b.preferences.isEmpty && b.preferences.head == candidate) ) 
+       r = r + b.weight 
+     r
+  }
+
 
   def quotaReached(totals: Map[Candidate, Rational], quota: Rational): Boolean = {
      if (totals.exists(_._2 >= quota) ) {

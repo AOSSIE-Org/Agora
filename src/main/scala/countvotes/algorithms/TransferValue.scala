@@ -28,7 +28,7 @@ trait TransferValueWithDenominatorWithNumOfMarkedContinuingBallots extends Gener
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  
 // TV = surplus /  total of continuing ballot papers (i.e. with further continuing preferences)
-trait TransferValueWithDenominatorWithTotalOfNonExhaustedBallots extends GenericSTVMethod[WeightedBallot]{  
+trait TransferValueWithDenominatorWithTotalOfContinuingBallots extends GenericSTVMethod[WeightedBallot]{  
   def computeTransferValue(surplus: Rational, election: Election[WeightedBallot], pendingWinners:  List[Candidate], candidate: Candidate, markings: Option[Set[Int]]): Rational = {
     var num:Rational = 0
       for (b <- election if !b.preferences.isEmpty) { 
