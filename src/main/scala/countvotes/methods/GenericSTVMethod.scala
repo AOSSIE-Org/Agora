@@ -41,8 +41,18 @@ abstract class GenericSTVMethod[B <: Ballot with Weight] {
   
   def exclude(election: Election[B], candidate: Candidate, value: Option[Rational], newWinners: Option[List[Candidate]]): Election[B]
 
+ def printElection(election: Election[B]) = {
+    print("\n")
+    for (e <- election.sortBy(x => x.id)) {
+      var pr = ""
+      for (p <- e.preferences) pr = pr + p + " > "
+      println(e.id + "   " + pr.dropRight(2) + "  " + e.weight)
+    }
+    print("\n")
+ }
+ 
   
-  def getCandidates(election: Election[B]): List[Candidate] = {
+ def getCandidates(election: Election[B]): List[Candidate] = {
    var set = new HashSet[Candidate]()
    for (b <- election) {
      for (c <- b.preferences)

@@ -24,7 +24,7 @@ GENERAL:
 the candidate should be removed from all preferences in ballots
 3) Take care in TransferValue traits that also winners are taken into account when we check continuing ballots....
 -----------------------------------------------------------------
-Terminal commands to run the code:
+Examples of terminal commands to run the code:
 
 
 sbt -J-Xmx4G -J-Xms4G 

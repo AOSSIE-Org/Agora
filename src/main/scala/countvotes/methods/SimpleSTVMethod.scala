@@ -22,6 +22,8 @@ object SimpleSTVMethod extends GenericSTVMethod[WeightedBallot]
    println("Quota = " + quota)
    result.setQuota(quota)
          
+   print("\n INPUT ELECTION: \n")
+   printElection(election)
    computeWinners(election, numVacancies)   
   }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -29,8 +31,6 @@ object SimpleSTVMethod extends GenericSTVMethod[WeightedBallot]
   def computeWinners(election: Election[WeightedBallot], numVacancies: Int): List[(Candidate, Rational)] = {
     
     println(" \n NEW RECURSIVE CALL \n")
-    
-    //println("Election: " + election)
     
     val ccands = getCandidates(election)
        
@@ -51,7 +51,8 @@ object SimpleSTVMethod extends GenericSTVMethod[WeightedBallot]
           vacanciesFilled(winners.length, numVacancies) match {
               case false =>  {
                 println("Vacancies are not yet filled.")
-                val newElection = surplusesDistribution(election, numVacancies-winners.length)                
+                val newElection = surplusesDistribution(election, numVacancies-winners.length) 
+                printElection(newElection)
                 computeWinners(newElection, numVacancies-winners.length):::winners  // TODO: care should be taken that newElection is not empty?!
               }
               case true => winners
@@ -61,6 +62,7 @@ object SimpleSTVMethod extends GenericSTVMethod[WeightedBallot]
           println("Excluding " + leastVotedCandidate )
           result.addExcludedCandidate(leastVotedCandidate._1, leastVotedCandidate._2)
           val newElection = exclusion(election, leastVotedCandidate._1, numVacancies)
+          printElection(newElection)
           computeWinners(newElection, numVacancies)
       }
     }
