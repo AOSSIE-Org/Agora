@@ -90,3 +90,30 @@ trait ScrutinyWithAllContinuingBallotsInSurplusDistribution extends GenericSTVMe
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+trait ScrutinyWithAllBallotsInSurplusDistribution extends GenericSTVMethod[WeightedBallot]{
+
+ def distributeSurplusVotes(election: Election[WeightedBallot], candidate: Candidate, total:Rational, markings: Option[Set[Int]], pendingWinners: List[Candidate], transferValue: Rational):  Election[WeightedBallot] = {  
+   
+    var list: Election[WeightedBallot] = Nil
+      
+    for (b <- election if !b.preferences.isEmpty){
+     
+        if (b.preferences.head == candidate) { 
+          if (b.preferences.tail.nonEmpty)
+            list = WeightedBallot(b.preferences.tail, b.id,  b.weight * transferValue)::list 
+        }
+        else 
+        list = WeightedBallot(b.preferences.head::b.preferences.tail filter {_!= candidate}, b.id, b.weight)::list
+      }
+   list
+ }
+   
+}
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

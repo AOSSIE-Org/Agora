@@ -12,7 +12,7 @@ object SimpleSTVMethod extends GenericSTVMethod[WeightedBallot]
   with UnfairExclusionTieResolutuim // todo
   with SimpleCandidateForExclusion
   with TransferValueWithDenominatorEqualToTotal
-  with ScrutinyWithAllContinuingBallotsInSurplusDistribution{
+  with ScrutinyWithAllBallotsInSurplusDistribution{
   
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
