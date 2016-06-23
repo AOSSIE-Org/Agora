@@ -8,6 +8,7 @@ object SimpleSTVMethod extends GenericSTVMethod[WeightedBallot]
   with DroopQuota
   with NoFractionInQuota
   with NewWinnersNotOrdered[WeightedBallot]
+  with SimpleSurplusDistributionTieResolution // not necessary because of NewWinnersNotOrdered
   with SimpleExclusion
   with UnfairExclusionTieResolutuim // todo
   with SimpleCandidateForExclusion

@@ -9,6 +9,7 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
  with NewWinnersOrderedByTotals[ACTBallot]
  with TransferValueWithDenominatorWithNumOfMarkedContinuingBallots
  with ACTSurplusDistribution
+ with ACTSurplusDistributionTieResolution
  with ACTFractionLoss
  with ACTCandidateForExclusion
  with ACTExclusion

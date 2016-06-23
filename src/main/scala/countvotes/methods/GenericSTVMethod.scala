@@ -35,6 +35,8 @@ abstract class GenericSTVMethod[B <: Ballot with Weight] {
  
   def distributeSurplusVotes(election: Election[B], candidate: Candidate, total:Rational, markings: Option[Set[Int]], pendingWinners: List[Candidate], transferValue: Rational): Election[B]
   
+  def resolveSurpluseDistributionTie(equaltotals: Map[Candidate, Rational]): List[(Candidate, Rational)]
+  
   def chooseCandidateForExclusion(totals: Map[Candidate, Rational]): (Candidate, Rational)
   
   def resolveExclusionTie(totals: Map[Candidate, Rational]): (Candidate, Rational)

@@ -91,8 +91,6 @@ trait ScrutinyWithAllContinuingBallotsInSurplusDistribution extends GenericSTVMe
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
 trait ScrutinyWithAllBallotsInSurplusDistribution extends GenericSTVMethod[WeightedBallot]{
 

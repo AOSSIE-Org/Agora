@@ -61,9 +61,8 @@ TODO:
 
 EVACS:
 1) Surplus distribution tie resolution for EVACS (history of scrutiny is required)
-2) Exclusion tie resolution for EVACS (history of scrutiny is required)
-3) Imitation of EVACS's wrong totals that appear in their scrutiny
-4) Distribution of votes of the last excluded candidate when the number of continuing candidates becomes equal to the number of remaining vacancies
+2) Imitation of EVACS's wrong totals that appear in their scrutiny
+3) Distribution of votes of the last excluded candidate when the number of continuing candidates becomes equal to the number of remaining vacancies
 
 GENERAL:
  

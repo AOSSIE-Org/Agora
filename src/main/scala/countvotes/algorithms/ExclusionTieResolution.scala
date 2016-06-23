@@ -12,20 +12,6 @@ import scala.util.Random
 
 trait ExclusionTieResolution {
   def resolveExclusionTie(equaltotals: Map[Candidate, Rational]): (Candidate, Rational)
-  
-  def recFindSmallest(equaltotals: Map[Candidate, Rational], totalshistory: List[Map[Candidate, Rational]]): Map[Candidate, Rational] = {
-      
-     if (equaltotals.size > 1 && totalshistory.nonEmpty) {
-      val listequalcandidates = equaltotals.toList.map(x => x._1)
-      var smallestcandidate: Candidate = listequalcandidates.head
-
-      for (c<-listequalcandidates){
-        if (totalshistory.head(c) < totalshistory.head(smallestcandidate)) smallestcandidate
-      }
-      recFindSmallest(equaltotals filter {_._2 == totalshistory.head(smallestcandidate)}, totalshistory.tail)
-     }
-     else equaltotals
-    } 
 }
 
 trait UnfairExclusionTieResolutuim {
@@ -34,6 +20,24 @@ trait UnfairExclusionTieResolutuim {
 
 // Todo: Count history is required here....
 trait ACTExclusionTieResolution extends GenericSTVMethod[ACTBallot] with ExclusionTieResolution{
+  
+  def recFindSmallest(equaltotals: Map[Candidate, Rational], totalshistory: List[Map[Candidate, Rational]]): Map[Candidate, Rational] = {
+      
+     if (equaltotals.size > 1 && totalshistory.nonEmpty) {
+      val listequalcandidates = equaltotals.toList.map(x => x._1)
+      var smallestcandidate: Candidate = listequalcandidates.head
+
+      for (c<-listequalcandidates){
+        if (totalshistory.head(c) < totalshistory.head(smallestcandidate)) {
+          smallestcandidate = c
+        }
+      }
+      recFindSmallest(equaltotals filter { p => p._2 == totalshistory.head(smallestcandidate)}, totalshistory.tail) // it may be not unique!!!
+     }
+     else equaltotals
+   } 
+  
+  
   def resolveExclusionTie(equaltotals: Map[Candidate, Rational]): (Candidate, Rational)  = {
   
     if (recFindSmallest(equaltotals, result.getTotalsHistory.tail).size > 1) {
