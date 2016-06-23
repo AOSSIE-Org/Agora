@@ -12,7 +12,7 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
  with ACTFractionLoss
  with ACTCandidateForExclusion
  with ACTExclusion
- with UnfairExclusionTieResolutuim // <- TODO !
+ with ACTExclusionTieResolution 
  {  
   
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -20,22 +20,24 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
   
    val quota = cutQuotaFraction(computeQuota(election.length, numVacancies))
    println("Quota = " + quota)
-   result.setQuota(quota)
-         
+   result.setQuota(quota)  
+    
+   result.addTotalsToHistory(computeTotals(election))   
+   
    computeWinners(election, numVacancies)   
  }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   def computeWinners(election: Election[ACTBallot], numVacancies: Int): List[(Candidate,Rational)] = {
     
-    println(" \n NEW RECURSIVE CALL \n")
-    
-    //println("Election: " + election)
-    
-    val ccands = getCandidates(election)
+   println(" \n NEW RECURSIVE CALL \n")
+        
+   val ccands = getCandidates(election)
        
-    val totals = computeTotals(election)  
-    println("Totals: " + totals)
+   val totals = computeTotals(election)  
+   println("Totals: " + totals)
+    
+   //result.addTotalsToHistory(totals)
     
    if (ccands.length <= numVacancies){
      for (c <- ccands) yield (c, totals(c))
@@ -105,7 +107,6 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
     val res = tryToDistributeSurplusVotes(newElection, cand, ctotal, markings)
     newElection = res._1
     newws = newws ::: res._2
-    println("res._2 = " + res._2)
     println("Are there pending candidates? " + result.getPendingWinners.nonEmpty)
    }
    (newElection, newws)
@@ -137,6 +138,7 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
     result.removePendingWinner(winner)
            
     val newtotals = computeTotals(newElectionWithoutFractionInTotals).clone().retain((k,v) => !pendingWinners.contains(k)) // excluding pending winners
+    result.addTotalsToHistory(newtotals)
     var ws:  List[(Candidate,Rational)] = List()
     if (quotaReached(newtotals, result.getQuota)){
      ws = returnNewWinners(newtotals, result.getQuota) // sorted!
@@ -161,6 +163,7 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
     steps = steps.tail // any better way to do this?
     newElection = loseFraction(exclude(newElection, step._1, Some(step._2), Some(newws.map(x => x._1)))) // perhaps it is better  to get rid of newws in a separate function
     val totals = computeTotals(newElection).clone().retain((k,v) => !ws.map(_._1).contains(k)) // excluding winners that are already identified in the while-loop
+    result.addTotalsToHistory(totals)
     println("totals " + totals)
     if (quotaReached(totals, result.getQuota) ) {
       newws = returnNewWinners(totals, result.getQuota) // sorted!

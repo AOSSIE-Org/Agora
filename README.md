@@ -11,7 +11,7 @@ Currently the following STV methods are implemented:
 REMARKS:
 -----------------------------------------------------------------
 
-When EVACSMethod is run on real data computation is slow because of ACTFractionLoss
+When EVACSMethod is run on real data the computation is slow because of ACTFractionLoss
 
 -----------------------------------------------------------------
 INPUT FILE FORMAT:

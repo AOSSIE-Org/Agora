@@ -10,6 +10,7 @@ import collection.mutable.{HashMap => Map}
    // private var continuingCandidates: List[Candidate] = Nil
     private var pendingWinners: List[(Candidate, Rational, Option[Set[Int]])] = Nil
           
+    private var totalsHistory: List[Map[Candidate, Rational]] = Nil
     
     def setQuota(q: Rational) = {
       quota = Some(q)
@@ -59,6 +60,15 @@ import collection.mutable.{HashMap => Map}
      excludedCandidates = (candidate, total)::excludedCandidates
      //continuingCandidates = continuingCandidates diff List(candidate)
     }
+    
+    def addTotalsToHistory(totals: Map[Candidate, Rational]) = {
+     totalsHistory = totals :: totalsHistory
+    }
+    
+    def getTotalsHistory: List[Map[Candidate, Rational]] = {
+     totalsHistory 
+    }
+    
     
     
   }
