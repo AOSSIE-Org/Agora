@@ -27,12 +27,12 @@ trait ACTExclusionTieResolution extends GenericSTVMethod[ACTBallot] with Exclusi
       val listequalcandidates = equaltotals.toList.map(x => x._1)
       var smallestcandidate: Candidate = listequalcandidates.head
 
-      for (c<-listequalcandidates){
+      for (c<-listequalcandidates.tail){
         if (totalshistory.head(c) < totalshistory.head(smallestcandidate)) {
           smallestcandidate = c
         }
       }
-      recFindSmallest(equaltotals filter { p => p._2 == totalshistory.head(smallestcandidate)}, totalshistory.tail) // it may be not unique!!!
+      recFindSmallest(equaltotals filter { p => totalshistory.head(p._1) == totalshistory.head(smallestcandidate)}, totalshistory.tail) // it may be not unique!!!
      }
      else equaltotals
    } 
