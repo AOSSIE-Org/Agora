@@ -11,11 +11,16 @@ import scala.util.Random
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 trait ExclusionTieResolution {
-  def resolveExclusionTie(equaltotals: Map[Candidate, Rational]): (Candidate, Rational)
+  def chooseCandidateForExclusion(totals: Map[Candidate, Rational]): (Candidate, Rational) 
 }
 
 trait UnfairExclusionTieResolutuim {
-  def resolveExclusionTie(equaltotals: Map[Candidate, Rational]): (Candidate, Rational)  = equaltotals head
+ def chooseCandidateForExclusion(totals: Map[Candidate, Rational]): (Candidate, Rational)   = {
+   var min = new Rational(Int.MaxValue, 1)
+   for (kv <- totals) if (kv._2 < min) min = kv._2
+   val equaltotals = totals filter {_._2 == min}   
+   equaltotals head
+ }
 }
 
 // Todo: Count history is required here....
@@ -32,14 +37,18 @@ trait ACTExclusionTieResolution extends GenericSTVMethod[ACTBallot] with Exclusi
           smallestcandidate = c
         }
       }
-      recFindSmallest(equaltotals filter { p => totalshistory.head(p._1) == totalshistory.head(smallestcandidate)}, totalshistory.tail) // it may be not unique!!!
+      recFindSmallest(equaltotals.clone() filter { p => totalshistory.head(p._1) == totalshistory.head(smallestcandidate)}, totalshistory.tail) // it may be not unique!!!
      }
      else equaltotals
    } 
   
   
-  def resolveExclusionTie(equaltotals: Map[Candidate, Rational]): (Candidate, Rational)  = {
+  def chooseCandidateForExclusion(totals: Map[Candidate, Rational]): (Candidate, Rational)  = {
   
+    var min = new Rational(Int.MaxValue, 1)
+    for (kv <- totals) if (kv._2 < min) min = kv._2
+    val equaltotals = totals.clone() filter {_._2 == min}   
+     
     if (recFindSmallest(equaltotals, result.getTotalsHistory.tail).size > 1) {
       Random.shuffle(equaltotals.toList).head      // If did not manage to resolve tie, take a random candidate (the commissioner decided according to the ACT Electorate act) 
     }

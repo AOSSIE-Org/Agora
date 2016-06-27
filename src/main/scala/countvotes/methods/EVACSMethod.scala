@@ -11,7 +11,6 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
  with ACTSurplusDistribution
  with ACTSurplusDistributionTieResolution
  with ACTFractionLoss
- with ACTCandidateForExclusion
  with ACTExclusion
  with ACTExclusionTieResolution 
  {  

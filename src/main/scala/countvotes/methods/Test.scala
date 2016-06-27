@@ -4,6 +4,9 @@ package countvotes.methods
 import countvotes.structures._
 import countvotes.algorithms._
 import collection.mutable.{HashMap => Map}
+import scala.util.Random
+
+
 
 
 object Test{
@@ -61,6 +64,23 @@ object Test{
   }
   
   
+  def recFindSmallest(equaltotals: Map[Candidate, Rational], totalshistory: List[Map[Candidate, Rational]]): Map[Candidate, Rational] = {
+      
+      if (equaltotals.size > 1 && totalshistory.nonEmpty) {
+      val listequalcandidates = equaltotals.toList.map(x => x._1)
+      var smallestcandidate: Candidate = listequalcandidates.head
+
+      for (c<-listequalcandidates.tail){
+        if (totalshistory.head(c) < totalshistory.head(smallestcandidate)) {
+          smallestcandidate = c
+        }
+      }
+      recFindSmallest(equaltotals.clone() filter { p => totalshistory.head(p._1) == totalshistory.head(smallestcandidate)}, totalshistory.tail) // it may be not unique!!!
+     }
+     else equaltotals
+   } 
+  
+
   
   def testSDResolution = {
     
@@ -70,15 +90,16 @@ object Test{
     //val totals4: Map[Candidate, Rational] =  Map(Candidate("A", None, None) -> 14, Candidate("B", None, None) -> 14, Candidate("C", None, None) -> 14, Candidate("D", None, None) -> 14, Candidate("E", None, None) -> 14, Candidate("F", None, None) -> 15)
 
     val totals1: Map[Candidate, Rational] =  Map(Candidate("A", None, None) -> 1, Candidate("B", None, None) -> 1, Candidate("C", None, None) -> 1, Candidate("D", None, None) -> 1, Candidate("E", None, None) -> 2)
-    val totals2: Map[Candidate, Rational] =  Map(Candidate("A", None, None) -> 1, Candidate("B", None, None) -> 1, Candidate("C", None, None) -> 1, Candidate("D", None, None) -> 6, Candidate("E", None, None) -> 6)
-    val totals3: Map[Candidate, Rational] =  Map(Candidate("A", None, None) -> 10, Candidate("B", None, None) -> 9, Candidate("C", None, None) -> 7, Candidate("D", None, None) -> 8, Candidate("E", None, None) -> 8)
-    val totals4: Map[Candidate, Rational] =  Map(Candidate("A", None, None) -> 11, Candidate("B", None, None) -> 11, Candidate("C", None, None) -> 11, Candidate("D", None, None) -> 10, Candidate("E", None, None) -> 10)
+    val totals2: Map[Candidate, Rational] =  Map(Candidate("A", None, None) -> 1, Candidate("B", None, None) -> 1, Candidate("C", None, None) -> 6, Candidate("D", None, None) -> 7, Candidate("E", None, None) -> 6)
+    val totals3: Map[Candidate, Rational] =  Map(Candidate("A", None, None) -> 3, Candidate("B", None, None) -> 9, Candidate("C", None, None) -> 7, Candidate("D", None, None) -> 7, Candidate("E", None, None) -> 8)
+    val totals4: Map[Candidate, Rational] =  Map(Candidate("A", None, None) -> 19, Candidate("B", None, None) -> 10, Candidate("C", None, None) -> 10, Candidate("D", None, None) -> 10, Candidate("E", None, None) -> 10)
 
     
     var totalsHistory: List[Map[Candidate, Rational]] =   totals4 :: totals3 :: totals2 :: totals1 :: List() 
        
     println(totalsHistory)
     
+    /*
     var sortedList = totalsHistory.head.toList.sortBy(x => x._2).reverse // >
     
     println(sortedList)
@@ -86,8 +107,26 @@ object Test{
     val listwithtieresolved = recOrderDifferent(totalsHistory.head, sortedList, totalsHistory) 
     var result = for (l <- listwithtieresolved ) yield (l, totalsHistory.head(l))
     
-    
     println(result)
+    */
+        
+    var min = new Rational(Int.MaxValue, 1)
+    for (kv <- totalsHistory.head) if (kv._2 < min) min = kv._2
+    val equaltotals = totalsHistory.head.clone() filter {_._2 == min}   
+    
+    
+    
+    if (recFindSmallest(equaltotals, totalsHistory.tail).size > 1) {
+      var  resultsmallest: (Candidate, Rational)  = Random.shuffle(equaltotals.toList).head // If did not manage to resolve tie, take a random candidate (the commissioner decided according to the ACT Electorate act) 
+      println("The smallest candidate was not found. " +  resultsmallest + " is picked up.")
+
+    }
+    else {
+     var resultsmallest: (Candidate, Rational)  = equaltotals.toList.head
+      println("The smallest candidate was found: " +  resultsmallest)
+    }
+    
+    
     
   }
   

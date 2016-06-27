@@ -60,9 +60,8 @@ TODO:
 -----------------------------------------------------------------
 
 EVACS:
-1) Test tie resolutions (surplus distribution and exclusion)
-2) Imitation of EVACS's wrong totals that appear in their scrutiny
-3) Distribution of votes of the last excluded candidate when the number of continuing candidates becomes equal to the number of remaining vacancies
+1) Imitation of EVACS's wrong totals that appear in their scrutiny
+2) Distribution of votes of the last excluded candidate when the number of continuing candidates becomes equal to the number of remaining vacancies
 
 GENERAL:
  
