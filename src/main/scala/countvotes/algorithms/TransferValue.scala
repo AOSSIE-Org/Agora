@@ -42,7 +42,7 @@ trait TransferValueWithDenominatorWithTotalOfContinuingBallots extends GenericST
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 /* 
- * i.e. surplus /  total 
+ * TV =  surplus /  total 
  * */
 trait TransferValueWithDenominatorEqualToTotal extends GenericSTVMethod[WeightedBallot]{  
   def computeTransferValue(surplus: Rational, election: Election[WeightedBallot], pendingWinners:  List[Candidate], candidate: Candidate, markings: Option[Set[Int]]): Rational = {

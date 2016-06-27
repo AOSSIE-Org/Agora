@@ -109,10 +109,12 @@ abstract class GenericSTVMethod[B <: Ballot with Weight] {
   }
     
     
-  def removeWinnerFromElection(election: Election[B], winner: Candidate): Election[B] = {
-   var list: Election[B] = Nil
+  def removeWinnerFromElection(election: Election[WeightedBallot], winner: Candidate): Election[WeightedBallot] = {
+   var list: Election[WeightedBallot] = Nil
    for (b <- election if !b.preferences.isEmpty)
-      if (b.preferences.head != winner) list = b::list     
+      if (b.preferences.head != winner) {
+        list =  WeightedBallot(filterPreferences(b.preferences, winner::List()), b.id, b.weight)::list     
+      }
    list
   }
 

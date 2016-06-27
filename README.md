@@ -60,14 +60,11 @@ TODO:
 -----------------------------------------------------------------
 
 EVACS:
-1) Imitation of EVACS's wrong totals that appear in their scrutiny
-2) Distribution of votes of the last excluded candidate when the number of continuing candidates becomes equal to the number of remaining vacancies
+1) Imitation of EVACS's wrong totals after partial exclusions that appear in their scrutiny 
+
 
 GENERAL:
  
 1) Output the scrutiny as a table
-2) In the following line of tryToDistributeSurplusVotes
-  val newElection = removeWinnerFromElection(election, winner) 
-the candidate should be removed from all preferences in ballots
-3) Take care in TransferValue traits that also winners are taken into account when we check continuing ballots....
+2) Optimize filtering pending winners (can be done once outside functions exclude and distributesurplus)
 

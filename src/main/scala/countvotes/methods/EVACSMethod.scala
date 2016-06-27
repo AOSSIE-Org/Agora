@@ -39,7 +39,12 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
     
    //result.addTotalsToHistory(totals)
     
-   if (ccands.length <= numVacancies){
+   // Notice: There may be more new winners than available vacancies!!! 
+   // Apparently EVACS does not check this condition. See step 8.  Or in count.c
+   // while (for_each_candidate(e->candidates, &check_status,
+	//			  (void *)(CAND_PENDING|CAND_ELECTED))
+	 //      != e->electorate->num_seats) {
+   if (ccands.length == numVacancies){
      for (c <- ccands) yield (c, totals(c))
    }
    else {  
@@ -75,7 +80,11 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
           
           println("new Winners " + newWinners)
           println("Number of winners in this recursive call: "  + newWinners.length)
-          if (newWinners.length == numVacancies) { newWinners }
+          if (newWinners.length == numVacancies) { 
+            // Notice: There may be more new winners than available vacancies!!! 
+            // Apparently EVACS does not check this condition. See step 42. Or in count.c
+            // if (for_each_candidate(candidates, &check_status,(void *)(CAND_ELECTED|CAND_PENDING)) == num_seats) return true;
+            newWinners }           
           else computeWinners(newElection, numVacancies-newWinners.length):::newWinners
           
       }
