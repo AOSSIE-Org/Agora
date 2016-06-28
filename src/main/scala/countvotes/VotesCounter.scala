@@ -49,6 +49,9 @@ object Main {
   }
   
   
+  
+  
+  
   def main(args: Array[String]): Unit = {
     
    parser.parse(args, Config()) map { c =>
@@ -57,14 +60,21 @@ object Main {
      val election =  PreferencesParser.read(c.directory + c.file)
      println("Parsing finished.")
       
-     var r:  List[(Candidate,Rational)] = List()
+     //var r:  List[(Candidate,Rational)] = List()
+     
+     val winnersfile = c.directory + "WinnersByAlgorithm_" + c.algorithm + "_InputFile_" + c.file
+     val reportfile = c.directory + "Report_" + c.algorithm + "_InputFile_" + c.file 
      
      c.algorithm match {
        case "EVACS" =>  {
-         r = EVACSMethod.runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
+        var r = EVACSMethod.runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
+        r.writeDistributionOfPreferences(reportfile)
+        r.writeWinners(winnersfile)
        }
        case "Simple" =>  {
-         r = SimpleSTVMethod.runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
+        var r = SimpleSTVMethod.runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
+        println(" Scrutiny table for method Simple is not implemented yet.")
+        r.writeWinners(winnersfile)
        }
        case "Test" =>  {
          Test.testSDResolution
@@ -72,21 +82,7 @@ object Main {
        case "" =>  println("Please, specify which algorithm should be used. Only options -a EVACS and -a Simple are currently available.")
      }
     
-     println("Winners: " + r)
-        
-     val outputfile = c.directory + "WinnersByAlgorithm_" + c.algorithm + "_InputFile_" + c.file
-     val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputfile)))      
-     //writer.write(result.getWinners.toString())
-     var sw = ""  
-     for ( w <- r){
-         sw = sw + w._1 + ": " + w._2.numerator/w._2.denominator + "\n"
-       }
-      writer.write(sw)
-     writer.close()
-        
-     val routputfile = c.directory + "Report_" + c.algorithm + "_InputFile_" + c.file
-     //writeDistributionOfPreferences(routputfile, report)
-     
+   
    }
   }
 

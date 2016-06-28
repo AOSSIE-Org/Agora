@@ -17,15 +17,23 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
  {  
   
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  def runScrutiny(election: Election[ACTBallot], numVacancies: Int): List[(Candidate,Rational)]  = {  // all ballots of e are marked when the function is called
+  def runScrutiny(election: Election[ACTBallot], numVacancies: Int):  Report[ACTBallot] = {  // all ballots of e are marked when the function is called
   
    val quota = cutQuotaFraction(computeQuota(election.length, numVacancies))
    println("Quota = " + quota)
-   result.setQuota(quota)  
+   result.setQuota(quota)
+   report.setQuota(quota)
     
-   result.addTotalsToHistory(computeTotals(election))   
+   val totals = computeTotals(election)
+   result.addTotalsToHistory(totals) 
+ 
+   report.setCandidates(getCandidates(election))
+   report.newCount(FirstCount, None, Some(election), Some(totals), None)
    
-   computeWinners(election, numVacancies)   
+   report.setWinners(computeWinners(election, numVacancies))   
+   
+   report
+   
  }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -37,7 +45,7 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
        
    val totals = computeTotals(election)  
    println("Totals: " + totals)
-    
+       
    //result.addTotalsToHistory(totals)
     
    // Notice: There may be more new winners than available vacancies!!! 
@@ -117,6 +125,7 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
     val res = tryToDistributeSurplusVotes(newElection, cand, ctotal, markings)
     newElection = res._1
     newws = newws ::: res._2
+        
     println("Are there pending candidates? " + result.getPendingWinners.nonEmpty)
    }
    (newElection, newws)
@@ -154,6 +163,10 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
      ws = returnNewWinners(newtotals, result.getQuota) // sorted!
      result.addPendingWinners(ws.toList, Some(extractMarkings(newElection))) 
     }
+    
+    if (ws.nonEmpty) report.newCount(SurplusDistribution, Some(winner), Some(newElectionWithoutFractionInTotals), Some(newtotals), Some(ws))
+    else report.newCount(SurplusDistribution, Some(winner), Some(newElectionWithoutFractionInTotals), Some(newtotals), None)
+    
     (newElectionWithoutFractionInTotals, ws)
   }
  }
@@ -180,7 +193,10 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
       println("New winners as a result of the current partial exclusion: " + newws)
       result.addPendingWinners(newws.toList, Some(extractMarkings(newElection))) 
       ws = ws ::: newws // check that the order is correct here!!!
+      report.newCount(Exclusion, Some(candidate), Some(newElection), Some(totals), Some(newws))
     }
+    else report.newCount(Exclusion, Some(candidate), Some(newElection), Some(totals), None)
+    
    }
   // TODO  distribute remaining votes
   // if (vacanciesFilled(ws.length, numVacancies)) { 

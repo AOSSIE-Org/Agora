@@ -19,11 +19,13 @@ abstract class GenericSTVMethod[B <: Ballot with Weight] {
   //type E = Election[B]
   
   
-  // GLOBAL MUTABLE VARIABLE
+  // GLOBAL MUTABLE VARIABLES
   // DON'T FORGET TO RESET
   val result: Result = new Result
+  val report: Report[B] = new Report[B]
   
-  def runScrutiny(e: Election[B], numVacancies: Int): List[(Candidate,Rational)] 
+  def runScrutiny(e: Election[B], numVacancies: Int):   Report[B]
+
   def computeWinners(e: Election[B], numVacancies: Int): List[(Candidate,Rational)] 
   
   def computeQuota(numVotes: Int, numVacancies: Int): Rational

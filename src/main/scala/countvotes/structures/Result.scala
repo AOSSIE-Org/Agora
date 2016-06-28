@@ -7,10 +7,10 @@ import collection.mutable.{HashMap => Map}
     private var quota: Option[Rational] = None
    
     private var excludedCandidates: List[(Candidate, Rational)] = Nil
-   // private var continuingCandidates: List[Candidate] = Nil
     private var pendingWinners: List[(Candidate, Rational, Option[Set[Int]])] = Nil
-          
-    private var totalsHistory: List[Map[Candidate, Rational]] = Nil
+    private var totalsHistory: List[Map[Candidate, Rational]] = Nil  // required for ACT's ties resolutions
+    
+    private var winners: List[(Candidate, Rational)] = Nil
     
     def setQuota(q: Rational) = {
       quota = Some(q)
@@ -69,6 +69,13 @@ import collection.mutable.{HashMap => Map}
      totalsHistory 
     }
     
+    def setWinners(ws: List[(Candidate, Rational)]) = {
+      winners = ws
+    }
+    
+    def getWinners: List[(Candidate, Rational)] = {
+      winners 
+    }
     
     
   }

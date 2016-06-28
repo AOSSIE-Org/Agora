@@ -18,14 +18,24 @@ object SimpleSTVMethod extends GenericSTVMethod[WeightedBallot]
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  def runScrutiny(election: Election[WeightedBallot], numVacancies: Int): List[(Candidate, Rational)]  = {  // all ballots of e are marked when the function is called
+  def runScrutiny(election: Election[WeightedBallot], numVacancies: Int):  Report[WeightedBallot]  = {  // all ballots of e are marked when the function is called
    val quota = cutQuotaFraction(computeQuota(election.length, numVacancies))
    println("Quota = " + quota)
    result.setQuota(quota)
          
+ 
    print("\n INPUT ELECTION: \n")
    printElection(election)
-   computeWinners(election, numVacancies)   
+   
+   val totals = computeTotals(election)
+   result.addTotalsToHistory(totals) 
+ 
+   report.setCandidates(getCandidates(election))
+   report.newCount(FirstCount, None, Some(election), Some(totals), None)
+   
+   report.setWinners(computeWinners(election, numVacancies))   
+   
+   report   
   }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

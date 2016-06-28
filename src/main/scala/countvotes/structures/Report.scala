@@ -1,36 +1,18 @@
 package countvotes.structures
-
+import java.io._
 
 import collection.mutable.{HashMap => Map}
 
-  // ALWAYS MODIFYING THE LAST COUNT  (the head of list)
-  class Report {
+  class Report[B <: Ballot with Weight] {
  
-    
-    /*
-    private var countReports : List[CountReport] = Nil
-    
-    private var currentPTotals: Map[Candidate, Rational] = Map()
+    private var countHistory : List[Count[B]] = Nil
+    //private var totals: Map[Candidate, Rational] = Map()
     
     private var candidates : List[Candidate] = Nil
     private var quota: Option[Rational] = None
     private var numVacancies: Option[Int] = None 
  
-    
-    
-    def createCountReports(counts: Register, initiator: Candidate, action: Actions) = {
-      if (counts.nonEmpty)
-      for (c <- counts.reverse){
-       val countr = new CountReport
-       countr.setAction(action)  
-       countr.setInitiator(initiator)  
-       countr.setElection(c.election)
-       countr.setProgressiveTotals(c.getProgressiveTotals)
-       countr.addWinners(c.getWinners)
-       countr.setValuesOfBallots(c.getValuesOfBallots)
-       countReports = countr::countReports
-      }
-    }
+    private var winners: List[(Candidate,Rational)] = Nil
     
     def setNumVacancies(n: Int) = { 
       numVacancies = Some(n)
@@ -39,25 +21,10 @@ import collection.mutable.{HashMap => Map}
     def getNumVacancies = { 
       numVacancies 
     }
-    
-    def setCurrentPTotal(c: Candidate, v: Rational) = {
-      currentPTotals(c)=v
-    }
-    
-    def getCurrentPTotals = {
-      currentPTotals
-    }
-        
-    def setLossByFraction(n: Rational) ={
-      var countr = countReports.head
-      countr.setLossByFraction(n)
-      countReports = countr :: countReports.tail
-    }
-    
+     
     def setCandidates(cands: List[Candidate]) = {
       candidates = cands
     }
-    
     
     def getCandidates: List[Candidate] = {
       candidates
@@ -74,98 +41,126 @@ import collection.mutable.{HashMap => Map}
       }
     }
     
-     
-   def createNewCountReport(a: Actions, initiator: Option[Candidate], election: Option[Election], ptotals: Option[Map[Candidate, Rational]], bvalues: Option[Map[Int, Rational]], winners: Option[List[(Candidate, Rational)]]) = {
-      
-     val countr = new CountReport
-     
-     countr.setAction(a)
+    
+   def newCount(action: Actions, initiator: Option[Candidate], relection: Option[Election[B]], totals: Option[Map[Candidate, Rational]], winners: Option[List[(Candidate, Rational)]]) = {
+        
+     val count = new Count[B]
       
       initiator match {
-       case Some(i) =>  countr.setInitiator(i)
+       case Some(i) =>  count.setInitiator(i)
        case None =>
       } 
      
-      election match {
-        case Some(e) => countr.setElection(e)
+      relection match { // election resulting from the action
+        case Some(e) => // count.setElection(e)  // TODO: commented because was taking much memory. Find a better solution (make a hash table for marked ballots).
         case None =>
       }
       
-      ptotals match {
-       case Some(pt) =>  countr.setProgressiveTotals(pt)
+      totals match {
+       case Some(pt) =>   count.setTotals(pt)
        case None => 
       }
       
-      bvalues match {
-        case Some(v) => countr.setValuesOfBallots(v)
-        case None =>
-      }
-      
       winners match {
-       case Some(w) =>  countr.addWinners(w)
+       case Some(w) =>  count.addWinners(w)
        case None =>
       }   
 
-      countReports = countr::countReports
-    }
+      countHistory = count :: countHistory 
+   }
     
   
      
-    def getCountReports: List[CountReport] = {
-      countReports
+  def getCountHistory: List[Count[B]] = {
+      countHistory
+  }
+    
+  def setWinners(ws: List[(Candidate,Rational)] ) = {
+    winners = ws
+  }
+  
+  def getWinners = {
+    winners
+  }
+    
+  def writeWinners(file: String) = {
+   val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)))      
+     //writer.write(result.getWinners.toString())
+     var sw = ""  
+     for ( w <- winners){
+         sw = sw + w._1 + ": " + w._2.numerator/w._2.denominator + "\n"
+     }
+     writer.write(sw)
+     writer.close()
+  }
+    
+    
+  def writeDistributionOfPreferences(file: String) = {
+    val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)))
+    
+    val separator = ","
+    val order = candidates
+    
+    // order of table headings in ACT Brundabella 2012
+    /*  val order = List(new Candidate("WALL Andrew"), 
+                      new Candidate("SMYTH Brendan"), 
+                      new Candidate("LAWDER Nicole"), 
+                      new Candidate("JEFFERY Val"), 
+                      new Candidate("SESELJA Zed"), 
+                      new Candidate("BRESNAN Amanda"), 
+                      new Candidate("MURPHY Ben"), 
+                      new Candidate("DAVIS Johnathan"), 
+                      new Candidate("BURCH Joy"), 
+                      new Candidate("MAFTOUM Karl"), 
+                      new Candidate("GENTLEMAN Mick"), 
+                      new Candidate("KINNIBURGH Mike"), 
+                      new Candidate("CODY Rebecca"), 
+                      new Candidate("HENSCHKE Adam"), 
+                      new Candidate("ERWOOD Mark"), 
+                      new Candidate("DOBLE Burl"), 
+                      new Candidate("JONES-ELLIS Kieran"),
+                      new Candidate("PEARCE Calvin"),
+                      new Candidate("GIBBONS Mark"),
+                      new Candidate("LINDFIELD Michael"))
+                  
+                 */
+    
+    writer.write( "Count" + separator) 
+    var countnum = 0
+    order.foreach { c => writer.write( c + separator) }
+    writer.write("Loss by Fraction" + separator + "Initiator" + separator + "Action"  + separator + "Winners" +  "\n") 
+    
+    for (countr <- countHistory.reverse ){
+          
+         // println(countr.getNumVotesReceived)
+      
+      countnum += 1
+      var line: String  = " " + separator 
+
+      line =  countnum + separator
+      
+      for (c<-order){
+        if ( countr.getTotals.exists(_._1 == c)) 
+          line += countr.getTotals(c).numerator/countr.getTotals(c).denominator + separator
+         // line += countr.getProgressiveTotals(c) + separator
+        else line += separator  
+      }
+      
+      var sw = ""
+      for (w <- countr.getWinners if countr.getWinners.nonEmpty){
+        sw += w._1 + " (" + w._2 + "); " 
+      }
+      line += "0000" + separator + separator +  separator + sw
+      writer.write(line + "\n")
+      
     }
-   
-    def setFullElection(e: Election) = {
-      var countr = countReports.head
-      countr.setOriginalElection(e)
-      countReports = countr :: countReports.tail
-    }
-   
     
-    def setModifiedCandidates(mc: Set[Candidate]) = {
-      var countr = countReports.head
-      countr.setModifiedCandidates(mc)
-      countReports = countr :: countReports.tail
-    }
-    
-    
-    
-    def addCountReport(cr: CountReport) = {
-      countReports = cr::countReports
-    }
-    
-    def addWinners(w: List[(Candidate, Rational)]) = {
-      var count = countReports.head
-      count.addWinners(w.sortBy(x => x._2))
-      countReports = count :: countReports.tail
-    }
-    
-    
-    def setAction(a: Actions) = {
-      var countr = countReports.head
-      countr.setAction(a)
-      countReports = countr :: countReports.tail
-    }
-    
-    def setCandidateToExclude(c: (Candidate, Rational)) = {
-      var count = countReports.head
-      count.setCandidateToExclude(c)
-      countReports = count :: countReports.tail
-    }
-    
-    def setNumVotesReceived(m: Map[Candidate, Rational])  = {
-      var count = countReports.head
-      count.setNumVotesReceived(m)
-      countReports = count :: countReports.tail
-    }
-    
-    def getNumVotesReceived: Map[Candidate, Rational]  = {
-      countReports.head.getNumVotesReceived
-    }
-    
-    
-    def getLossByFraction: Rational = {
-       countReports.head.getLossByFraction
-    }
-    */
+     //rwriter.write("Candidates: " + report.getCandidates.toString()+"\n")  
+     //rwriter.write("Number of seats: " + report.getNumVacancies.toString()+"\n")  
+     //rwriter.write("Quota: " + report.getQuota.toString())
+     writer.close()
+  }
+  
+       
+      
   }
