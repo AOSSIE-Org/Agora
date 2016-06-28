@@ -13,6 +13,7 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
  with ACTFractionLoss
  with ACTExclusion
  with ACTExclusionTieResolution 
+ with ACTExactWinnerRemoval
  {  
   
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -129,7 +130,7 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
   
   if (ctotal == result.getQuota || !ballotsAreContinuing(winner, election, pendingWinners) )  
    { 
-      val newElection = removeWinnerFromElection(election, winner) // should not we remove the candidate from all preferences in ballots???
+      val newElection = removeWinnerWithoutSurplusFromElection(election, winner) // should not we remove the candidate from all preferences in ballots???
       result.removePendingWinner(winner)
       (newElection, List())
    }

@@ -12,7 +12,8 @@ object SimpleSTVMethod extends GenericSTVMethod[WeightedBallot]
   with SimpleExclusion
   with UnfairExclusionTieResolutuim 
   with TransferValueWithDenominatorEqualToTotal
-  with ScrutinyWithAllBallotsInSurplusDistribution{
+  with ScrutinyWithAllBallotsInSurplusDistribution
+  with ExactWinnerRemoval{
   
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -87,7 +88,7 @@ def surplusesDistribution(election: Election[WeightedBallot], numVacancies: Int)
   
   if (ctotal == result.getQuota || !ballotsAreContinuing(winner, election, pendingWinners) )  
    { 
-      removeWinnerFromElection(election, winner) // should not we remove the candidate from all preferences in ballots???!!!  SHOULD!
+      removeWinnerWithoutSurplusFromElection(election, winner) 
    }
   else {
     println("Distributing the surplus of " + winner)  

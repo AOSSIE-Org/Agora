@@ -37,7 +37,7 @@ import collection.mutable.{HashMap => Map}
      //   case Some(mrks) => pendingWinners = pendingWinners :+ (candidate, total, mrks) // !!! is it adding at the end of the list?
       //  case None => pendingWinners = pendingWinners :+ (candidate, total, None) // !!! is it adding at the end of the list?
       //}
-      pendingWinners = pendingWinners :+ (candidate, total, markings) // !!! is it adding at the end of the list?
+      pendingWinners = pendingWinners :+ (candidate, total, markings) 
     }
     
      

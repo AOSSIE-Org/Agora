@@ -53,12 +53,14 @@ object Main {
     
    parser.parse(args, Config()) map { c =>
     
-    ///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    ///  ACT
-    ///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      println("Parsing started...")    
      val election =  PreferencesParser.read(c.directory + c.file)
      println("Parsing finished.")
+     
+     var list = 1 :: 2 :: 3 :: Nil
+     list = list :+ 4 
+     println(list)
+     
   
      var r:  List[(Candidate,Rational)] = List()
      
@@ -72,7 +74,7 @@ object Main {
        case "Test" =>  {
          Test.testSDResolution
        }
-       case "" =>  println("Please, specify which algorithm should be used. Only option -a \"EVACS\" is currently available.")
+       case "" =>  println("Please, specify which algorithm should be used. Only options -a EVACS and -a Simple are currently available.")
      }
     
      println("Winners: " + r)

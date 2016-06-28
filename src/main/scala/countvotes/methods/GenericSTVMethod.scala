@@ -41,6 +41,9 @@ abstract class GenericSTVMethod[B <: Ballot with Weight] {
     
   def exclude(election: Election[B], candidate: Candidate, value: Option[Rational], newWinners: Option[List[Candidate]]): Election[B]
 
+  def removeWinnerWithoutSurplusFromElection(election: Election[B], winner: Candidate): Election[B]
+
+  
  def printElection(election: Election[B]) = {
     print("\n")
     for (e <- election.sortBy(x => x.id)) {
@@ -109,14 +112,7 @@ abstract class GenericSTVMethod[B <: Ballot with Weight] {
   }
     
     
-  def removeWinnerFromElection(election: Election[WeightedBallot], winner: Candidate): Election[WeightedBallot] = {
-   var list: Election[WeightedBallot] = Nil
-   for (b <- election if !b.preferences.isEmpty)
-      if (b.preferences.head != winner) {
-        list =  WeightedBallot(filterPreferences(b.preferences, winner::List()), b.id, b.weight)::list     
-      }
-   list
-  }
+  
 
   
   //TODO: Optimize: as soon as we found continuing candidate, we can simply attach the rest of the list
