@@ -56,12 +56,7 @@ object Main {
      println("Parsing started...")    
      val election =  PreferencesParser.read(c.directory + c.file)
      println("Parsing finished.")
-     
-     var list = 1 :: 2 :: 3 :: Nil
-     list = list :+ 4 
-     println(list)
-     
-  
+      
      var r:  List[(Candidate,Rational)] = List()
      
      c.algorithm match {
