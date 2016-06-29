@@ -1,7 +1,9 @@
 package countvotes.structures
-import java.io._
 
+import java.io._
 import collection.mutable.{HashMap => Map}
+
+
 
   class Report[B <: Ballot with Weight] {
  
@@ -13,6 +15,29 @@ import collection.mutable.{HashMap => Map}
     private var numVacancies: Option[Int] = None 
  
     private var winners: List[(Candidate,Rational)] = Nil
+    
+    
+    def setLossByFractionToZero = {
+      countHistory.head.setLossByFraction(0)
+    }
+    
+    def setLossByFraction(oldtotals: Map[Candidate, Rational], newtotals:  Map[Candidate, Rational]) = {
+      
+        def sumTotals(totals:  Map[Candidate, Rational]): Rational = {
+          var sum: Rational = 0
+          for (t <- totals)  sum += t._2
+          sum
+        }
+      
+      var sumoldtotals = sumTotals(oldtotals)
+      var sumnewtotals = sumTotals(newtotals)
+      
+      countHistory.head.setLossByFraction(sumoldtotals-sumnewtotals)
+    }
+    
+    def setIgnoredBallots(ignoredBallots: Election[B]) = {
+      countHistory.head.setIgnoredBallots(ignoredBallots)
+    }
     
     def setNumVacancies(n: Int) = { 
       numVacancies = Some(n)
@@ -42,10 +67,12 @@ import collection.mutable.{HashMap => Map}
     }
     
     
-   def newCount(action: Actions, initiator: Option[Candidate], relection: Option[Election[B]], totals: Option[Map[Candidate, Rational]], winners: Option[List[(Candidate, Rational)]]) = {
+   def newCount(action: Actions, initiator: Option[Candidate], relection: Option[Election[B]], totals: Option[Map[Candidate, Rational]], winners: Option[List[(Candidate, Rational)]], exhaustedBallots: Option[Set[B]]) = {
         
      val count = new Count[B]
       
+      count.setAction(action)
+     
       initiator match {
        case Some(i) =>  count.setInitiator(i)
        case None =>
@@ -65,6 +92,11 @@ import collection.mutable.{HashMap => Map}
        case Some(w) =>  count.addWinners(w)
        case None =>
       }   
+      
+      exhaustedBallots match {
+        case Some(eb) => count.setExhaustedBallots(eb)
+        case None => 
+      }
 
       countHistory = count :: countHistory 
    }
@@ -126,39 +158,58 @@ import collection.mutable.{HashMap => Map}
                  */
     
     writer.write( "Count" + separator) 
-    var countnum = 0
+    var countnum = -1
     order.foreach { c => writer.write( c + separator) }
-    writer.write("Loss by Fraction" + separator + "Initiator" + separator + "Action"  + separator + "Winners" +  "\n") 
+    writer.write("Initiator" + separator + "Action"  + separator + "Winners" + separator  + "Loss by Fraction" +  separator + "N Exhausted Ballots" + separator + "N Ignored Ballots" + "\n") 
     
-    for (countr <- countHistory.reverse ){
+    for (count <- countHistory.reverse ){
           
          // println(countr.getNumVotesReceived)
       
       countnum += 1
-      var line: String  = " " + separator 
-
-      line =  countnum + separator
+      var line: String  = countnum + separator
       
       for (c<-order){
-        if ( countr.getTotals.exists(_._1 == c)) 
-          line += countr.getTotals(c).numerator/countr.getTotals(c).denominator + separator
-         // line += countr.getProgressiveTotals(c) + separator
+        if ( count.getTotals.exists(_._1 == c)) 
+          line += count.getTotals(c).numerator/count.getTotals(c).denominator + separator
+         // line += count.getProgressiveTotals(c) + separator
         else line += separator  
       }
       
-      var sw = ""
-      for (w <- countr.getWinners if countr.getWinners.nonEmpty){
-        sw += w._1 + " (" + w._2 + "); " 
+      var winners = ""
+      for (w <- count.getWinners if count.getWinners.nonEmpty){
+        winners += w._1 + " (" + w._2 + "); " 
       }
-      line += "0000" + separator + separator +  separator + sw
+      
+      //println("Exhausted ballots: " + count.getExhaustedBallots)
+      line +=   count.getInitiator + separator + count.getAction + separator + winners + separator + count.getLossByFraction.toInt   + separator 
+     
+      
+      val exhaustedBallots = count.getExhaustedBallots
+      val ignoredBallots = count.getIgnoredBallots
+     
+      var exhhaustedandignored: String = ""
+      exhaustedBallots match {
+        case Some (eB) => 
+          exhhaustedandignored +=   eB.size + separator 
+        case None =>
+          exhhaustedandignored +=   " " + separator 
+      }
+     ignoredBallots match {
+        case Some (iB) => exhhaustedandignored += iB.size
+        case None => 
+     }
+          
+     line += exhhaustedandignored
       writer.write(line + "\n")
+      
       
     }
     
      //rwriter.write("Candidates: " + report.getCandidates.toString()+"\n")  
      //rwriter.write("Number of seats: " + report.getNumVacancies.toString()+"\n")  
      //rwriter.write("Quota: " + report.getQuota.toString())
-     writer.close()
+     writer.close
   }
   
        

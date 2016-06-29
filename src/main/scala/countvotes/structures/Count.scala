@@ -14,33 +14,47 @@ class Count[B <: Ballot with Weight]  {
    
     private var totals: Option[Map[Candidate, Rational] ] = None // outcome of the count
 
-    private var numVotesReceived:  Option[Map[Candidate, Rational] ] = None // for each candidate, number of votes she/he received in the current count
+    //private var numVotesReceived:  Option[Map[Candidate, Rational] ] = None // for each candidate, number of votes she/he received in the current count
    
     private var winners: List[(Candidate, Rational)] = Nil // outcome of the count
       
-    //private var numberOfExhaustedPapers: Option[Integer] = None // outcome of the count
+    private var exhaustedBallots: Option[Set[B]] = None // outcome of the count
     
-    //private var lossByFraction: Option[Rational] = None // outcome of the count
+    private var lossByFraction: Option[Rational] = None   // outcome of the count
+    
+    private var ignoredBallots: Option[Election[B]] = None // outcome of  the count
         
     //private var tv: Option[Rational] = None
     
     //private var quota: Option[Rational] = None
     
     
-    /*
-    def setLossByFraction(n:Rational) = {
-      lossByFraction = Some(n)
+    def setExhaustedBallots(exhballots: Set[B]) = {
+      exhaustedBallots = Some(exhballots)
+    }
+
+    def getExhaustedBallots: Option[Set[B]] = {
+      exhaustedBallots
+    }
+
+    def setIgnoredBallots(iballots: Election[B]) = {
+      ignoredBallots = Some(iballots)
+    }
+
+    def getIgnoredBallots: Option[Election[B]] = {
+      ignoredBallots
+    }
+   
+    def setLossByFraction(lbf: Rational) = {
+      lossByFraction = Some(lbf)
     }
     
     def getLossByFraction: Rational = {
       lossByFraction match {
-        case Some(n) => n
-        case None => 0
+        case Some(lbf) => lbf
+        case None => throw new Exception("Loss by Fraction is not set.")
       }
     }
-    * */
-   
-    
     
     def addWinners(w: List[(Candidate, Rational)] ) = {
       winners = w.sortBy(x => x._2) ++ winners
@@ -69,7 +83,7 @@ class Count[B <: Ballot with Weight]  {
     def getInitiator: Candidate = {
       initiator match {
         case Some(c) => c
-        case None => new Candidate("no initiator") // TODO: fix this case
+        case None => new Candidate("no initiator") 
       }
       
     }
@@ -90,6 +104,7 @@ class Count[B <: Ballot with Weight]  {
       }
     }
     
+    /*
     def setNumVotesReceived(m: Map[Candidate, Rational])  ={
       numVotesReceived = Some(m)
     }
@@ -100,6 +115,8 @@ class Count[B <: Ballot with Weight]  {
         case None =>  Map() //throw new Exception("Progressive totals are not set in Report yet.")
       }
     }
+    * 
+    */
     
    
 }

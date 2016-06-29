@@ -24,7 +24,7 @@ trait ACTFractionLoss extends GenericSTVMethod[ACTBallot]{
         else b
       }
       newe = neweste
-    }
+    }  
    newe
   }
   

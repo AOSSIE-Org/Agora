@@ -35,13 +35,13 @@ abstract class GenericSTVMethod[B <: Ballot with Weight] {
   
   def computeTransferValue(surplus: Rational, election: Election[B], pendingWinners:  List[Candidate], candidate: Candidate, markings: Option[Set[Int]]): Rational
  
-  def distributeSurplusVotes(election: Election[B], candidate: Candidate, total:Rational, markings: Option[Set[Int]], pendingWinners: List[Candidate], transferValue: Rational): Election[B]
+  def distributeSurplusVotes(election: Election[B], candidate: Candidate, total:Rational, markings: Option[Set[Int]], pendingWinners: List[Candidate], transferValue: Rational): (Election[B], Set[B], Option[Election[B]])
   
   def resolveSurpluseDistributionTie(equaltotals: Map[Candidate, Rational]): List[(Candidate, Rational)]
   
   def chooseCandidateForExclusion(totals: Map[Candidate, Rational]): (Candidate, Rational)
     
-  def exclude(election: Election[B], candidate: Candidate, value: Option[Rational], newWinners: Option[List[Candidate]]): Election[B]
+  def exclude(election: Election[B], candidate: Candidate, value: Option[Rational], newWinners: Option[List[Candidate]]): (Election[B], Set[B])
 
   def removeWinnerWithoutSurplusFromElection(election: Election[B], winner: Candidate): Election[B]
 
@@ -76,6 +76,14 @@ abstract class GenericSTVMethod[B <: Ballot with Weight] {
      m
   }
   
+  
+  def sumTotals(totals:  Map[Candidate, Rational]): Rational = {
+    var sum: Rational = 0
+    for (t <- totals) {
+      sum += t._2
+    }
+    sum
+  }
     
   def computeTotal(election: Election[WeightedBallot], candidate: Candidate): Rational = {
      var r: Rational = 0

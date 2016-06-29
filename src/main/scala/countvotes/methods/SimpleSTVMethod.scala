@@ -31,7 +31,7 @@ object SimpleSTVMethod extends GenericSTVMethod[WeightedBallot]
    result.addTotalsToHistory(totals) 
  
    report.setCandidates(getCandidates(election))
-   report.newCount(FirstCount, None, Some(election), Some(totals), None)
+   report.newCount(FirstCount, None, Some(election), Some(totals), None, None)
    
    report.setWinners(computeWinners(election, numVacancies))   
    
@@ -106,7 +106,8 @@ def surplusesDistribution(election: Election[WeightedBallot], numVacancies: Int)
     
     val tv = computeTransferValue(surplus, election, pendingWinners, winner, None) 
     println("tv = " + tv) 
-    distributeSurplusVotes(election, winner, ctotal, None, pendingWinners, tv)               
+    val res = distributeSurplusVotes(election, winner, ctotal, None, pendingWinners, tv)    
+    res._1
   }
  }
  
@@ -114,7 +115,8 @@ def surplusesDistribution(election: Election[WeightedBallot], numVacancies: Int)
 
  def exclusion(election: Election[WeightedBallot], candidate: Candidate, numVacancies: Int): Election[WeightedBallot] = { 
    println("Exclusion of " + candidate)
-   exclude(election, candidate, None, None) 
+   val ex = exclude(election, candidate, None, None) 
+   ex._1
  }
   
  

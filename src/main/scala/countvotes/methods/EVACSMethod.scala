@@ -28,12 +28,12 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
    result.addTotalsToHistory(totals) 
  
    report.setCandidates(getCandidates(election))
-   report.newCount(FirstCount, None, Some(election), Some(totals), None)
+   report.newCount(FirstCount, None, Some(election), Some(totals), None, None)
+   report.setLossByFractionToZero
    
    report.setWinners(computeWinners(election, numVacancies))   
    
    report
-   
  }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -42,6 +42,7 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
    println(" \n NEW RECURSIVE CALL \n")
         
    val ccands = getCandidates(election)
+   //println("Continuing candidates: " + ccands)
        
    val totals = computeTotals(election)  
    println("Totals: " + totals)
@@ -81,7 +82,7 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
           
       case false =>  
           val leastVotedCandidate = chooseCandidateForExclusion(totals)
-          println("Excluding " + leastVotedCandidate )
+          //println("Excluding " + leastVotedCandidate )
           result.addExcludedCandidate(leastVotedCandidate._1,leastVotedCandidate._2)
           val res = exclusion(election, leastVotedCandidate._1, numVacancies)
           val newElection: Election[ACTBallot] = res._1
@@ -151,21 +152,31 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
     val tv = computeTransferValue(surplus, election, pendingWinners, winner, markings) 
     println("tv = " + tv)
         
-    val newElection = distributeSurplusVotes(election, winner, ctotal, markings, pendingWinners, tv)    
+    val (newElection, exhaustedBallots, ignoredBallots) = distributeSurplusVotes(election, winner, ctotal, markings, pendingWinners, tv)    
     val newElectionWithoutFractionInTotals = loseFraction(newElection)
+           
+    val newtotals = computeTotals(newElectionWithoutFractionInTotals)
+    val newtotalswithoutpendingwinners = newtotals.clone().retain((k,v) => !pendingWinners.contains(k)) // excluding pending winners
     
     result.removePendingWinner(winner)
-           
-    val newtotals = computeTotals(newElectionWithoutFractionInTotals).clone().retain((k,v) => !pendingWinners.contains(k)) // excluding pending winners
-    result.addTotalsToHistory(newtotals)
+    
+    result.addTotalsToHistory(newtotalswithoutpendingwinners)
     var ws:  List[(Candidate,Rational)] = List()
-    if (quotaReached(newtotals, result.getQuota)){
-     ws = returnNewWinners(newtotals, result.getQuota) // sorted!
+    if (quotaReached(newtotalswithoutpendingwinners, result.getQuota)){
+     ws = returnNewWinners(newtotalswithoutpendingwinners, result.getQuota) // sorted!
      result.addPendingWinners(ws.toList, Some(extractMarkings(newElection))) 
     }
     
-    if (ws.nonEmpty) report.newCount(SurplusDistribution, Some(winner), Some(newElectionWithoutFractionInTotals), Some(newtotals), Some(ws))
-    else report.newCount(SurplusDistribution, Some(winner), Some(newElectionWithoutFractionInTotals), Some(newtotals), None)
+    //------------ Reporting ------------------------------------------
+    if (ws.nonEmpty) report.newCount(SurplusDistribution, Some(winner), Some(newElectionWithoutFractionInTotals), Some(newtotals), Some(ws), Some(exhaustedBallots))
+    else report.newCount(SurplusDistribution, Some(winner), Some(newElectionWithoutFractionInTotals), Some(newtotals), None, Some(exhaustedBallots))
+    report.setLossByFraction(computeTotals(newElection), newtotals)
+    ignoredBallots match { // ballots ignored because they don't belong to the last parcel of the winner
+      case Some(ib) => report.setIgnoredBallots(ib)
+      case None =>
+    }
+    //------------------------------------------------------------------
+    
     
     (newElectionWithoutFractionInTotals, ws)
   }
@@ -180,35 +191,45 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
    var newws: List[(Candidate,Rational)] = List()
    var steps = determineStepsOfExclusion(election,candidate)
    var newElection = election
+   var newElectionWithoutFractionInTotals = election
+   var exhaustedBallots: Set[ACTBallot] = Set()
    while (ws.length != numVacancies && !steps.isEmpty){
     val step = steps.head
     println("Step of exclusion " + step)
     steps = steps.tail // any better way to do this?
-    newElection = loseFraction(exclude(newElection, step._1, Some(step._2), Some(newws.map(x => x._1)))) // perhaps it is better  to get rid of newws in a separate function
-    val totals = computeTotals(newElection).clone().retain((k,v) => !ws.map(_._1).contains(k)) // excluding winners that are already identified in the while-loop
-    result.addTotalsToHistory(totals)
-    println("totals " + totals)
-    if (quotaReached(totals, result.getQuota) ) {
-      newws = returnNewWinners(totals, result.getQuota) // sorted!
+    val ex = exclude(newElectionWithoutFractionInTotals, step._1, Some(step._2), Some(newws.map(x => x._1)))
+    newElection = ex._1
+    exhaustedBallots = ex._2
+    val oldtotals = computeTotals(newElection)
+    newElectionWithoutFractionInTotals = loseFraction(newElection) // perhaps it is better  to get rid of newws in a separate function
+    val newtotals = computeTotals(newElectionWithoutFractionInTotals)
+    val totalsWithoutNewWinners = newtotals.clone().retain((k,v) => !ws.map(_._1).contains(k)) // excluding winners that are already identified in the while-loop
+    result.addTotalsToHistory(totalsWithoutNewWinners)
+    println("totals " + totalsWithoutNewWinners)
+    if (quotaReached(totalsWithoutNewWinners, result.getQuota) ) {
+      newws = returnNewWinners(totalsWithoutNewWinners, result.getQuota) // sorted!
       println("New winners as a result of the current partial exclusion: " + newws)
-      result.addPendingWinners(newws.toList, Some(extractMarkings(newElection))) 
+      result.addPendingWinners(newws.toList, Some(extractMarkings(newElectionWithoutFractionInTotals))) 
       ws = ws ::: newws // check that the order is correct here!!!
-      report.newCount(Exclusion, Some(candidate), Some(newElection), Some(totals), Some(newws))
+      //------------ Reporting ------------------------------------------
+      report.newCount(Exclusion, Some(candidate), Some(newElectionWithoutFractionInTotals), Some(newtotals), Some(newws), Some(exhaustedBallots))
     }
-    else report.newCount(Exclusion, Some(candidate), Some(newElection), Some(totals), None)
-    
+    //------------ Reporting ------------------------------------------
+    else report.newCount(Exclusion, Some(candidate), Some(newElectionWithoutFractionInTotals), Some(totalsWithoutNewWinners), None, Some(exhaustedBallots))
+    report.setLossByFraction(oldtotals, newtotals)
+    //report.setIgnoredBallots(List())
    }
   // TODO  distribute remaining votes
   // if (vacanciesFilled(ws.length, numVacancies)) { 
   // }
    var dws:  List[(Candidate, Rational)]  = List()
    if (ws.nonEmpty) {
-     val res = surplusesDistribution(newElection, numVacancies - ws.length)
-     newElection = res._1
+     val res = surplusesDistribution(newElectionWithoutFractionInTotals, numVacancies - ws.length)
+     newElectionWithoutFractionInTotals = res._1
      dws = res._2
    }
    
-   (newElection, ws:::dws)
+   (newElectionWithoutFractionInTotals, ws:::dws)
  }
   
  
