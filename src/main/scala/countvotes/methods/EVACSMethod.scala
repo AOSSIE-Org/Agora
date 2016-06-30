@@ -8,6 +8,7 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
  with NoFractionInQuota
  with NewWinnersOrderedByTotals[ACTBallot]
  with TransferValueWithDenominatorWithNumOfMarkedContinuingBallots
+ //with ACTScrutinyWithAllContinuingBallotsInSurplusDistribution //
  with ACTSurplusDistribution
  with ACTSurplusDistributionTieResolution
  with ACTFractionLoss
@@ -55,6 +56,10 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
 	//			  (void *)(CAND_PENDING|CAND_ELECTED))
 	 //      != e->electorate->num_seats) {
    if (ccands.length == numVacancies){
+     var ws: List[(Candidate,Rational)] = List()
+     for (c <- ccands) ws = (c, totals(c))::ws
+     report.newCount(VictoryWithoutQuota, None, None, None, Some(ws), None)
+     report.setLossByFractionToZero
      for (c <- ccands) yield (c, totals(c))
    }
    else {  
