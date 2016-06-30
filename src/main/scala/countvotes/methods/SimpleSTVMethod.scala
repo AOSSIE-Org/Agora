@@ -31,7 +31,7 @@ object SimpleSTVMethod extends GenericSTVMethod[WeightedBallot]
    result.addTotalsToHistory(totals) 
  
    report.setCandidates(getCandidates(election))
-   report.newCount(FirstCount, None, Some(election), Some(totals), None, None)
+   report.newCount(Input, None, Some(election), Some(totals), None, None)
    
    report.setWinners(computeWinners(election, numVacancies))   
    

@@ -1,3 +1,5 @@
+
+
 package countvotes.structures
 
 import java.io._
@@ -31,6 +33,9 @@ import collection.mutable.{HashMap => Map}
       
       var sumoldtotals = sumTotals(oldtotals)
       var sumnewtotals = sumTotals(newtotals)
+      
+      //println("sumoldtotals " + sumoldtotals)
+      //println("sumnewtotals " + sumnewtotals)
       
       countHistory.head.setLossByFraction(sumoldtotals-sumnewtotals)
     }
@@ -131,10 +136,10 @@ import collection.mutable.{HashMap => Map}
     val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)))
     
     val separator = ","
-    val order = candidates
+   // val order = candidates
     
     // order of table headings in ACT Brundabella 2012
-    /*  val order = List(new Candidate("WALL Andrew"), 
+      val order = List(new Candidate("WALL Andrew"), 
                       new Candidate("SMYTH Brendan"), 
                       new Candidate("LAWDER Nicole"), 
                       new Candidate("JEFFERY Val"), 
@@ -155,12 +160,20 @@ import collection.mutable.{HashMap => Map}
                       new Candidate("GIBBONS Mark"),
                       new Candidate("LINDFIELD Michael"))
                   
-                 */
+                 
     
     writer.write( "Count" + separator) 
     var countnum = -1
     order.foreach { c => writer.write( c + separator) }
-    writer.write("Initiator" + separator + "Action"  + separator + "Winners" + separator  + "Loss by Fraction" +  separator + "N Exhausted Ballots" + separator + "N Ignored Ballots" + "\n") 
+    writer.write("Initiator" + separator + 
+                 "Action"  + separator + 
+                 "Winners" + separator  + 
+                 "~ Loss by Fraction" + separator + 
+                 "N Exhausted Ballots" + separator + 
+                 "~ Exhausted Votes" + separator + 
+                 "N Ignored Ballots" + separator +
+                 "~ Ignored Votes" 
+                 + "\n") 
     
     for (count <- countHistory.reverse ){
           
@@ -187,16 +200,27 @@ import collection.mutable.{HashMap => Map}
       
       val exhaustedBallots = count.getExhaustedBallots
       val ignoredBallots = count.getIgnoredBallots
+      
+      
      
       var exhhaustedandignored: String = ""
       exhaustedBallots match {
         case Some (eB) => 
-          exhhaustedandignored +=   eB.size + separator 
+          var totalweighteB: Rational = 0
+          for (b <- eB) {
+           totalweighteB += b.weight
+          }
+         exhhaustedandignored +=   eB.size + separator + totalweighteB.toInt + separator
         case None =>
           exhhaustedandignored +=   " " + separator 
       }
      ignoredBallots match {
-        case Some (iB) => exhhaustedandignored += iB.size
+        case Some (iB) => 
+          var totalweightiB: Rational = 0
+          for (b <- iB) {
+           totalweightiB += b.weight
+          }
+        exhhaustedandignored += iB.size + separator + totalweightiB.toInt
         case None => 
      }
           
@@ -215,3 +239,4 @@ import collection.mutable.{HashMap => Map}
        
       
   }
+

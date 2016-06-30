@@ -28,7 +28,7 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
    result.addTotalsToHistory(totals) 
  
    report.setCandidates(getCandidates(election))
-   report.newCount(FirstCount, None, Some(election), Some(totals), None, None)
+   report.newCount(Input, None, Some(election), Some(totals), None, None)
    report.setLossByFractionToZero
    
    report.setWinners(computeWinners(election, numVacancies))   
@@ -152,25 +152,25 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
     val tv = computeTransferValue(surplus, election, pendingWinners, winner, markings) 
     println("tv = " + tv)
         
-    val (newElection, exhaustedBallots, ignoredBallots) = distributeSurplusVotes(election, winner, ctotal, markings, pendingWinners, tv)    
+    val (newElection, exhaustedBallots, ignoredBallots) = distributeSurplusVotes(election, winner, ctotal, markings, pendingWinners, tv)  
     val newElectionWithoutFractionInTotals = loseFraction(newElection)
            
-    val newtotals = computeTotals(newElectionWithoutFractionInTotals)
-    val newtotalswithoutpendingwinners = newtotals.clone().retain((k,v) => !pendingWinners.contains(k)) // excluding pending winners
+    val newtotalsWithoutFraction = computeTotals(newElectionWithoutFractionInTotals)
+    val newtotalsWithoutFractionWithoutpendingwinners = newtotalsWithoutFraction.clone().retain((k,v) => !pendingWinners.contains(k)) 
     
     result.removePendingWinner(winner)
     
-    result.addTotalsToHistory(newtotalswithoutpendingwinners)
+    result.addTotalsToHistory(newtotalsWithoutFractionWithoutpendingwinners)
     var ws:  List[(Candidate,Rational)] = List()
-    if (quotaReached(newtotalswithoutpendingwinners, result.getQuota)){
-     ws = returnNewWinners(newtotalswithoutpendingwinners, result.getQuota) // sorted!
+    if (quotaReached(newtotalsWithoutFractionWithoutpendingwinners, result.getQuota)){
+     ws = returnNewWinners(newtotalsWithoutFractionWithoutpendingwinners, result.getQuota) // sorted for further surplus distribution!
      result.addPendingWinners(ws.toList, Some(extractMarkings(newElection))) 
     }
     
     //------------ Reporting ------------------------------------------
-    if (ws.nonEmpty) report.newCount(SurplusDistribution, Some(winner), Some(newElectionWithoutFractionInTotals), Some(newtotals), Some(ws), Some(exhaustedBallots))
-    else report.newCount(SurplusDistribution, Some(winner), Some(newElectionWithoutFractionInTotals), Some(newtotals), None, Some(exhaustedBallots))
-    report.setLossByFraction(computeTotals(newElection), newtotals)
+    if (ws.nonEmpty) report.newCount(SurplusDistribution, Some(winner), Some(newElectionWithoutFractionInTotals), Some(newtotalsWithoutFraction), Some(ws), Some(exhaustedBallots))
+    else report.newCount(SurplusDistribution, Some(winner), Some(newElectionWithoutFractionInTotals), Some(newtotalsWithoutFraction), None, Some(exhaustedBallots))
+    report.setLossByFraction(computeTotals(newElection), newtotalsWithoutFraction)
     ignoredBallots match { // ballots ignored because they don't belong to the last parcel of the winner
       case Some(ib) => report.setIgnoredBallots(ib)
       case None =>

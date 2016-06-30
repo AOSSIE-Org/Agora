@@ -23,7 +23,7 @@ package object structures {
   case object Exclusion extends Actions
   case object SurplusDistribution extends Actions
   case object ExactWinner extends Actions
-  case object FirstCount extends Actions
+  case object Input extends Actions
   case object VictoryWithoutQuota extends Actions
   
   

@@ -65,6 +65,5 @@ EVACS:
 
 GENERAL:
  
-1) Output the scrutiny as a table
-2) Optimize filtering pending winners (can be done once outside functions exclude and distributesurplus)
+1) Optimize filtering pending winners (can be done once outside functions exclude and distributesurplus)
 
