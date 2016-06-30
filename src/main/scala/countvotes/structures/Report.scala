@@ -136,10 +136,10 @@ import collection.mutable.{HashMap => Map}
     val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)))
     
     val separator = ","
-   // val order = candidates
+    val order = candidates
     
     // order of table headings in ACT Brundabella 2012
-      val order = List(new Candidate("WALL Andrew"), 
+    /*  val order = List(new Candidate("WALL Andrew"), 
                       new Candidate("SMYTH Brendan"), 
                       new Candidate("LAWDER Nicole"), 
                       new Candidate("JEFFERY Val"), 
@@ -160,7 +160,7 @@ import collection.mutable.{HashMap => Map}
                       new Candidate("GIBBONS Mark"),
                       new Candidate("LINDFIELD Michael"))
                   
-                 
+          */       
     
     writer.write( "Count" + separator) 
     var countnum = -1
