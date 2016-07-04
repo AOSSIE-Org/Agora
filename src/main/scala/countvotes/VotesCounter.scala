@@ -71,6 +71,11 @@ object Main {
         r.writeDistributionOfPreferences(reportfile)
         r.writeWinners(winnersfile)
        }
+       case "EVACSnoLP" =>  {
+        var r = EVACSnoLPMethod.runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
+        r.writeDistributionOfPreferences(reportfile)
+        r.writeWinners(winnersfile)
+       }
        case "Simple" =>  {
         var r = SimpleSTVMethod.runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
         println(" Scrutiny table for method Simple is not implemented yet.")

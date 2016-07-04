@@ -55,6 +55,10 @@ run -d /home/users/u1017108/ownCloud/Code/files/wikipedia/ -f wikipedia.txt -a S
 
 
 
+run -d /home/users/u1017108/Code/PreferenceData/MODIFIEDACT/2012/EVACS/ -f Modified_Preferences_ACT_Brindabella_2012.txt -a EVACS -n 5
+
+
+run -d /home/users/u1017108/ownCloud/Code/examples/modify/ -f Modified_simpl.txt -a EVACS -n 3
 -----------------------------------------------------------------
 TODO:
 -----------------------------------------------------------------

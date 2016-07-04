@@ -1,14 +1,21 @@
+//
+// EXACTLY LIKE EVACS METHOD
+// EXCEPT TWO FOLLOWING TRAITS: 
+// TransferValueWithDenominatorWithNumOfContinuingBallots
+// ACTScrutinyWithAllContinuingBallotsInSurplusDistribution
+//
+//
 package countvotes.methods
 
 import countvotes.structures._
 import countvotes.algorithms._
 
-object EVACSMethod extends GenericSTVMethod[ACTBallot] 
+object EVACSnoLPMethod extends GenericSTVMethod[ACTBallot] 
  with DroopQuota
  with NoFractionInQuota
  with NewWinnersOrderedByTotals[ACTBallot]
- with TransferValueWithDenominatorWithNumOfMarkedContinuingBallots
- with ACTSurplusDistribution
+ with TransferValueWithDenominatorWithNumOfContinuingBallots // instead of TransferValueWithDenominatorWithNumOfMarkedContinuingBallots
+ with ACTScrutinyWithAllContinuingBallotsInSurplusDistribution // instead  ACTSurplusDistribution
  with ACTSurplusDistributionTieResolution
  with ACTFractionLoss
  with ACTExclusion
