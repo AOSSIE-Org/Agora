@@ -138,7 +138,7 @@ import collection.mutable.{HashMap => Map}
     val separator = ","
     val order = candidates
     
-    // order of table headings in ACT Brundabella 2012
+    ///order of table headings in ACT Brundabella 2012
     /* val order = List(new Candidate("WALL Andrew"), 
                       new Candidate("SMYTH Brendan"), 
                       new Candidate("LAWDER Nicole"), 
@@ -159,9 +159,12 @@ import collection.mutable.{HashMap => Map}
                       new Candidate("PEARCE Calvin"),
                       new Candidate("GIBBONS Mark"),
                       new Candidate("LINDFIELD Michael"))
+                      * 
+                      */
          
-         *          
-         */
+                  
+                  
+         
                 
     
     writer.write( "Count" + separator) 
@@ -218,6 +221,20 @@ import collection.mutable.{HashMap => Map}
       }
      ignoredBallots match {
         case Some (iB) => 
+          
+          val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file + "IgnoredBallots_Count" + countnum + ".txt")))      
+           //writer.write(result.getWinners.toString())
+          
+          var s = ""
+          
+          for (b <- iB) {
+            s += b.id + " " + b.preferences + " " + b.weight + "\n" 
+          }
+          
+           writer.write(s)
+           writer.close()
+          
+          
           var totalweightiB: Rational = 0
           for (b <- iB) {
            totalweightiB += b.weight

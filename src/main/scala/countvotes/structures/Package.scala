@@ -15,8 +15,7 @@ package object structures {
   object Election {
     implicit def weightedElectionToACTElection(we: Election[WeightedBallot]): Election[ACTBallot] = {
       for (b <- we) yield ACTBallot.fromWeightedBallot(b) // b // ACTBallot.fromWeightedBallot(b)
-    }
-    
+    } 
   }
        
   abstract sealed class Actions

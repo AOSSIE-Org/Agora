@@ -25,6 +25,20 @@ trait TransferValueWithDenominatorWithNumOfMarkedContinuingBallots extends Gener
   }
 }
 
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+trait TransferValueWithDenominatorWithNumOfContinuingBallots extends GenericSTVMethod[ACTBallot]{  
+  def computeTransferValue(surplus: Rational, election: Election[ACTBallot], pendingWinners:  List[Candidate], candidate: Candidate, markings: Option[Set[Int]]): Rational = {
+    var num = 0
+      for (b <- election if !b.preferences.isEmpty) { 
+        if ( b.preferences.head == candidate  && !b.preferences.tail.diff(pendingWinners).isEmpty) {num = num + 1}
+      }
+      // println("Denominator: " + num)
+      surplus/num
+  }
+}
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  
 // TV = surplus /  total of continuing ballot papers (i.e. with further continuing preferences)
