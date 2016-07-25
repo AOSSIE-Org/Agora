@@ -162,6 +162,7 @@ import collection.mutable.{HashMap => Map}
                       * 
                       */
          
+
      val order = List(new Candidate("Erol Francis BYRNE"), 
                       new Candidate("Thelma JANES"),
                       new Candidate("Graham JENSEN"),
@@ -184,8 +185,7 @@ import collection.mutable.{HashMap => Map}
                       new Candidate("Lance MUIR"), 
                       new Candidate("Stephanie ELLIOTT"))
                      
-                  
-         
+
                 
     
     writer.write( "Count" + separator) 
