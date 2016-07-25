@@ -47,10 +47,7 @@ object Main {
       c.copy(nvacancies = v) 
     } text("set number of vacancies  <num>\n") valueName("<num>")
   }
-  
-  
-  
-  
+
   
   def main(args: Array[String]): Unit = {
     
@@ -69,7 +66,9 @@ object Main {
        case "EVACS" =>  {
         var r = EVACSMethod.runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
         r.writeDistributionOfPreferences(reportfile)
+        println("The scrutiny was recorded to " + reportfile)
         r.writeWinners(winnersfile)
+        println("The winners were recorded to " + winnersfile)
        }
        case "EVACSnoLP" =>  {
         var r = EVACSnoLPMethod.runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
@@ -84,7 +83,7 @@ object Main {
        case "Test" =>  {
          Test.testSDResolution
        }
-       case "" =>  println("Please, specify which algorithm should be used. Only options -a EVACS and -a Simple are currently available.")
+       case "" =>  println("Please, specify which algorithm should be used. Only option -a EVACS is currently available.")
      }
     
    

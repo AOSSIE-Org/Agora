@@ -15,7 +15,7 @@ import scala.util.Sorting
 import java.io._
 
 
-abstract class GenericSTVMethod[B <: Ballot with Weight] {
+abstract class STVMethod[B <: Ballot with Weight] extends VoteCountingMethod[B] {
   //type E = Election[B]
   
   
@@ -45,26 +45,6 @@ abstract class GenericSTVMethod[B <: Ballot with Weight] {
 
   def removeWinnerWithoutSurplusFromElection(election: Election[B], winner: Candidate): Election[B]
 
-  
- def printElection(election: Election[B]) = {
-    print("\n")
-    for (e <- election.sortBy(x => x.id)) {
-      var pr = ""
-      for (p <- e.preferences) pr = pr + p + " > "
-      println(e.id + "   " + pr.dropRight(2) + "  " + e.weight)
-    }
-    print("\n")
- }
- 
-  
- def getCandidates(election: Election[B]): List[Candidate] = {
-   var set = new HashSet[Candidate]()
-   for (b <- election) {
-     for (c <- b.preferences)
-       if (!set.exists(n => n == c) )  set = set + c 
-   }
-   set.toList
- }
   
   
   def computeTotals(election: Election[WeightedBallot]): Map[Candidate, Rational] = {
@@ -104,8 +84,6 @@ abstract class GenericSTVMethod[B <: Ballot with Weight] {
      }
   }
   
-  def vacanciesFilled(numWinners:Int, numVacancies:Int): Boolean = 
-    numWinners >= numVacancies
     
     
   def ballotsAreContinuing(c: Candidate, election: Election[B], pendingWinners:  List[Candidate]): Boolean = {

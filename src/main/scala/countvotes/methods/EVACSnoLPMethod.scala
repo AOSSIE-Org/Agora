@@ -10,7 +10,7 @@ package countvotes.methods
 import countvotes.structures._
 import countvotes.algorithms._
 
-object EVACSnoLPMethod extends GenericSTVMethod[ACTBallot] 
+object EVACSnoLPMethod extends STVMethod[ACTBallot] 
  with DroopQuota
  with NoFractionInQuota
  with NewWinnersOrderedByTotals[ACTBallot]

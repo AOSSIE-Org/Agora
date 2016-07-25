@@ -6,7 +6,7 @@ import collection.mutable.{HashMap => Map}
 import java.io._
 
 
-trait ACTExactWinnerRemoval extends GenericSTVMethod[ACTBallot]{
+trait ACTExactWinnerRemoval extends STVMethod[ACTBallot]{
   
   
   def removeWinnerWithoutSurplusFromElection(election: Election[ACTBallot], winner: Candidate): Election[ACTBallot] = {
@@ -20,7 +20,7 @@ trait ACTExactWinnerRemoval extends GenericSTVMethod[ACTBallot]{
   
 }
 
-trait ExactWinnerRemoval extends GenericSTVMethod[WeightedBallot]{
+trait ExactWinnerRemoval extends STVMethod[WeightedBallot]{
   
   
   def removeWinnerWithoutSurplusFromElection(election: Election[WeightedBallot], winner: Candidate): Election[WeightedBallot] = {

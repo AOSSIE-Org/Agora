@@ -35,36 +35,44 @@ Example:
 Examples of TERMINAL COMMANDS to run the code:
 -----------------------------------------------------------------
 
-sbt -J-Xmx4G -J-Xms4G 
+sbt -J-Xmx12G -J-Xms12G  
 
-run -d /home/users/u1017108/Code/PreferenceData/ACT/2012/ -f Preferences_ACT_Brindabella_2012.txt -a EVACS -n 5
-run -d /home/users/u1017108/Code/PreferenceData/ACT/2012/ -f Preferences_ACT_Ginninderra_2012.txt -a EVACS -n 5
-run -d /home/users/u1017108/Code/PreferenceData/ACT/2012/ -f Preferences_ACT_Molonglo_2012.txt -a EVACS -n 7
+run -d /home/users/u1017108/Code/PreferenceData/ACT/2012/ -f Preferences_ACT_Brindabella_2012.txt -a EVACS -n 5  
+run -d /home/users/u1017108/Code/PreferenceData/ACT/2012/ -f Preferences_ACT_Ginninderra_2012.txt -a EVACS -n 5  
+run -d /home/users/u1017108/Code/PreferenceData/ACT/2012/ -f Preferences_ACT_Molonglo_2012.txt -a EVACS -n 7  
 
-run -d /home/users/u1017108/Code/PreferenceData/ACT/2008/ -f Preferences_ACT_Brindabella_2008.txt -a EVACS -n 5
-run -d /home/users/u1017108/Code/PreferenceData/ACT/2008/ -f Preferences_ACT_Ginninderra_2008.txt -a EVACS -n 5
-run -d /home/users/u1017108/Code/PreferenceData/ACT/2008/ -f Preferences_ACT_Molonglo_2008.txt -a EVACS -n 7
+run -d /home/users/u1017108/Code/PreferenceData/ACT/2008/ -f Preferences_ACT_Brindabella_2008.txt -a EVACS -n 5  
+run -d /home/users/u1017108/Code/PreferenceData/ACT/2008/ -f Preferences_ACT_Ginninderra_2008.txt -a EVACS -n 5  
+run -d /home/users/u1017108/Code/PreferenceData/ACT/2008/ -f Preferences_ACT_Molonglo_2008.txt -a EVACS -n 7  
 
-run -d /home/users/u1017108/Code/PreferenceData/ACT/2012/ -f Preferences_ACT_Brindabella_2012.txt -a Simple -n 5
-run -d /home/users/u1017108/Code/PreferenceData/ACT/2012/ -f Preferences_ACT_Ginninderra_2012.txt -a Simple -n 5
-run -d /home/users/u1017108/Code/PreferenceData/ACT/2012/ -f Preferences_ACT_Molonglo_2012.txt -a Simple -n 7
-
-
-run -d /home/users/u1017108/ownCloud/Code/files/wikipedia/ -f wikipedia.txt -a EVACS -n 3
-run -d /home/users/u1017108/ownCloud/Code/files/wikipedia/ -f wikipedia.txt -a Simple -n 3
+run -d /home/users/u1017108/Code/PreferenceData/ACT/2012/ -f Preferences_ACT_Brindabella_2012.txt -a Simple -n 5  
+run -d /home/users/u1017108/Code/PreferenceData/ACT/2012/ -f Preferences_ACT_Ginninderra_2012.txt -a Simple -n 5  
+run -d /home/users/u1017108/Code/PreferenceData/ACT/2012/ -f Preferences_ACT_Molonglo_2012.txt -a Simple -n 7  
 
 
-
-run -d /home/users/u1017108/Code/PreferenceData/MODIFIEDACT/2012/EVACS/ -f Modified_Preferences_ACT_Brindabella_2012.txt -a EVACS -n 5
-
-
-run -d /home/users/u1017108/ownCloud/Code/examples/modify/ -f Modified_simpl.txt -a EVACS -n 3
+run -d /home/users/u1017108/ownCloud/Code/files/wikipedia/ -f wikipedia.txt -a EVACS -n 3  
+run -d /home/users/u1017108/ownCloud/Code/files/wikipedia/ -f wikipedia.txt -a Simple -n 3  
 
 
-run -d /home/users/u1017108/ownCloud/Research/SocialChoice/PreferenceData/ACT/2004/ -f Preferences_ACT2004_Brindabella.txt -a EVACS -n 5
+
+run -d /home/users/u1017108/ownCloud/Code/PreferenceData/ACT/2012/ -f Preferences_ACT_Brindabella_2012.txt -a EVACS -n 5  
+
+run -d /home/users/u1017108/Code/PreferenceData/MODIFIEDACT/2012/EVACS/ -f Modified_Preferences_ACT_Brindabella_2012.txt -a EVACS -n 5  
 
 
-run -d /home/users/u1017108/ownCloud/Research/SocialChoice/PreferenceData/ACT/2012/ -f  Preferences_ACT_Brindabella_2012.txt -a EVACS -n 5
+run -d /home/users/u1017108/ownCloud/Code/examples/modify/ -f Modified_simpl.txt -a EVACS -n 3  
+
+
+run -d /home/users/u1017108/ownCloud/Research/SocialChoice/PreferenceData/ACT/2004/ -f Preferences_ACT2004_Brindabella.txt -a EVACS -n 5  
+run -d /home/users/u1017108/ownCloud/Research/SocialChoice/PreferenceData/ACT/2012/ -f  Preferences_ACT_Brindabella_2012.txt -a EVACS -n 5  
+
+
+run -d /home/users/u1017108/ownCloud/Research/SocialChoice/PreferenceData/temp/ -f test.txt -a Simple -n 2  
+
+-----------------------------------------------------------------
+
+java -jar countvotes-assembly-1.1.jar -d /home/users/u1017108/ownCloud/Research/SocialChoice/PreferenceData/ACT/2004/ -f Preferences_ACT2004_Brindabella.txt -a EVACS -n 5
+
 -----------------------------------------------------------------
 TODO:
 -----------------------------------------------------------------

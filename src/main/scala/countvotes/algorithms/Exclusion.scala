@@ -5,7 +5,7 @@ import countvotes.structures._
 import countvotes.methods._
 import collection.mutable.{HashMap => Map}
 
-trait ACTExclusion extends GenericSTVMethod[ACTBallot] {
+trait ACTExclusion extends STVMethod[ACTBallot] {
  
  def exclude( election: Election[ACTBallot], candidate: Candidate, value: Option[Rational], newWinners: Option[List[Candidate]]): (Election[ACTBallot], Set[ACTBallot] ) ={
   var list: Election[ACTBallot] = Nil
@@ -36,7 +36,7 @@ trait ACTExclusion extends GenericSTVMethod[ACTBallot] {
 }
 
 
-trait SimpleExclusion extends GenericSTVMethod[WeightedBallot] {
+trait SimpleExclusion extends STVMethod[WeightedBallot] {
  
  def exclude(election: Election[WeightedBallot], candidate: Candidate, value: Option[Rational], newWinners: Option[List[Candidate]]): (Election[WeightedBallot], Set[WeightedBallot] ) = {
    var list: Election[WeightedBallot]  = Nil

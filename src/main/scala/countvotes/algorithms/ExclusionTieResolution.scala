@@ -24,7 +24,7 @@ trait UnfairExclusionTieResolutuim {
 }
 
 // Todo: Count history is required here....
-trait ACTExclusionTieResolution extends GenericSTVMethod[ACTBallot] with ExclusionTieResolution{
+trait ACTExclusionTieResolution extends STVMethod[ACTBallot] with ExclusionTieResolution{
   
   def recFindSmallest(equaltotals: Map[Candidate, Rational], totalshistory: List[Map[Candidate, Rational]]): Map[Candidate, Rational] = {
       

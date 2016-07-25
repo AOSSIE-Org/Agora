@@ -29,7 +29,7 @@ import java.io._
 // i.e.:
 // if (tv > weight_i) then weight_(i+1) = weight_i else weight_(i+1) = tv
 //
-trait ACTSurplusDistribution extends GenericSTVMethod[ACTBallot]{
+trait ACTSurplusDistribution extends STVMethod[ACTBallot]{
   
   
  def distributeSurplusVotes(election: Election[ACTBallot], candidate: Candidate, total:Rational, markings: Option[Set[Int]], pendingWinners: List[Candidate], transferValue: Rational):  (Election[ACTBallot], Set[ACTBallot], Option[Election[ACTBallot]]) = {  
@@ -72,7 +72,7 @@ trait ACTSurplusDistribution extends GenericSTVMethod[ACTBallot]{
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-trait ACTScrutinyWithAllContinuingBallotsInSurplusDistribution extends GenericSTVMethod[ACTBallot]{
+trait ACTScrutinyWithAllContinuingBallotsInSurplusDistribution extends STVMethod[ACTBallot]{
 
  def distributeSurplusVotes(election: Election[ACTBallot], candidate: Candidate, total:Rational, markings: Option[Set[Int]], pendingWinners: List[Candidate], transferValue: Rational):  (Election[ACTBallot], Set[ACTBallot], Option[Election[ACTBallot]]) = {  
    
@@ -105,7 +105,7 @@ trait ACTScrutinyWithAllContinuingBallotsInSurplusDistribution extends GenericST
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-trait ScrutinyWithAllContinuingBallotsInSurplusDistribution extends GenericSTVMethod[WeightedBallot]{
+trait ScrutinyWithAllContinuingBallotsInSurplusDistribution extends STVMethod[WeightedBallot]{
 
  def distributeSurplusVotes(election: Election[WeightedBallot], candidate: Candidate, total:Rational, markings: Option[Set[Int]], pendingWinners: List[Candidate], transferValue: Rational):  (Election[WeightedBallot], Set[WeightedBallot], Option[Election[WeightedBallot]]) = {  
    
@@ -132,7 +132,7 @@ trait ScrutinyWithAllContinuingBallotsInSurplusDistribution extends GenericSTVMe
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-trait ScrutinyWithAllBallotsInSurplusDistribution extends GenericSTVMethod[WeightedBallot]{
+trait ScrutinyWithAllBallotsInSurplusDistribution extends STVMethod[WeightedBallot]{
 
  def distributeSurplusVotes(election: Election[WeightedBallot], candidate: Candidate, total:Rational, markings: Option[Set[Int]], pendingWinners: List[Candidate], transferValue: Rational):  (Election[WeightedBallot], Set[WeightedBallot], Option[Election[WeightedBallot]]) = {  
    

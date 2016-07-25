@@ -136,7 +136,7 @@ import collection.mutable.{HashMap => Map}
     val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)))
     
     val separator = ","
-    val order = candidates
+   // val order = candidates
     
     ///order of table headings in ACT Brundabella 2012
     /* val order = List(new Candidate("WALL Andrew"), 
@@ -162,7 +162,28 @@ import collection.mutable.{HashMap => Map}
                       * 
                       */
          
-                  
+     val order = List(new Candidate("Erol Francis BYRNE"), 
+                      new Candidate("Thelma JANES"),
+                      new Candidate("Graham JENSEN"),
+                      new Candidate("Kathryn KELLY"),
+                      new Candidate("Brendan SMYTH"), 
+                      new Candidate("Karen SCHILLING"), 
+                      new Candidate("Megan PURCELL"), 
+                      new Candidate("Steve DOSZPOT"), 
+                      new Candidate("Steve PRATT"), 
+                      new Candidate("Marc EMERSON"),
+                      new Candidate("Rowena BEW"), 
+                      new Candidate("David GARRETT"), 
+                      new Candidate("Matthew HARDING"), 
+                      new Candidate("John HARGREAVES"), 
+                      new Candidate("Karin MacDONALD"), 
+                      new Candidate("Mick GENTLEMAN"), 
+                      new Candidate("Paschal LEAHY"), 
+                      new Candidate("Rebecca LOGUE"), 
+                      new Candidate("Burl DOBLE"), 
+                      new Candidate("Lance MUIR"), 
+                      new Candidate("Stephanie ELLIOTT"))
+                     
                   
          
                 

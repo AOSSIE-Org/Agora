@@ -3,7 +3,7 @@ package countvotes.methods
 import countvotes.structures._
 import countvotes.algorithms._
 
-object EVACSMethod extends GenericSTVMethod[ACTBallot] 
+object EVACSMethod extends STVMethod[ACTBallot] 
  with DroopQuota
  with NoFractionInQuota
  with NewWinnersOrderedByTotals[ACTBallot]
@@ -15,10 +15,30 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
  with ACTExclusionTieResolution 
  with ACTExactWinnerRemoval
  {  
+
+  def filterBallotsWithFirstPreferences(election: Election[ACTBallot], preferences: List[Candidate]): Election[ACTBallot] = {
+    var ballots:  Election[ACTBallot] = List()
+    for (b <- election) {
+      if (b.preferences.take(preferences.length) == preferences) ballots = b::ballots
+    }
+    ballots
+  }
   
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   def runScrutiny(election: Election[ACTBallot], numVacancies: Int):  Report[ACTBallot] = {  // all ballots of e are marked when the function is called
   
+   //val c1 = new Candidate("Brendan SMYTH", None, None)
+   //val c2 = new Candidate("Matthew HARDING", None, None)
+   //val ballts = filterBallotsWithFirstPreferences(election, c1::c2::List() )
+   
+   //println("Number of ballots with Brendan SMYTH > Matthey HARDING " + ballts.length)
+   
+   //val c3 = new Candidate("Brendan SMYTH", None, None)
+   //val c4 = new Candidate("David GARRETT", None, None)
+   //val ballts2 = filterBallotsWithFirstPreferences(election, c3::c4::List() )
+   
+   //println("Number of ballots with Brendan SMYTH > David GARRETT " + ballts2.length)
+    
    val quota = cutQuotaFraction(computeQuota(election.length, numVacancies))
    println("Number of ballots:" + election.length)
    println("Quota = " + quota)
@@ -55,6 +75,7 @@ object EVACSMethod extends GenericSTVMethod[ACTBallot]
    // while (for_each_candidate(e->candidates, &check_status,
 	//			  (void *)(CAND_PENDING|CAND_ELECTED))
 	 //      != e->electorate->num_seats) {
+   // That is why we also check only equality here
    if (ccands.length == numVacancies){
      var ws: List[(Candidate,Rational)] = List()
      for (c <- ccands) ws = (c, totals(c))::ws

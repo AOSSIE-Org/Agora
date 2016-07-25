@@ -13,7 +13,7 @@ trait SurplusDistributionTieResolution {
 }
 
 
-trait ACTSurplusDistributionTieResolution extends GenericSTVMethod[ACTBallot] with SurplusDistributionTieResolution{
+trait ACTSurplusDistributionTieResolution extends STVMethod[ACTBallot] with SurplusDistributionTieResolution{
   
  def recOrderIdentical(equaltotals: List[Candidate], totalshistory: List[Map[Candidate, Rational]]): List[Candidate] = {
       
@@ -64,7 +64,7 @@ trait ACTSurplusDistributionTieResolution extends GenericSTVMethod[ACTBallot] wi
 }
 
 
-trait SimpleSurplusDistributionTieResolution extends GenericSTVMethod[WeightedBallot] with SurplusDistributionTieResolution{
+trait SimpleSurplusDistributionTieResolution extends STVMethod[WeightedBallot] with SurplusDistributionTieResolution{
   def resolveSurpluseDistributionTie(equaltotals: Map[Candidate, Rational]): List[(Candidate, Rational)] = {
     equaltotals.toList.sortBy(x => x._2).reverse // >
   }
