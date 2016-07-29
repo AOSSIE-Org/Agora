@@ -1,11 +1,11 @@
-This software implements some STV algorithms in a recursive way.
-Common components are implemented as traits.
+This software implements some STV algorithms in a recursive way.  
+Common components are implemented as traits.  
 
 
-Currently the following STV methods are implemented:
+Currently the following STV methods are implemented:  
 
-1) EVACSMethod (imitation of ACT's EVACS system)
-2) SimpleSTVMetod (a simple STV counting algorithm)
+1) EVACSMethod (imitation of ACT's EVACS system)  
+2) SimpleSTVMetod (a simple STV counting algorithm)  
 
 -----------------------------------------------------------------
 REMARKS:
@@ -17,23 +17,23 @@ When EVACSMethod is run on real data the computation is slow because of ACTFract
 INPUT FILE FORMAT:
 -----------------------------------------------------------------
 
-id1 weight preference1 > ... > preferenceN
-id2 weight preference1 > ... > preferenceM
-id3 weight preference1 > ... > preferenceK
+id1 weight preference1 > ... > preferenceN  
+id2 weight preference1 > ... > preferenceM  
+id3 weight preference1 > ... > preferenceK  
 
-weight has to be a rational number.
-In the beginning of scrutiny weight is normally equal to 1/1.
+weight has to be a rational number.  
+In the beginning of scrutiny weight is normally equal to 1/1.  
 
-Example:
+Example:  
 
-1 1/1 A
-2 1/1 A > B
-3 1/1 B > A > C
-4 1/1 C
+1 1/1 A  
+2 1/1 A > B  
+3 1/1 B > A > C  
+4 1/1 C  
 
------------------------------------------------------------------
-Examples of TERMINAL COMMANDS to run the code:
------------------------------------------------------------------
+-----------------------------------------------------------------   
+Examples of TERMINAL COMMANDS to run the code:  
+-----------------------------------------------------------------  
 
 sbt -J-Xmx12G -J-Xms12G  
 
@@ -85,4 +85,7 @@ EVACS:
 GENERAL:
  
 1) Optimize filtering pending winners (can be done once outside functions exclude and distributesurplus)
+
+BUG:
+Candidates that do not appear as a first preference in one of the ballots never win by algorithm Simple
 
