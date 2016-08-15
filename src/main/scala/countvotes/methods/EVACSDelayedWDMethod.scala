@@ -7,7 +7,7 @@ object EVACSDelayedWDMethod extends STVMethod[ACTBallot]
  with DroopQuota
  with NoFractionInQuota
  with NewWinnersOrderedByTotals[ACTBallot]
- with TransferValueWithDenominatorWithNumOfMarkedContinuingBallots
+ with TransferValueWithDenominatorWithNumOfMarkedContinuingBallotsOrOne
  with ACTSurplusDistribution
  with ACTSurplusDistributionTieResolution
  with ACTFractionLoss

@@ -8,7 +8,9 @@ import java.io._
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
+
+
+
 
 trait TransferValueWithDenominatorWithNumOfMarkedContinuingBallots extends STVMethod[ACTBallot]{  
   def computeTransferValue(surplus: Rational, election: Election[ACTBallot], pendingWinners:  List[Candidate], candidate: Candidate, markings: Option[Set[Int]]): Rational = {
@@ -29,6 +31,29 @@ trait TransferValueWithDenominatorWithNumOfMarkedContinuingBallots extends STVMe
 }
 
 
+trait TransferValueWithDenominatorWithNumOfMarkedContinuingBallotsOrOne {  
+  def computeTransferValue(surplus: Rational, election: Election[ACTBallot], pendingWinners:  List[Candidate], candidate: Candidate, markings: Option[Set[Int]]): Rational = {
+    //println("TV with denominator with the cardinality of marked non-exhausted ballots")
+    var num = 0
+     markings match {
+     case None => throw new Exception("Last parcel is undetermined.")
+     case Some(mrks) =>
+      for (b <- election if !b.preferences.isEmpty) {        
+        if ( b.preferences.head == candidate  && !b.preferences.tail.diff(pendingWinners).isEmpty  && mrks.contains(b.id)) {num = num + 1}
+      }
+    }
+    if (num == 0) 
+      println("Denominator is equal to 0 !!!!!!!!!!!!!!!!!!!!")  
+ 
+    var tv: Rational = 1
+    if (num != 0) tv = surplus/num
+    if (tv > 1) 1 else tv
+  }
+}
+
+
+
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 trait TransferValueWithDenominatorWithNumOfContinuingBallots extends STVMethod[ACTBallot]{  
@@ -41,6 +66,23 @@ trait TransferValueWithDenominatorWithNumOfContinuingBallots extends STVMethod[A
       surplus/num
   }
 }
+
+
+trait TransferValueWithDenominatorWithNumOfContinuingBallotsOrOne extends STVMethod[ACTBallot]{  
+  def computeTransferValue(surplus: Rational, election: Election[ACTBallot], pendingWinners:  List[Candidate], candidate: Candidate, markings: Option[Set[Int]]): Rational = {
+    var num = 0
+      for (b <- election if !b.preferences.isEmpty) { 
+        if ( b.preferences.head == candidate  && !b.preferences.tail.diff(pendingWinners).isEmpty) {num = num + 1}
+      }
+    if (num == 0) 
+      println("Denominator is equal to 0 !!!!!!!!!!!!!!!!!!!!")  
+ 
+    var tv: Rational = 1
+    if (num != 0) tv = surplus/num
+    if (tv > 1) 1 else tv   
+  }
+}
+
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  

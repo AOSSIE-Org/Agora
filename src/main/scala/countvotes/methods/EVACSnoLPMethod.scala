@@ -15,7 +15,7 @@ object EVACSnoLPMethod extends STVMethod[ACTBallot]
  with DroopQuota
  with NoFractionInQuota
  with NewWinnersOrderedByTotals[ACTBallot]
- with TransferValueWithDenominatorWithNumOfContinuingBallots // instead of TransferValueWithDenominatorWithNumOfMarkedContinuingBallots
+ with TransferValueWithDenominatorWithNumOfContinuingBallotsOrOne // instead of TransferValueWithDenominatorWithNumOfMarkedContinuingBallots
  with ACTScrutinyWithAllContinuingBallotsInSurplusDistribution // instead  ACTSurplusDistribution
  with ACTSurplusDistributionTieResolution
  with ACTFractionLoss
