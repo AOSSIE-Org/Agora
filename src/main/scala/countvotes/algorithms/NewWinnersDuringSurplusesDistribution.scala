@@ -17,7 +17,7 @@ trait ACTNewWinnersDuringSurplusesDistribution extends ACT{
 }
 
 trait NoNewWinnersDuringSurplusesDistribution{
-   def declareNewWinnersWhileDistributingSurpluses(totals: Map[Candidate, Rational], election:Election[ACTBallot]):  List[(Candidate,Rational)] = {
+  def declareNewWinnersWhileDistributingSurpluses(totals: Map[Candidate, Rational], election:Election[ACTBallot]):  List[(Candidate,Rational)] = {
     List()
   }
 }
