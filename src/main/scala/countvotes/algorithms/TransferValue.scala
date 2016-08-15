@@ -56,7 +56,7 @@ trait TransferValueWithDenominatorWithNumOfMarkedContinuingBallotsOrOne {
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-trait TransferValueWithDenominatorWithNumOfContinuingBallots extends STVMethod[ACTBallot]{  
+trait TransferValueWithDenominatorWithNumOfAllContinuingBallots extends STVMethod[ACTBallot]{  
   def computeTransferValue(surplus: Rational, election: Election[ACTBallot], pendingWinners:  List[Candidate], candidate: Candidate, markings: Option[Set[Int]]): Rational = {
     var num = 0
       for (b <- election if !b.preferences.isEmpty) { 
@@ -68,7 +68,7 @@ trait TransferValueWithDenominatorWithNumOfContinuingBallots extends STVMethod[A
 }
 
 
-trait TransferValueWithDenominatorWithNumOfContinuingBallotsOrOne extends STVMethod[ACTBallot]{  
+trait TransferValueWithDenominatorWithNumOfAllContinuingBallotsOrOne extends STVMethod[ACTBallot]{  
   def computeTransferValue(surplus: Rational, election: Election[ACTBallot], pendingWinners:  List[Candidate], candidate: Candidate, markings: Option[Set[Int]]): Rational = {
     var num = 0
       for (b <- election if !b.preferences.isEmpty) { 
