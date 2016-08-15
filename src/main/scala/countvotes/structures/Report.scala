@@ -132,65 +132,20 @@ import collection.mutable.{HashMap => Map}
   }
     
     
-  def writeDistributionOfPreferences(file: String) = {
+  def writeDistributionOfPreferences(file: String, order: Option[List[Candidate]]) = {
     val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)))
     
     val separator = ","
-   // val order = candidates
     
-    ///order of table headings in ACT Brundabella 2012
-    /* val order = List(new Candidate("WALL Andrew"), 
-                      new Candidate("SMYTH Brendan"), 
-                      new Candidate("LAWDER Nicole"), 
-                      new Candidate("JEFFERY Val"), 
-                      new Candidate("SESELJA Zed"), 
-                      new Candidate("BRESNAN Amanda"), 
-                      new Candidate("MURPHY Ben"), 
-                      new Candidate("DAVIS Johnathan"), 
-                      new Candidate("BURCH Joy"), 
-                      new Candidate("MAFTOUM Karl"), 
-                      new Candidate("GENTLEMAN Mick"), 
-                      new Candidate("KINNIBURGH Mike"), 
-                      new Candidate("CODY Rebecca"), 
-                      new Candidate("HENSCHKE Adam"), 
-                      new Candidate("ERWOOD Mark"), 
-                      new Candidate("DOBLE Burl"), 
-                      new Candidate("JONES-ELLIS Kieran"),
-                      new Candidate("PEARCE Calvin"),
-                      new Candidate("GIBBONS Mark"),
-                      new Candidate("LINDFIELD Michael"))
-                      * 
-                      */
-         
-
-     val order = List(new Candidate("Erol Francis BYRNE"), 
-                      new Candidate("Thelma JANES"),
-                      new Candidate("Graham JENSEN"),
-                      new Candidate("Kathryn KELLY"),
-                      new Candidate("Brendan SMYTH"), 
-                      new Candidate("Karen SCHILLING"), 
-                      new Candidate("Megan PURCELL"), 
-                      new Candidate("Steve DOSZPOT"), 
-                      new Candidate("Steve PRATT"), 
-                      new Candidate("Marc EMERSON"),
-                      new Candidate("Rowena BEW"), 
-                      new Candidate("David GARRETT"), 
-                      new Candidate("Matthew HARDING"), 
-                      new Candidate("John HARGREAVES"), 
-                      new Candidate("Karin MacDONALD"), 
-                      new Candidate("Mick GENTLEMAN"), 
-                      new Candidate("Paschal LEAHY"), 
-                      new Candidate("Rebecca LOGUE"), 
-                      new Candidate("Burl DOBLE"), 
-                      new Candidate("Lance MUIR"), 
-                      new Candidate("Stephanie ELLIOTT"))
-                     
-
-                
-    
+    var tableorder: List[Candidate] = Nil
+    order match {
+      case Some(o) =>  tableorder = o
+      case None =>  tableorder = candidates
+    }
+                                  
     writer.write( "Count" + separator) 
     var countnum = -1
-    order.foreach { c => writer.write( c + separator) }
+    tableorder.foreach { c => writer.write( c + separator) }
     writer.write("Initiator" + separator + 
                  "Action"  + separator + 
                  "Winners" + separator  + 
@@ -208,7 +163,7 @@ import collection.mutable.{HashMap => Map}
       countnum += 1
       var line: String  = countnum + separator
       
-      for (c<-order){
+      for (c<-tableorder){
         if ( count.getTotals.exists(_._1 == c)) 
           line += count.getTotals(c).numerator/count.getTotals(c).denominator + separator
          // line += count.getProgressiveTotals(c) + separator
