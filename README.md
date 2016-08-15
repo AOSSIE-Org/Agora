@@ -61,7 +61,7 @@ where
 <order> is the order of candidates in tally as appears in the Electorate Comission's tables and can be one of ACTGinninderra2004, ACTBrindabella2004, ACTGinninderra2004, ACTBrindabella2012.
 
 
-If -o is ommited, candidates are unordered..
+If -o is ommited, candidates are unordered.
 
 
 -----------------------------------------------------------------

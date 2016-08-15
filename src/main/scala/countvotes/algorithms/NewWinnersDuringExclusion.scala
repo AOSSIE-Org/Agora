@@ -21,8 +21,9 @@ trait ACTNewWinnersDuringExclusion extends ACT{
   }
 }
 
-trait NoNewWinnersDuringExclusion{
+trait NoNewWinnersDuringExclusion extends ACT{
   def declareNewWinnersWhileExcluding(candidate: Candidate, exhaustedBallots: Set[ACTBallot], newtotals: Map[Candidate, Rational], totalsWithoutNewWinners: Map[Candidate, Rational], newElectionWithoutFractionInTotals: Election[ACTBallot]):  List[(Candidate,Rational)] = {
+    report.newCount(Exclusion, Some(candidate), Some(newElectionWithoutFractionInTotals), Some(totalsWithoutNewWinners), None, Some(exhaustedBallots))
     Nil
   }
 }
