@@ -67,7 +67,7 @@ If -o is ommited, candidates are unordered.
 -----------------------------------------------------------------
 TODO:
 -----------------------------------------------------------------
-
+t
 GENERAL:
  
 1) Optimize filtering pending winners (can be done once outside functions exclude and distributesurplus)
