@@ -29,6 +29,11 @@ abstract class ACT extends STVMethod[ACTBallot]
   def declareNewWinnersWhileExcluding(candidate: Candidate, exhaustedBallots: Set[ACTBallot], newtotals: Map[Candidate, Rational], totalsWithoutNewWinners: Map[Candidate, Rational], newElectionWithoutFractionInTotals: Election[ACTBallot]):  List[(Candidate,Rational)]
   
   def declareNewWinnersWhileDistributingSurpluses(totals: Map[Candidate, Rational], election:Election[ACTBallot]):  List[(Candidate,Rational)] 
+  
+  def rewriteTotalOfCandidate(totals: Map[Candidate, Rational], candidate: Candidate, newTotal: Option[Int]): Map[Candidate, Rational]
+  
+  def computeIncorrectTotalofEVACS(step: (Candidate, Rational), newElectionWithoutFractionInTotals: Election[ACTBallot]): Option[Int]
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   def filterBallotsWithFirstPreferences(election: Election[ACTBallot], preferences: List[Candidate]): Election[ACTBallot] = {
@@ -41,19 +46,6 @@ abstract class ACT extends STVMethod[ACTBallot]
   
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   def runScrutiny(election: Election[ACTBallot], numVacancies: Int):  Report[ACTBallot] = {  // all ballots of e are marked when the function is called
-  
-   //val c1 = new Candidate("Brendan SMYTH", None, None)
-   //val c2 = new Candidate("Matthew HARDING", None, None)
-   //val ballts = filterBallotsWithFirstPreferences(election, c1::c2::List() )
-   
-   //println("Number of ballots with Brendan SMYTH > Matthey HARDING " + ballts.length)
-   
-   //val c3 = new Candidate("Brendan SMYTH", None, None)
-   //val c4 = new Candidate("David GARRETT", None, None)
-   //val ballts2 = filterBallotsWithFirstPreferences(election, c3::c4::List() )
-   
-   //println("Number of ballots with Brendan SMYTH > David GARRETT " + ballts2.length)
-    
    val quota = cutQuotaFraction(computeQuota(election.length, numVacancies))
    println("Number of ballots:" + election.length)
    println("Quota = " + quota)
@@ -235,20 +227,27 @@ abstract class ACT extends STVMethod[ACTBallot]
     val step = steps.head
     println("Step of exclusion " + step)
     steps = steps.tail // any better way to do this?
+    
+    val newTotal = computeIncorrectTotalofEVACS(step, newElectionWithoutFractionInTotals) // simulating EVACS's incorrect total as a result of partial exclusion
+
     val ex = exclude(newElectionWithoutFractionInTotals, step._1, Some(step._2), Some(newws.map(x => x._1)))
     newElection = ex._1
     exhaustedBallots = ex._2
-    val oldtotals = computeTotals(newElection)
+    val totalsBeforeFractionLoss = computeTotals(newElection) // for computing LbF
     newElectionWithoutFractionInTotals = loseFraction(newElection) // perhaps it is better  to get rid of newws in a separate function
-    val newtotals = computeTotals(newElectionWithoutFractionInTotals)
-    val totalsWithoutNewWinners = newtotals.clone().retain((k,v) => !ws.map(_._1).contains(k)) // excluding winners that are already identified in the while-loop
-    result.addTotalsToHistory(totalsWithoutNewWinners)
-    println("totals " + totalsWithoutNewWinners)
     
-    newws = declareNewWinnersWhileExcluding(candidate, exhaustedBallots, newtotals,totalsWithoutNewWinners, newElectionWithoutFractionInTotals)
+    val totalsAfterFractionLoss = computeTotals(newElectionWithoutFractionInTotals)
+    
+    val totalsWithIncorrectValueForCandidate = rewriteTotalOfCandidate(totalsAfterFractionLoss, candidate, newTotal) // simulating EVACS's incorrect total as a result of partial exclusion
+    
+    val totalsWithoutNewWinners = totalsWithIncorrectValueForCandidate.clone().retain((k,v) => !ws.map(_._1).contains(k)) // excluding winners that are already identified in the while-loop
+    result.addTotalsToHistory(totalsWithIncorrectValueForCandidate)
+    println("totals " + totalsWithIncorrectValueForCandidate)
+    
+    newws = declareNewWinnersWhileExcluding(candidate, exhaustedBallots, totalsWithIncorrectValueForCandidate,totalsWithoutNewWinners, newElectionWithoutFractionInTotals)
     ws = ws ::: newws 
     
-    report.setLossByFraction(oldtotals, newtotals)
+    report.setLossByFraction(totalsBeforeFractionLoss, totalsWithIncorrectValueForCandidate)
     //report.setIgnoredBallots(List())
    }
   // TODO  distribute remaining votes

@@ -21,5 +21,6 @@ object EVACSnoLPMethod extends ACT
  with ACTScrutinyWithAllContinuingBallotsInSurplusDistribution // instead  ACTSurplusDistribution
  with ACTNewWinnersDuringSurplusesDistribution
  with ACTNewWinnersDuringExclusion
+ with ACTTotalsDuringExclusion
 {
 }

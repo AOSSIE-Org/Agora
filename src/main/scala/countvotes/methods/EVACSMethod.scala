@@ -19,5 +19,6 @@ object EVACSMethod extends ACT
  with ACTSurplusDistribution
  with ACTNewWinnersDuringSurplusesDistribution
  with ACTNewWinnersDuringExclusion
+ with ACTTotalsDuringExclusion
 {  
 }

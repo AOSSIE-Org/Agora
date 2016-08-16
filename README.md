@@ -68,10 +68,6 @@ If -o is ommited, candidates are unordered.
 TODO:
 -----------------------------------------------------------------
 
-EVACS:
-1) Imitation of EVACS's wrong totals after partial exclusions that appear in their scrutiny 
-
-
 GENERAL:
  
 1) Optimize filtering pending winners (can be done once outside functions exclude and distributesurplus)

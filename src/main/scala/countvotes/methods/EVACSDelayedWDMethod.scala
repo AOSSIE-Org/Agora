@@ -20,5 +20,6 @@ with TransferValueWithDenominatorWithNumOfMarkedContinuingBallotsOrOne
 with ACTSurplusDistribution
 with NoNewWinnersDuringSurplusesDistribution
 with NoNewWinnersDuringExclusion
+with ACTTotalsDuringExclusion
 {  
 }
