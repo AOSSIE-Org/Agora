@@ -20,8 +20,8 @@ import countvotes.structures.Election
 object Main {
  
   case class Config(directory: String = "",
-                    file: String = "", 
-                    algorithm: String = "",
+                    file: Option[String] = None, 
+                    method: String = "",
                     nvacancies: String = "",
                     order: String = "")   
   
@@ -29,7 +29,7 @@ object Main {
     head("\nCommand Line Interface for Electronic Vote Counting\n\n  ")        
     
     note("""The following arguments have to be provided:""" + "\n" + 
-        """ -d -f -a -n -o""" + "\n \n"
+        """ -d -f -m -n -o""" + "\n \n"
     )  
         
     opt[String]('d', "directory") unbounded() action { (v, c) => 
@@ -37,12 +37,12 @@ object Main {
     } text("set working directory to <dir>\n") valueName("<dir>")
     
     opt[String]('f', "file") action { (v, c) =>
-      c.copy(file = v) 
+      c.copy(file = Some(v)) 
     } text("use preferences listed in <file>\n") valueName("<file>")
     
-    opt[String]('a', "algorithm") action { (v, c) =>
-      c.copy(algorithm = v) 
-    } text("use vote counting algorithm of territory/state  <alg>\n") valueName("<alg>")
+    opt[String]('m', "method") action { (v, c) =>
+      c.copy(method = v) 
+    } text("use vote counting method of territory/state  <met>\n") valueName("<met>")
     
     opt[String]('n', "nvacancies") action { (v, c) =>
       c.copy(nvacancies = v) 
@@ -56,17 +56,41 @@ object Main {
   
   def main(args: Array[String]): Unit = {
     
+    
+    def callMethod(c: Config, election: List[WeightedBallot],  winnersfile:String, reportfile: String, order:  List[Candidate]) = {
+      c.method match {
+               case "EVACS" =>  {
+                 var r = EVACSMethod.runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
+                 if (order.nonEmpty) r.writeDistributionOfPreferences(reportfile,Some(order)) else  r.writeDistributionOfPreferences(reportfile,None)
+                 println("The scrutiny was recorded to " + reportfile)
+                 r.writeWinners(winnersfile)
+                 println("The winners were recorded to " + winnersfile)
+               }
+               case "EVACSnoLP" =>  {
+                 var r = EVACSnoLPMethod.runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
+                 if (order.nonEmpty)  r.writeDistributionOfPreferences(reportfile,Some(order)) else  r.writeDistributionOfPreferences(reportfile,None)
+                 r.writeWinners(winnersfile)
+               }
+               case "EVACSDWD" =>  {
+                  var r = EVACSDelayedWDMethod.runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
+                  if (order.nonEmpty) r.writeDistributionOfPreferences(reportfile,Some(order)) else r.writeDistributionOfPreferences(reportfile,None)
+                  r.writeWinners(winnersfile)
+               }
+               case "Simple" =>  {
+                  var r = SimpleSTVMethod.runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
+                  println(" Scrutiny table for method Simple is not implemented yet.")
+                  r.writeWinners(winnersfile)
+               }
+               case "Test" =>  {
+                  Test.testSDResolution
+               }
+               case "" =>  println("Please, specify which algorithm should be used. Only option -a EVACS is currently available.")
+           }
+    }
+    
+    
    parser.parse(args, Config()) map { c =>
-    
-     println("Parsing started...")    
-     val election =  PreferencesParser.read(c.directory + c.file)
-     println("Parsing finished.")
-      
-     //var r:  List[(Candidate,Rational)] = List()
-     
-     val winnersfile = c.directory + "WinnersByAlgorithm_" + c.algorithm + "_InputFile_" + c.file
-     val reportfile = c.directory + "Report_" + c.algorithm + "_InputFile_" + c.file 
-    
+        
      var order: List[Candidate] = Nil
      c.order match {
        case "ACTGinninderra2004" =>     
@@ -173,36 +197,25 @@ object Main {
        case _ =>
      }
      
-     c.algorithm match {
-       case "EVACS" =>  {
-        var r = EVACSMethod.runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
-        if (order.nonEmpty) r.writeDistributionOfPreferences(reportfile,Some(order)) else  r.writeDistributionOfPreferences(reportfile,None)
-        println("The scrutiny was recorded to " + reportfile)
-        r.writeWinners(winnersfile)
-        println("The winners were recorded to " + winnersfile)
+     
+     c.file match {
+       case Some(filename) => { // ONLY ONE FILE HAS TO BE ANALYSED
+            val election =  PreferencesParser.read(c.directory + filename)
+            val winnersfile = c.directory + "/winners/" + "Winners_" + c.method + "_InputFile_" + filename
+            val reportfile = c.directory + "/reports/" + "Report_" + c.method + "_InputFile_" + filename 
+            callMethod(c, election, winnersfile, reportfile, order) 
        }
-       case "EVACSnoLP" =>  {
-        var r = EVACSnoLPMethod.runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
-        if (order.nonEmpty)  r.writeDistributionOfPreferences(reportfile,Some(order)) else  r.writeDistributionOfPreferences(reportfile,None)
-        r.writeWinners(winnersfile)
+       case None => {  // ALL FILES IN THE DIRECTORY HAVE TO BE ANALYSED
+        val files = new java.io.File(c.directory).listFiles.filter(_.getName.endsWith(".txt"))
+        for (file <- files){
+          val filename = file.getName
+          val election =  PreferencesParser.read(c.directory + filename)
+          val winnersfile = c.directory + "/winners/" + "Winners_" + c.method + "_InputFile_" + filename
+          val reportfile = c.directory + "/reports/" + "Report_" + c.method + "_InputFile_" + filename 
+          callMethod(c, election, winnersfile, reportfile, order) 
+        }
        }
-       case "EVACSDWD" =>  {
-        var r = EVACSDelayedWDMethod.runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
-        if (order.nonEmpty) r.writeDistributionOfPreferences(reportfile,Some(order)) else r.writeDistributionOfPreferences(reportfile,None)
-        r.writeWinners(winnersfile)
-       }
-       case "Simple" =>  {
-        var r = SimpleSTVMethod.runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
-        println(" Scrutiny table for method Simple is not implemented yet.")
-        r.writeWinners(winnersfile)
-       }
-       case "Test" =>  {
-         Test.testSDResolution
-       }
-       case "" =>  println("Please, specify which algorithm should be used. Only option -a EVACS is currently available.")
      }
-    
-   
    }
   }
 
