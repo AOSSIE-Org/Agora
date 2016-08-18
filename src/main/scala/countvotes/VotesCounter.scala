@@ -209,6 +209,7 @@ object Main {
         val files = new java.io.File(c.directory).listFiles.filter(_.getName.endsWith(".txt"))
         for (file <- files){
           val filename = file.getName
+          println("/n" + file.getName + "/n")          
           val election =  PreferencesParser.read(c.directory + filename)
           val winnersfile = c.directory + "/winners/" + "Winners_" + c.method + "_InputFile_" + filename
           val reportfile = c.directory + "/reports/" + "Report_" + c.method + "_InputFile_" + filename 
