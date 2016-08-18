@@ -14,7 +14,7 @@ import java.io._
 
 
 
-object EVACSMethod extends ACT
+class EVACSMethod extends ACT
  with TransferValueWithDenominatorWithNumOfMarkedContinuingBallotsOrOne
  with ACTSurplusDistribution
  with ACTNewWinnersDuringSurplusesDistribution

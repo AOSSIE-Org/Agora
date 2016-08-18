@@ -46,12 +46,12 @@ abstract class STVMethod[B <: Ballot with Weight] extends VoteCountingMethod[B] 
   def removeWinnerWithoutSurplusFromElection(election: Election[B], winner: Candidate): Election[B]
 
   
-  def run(e: Election[B], numVacancies: Int):   Report[B] = {
-    val output = runScrutiny(e: Election[B], numVacancies: Int)
-    result.clear
-    report.clear
-    output
-  }
+  //def run(e: Election[B], numVacancies: Int):   Report[B] = {
+  //  val output = runScrutiny(e: Election[B], numVacancies: Int)
+  //  result.clear
+  //  report.clear
+  //  output
+  //}
   
   
   def computeTotals(election: Election[WeightedBallot]): Map[Candidate, Rational] = {

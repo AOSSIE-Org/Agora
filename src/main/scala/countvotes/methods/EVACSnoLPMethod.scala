@@ -16,7 +16,7 @@ import java.io._
 
 
 
-object EVACSnoLPMethod extends ACT
+class EVACSnoLPMethod extends ACT
  with TransferValueWithDenominatorWithNumOfAllContinuingBallotsOrOne // instead of TransferValueWithDenominatorWithNumOfMarkedContinuingBallotsOrOne
  with ACTScrutinyWithAllContinuingBallotsInSurplusDistribution // instead  ACTSurplusDistribution
  with ACTNewWinnersDuringSurplusesDistribution

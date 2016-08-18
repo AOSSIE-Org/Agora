@@ -4,7 +4,7 @@ import countvotes.structures._
 import countvotes.algorithms._
 
 
-object SimpleSTVMethod extends STVMethod[WeightedBallot]
+class SimpleSTVMethod extends STVMethod[WeightedBallot]
   with DroopQuota
   with NoFractionInQuota
   with NewWinnersNotOrdered[WeightedBallot]

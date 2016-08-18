@@ -17,22 +17,17 @@ trait ACTSurplusDistributionTieResolution extends STVMethod[ACTBallot] with Surp
   
  def recOrderIdentical(equaltotals: List[Candidate], totalshistory: List[Map[Candidate, Rational]]): List[Candidate] = {
       
-    //println("recOrderIdentical - equaltotals" + equaltotals)
      if (totalshistory.nonEmpty) {
       var biggestcandidate: Candidate = equaltotals.head
 
       for (c<-equaltotals){
         if (totalshistory.head.getOrElse(c, Rational(0,1)) > totalshistory.head.getOrElse(biggestcandidate, Rational(0,1))) biggestcandidate = c
         //if (totalshistory.head(c) > totalshistory.head(biggestcandidate)) biggestcandidate = c
-      }
-      
-      //println("biggestcandidate " + biggestcandidate)
-      
-      val biggestcandidates = totalshistory.head.clone() filter {p => p._2 == totalshistory.head(biggestcandidate)}
+      }      
+      val biggestcandidates = totalshistory.head.clone() filter {p => (p._2 == totalshistory.head(biggestcandidate) && equaltotals.toSet.contains(p._1) == true)}
       val lbiggestcandidates = biggestcandidates.toList.map(x => x._1)
       val totalsofremainingcandidates = totalshistory.head.clone().retain ((k,v) => lbiggestcandidates.toSet.contains(k) == false && equaltotals.toSet.contains(k) == true)
       val listoftotalsofremainingcandidates =  totalsofremainingcandidates.toList.sortBy(x => x._2).reverse 
-
       if (biggestcandidates.size > 1)
         recOrderIdentical(lbiggestcandidates, totalshistory.tail):::recOrderDifferent(totalsofremainingcandidates, listoftotalsofremainingcandidates, totalshistory)
       else 
@@ -49,7 +44,6 @@ trait ACTSurplusDistributionTieResolution extends STVMethod[ACTBallot] with Surp
      var equaltoc = totalsOfWinners.clone() filter {_._2 == c._2}
      if (equaltoc.size > 1) {    
        var twf = totalsOfWinners.clone() filter {_._2 != c._2} 
-       println("twf " + twf)
        if (twf.nonEmpty)
         recOrderIdentical(equaltoc.toList.map(x => x._1), totalshistory.tail):::recOrderDifferent(twf, sortedlist.filter( p => p._2 != c._2), totalshistory)
        else recOrderIdentical(equaltoc.toList.map(x => x._1), totalshistory.tail)

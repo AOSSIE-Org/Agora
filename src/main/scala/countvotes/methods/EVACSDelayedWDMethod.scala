@@ -15,7 +15,7 @@ import java.io._
 
 
 
-object EVACSDelayedWDMethod extends ACT
+class EVACSDelayedWDMethod extends ACT
 with TransferValueWithDenominatorWithNumOfMarkedContinuingBallotsOrOne
 with ACTSurplusDistribution
 with NoNewWinnersDuringSurplusesDistribution

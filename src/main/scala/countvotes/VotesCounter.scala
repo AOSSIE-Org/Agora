@@ -60,24 +60,24 @@ object Main {
     def callMethod(c: Config, election: List[WeightedBallot],  winnersfile:String, reportfile: String, order:  List[Candidate]) = {
       c.method match {
                case "EVACS" =>  {
-                 var r = EVACSMethod.run(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
+                 var r = (new EVACSMethod).runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
                  if (order.nonEmpty) r.writeDistributionOfPreferences(reportfile,Some(order)) else  r.writeDistributionOfPreferences(reportfile,None)
                  println("The scrutiny was recorded to " + reportfile)
                  r.writeWinners(winnersfile)
                  println("The winners were recorded to " + winnersfile)
                }
                case "EVACSnoLP" =>  {
-                 var r =  EVACSnoLPMethod.run(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
+                 var r = (new EVACSnoLPMethod).runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
                  if (order.nonEmpty)  r.writeDistributionOfPreferences(reportfile,Some(order)) else  r.writeDistributionOfPreferences(reportfile,None)
                  r.writeWinners(winnersfile)
                }
                case "EVACSDWD" =>  {
-                  var r = EVACSDelayedWDMethod.run(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
+                  var r = (new EVACSDelayedWDMethod).runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
                   if (order.nonEmpty) r.writeDistributionOfPreferences(reportfile,Some(order)) else r.writeDistributionOfPreferences(reportfile,None)
                   r.writeWinners(winnersfile)
                }
                case "Simple" =>  {
-                  var r = SimpleSTVMethod.run(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
+                  var r = (new SimpleSTVMethod).runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
                   println(" Scrutiny table for method Simple is not implemented yet.")
                   r.writeWinners(winnersfile)
                }
@@ -201,8 +201,8 @@ object Main {
      c.file match {
        case Some(filename) => { // ONLY ONE FILE HAS TO BE ANALYSED
             val election =  PreferencesParser.read(c.directory + filename)
-            val winnersfile = c.directory + "/winners/" + "Winners_" + c.method + "_InputFile_" + filename
-            val reportfile = c.directory + "/reports/" + "Report_" + c.method + "_InputFile_" + filename 
+            val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
+            val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename 
             callMethod(c, election, winnersfile, reportfile, order) 
        }
        case None => {  // ALL FILES IN THE DIRECTORY HAVE TO BE ANALYSED
@@ -213,8 +213,8 @@ object Main {
           println("\n" + "    NEW ELECTION: " + file.getName + "\n")      
           println("------------------------------------------------")
           val election =  PreferencesParser.read(c.directory + filename)
-          val winnersfile = c.directory + "/winners/" + "Winners_" + c.method + "_InputFile_" + filename
-          val reportfile = c.directory + "/reports/" + "Report_" + c.method + "_InputFile_" + filename 
+          val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
+          val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename 
           callMethod(c, election, winnersfile, reportfile, order) 
         }
        }
