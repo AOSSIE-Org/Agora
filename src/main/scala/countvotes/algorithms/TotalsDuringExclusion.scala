@@ -11,9 +11,9 @@ trait ACTTotalsDuringExclusion extends ACT{
   
   def computeIncorrectTotalofEVACS(step: (Candidate, Rational), newElectionWithoutFractionInTotals: Election[ACTBallot]): Option[Int] = {
     val roundedExcludedTotal = computeRoundedExcludedTotal(step, newElectionWithoutFractionInTotals) 
-    val previousTotalOfTheCandidate = result.getTotalsHistory.head(step._1).toInt  // take care here, check that it is correct
+    val previousTotalOfTheCandidate = result.getTotalsHistoryClone.head(step._1).toInt  // take care here, check that it is correct
     val newTotal = previousTotalOfTheCandidate - roundedExcludedTotal
-    println("ACT total of candidate being excluded: " + newTotal)
+    println("ACT's total of candidate being excluded: " + newTotal)
     Some(newTotal)
   }
   

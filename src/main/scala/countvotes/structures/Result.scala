@@ -74,8 +74,8 @@ import collection.mutable.{HashMap => Map}
      totalsHistory = totals :: totalsHistory
     }
     
-    def getTotalsHistory: List[Map[Candidate, Rational]] = {
-     totalsHistory 
+    def getTotalsHistoryClone: List[Map[Candidate, Rational]] = {
+      totalsHistory map { m => m.clone() }
     }
     
     def setWinners(ws: List[(Candidate, Rational)]) = {

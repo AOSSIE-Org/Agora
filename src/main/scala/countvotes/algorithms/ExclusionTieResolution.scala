@@ -49,7 +49,7 @@ trait ACTExclusionTieResolution extends STVMethod[ACTBallot] with ExclusionTieRe
     for (kv <- totals) if (kv._2 < min) min = kv._2
     val equaltotals = totals.clone() filter {_._2 == min}   
     //println("Equal smallest totals: " + equaltotals)
-    val smallestCandidate = recFindSmallest(equaltotals, result.getTotalsHistory.tail)
+    val smallestCandidate = recFindSmallest(equaltotals, result.getTotalsHistoryClone.tail)
     if (smallestCandidate.size > 1) {
       Random.shuffle(equaltotals.toList).head      // If did not manage to resolve tie, take a random candidate (the commissioner decided according to the ACT Electorate act) 
     }

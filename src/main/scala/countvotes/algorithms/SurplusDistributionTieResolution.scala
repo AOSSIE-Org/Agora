@@ -19,10 +19,8 @@ trait ACTSurplusDistributionTieResolution extends STVMethod[ACTBallot] with Surp
       
      if (totalshistory.nonEmpty) {
       var biggestcandidate: Candidate = equaltotals.head
-
       for (c<-equaltotals){
         if (totalshistory.head.getOrElse(c, Rational(0,1)) > totalshistory.head.getOrElse(biggestcandidate, Rational(0,1))) biggestcandidate = c
-        //if (totalshistory.head(c) > totalshistory.head(biggestcandidate)) biggestcandidate = c
       }      
       val biggestcandidates = totalshistory.head.clone() filter {p => (p._2 == totalshistory.head(biggestcandidate) && equaltotals.toSet.contains(p._1) == true)}
       val lbiggestcandidates = biggestcandidates.toList.map(x => x._1)
@@ -58,8 +56,8 @@ trait ACTSurplusDistributionTieResolution extends STVMethod[ACTBallot] with Surp
   
   def resolveSurpluseDistributionTie(totalsOfWinners: Map[Candidate, Rational]): List[(Candidate, Rational)] = {
    var sortedList = totalsOfWinners.toList.sortBy(x => x._2).reverse // >
-   println("sortedList: " + sortedList)
-   val listwithtieresolved = recOrderDifferent(totalsOfWinners, sortedList, result.getTotalsHistory) 
+   //println("sortedList: " + sortedList)
+   val listwithtieresolved = recOrderDifferent(totalsOfWinners, sortedList, result.getTotalsHistoryClone) 
    for (l <- listwithtieresolved ) yield (l, totalsOfWinners(l))
   }
   
