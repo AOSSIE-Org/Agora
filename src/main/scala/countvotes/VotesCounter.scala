@@ -60,14 +60,14 @@ object Main {
     def callMethod(c: Config, election: List[WeightedBallot],  winnersfile:String, reportfile: String, order:  List[Candidate]) = {
       c.method match {
                case "EVACS" =>  {
-                 var r = EVACSMethod.runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
+                 var r = (new EVACSMethod).runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
                  if (order.nonEmpty) r.writeDistributionOfPreferences(reportfile,Some(order)) else  r.writeDistributionOfPreferences(reportfile,None)
                  println("The scrutiny was recorded to " + reportfile)
                  r.writeWinners(winnersfile)
                  println("The winners were recorded to " + winnersfile)
                }
                case "EVACSnoLP" =>  {
-                 var r = EVACSnoLPMethod.runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
+                 var r = (new EVACSnoLPMethod).runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
                  if (order.nonEmpty)  r.writeDistributionOfPreferences(reportfile,Some(order)) else  r.writeDistributionOfPreferences(reportfile,None)
                  r.writeWinners(winnersfile)
                }
@@ -209,7 +209,9 @@ object Main {
         val files = new java.io.File(c.directory).listFiles.filter(_.getName.endsWith(".txt"))
         for (file <- files){
           val filename = file.getName
-          println("/n" + file.getName + "/n")          
+          println("------------------------------------------------")
+          println("\n" + "    NEW ELECTION: " + file.getName + "\n")      
+          println("------------------------------------------------")
           val election =  PreferencesParser.read(c.directory + filename)
           val winnersfile = c.directory + "/winners/" + "Winners_" + c.method + "_InputFile_" + filename
           val reportfile = c.directory + "/reports/" + "Report_" + c.method + "_InputFile_" + filename 

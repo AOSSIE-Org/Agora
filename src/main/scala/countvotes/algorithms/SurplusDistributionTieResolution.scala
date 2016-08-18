@@ -17,12 +17,16 @@ trait ACTSurplusDistributionTieResolution extends STVMethod[ACTBallot] with Surp
   
  def recOrderIdentical(equaltotals: List[Candidate], totalshistory: List[Map[Candidate, Rational]]): List[Candidate] = {
       
+    //println("recOrderIdentical - equaltotals" + equaltotals)
      if (totalshistory.nonEmpty) {
       var biggestcandidate: Candidate = equaltotals.head
 
       for (c<-equaltotals){
-        if (totalshistory.head(c) > totalshistory.head(biggestcandidate)) biggestcandidate = c
+        if (totalshistory.head.getOrElse(c, Rational(0,1)) > totalshistory.head.getOrElse(biggestcandidate, Rational(0,1))) biggestcandidate = c
+        //if (totalshistory.head(c) > totalshistory.head(biggestcandidate)) biggestcandidate = c
       }
+      
+      //println("biggestcandidate " + biggestcandidate)
       
       val biggestcandidates = totalshistory.head.clone() filter {p => p._2 == totalshistory.head(biggestcandidate)}
       val lbiggestcandidates = biggestcandidates.toList.map(x => x._1)
@@ -34,7 +38,9 @@ trait ACTSurplusDistributionTieResolution extends STVMethod[ACTBallot] with Surp
       else 
         lbiggestcandidates.head :: recOrderDifferent(totalsofremainingcandidates, listoftotalsofremainingcandidates, totalshistory)  
      }
-     else Nil
+     else {
+      Random.shuffle(equaltotals.toList)      // If did not manage to resolve tie, shuffle them randomly (the commissioner decided according to the ACT Electorate act) 
+     }
   } 
   
   def recOrderDifferent(totalsOfWinners: Map[Candidate, Rational], sortedlist: List[(Candidate, Rational)], totalshistory: List[Map[Candidate, Rational]]): List[Candidate] = {
@@ -43,6 +49,7 @@ trait ACTSurplusDistributionTieResolution extends STVMethod[ACTBallot] with Surp
      var equaltoc = totalsOfWinners.clone() filter {_._2 == c._2}
      if (equaltoc.size > 1) {    
        var twf = totalsOfWinners.clone() filter {_._2 != c._2} 
+       println("twf " + twf)
        if (twf.nonEmpty)
         recOrderIdentical(equaltoc.toList.map(x => x._1), totalshistory.tail):::recOrderDifferent(twf, sortedlist.filter( p => p._2 != c._2), totalshistory)
        else recOrderIdentical(equaltoc.toList.map(x => x._1), totalshistory.tail)
@@ -57,6 +64,7 @@ trait ACTSurplusDistributionTieResolution extends STVMethod[ACTBallot] with Surp
   
   def resolveSurpluseDistributionTie(totalsOfWinners: Map[Candidate, Rational]): List[(Candidate, Rational)] = {
    var sortedList = totalsOfWinners.toList.sortBy(x => x._2).reverse // >
+   println("sortedList: " + sortedList)
    val listwithtieresolved = recOrderDifferent(totalsOfWinners, sortedList, result.getTotalsHistory) 
    for (l <- listwithtieresolved ) yield (l, totalsOfWinners(l))
   }
