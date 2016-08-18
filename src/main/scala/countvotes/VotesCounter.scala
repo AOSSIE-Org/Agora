@@ -60,14 +60,14 @@ object Main {
     def callMethod(c: Config, election: List[WeightedBallot],  winnersfile:String, reportfile: String, order:  List[Candidate]) = {
       c.method match {
                case "EVACS" =>  {
-                 var r = (new EVACSMethod).runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
+                 var r = EVACSMethod.runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
                  if (order.nonEmpty) r.writeDistributionOfPreferences(reportfile,Some(order)) else  r.writeDistributionOfPreferences(reportfile,None)
                  println("The scrutiny was recorded to " + reportfile)
                  r.writeWinners(winnersfile)
                  println("The winners were recorded to " + winnersfile)
                }
                case "EVACSnoLP" =>  {
-                 var r = (new EVACSnoLPMethod).runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
+                 var r =  EVACSnoLPMethod.runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
                  if (order.nonEmpty)  r.writeDistributionOfPreferences(reportfile,Some(order)) else  r.writeDistributionOfPreferences(reportfile,None)
                  r.writeWinners(winnersfile)
                }
