@@ -12,6 +12,15 @@ import collection.mutable.{HashMap => Map}
     
     private var winners: List[(Candidate, Rational)] = Nil
     
+    def clear = {
+      quota = None
+      excludedCandidates = Nil
+      pendingWinners = Nil
+      totalsHistory = Nil
+      winners = Nil
+    }
+    
+    
     def setQuota(q: Rational) = {
       quota = Some(q)
     }

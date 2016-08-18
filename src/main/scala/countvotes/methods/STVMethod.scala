@@ -21,8 +21,8 @@ abstract class STVMethod[B <: Ballot with Weight] extends VoteCountingMethod[B] 
   
   // GLOBAL MUTABLE VARIABLES
   // DON'T FORGET TO RESET
-  val result: Result = new Result
-  val report: Report[B] = new Report[B]
+  protected val result: Result = new Result
+  protected val report: Report[B] = new Report[B]
   
   def runScrutiny(e: Election[B], numVacancies: Int):   Report[B]
 
@@ -45,6 +45,13 @@ abstract class STVMethod[B <: Ballot with Weight] extends VoteCountingMethod[B] 
 
   def removeWinnerWithoutSurplusFromElection(election: Election[B], winner: Candidate): Election[B]
 
+  
+  def run(e: Election[B], numVacancies: Int):   Report[B] = {
+    val output = runScrutiny(e: Election[B], numVacancies: Int)
+    result.clear
+    report.clear
+    output
+  }
   
   
   def computeTotals(election: Election[WeightedBallot]): Map[Candidate, Rational] = {

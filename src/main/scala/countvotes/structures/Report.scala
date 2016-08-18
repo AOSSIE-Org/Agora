@@ -18,6 +18,14 @@ import collection.mutable.{HashMap => Map}
  
     private var winners: List[(Candidate,Rational)] = Nil
     
+    def clear = {
+      countHistory = Nil
+      candidates = Nil
+      quota = None
+      numVacancies = None 
+      winners = Nil
+    }
+    
     
     def setLossByFractionToZero = {
       countHistory.head.setLossByFraction(0)
