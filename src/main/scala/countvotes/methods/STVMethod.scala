@@ -75,11 +75,11 @@ abstract class STVMethod[B <: Ballot with Weight] extends VoteCountingMethod[B] 
 
   def quotaReached(totals: Map[Candidate, Rational], quota: Rational): Boolean = {
      if (totals.exists(_._2 >= quota) ) {
-       //println("\nQuota is reached")
+       println("\nQuota is reached")
        true
        }
      else {
-       //println("\nQuota is not reached")
+       println("\nQuota is not reached")
        false
      }
   }

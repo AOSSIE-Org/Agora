@@ -90,7 +90,7 @@ abstract class ACT extends STVMethod[ACTBallot]
      report.setLossByFractionToZero
      for (c <- ccands) yield (c, totals(c))
    }
-   else {  
+   else { 
     quotaReached(totals, result.getQuota) match {
       case true => 
           println("The quota is reached.")
@@ -115,7 +115,7 @@ abstract class ACT extends STVMethod[ACTBallot]
           
       case false =>  
           val leastVotedCandidate = chooseCandidateForExclusion(totals)
-          //println("Excluding " + leastVotedCandidate )
+          println("Excluding " + leastVotedCandidate )
           result.addExcludedCandidate(leastVotedCandidate._1,leastVotedCandidate._2)
           val res = exclusion(election, leastVotedCandidate._1, numVacancies)
           val newElection: Election[ACTBallot] = res._1
