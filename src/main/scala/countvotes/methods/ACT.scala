@@ -229,13 +229,16 @@ abstract class ACT extends STVMethod[ACTBallot]
     steps = steps.tail // any better way to do this?
     
     val newTotal = computeIncorrectTotalofEVACS(step, newElectionWithoutFractionInTotals) // simulating EVACS's incorrect total as a result of partial exclusion
-
+    
     val ex = exclude(newElectionWithoutFractionInTotals, step._1, Some(step._2), Some(newws.map(x => x._1)))
+
     newElection = ex._1
     exhaustedBallots = ex._2
+
     val totalsBeforeFractionLoss = computeTotals(newElection) // for computing LbF
+
     newElectionWithoutFractionInTotals = loseFraction(newElection) // perhaps it is better  to get rid of newws in a separate function
-    
+
     val totalsAfterFractionLoss = computeTotals(newElectionWithoutFractionInTotals)
     
     val totalsWithIncorrectValueForCandidate = rewriteTotalOfCandidate(totalsAfterFractionLoss, candidate, newTotal) // simulating EVACS's incorrect total as a result of partial exclusion

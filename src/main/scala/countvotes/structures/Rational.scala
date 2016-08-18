@@ -23,7 +23,7 @@ class Rational(n: BigInt, d: BigInt) {
   def *(that: Rational) = 
    new Rational(numerator * that.numerator, denominator * that.denominator)
   def /(that: Rational) = 
-   new Rational(numerator * that.denominator, denominator * that.numerator)
+    new Rational(numerator * that.denominator, denominator * that.numerator)
   def <(that: Rational): Boolean = 
     numerator * that.denominator < that.numerator * denominator
   def <=(that: Rational): Boolean = 

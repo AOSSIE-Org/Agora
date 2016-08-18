@@ -30,7 +30,6 @@ trait ACTExclusionTieResolution extends STVMethod[ACTBallot] with ExclusionTieRe
      if (equaltotals.size > 1 && totalshistory.nonEmpty) {
       val listequalcandidates = equaltotals.toList.map(x => x._1)
       var smallestcandidate: Candidate = listequalcandidates.head
-      println("smallest " + smallestcandidate)
       for (c<-listequalcandidates.tail){
         if ((totalshistory.head.getOrElse(c, Rational(0,1))  ) < totalshistory.head.getOrElse(smallestcandidate, Rational(0,1))) {
           smallestcandidate = c
