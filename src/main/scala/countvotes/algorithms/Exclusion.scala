@@ -19,7 +19,7 @@ trait ACTExclusion extends STVMethod[ACTBallot] {
        for (b<-election if b.preferences.nonEmpty) {
         if (b.preferences.head == candidate && b.value == v) {
            if (b.preferences.tail.nonEmpty) {
-             val restOfPreferences = filterPreferences(b.preferences.tail, nW)
+             val restOfPreferences = filterPreferences(b.preferences.tail, candidate::nW)
              if (restOfPreferences.nonEmpty){
                list = ACTBallot(restOfPreferences, b.id, true, b.value, b.value)::list
              }

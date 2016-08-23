@@ -68,9 +68,9 @@ abstract class ACT extends STVMethod[ACTBallot]
   def computeWinners(election: Election[ACTBallot], numVacancies: Int): List[(Candidate,Rational)] = {
     
    println(" \n NEW RECURSIVE CALL \n")
-        
+           
    val ccands = getCandidates(election)
-   //println("Continuing candidates: " + ccands)
+   println("Continuing candidates: " + ccands)
        
    val totals = computeTotals(election)  
    println("Totals: " + totals)
@@ -153,9 +153,9 @@ abstract class ACT extends STVMethod[ACTBallot]
   println("Distribution of surpluses.")
    var newws: List[(Candidate, Rational)] = List() 
    var newElection = election
+
    while (result.getPendingWinners.nonEmpty && newws.length != numVacancies){
     val (cand, ctotal, markings) = result.takeAndRemoveFirstPendingWinner
-    println("totals history head: " + result.getTotalsHistoryClone.head)
 
     val res = tryToDistributeSurplusVotes(newElection, cand, ctotal, markings)
     newElection = res._1
@@ -206,9 +206,7 @@ abstract class ACT extends STVMethod[ACTBallot]
       case None =>
     }
     //------------------------------------------------------------------
-         println("tryToDistributeSurplusVotes - end: " + result.getTotalsHistoryClone.head)
 
-    
     (newElectionWithoutFractionInTotals, ws)
   }
  }
@@ -235,6 +233,7 @@ abstract class ACT extends STVMethod[ACTBallot]
     val ex = exclude(newElectionWithoutFractionInTotals, step._1, Some(step._2), Some(newws.map(x => x._1)))
 
     newElection = ex._1
+    
     exhaustedBallots = ex._2
 
     val totalsBeforeFractionLoss = computeTotals(newElection) // for computing LbF
@@ -252,6 +251,7 @@ abstract class ACT extends STVMethod[ACTBallot]
     newws = declareNewWinnersWhileExcluding(candidate, exhaustedBallots, totalsWithIncorrectValueForCandidate,totalsWithoutNewWinners, newElectionWithoutFractionInTotals)
     ws = ws ::: newws 
     
+    
     report.setLossByFraction(totalsBeforeFractionLoss, totalsWithIncorrectValueForCandidate)
     //report.setIgnoredBallots(List())
    }
@@ -268,6 +268,7 @@ abstract class ACT extends STVMethod[ACTBallot]
    (newElectionWithoutFractionInTotals, ws:::dws)
  }
   
+ 
  
 // ACT Legislation:
 // 9(1): If a candidate is excluded in accordance with clause 8, the ballot papers counted for the candidate 

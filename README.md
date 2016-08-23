@@ -51,6 +51,9 @@ sbt -J-Xmx12G -J-Xms12G
 run -d /directory/ [-f file_with_preferences.txt] -m method -n num_of_vacancies [-o order]
 
 
+run -d /home/users/u1017108/Documents/PreferenceData/Generated/Generated1/ -m EVACS -n 5
+
+election_20_100_40.txt
 -----------------------------------------------------------------
 
 java -jar countvotes-assembly-1.1.jar -d /directory/ [-f file_with_preferences.txt] -m method -n num_of_vacancies [-o order]

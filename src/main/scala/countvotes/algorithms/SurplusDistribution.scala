@@ -43,7 +43,7 @@ trait ACTSurplusDistribution extends STVMethod[ACTBallot]{
      
         if (b.preferences.head == candidate) { 
 
-          val continuingPreferences = filterPreferences(b.preferences.tail, pendingWinners)
+          val continuingPreferences = filterPreferences(b.preferences.tail, candidate::pendingWinners)
           if (continuingPreferences.nonEmpty){
             // NOTE: HERE WE IGNORE BALLOTS THAT HAVE candidate AS FP BUT ARE NOT MARKED. THESE BALLOTS BECOME OUT OF SCRUTINY:
             if (mrks.contains(b.id)){
@@ -82,7 +82,7 @@ trait ACTScrutinyWithAllContinuingBallotsInSurplusDistribution extends STVMethod
     for (b <- election if !b.preferences.isEmpty){
      
         if (b.preferences.head == candidate) { 
-          val continuingPreferences = filterPreferences(b.preferences.tail, pendingWinners)
+          val continuingPreferences = filterPreferences(b.preferences.tail, candidate::pendingWinners)
           if (continuingPreferences.nonEmpty){
             if (transferValue > b.value ) { // 1C(4) of the ACT Electoral act 1992 Schedule 4 
                  list = ACTBallot(continuingPreferences, b.id, true, b.value, b.value)::list //take care of b.weight (4th argument) here
@@ -115,7 +115,7 @@ trait ScrutinyWithAllContinuingBallotsInSurplusDistribution extends STVMethod[We
     for (b <- election if !b.preferences.isEmpty){
      
         if (b.preferences.head == candidate) { 
-          val continuingPreferences = filterPreferences(b.preferences.tail, pendingWinners)
+          val continuingPreferences = filterPreferences(b.preferences.tail, candidate::pendingWinners)
           if (continuingPreferences.nonEmpty)
             list = WeightedBallot(continuingPreferences, b.id,  b.weight * transferValue)::list 
           else setExhausted += b // this ballot is exhausted
