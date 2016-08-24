@@ -23,13 +23,15 @@ object Main {
                     file: Option[String] = None, 
                     method: String = "",
                     nvacancies: String = "",
-                    order: String = "")   
+                    order: String = "",
+                    ncandidates: Option[String] = None // for numerical ordering purpose
+                    )    
   
   val parser = new scopt.OptionParser[Config]("compress"){
     head("\nCommand Line Interface for Electronic Vote Counting\n\n  ")        
     
-    note("""The following arguments have to be provided:""" + "\n" + 
-        """ -d -f -m -n -o""" + "\n \n"
+    note("""The following arguments can be provided:""" + "\n" + 
+        """ -d -f -m -n [-o] [-c]""" + "\n \n"
     )  
         
     opt[String]('d', "directory") unbounded() action { (v, c) => 
@@ -47,6 +49,10 @@ object Main {
     opt[String]('n', "nvacancies") action { (v, c) =>
       c.copy(nvacancies = v) 
     } text("set number of vacancies  <num>\n") valueName("<num>")
+    
+    opt[String]('c', "ncandidates") action { (v, c) =>
+      c.copy(ncandidates = Some(v)) 
+    } text("set number of candidates  <num>\n") valueName("<num>")
     
     opt[String]('o', "order") action { (v, c) =>
       c.copy(order = v) 
@@ -93,6 +99,15 @@ object Main {
         
      var order: List[Candidate] = Nil
      c.order match {
+       case "Numerical" => {
+         c.ncandidates match {
+           case None => 
+           case Some(ncand) => 
+            for (i <- (1 to ncand.toInt).reverse) 
+              order = new Candidate(i.toString()) :: order
+            
+         }
+       }
        case "ACTGinninderra2004" =>     
          order = List(new Candidate("Ben O'CALLAGHAN"), 
                       new Candidate("Meredith HUNTER"),

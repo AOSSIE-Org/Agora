@@ -17,7 +17,7 @@ object PreferencesParser extends ElectionParser[WeightedBallot] with RegexParser
        }
    }
    
-   def candidate : Parser[Candidate] = """[1-9A-Za-z\-\,\.\ \']*""".r ^^ { s => Candidate(s) }
+   def candidate : Parser[Candidate] = """[0-9A-Za-z\-\,\.\ \']*""".r ^^ { s => Candidate(s) }
    
    //def candidate : Parser[Candidate] = """[A-Za-z]+-? ?[A-Za-z]*\,?[A-Za-z]* ?[A-Za-z]*""".r ^^ { s => Candidate(s) }
    
