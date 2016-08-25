@@ -7,6 +7,16 @@ import collection.mutable.{HashMap => Map}
 
 trait ACTExclusion extends STVMethod[ACTBallot] {
  
+ def excludeZero( election: Election[ACTBallot], candidate: Candidate): (Election[ACTBallot], Set[ACTBallot] ) ={
+  var list: Election[ACTBallot] = Nil
+  var setExhausted: Set[ACTBallot] = Set()
+    for (b<-election if b.preferences.nonEmpty) 
+      list = ACTBallot(b.preferences.head :: b.preferences.tail filter { _ != candidate}, b.id, false, b.weight, b.value ):: list   
+  (list, setExhausted)
+ }
+
+  
+  
  def exclude( election: Election[ACTBallot], candidate: Candidate, value: Option[Rational], newWinners: Option[List[Candidate]]): (Election[ACTBallot], Set[ACTBallot] ) ={
   var list: Election[ACTBallot] = Nil
   var setExhausted: Set[ACTBallot] = Set()

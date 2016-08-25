@@ -234,13 +234,13 @@ object Main {
      
      
      c.file match {
-       case Some(filename) => { // ONLY ONE FILE HAS TO BE ANALYSED
+       case Some(filename) => { // ONLY ONE FILE IS ANALYSED
             val election =  PreferencesParser.read(c.directory + filename)
             val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
             val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename 
             callMethod(c, election, winnersfile, reportfile, order) 
        }
-       case None => {  // ALL FILES IN THE DIRECTORY HAVE TO BE ANALYSED
+       case None => {  // ALL FILES IN THE DIRECTORY ARE ANALYSED
         val files = new java.io.File(c.directory).listFiles.filter(_.getName.endsWith(".kat"))
         for (file <- files){
           val filename = file.getName
@@ -251,6 +251,7 @@ object Main {
           val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
           val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename 
           callMethod(c, election, winnersfile, reportfile, order) 
+          PreferencesParser.close(c.directory + filename)
         }
        }
      }

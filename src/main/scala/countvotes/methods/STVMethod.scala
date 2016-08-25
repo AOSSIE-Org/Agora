@@ -57,9 +57,19 @@ abstract class STVMethod[B <: Ballot with Weight] extends VoteCountingMethod[B] 
   def computeTotals(election: Election[WeightedBallot]): Map[Candidate, Rational] = {
       val m = new Map[Candidate, Rational]
     
+      // getting all candidates  //  val cand = getCandidates(election)
+     var cand = new HashSet[Candidate]()
+      for (b <- election) {
+         for (c <- b.preferences)
+       if (!cand.exists(n => n == c) ) cand = cand + c 
+      }
+            
       for (b <- election if !b.preferences.isEmpty) { 
         m(b.preferences.head) = b.weight + (m.getOrElse(b.preferences.head, 0))
       }
+      
+      for (c<-cand) m(c) = (m.getOrElse(c, 0))
+      
      m
   }
   
