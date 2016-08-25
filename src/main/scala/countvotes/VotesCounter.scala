@@ -251,7 +251,6 @@ object Main {
           val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
           val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename 
           callMethod(c, election, winnersfile, reportfile, order) 
-          PreferencesParser.close(c.directory + filename)
         }
        }
      }
