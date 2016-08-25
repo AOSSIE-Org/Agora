@@ -139,6 +139,69 @@ import collection.mutable.{HashMap => Map}
      writer.close()
   }
     
+   def writeDistributionOfPreferencesACT(file: String, order: Option[List[Candidate]]) = {
+    val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)))
+    
+    val separator = ","
+    
+    var tableorder: List[Candidate] = Nil
+    order match {
+      case Some(o) =>  tableorder = o
+      case None =>  tableorder = candidates
+    }
+                                  
+ 
+    var countnum = 0
+    
+    
+    
+    
+   for (count <- countHistory.reverse ){
+          
+         // println(countr.getNumVotesReceived)
+      
+     countnum += 1
+     var line: String  = countnum + separator
+      
+     if (countnum == 1){
+        for (c<-tableorder){
+        if ( count.getTotals.exists(_._1 == c)) 
+          line += count.getTotals(c).numerator/count.getTotals(c).denominator + separator
+         // line += count.getProgressiveTotals(c) + separator
+        else line += separator  
+      }
+      writer.write(line + "\n")
+
+      countnum += 1
+      
+      line  = countnum + separator
+     }
+      
+        
+      for (c<-tableorder){
+        if ( count.getTotals.exists(_._1 == c)) 
+          line += count.getTotals(c).numerator/count.getTotals(c).denominator + separator
+         // line += count.getProgressiveTotals(c) + separator
+        else line += separator  
+      }
+      
+            
+     // val exhaustedBallots = count.getExhaustedBallots
+     // val ignoredBallots = count.getIgnoredBallots
+         
+          
+      writer.write(line + "\n")
+      
+      
+    }
+    
+     //rwriter.write("Candidates: " + report.getCandidates.toString()+"\n")  
+     //rwriter.write("Number of seats: " + report.getNumVacancies.toString()+"\n")  
+     //rwriter.write("Quota: " + report.getQuota.toString())
+     writer.close
+  }
+  
+  
     
   def writeDistributionOfPreferences(file: String, order: Option[List[Candidate]]) = {
     val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)))

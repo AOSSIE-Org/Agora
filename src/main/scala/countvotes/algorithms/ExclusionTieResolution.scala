@@ -23,7 +23,6 @@ trait UnfairExclusionTieResolutuim {
  }
 }
 
-// Todo: Count history is required here....
 trait ACTExclusionTieResolution extends STVMethod[ACTBallot] with ExclusionTieResolution{
   
   def recFindSmallest(equaltotals: Map[Candidate, Rational], totalshistory: List[Map[Candidate, Rational]]): Map[Candidate, Rational] = {
@@ -51,7 +50,8 @@ trait ACTExclusionTieResolution extends STVMethod[ACTBallot] with ExclusionTieRe
     //println("Equal smallest totals: " + equaltotals)
     val smallestCandidate = recFindSmallest(equaltotals, result.getTotalsHistoryClone.tail)
     if (smallestCandidate.size > 1) {
-      Random.shuffle(equaltotals.toList).head      // If did not manage to resolve tie, take a random candidate (the commissioner decided according to the ACT Electorate act) 
+      //Random.shuffle(equaltotals.toList).head      // If did not manage to resolve tie, take a random candidate (the commissioner decided according to the ACT Electorate act) 
+     equaltotals.minBy(_._1.name)  // If did not manage to resolve tie, the candidate with the "smallest name" (the commissioner decided according to the ACT Electorate act) 
     }
     else {
      smallestCandidate.toList.head

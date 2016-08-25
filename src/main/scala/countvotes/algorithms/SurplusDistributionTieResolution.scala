@@ -32,10 +32,14 @@ trait ACTSurplusDistributionTieResolution extends STVMethod[ACTBallot] with Surp
         lbiggestcandidates.head :: recOrderDifferent(totalsofremainingcandidates, listoftotalsofremainingcandidates, totalshistory)  
      }
      else {
-      Random.shuffle(equaltotals.toList)      // If did not manage to resolve tie, shuffle them randomly (the commissioner decided according to the ACT Electorate act) 
+      //Random.shuffle(equaltotals.toList)      // If did not manage to resolve tie, shuffle them randomly (the commissioner decided according to the ACT Electorate act) 
+      equaltotals.sortBy(_.name)  // If did not manage to resolve tie, sort them by name (the commissioner decided according to the ACT Electorate act) 
      }
   } 
   
+   
+ 
+ 
   def recOrderDifferent(totalsOfWinners: Map[Candidate, Rational], sortedlist: List[(Candidate, Rational)], totalshistory: List[Map[Candidate, Rational]]): List[Candidate] = {
     if (sortedlist.nonEmpty) {
      var c  = sortedlist.head

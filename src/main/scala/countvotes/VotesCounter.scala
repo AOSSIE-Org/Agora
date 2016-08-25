@@ -17,6 +17,12 @@ import scala.languageFeature.implicitConversions
 import countvotes.structures.ACTBallot
 import countvotes.structures.Election
 
+abstract sealed class ScrutinyTableFormats
+  case object ACT extends ScrutinyTableFormats
+  case object Concise extends ScrutinyTableFormats
+
+
+
 object Main {
  
   case class Config(directory: String = "",
@@ -24,14 +30,14 @@ object Main {
                     method: String = "",
                     nvacancies: String = "",
                     order: String = "",
-                    ncandidates: Option[String] = None // for numerical ordering purpose
-                    )    
+                    ncandidates: Option[String] = None, // for ordering numerical ordering purpose
+                    table: ScrutinyTableFormats = Concise)    
   
   val parser = new scopt.OptionParser[Config]("compress"){
     head("\nCommand Line Interface for Electronic Vote Counting\n\n  ")        
     
     note("""The following arguments can be provided:""" + "\n" + 
-        """ -d -f -m -n [-o] [-c]""" + "\n \n"
+        """ -d -f -m -n [-o] [-c] [-t]""" + "\n \n"
     )  
         
     opt[String]('d', "directory") unbounded() action { (v, c) => 
@@ -57,6 +63,17 @@ object Main {
     opt[String]('o', "order") action { (v, c) =>
       c.copy(order = v) 
     } text("set order in which the candidates appear in output tables <ord>\n") valueName("<ord>")
+    
+    opt[String]('t', "table") action { (v, c) => {
+      
+      val tableFormat = v match {
+        case "ACT" => ACT
+        case _ => Concise
+      }
+      c.copy(table = tableFormat) 
+    }
+      
+    } text("set format of the output table <tbl>\n") valueName("<tbl>")
   }
 
   
@@ -67,7 +84,10 @@ object Main {
       c.method match {
                case "EVACS" =>  {
                  var r = (new EVACSMethod).runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
-                 if (order.nonEmpty) r.writeDistributionOfPreferences(reportfile,Some(order)) else  r.writeDistributionOfPreferences(reportfile,None)
+                 c.table match {
+                   case ACT => if (order.nonEmpty) r.writeDistributionOfPreferencesACT(reportfile,Some(order)) else  r.writeDistributionOfPreferencesACT(reportfile,None)
+                   case _ => if (order.nonEmpty) r.writeDistributionOfPreferences(reportfile,Some(order)) else  r.writeDistributionOfPreferences(reportfile,None)
+                 }
                  println("The scrutiny was recorded to " + reportfile)
                  r.writeWinners(winnersfile)
                  println("The winners were recorded to " + winnersfile)
@@ -221,7 +241,7 @@ object Main {
             callMethod(c, election, winnersfile, reportfile, order) 
        }
        case None => {  // ALL FILES IN THE DIRECTORY HAVE TO BE ANALYSED
-        val files = new java.io.File(c.directory).listFiles.filter(_.getName.endsWith(".txt"))
+        val files = new java.io.File(c.directory).listFiles.filter(_.getName.endsWith(".kat"))
         for (file <- files){
           val filename = file.getName
           println("------------------------------------------------")
