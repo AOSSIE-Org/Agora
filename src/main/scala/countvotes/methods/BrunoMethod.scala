@@ -130,3 +130,4 @@ object BrunoMethod extends BrunoMethodClass[ACTBallot] {
     if (x._1 > y._1) {x}
     else {y}
   }
+}
