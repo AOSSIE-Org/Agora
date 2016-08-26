@@ -30,7 +30,9 @@ object Main {
                     method: String = "",
                     nvacancies: String = "",
                     order: String = "",
-                    ncandidates: Option[String] = None, // for ordering numerical ordering purpose
+                    ncandidates: Option[String] = None, // for ordering numerical ordering purpose and for having candidates not occuring in the elections
+                    // sufficient when candidates names are integers from 1 to ncandidates
+                    // TODO: for a general case, a list of all candidates has to be provided
                     table: ScrutinyTableFormats = Concise)    
   
   val parser = new scopt.OptionParser[Config]("compress"){
@@ -82,6 +84,16 @@ object Main {
     
     def callMethod(c: Config, election: List[WeightedBallot],  winnersfile:String, reportfile: String, order:  List[Candidate]) = {
       c.method match {
+                case "IEVACS" =>  {
+                 var r = (new IEVACSMethod).runScrutiny(Election.weightedElectionToACTElection(election), order ,c.nvacancies.toInt) 
+                 c.table match {
+                   case ACT => if (order.nonEmpty) r.writeDistributionOfPreferencesACT(reportfile,Some(order)) else  r.writeDistributionOfPreferencesACT(reportfile,None)
+                   case _ => if (order.nonEmpty) r.writeDistributionOfPreferences(reportfile,Some(order)) else  r.writeDistributionOfPreferences(reportfile,None)
+                 }
+                 println("The scrutiny was recorded to " + reportfile)
+                 r.writeWinners(winnersfile)
+                 println("The winners were recorded to " + winnersfile)
+               }
                case "EVACS" =>  {
                  var r = (new EVACSMethod).runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
                  c.table match {

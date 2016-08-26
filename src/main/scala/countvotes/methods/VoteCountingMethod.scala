@@ -18,10 +18,20 @@ import java.io._
 abstract class VoteCountingMethod[B <: Ballot with Weight] {
 
   
-  def vacanciesFilled(numWinners:Int, numVacancies:Int): Boolean = 
+ def vacanciesFilled(numWinners:Int, numVacancies:Int): Boolean = 
     numWinners >= numVacancies
   
  
+    
+ // When candidates' names are from 1 to N
+ // Implemented to to compare EVoting outputs with Jeremy's outputs
+ def generateNIntCandidates(n: Integer): List[Candidate] = {
+  var lcand: List[Candidate] = Nil
+  for (i <- 1 to n){
+    lcand = (Candidate(i.toString(),None,None)):: lcand
+  }
+  lcand
+ }
  
   
  def getCandidates(election: Election[B]): List[Candidate] = {

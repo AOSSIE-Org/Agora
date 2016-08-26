@@ -15,7 +15,7 @@ import scala.util.Sorting
 import java.io._
 
 
-abstract class STVMethod[B <: Ballot with Weight] extends VoteCountingMethod[B] {
+abstract class ISTVMethod[B <: Ballot with Weight] extends VoteCountingMethod[B] {
   //type E = Election[B]
   
   
@@ -24,9 +24,11 @@ abstract class STVMethod[B <: Ballot with Weight] extends VoteCountingMethod[B] 
   protected val result: Result = new Result
   protected val report: Report[B] = new Report[B]
   
-  def runScrutiny(e: Election[B], numVacancies: Int):   Report[B]
+  
+  def runScrutiny(e: Election[B], ccandidates: List[Candidate], numVacancies: Int):   Report[B]
 
-  def computeWinners(e: Election[B], numVacancies: Int): List[(Candidate,Rational)] 
+  def computeWinners(e: Election[B], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)] 
+
   
   def computeQuota(numVotes: Int, numVacancies: Int): Rational
   def cutQuotaFraction(num: Rational): Rational 
@@ -34,15 +36,17 @@ abstract class STVMethod[B <: Ballot with Weight] extends VoteCountingMethod[B] 
   def returnNewWinners(totals: Map[Candidate, Rational], quota: Rational): List[(Candidate,Rational)] 
   
   def computeTransferValue(surplus: Rational, election: Election[B], pendingWinners:  List[Candidate], candidate: Candidate, markings: Option[Set[Int]]): Rational
- 
-  def distributeSurplusVotes(election: Election[B], candidate: Candidate, total:Rational, markings: Option[Set[Int]], pendingWinners: List[Candidate], transferValue: Rational): (Election[B], Set[B], Option[Election[B]])
+   
+  def distributeSurplusVotes(election: Election[B],  candidate: Candidate, total:Rational, markings: Option[Set[Int]], pendingWinners: List[Candidate], transferValue: Rational): (Election[B], Set[B], Option[Election[B]])
   
   def resolveSurpluseDistributionTie(equaltotals: Map[Candidate, Rational]): List[(Candidate, Rational)]
   
   def chooseCandidateForExclusion(totals: Map[Candidate, Rational]): (Candidate, Rational)
     
+
   def exclude(election: Election[B], candidate: Candidate, value: Option[Rational], newWinners: Option[List[Candidate]]): (Election[B], Set[B])
 
+  
   def removeWinnerWithoutSurplusFromElection(election: Election[B], winner: Candidate): Election[B]
 
   
@@ -54,32 +58,25 @@ abstract class STVMethod[B <: Ballot with Weight] extends VoteCountingMethod[B] 
   //}
   
   
-  def computeTotals(election: Election[WeightedBallot]): Map[Candidate, Rational] = {
+  
+  def computeTotals(election: Election[WeightedBallot], candidates: List[Candidate]): Map[Candidate, Rational] = {
       val m = new Map[Candidate, Rational]
     
-      // getting all candidates  //  val cand = getCandidates(election)
-     var cand = new HashSet[Candidate]()
-      for (b <- election) {
-         for (c <- b.preferences)
-       if (!cand.exists(n => n == c) ) cand = cand + c 
-      }
-            
+      for (c<-candidates) m(c) = 0
+      
       for (b <- election if !b.preferences.isEmpty) { 
         m(b.preferences.head) = b.weight + (m.getOrElse(b.preferences.head, 0))
       }
-      
-      for (c<-cand) m(c) = (m.getOrElse(c, 0))
-      
+            
      m
   }
-  
   
   
   def sumTotals(totals:  Map[Candidate, Rational]): Rational = {
     var sum: Rational = 0
     for (t <- totals) {
       sum += t._2
-    }
+    } 
     sum
   }
     
@@ -138,5 +135,3 @@ abstract class STVMethod[B <: Ballot with Weight] extends VoteCountingMethod[B] 
   
 }
   
-
-
