@@ -24,9 +24,11 @@ abstract class STVMethod[B <: Ballot with Weight] extends VoteCountingMethod[B] 
   protected val result: Result = new Result
   protected val report: Report[B] = new Report[B]
   
-  def runScrutiny(e: Election[B], numVacancies: Int):   Report[B]
+  
+  def runScrutiny(e: Election[B], ccandidates: List[Candidate], numVacancies: Int):   Report[B]
 
-  def computeWinners(e: Election[B], numVacancies: Int): List[(Candidate,Rational)] 
+  def computeWinners(e: Election[B], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)] 
+
   
   def computeQuota(numVotes: Int, numVacancies: Int): Rational
   def cutQuotaFraction(num: Rational): Rational 
@@ -34,8 +36,8 @@ abstract class STVMethod[B <: Ballot with Weight] extends VoteCountingMethod[B] 
   def returnNewWinners(totals: Map[Candidate, Rational], quota: Rational): List[(Candidate,Rational)] 
   
   def computeTransferValue(surplus: Rational, election: Election[B], pendingWinners:  List[Candidate], candidate: Candidate, markings: Option[Set[Int]]): Rational
- 
-  def distributeSurplusVotes(election: Election[B], candidate: Candidate, total:Rational, markings: Option[Set[Int]], pendingWinners: List[Candidate], transferValue: Rational): (Election[B], Set[B], Option[Election[B]])
+   
+  def distributeSurplusVotes(election: Election[B],  candidate: Candidate, total:Rational, markings: Option[Set[Int]], pendingWinners: List[Candidate], transferValue: Rational): (Election[B], Set[B], Option[Election[B]])
   
   def resolveSurpluseDistributionTie(equaltotals: Map[Candidate, Rational]): List[(Candidate, Rational)]
   
@@ -54,32 +56,23 @@ abstract class STVMethod[B <: Ballot with Weight] extends VoteCountingMethod[B] 
   //}
   
   
-  def computeTotals(election: Election[WeightedBallot]): Map[Candidate, Rational] = {
+  def computeTotals(election: Election[WeightedBallot], candidates: List[Candidate]): Map[Candidate, Rational] = {
       val m = new Map[Candidate, Rational]
     
-      // getting all candidates  //  val cand = getCandidates(election)
-     var cand = new HashSet[Candidate]()
-      for (b <- election) {
-         for (c <- b.preferences)
-       if (!cand.exists(n => n == c) ) cand = cand + c 
-      }
-            
+      for (c<-candidates) m(c) = 0
+      
       for (b <- election if !b.preferences.isEmpty) { 
         m(b.preferences.head) = b.weight + (m.getOrElse(b.preferences.head, 0))
       }
-      
-      for (c<-cand) m(c) = (m.getOrElse(c, 0))
-      
+            
      m
   }
-  
-  
   
   def sumTotals(totals:  Map[Candidate, Rational]): Rational = {
     var sum: Rational = 0
     for (t <- totals) {
       sum += t._2
-    }
+    } 
     sum
   }
     
@@ -89,7 +82,6 @@ abstract class STVMethod[B <: Ballot with Weight] extends VoteCountingMethod[B] 
        r = r + b.weight 
      r
   }
-
 
   def quotaReached(totals: Map[Candidate, Rational], quota: Rational): Boolean = {
      if (totals.exists(_._2 >= quota) ) {
@@ -102,7 +94,6 @@ abstract class STVMethod[B <: Ballot with Weight] extends VoteCountingMethod[B] 
      }
   }
   
-    
     
   def ballotsAreContinuing(c: Candidate, election: Election[B], pendingWinners:  List[Candidate]): Boolean = {
     var el = election
@@ -117,10 +108,6 @@ abstract class STVMethod[B <: Ballot with Weight] extends VoteCountingMethod[B] 
     ballotsC
   }
     
-    
-  
-
-  
   //TODO: Optimize: as soon as we found continuing candidate, we can simply attach the rest of the list
   def filterPreferences(preferences: List[Candidate], candidates: List[Candidate]): List[Candidate] = { 
    var newpreferences: List[Candidate] = Nil
@@ -138,5 +125,3 @@ abstract class STVMethod[B <: Ballot with Weight] extends VoteCountingMethod[B] 
   
 }
   
-
-

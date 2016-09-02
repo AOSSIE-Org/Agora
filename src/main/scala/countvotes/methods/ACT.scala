@@ -14,11 +14,13 @@ import scala.util.Sorting
 import java.io._
 
 
-
+// LIKE ACT, BUT TAKE A LIST OF CANDIDATES (INTEGERS) AS INPUT
+// HAS TO BE EXTENDED TO ANY TYPE OF CANDIDATES
+// THEN ACT CLASS CAN BE REMOVED
 abstract class ACT extends STVMethod[ACTBallot]
  with DroopQuota
  with NoFractionInQuota
- with NewWinnersOrderedByTotals[ACTBallot]
+ with INewWinnersOrderedByTotals[ACTBallot]
  with ACTSurplusDistributionTieResolution
  with ACTFractionLoss
  with ACTExclusion
@@ -45,34 +47,34 @@ abstract class ACT extends STVMethod[ACTBallot]
   }
   
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  def runScrutiny(election: Election[ACTBallot], numVacancies: Int):  Report[ACTBallot] = {  // all ballots of e are marked when the function is called
+  def runScrutiny(election: Election[ACTBallot], candidates: List[Candidate], numVacancies: Int):  Report[ACTBallot] = {  // all ballots of e are marked when the function is called
    val quota = cutQuotaFraction(computeQuota(election.length, numVacancies))
    println("Number of ballots:" + election.length)
    println("Quota: " + quota)
    result.setQuota(quota)
    report.setQuota(quota)
     
-   val totals = computeTotals(election) // Here are totals of candidates OCCURING in the election
+   val totals = computeTotals(election, candidates) // Here are totals of candidates also not OCCURING in the ballots
    result.addTotalsToHistory(totals) 
  
-   report.setCandidates(getCandidates(election))  // Here are candidates OCCURING in the election
-   
+   //report.setCandidates(getCandidates(election))  // Here are candidates OCCURING in the election
+   report.setCandidates(candidates)  // Here are candidates also not OCCURING in the election
    
    
    report.newCount(Input, None, Some(election), Some(totals), None, None)
    report.setLossByFractionToZero
    
-   report.setWinners(computeWinners(election, numVacancies))   
+   report.setWinners(computeWinners(election, candidates, numVacancies))   
    
    report
  }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  def computeWinners(election: Election[ACTBallot], numVacancies: Int): List[(Candidate,Rational)] = {
+  def computeWinners(election: Election[ACTBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)] = {
     
    println(" \n NEW RECURSIVE CALL \n")
    
-   //println("Election: " + election)
+   println("Election: " + election)
   
    if (election.isEmpty){Nil}  // If all ballots are removed by the candidate who reached the quota exactly, the election will be empty.
    //                             For example (3 seats, quota=2):
@@ -83,10 +85,10 @@ abstract class ACT extends STVMethod[ACTBallot]
    //                              5 1/1 5>3>6 
    else {
    
-   val ccands = getCandidates(election)
-   println("Continuing candidates: " + ccands)
+   //val ccands = getCandidates(election)
+   println("Continuing candidates: " + ccandidates)
        
-   val totals = computeTotals(election)  
+   val totals = computeTotals(election, ccandidates)  
    println("Totals: " + totals)
         
    //result.addTotalsToHistory(totals)
@@ -97,12 +99,12 @@ abstract class ACT extends STVMethod[ACTBallot]
 	//			  (void *)(CAND_PENDING|CAND_ELECTED))
 	 //      != e->electorate->num_seats) {
    // That is why we also check only equality here
-   if (ccands.length == numVacancies){
+   if (ccandidates.length == numVacancies){
      var ws: List[(Candidate,Rational)] = List()
-     for (c <- ccands) ws = (c, totals.getOrElse(c, Rational(0,1)))::ws
+     for (c <- ccandidates) ws = (c, totals.getOrElse(c, Rational(0,1)))::ws
      report.newCount(VictoryWithoutQuota, None, None, None, Some(ws), None)
      report.setLossByFractionToZero
-     for (c <- ccands) yield (c, totals.getOrElse(c, Rational(0,1)))
+     for (c <- ccandidates) yield (c, totals.getOrElse(c, Rational(0,1)))
    }
    else {        
     quotaReached(totals, result.getQuota) match {
@@ -114,15 +116,19 @@ abstract class ACT extends STVMethod[ACTBallot]
           vacanciesFilled(winners.length, numVacancies) match {
               case false =>  {
                 println("Vacancies: not yet filled.")
-                val res = surplusesDistribution(election,numVacancies-winners.length)
+                val res = surplusesDistribution(election, ccandidates, numVacancies-winners.length)
                 val newElection: Election[ACTBallot] = res._1
                 val newWinners: List[(Candidate, Rational)] = res._2
                 
                 val nws = winners.length + newWinners.length
                 println("Number of winners in this recursive call: "  + nws)
-                if (nws == numVacancies) { winners:::newWinners }
-                else computeWinners(newElection, numVacancies-nws):::winners:::newWinners   // TODO: care should be taken that newElection is not empty?!
-              }
+                val allWinners = winners:::newWinners 
+                if (nws == numVacancies) { allWinners } 
+                else {
+                  val setAllWinners = allWinners.map{_._1}.toSet
+                  computeWinners(newElection, ccandidates.filterNot(setAllWinners.contains(_)) ,numVacancies-nws):::allWinners  // TODO: care should be taken that newElection is not empty?!
+                }
+                }
               case true => winners
             }
           
@@ -131,7 +137,7 @@ abstract class ACT extends STVMethod[ACTBallot]
           println("Candidate to be excluded: " + leastVotedCandidate )
           result.addExcludedCandidate(leastVotedCandidate._1,leastVotedCandidate._2)
 
-          val res = exclusion(election, leastVotedCandidate, numVacancies)
+          val res = exclusion(election, ccandidates, leastVotedCandidate, numVacancies)
           val newElection: Election[ACTBallot] = res._1
           val newWinners: List[(Candidate, Rational)] = res._2
           
@@ -142,7 +148,7 @@ abstract class ACT extends STVMethod[ACTBallot]
             // Apparently EVACS does not check this condition. See step 42. Or in count.c
             // if (for_each_candidate(candidates, &check_status,(void *)(CAND_ELECTED|CAND_PENDING)) == num_seats) return true;
             newWinners }           
-          else computeWinners(newElection, numVacancies-newWinners.length):::newWinners
+          else computeWinners(newElection,ccandidates.filterNot(x => x == leastVotedCandidate._1), numVacancies-newWinners.length):::newWinners
           
       }
     
@@ -164,14 +170,14 @@ abstract class ACT extends STVMethod[ACTBallot]
   
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
- def surplusesDistribution(election: Election[ACTBallot], numVacancies: Int): (Election[ACTBallot], List[(Candidate,Rational)]) = {
+ def surplusesDistribution(election: Election[ACTBallot], ccandidates: List[Candidate], numVacancies: Int): (Election[ACTBallot], List[(Candidate,Rational)]) = {
   println("Distribution of surpluses.")
    var newws: List[(Candidate, Rational)] = List() 
    var newElection = election
 
    while (result.getPendingWinners.nonEmpty && newws.length != numVacancies){
     val (cand, ctotal, markings) = result.takeAndRemoveFirstPendingWinner
-    val res = tryToDistributeSurplusVotes(newElection, cand, ctotal, markings)
+    val res = tryToDistributeSurplusVotes(newElection, ccandidates, cand, ctotal, markings)
     newElection = res._1
     newws = newws ::: res._2
     println("Are there pending candidates? " + result.getPendingWinners.nonEmpty)
@@ -181,7 +187,7 @@ abstract class ACT extends STVMethod[ACTBallot]
   
  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
- def tryToDistributeSurplusVotes(election: Election[ACTBallot], winner: Candidate, ctotal:Rational, markings: Option[Set[Int]] ): (Election[ACTBallot], List[(Candidate,Rational)]) = {
+ def tryToDistributeSurplusVotes(election: Election[ACTBallot], ccandidates: List[Candidate], winner: Candidate, ctotal:Rational, markings: Option[Set[Int]] ): (Election[ACTBallot], List[(Candidate,Rational)]) = {
 
   val pendingWinners = result.getPendingWinners.map(x => x._1)
 
@@ -208,9 +214,9 @@ abstract class ACT extends STVMethod[ACTBallot]
     println("tv = " + tv)
         
     val (newElection, exhaustedBallots, ignoredBallots) = distributeSurplusVotes(election, winner, ctotal, markings, pendingWinners, tv)  
-    val newElectionWithoutFractionInTotals = loseFraction(newElection)
+    val newElectionWithoutFractionInTotals = loseFraction(newElection, ccandidates)
            
-    val newtotalsWithoutFraction = computeTotals(newElectionWithoutFractionInTotals)
+    val newtotalsWithoutFraction = computeTotals(newElectionWithoutFractionInTotals, ccandidates)
     val newtotalsWithoutFractionWithoutpendingwinners = newtotalsWithoutFraction.clone().retain((k,v) => !pendingWinners.contains(k)) 
     
     
@@ -222,7 +228,7 @@ abstract class ACT extends STVMethod[ACTBallot]
     //------------ Reporting ------------------------------------------
     if (ws.nonEmpty) report.newCount(SurplusDistribution, Some(winner), Some(newElectionWithoutFractionInTotals), Some(newtotalsWithoutFraction), Some(ws), Some(exhaustedBallots))
     else report.newCount(SurplusDistribution, Some(winner), Some(newElectionWithoutFractionInTotals), Some(newtotalsWithoutFraction), None, Some(exhaustedBallots))
-    report.setLossByFraction(computeTotals(newElection), newtotalsWithoutFraction)
+    report.setLossByFraction(computeTotals(newElection,ccandidates), newtotalsWithoutFraction)
     ignoredBallots match { // ballots ignored because they don't belong to the last parcel of the winner
       case Some(ib) => report.setIgnoredBallots(ib)
       case None =>
@@ -235,7 +241,7 @@ abstract class ACT extends STVMethod[ACTBallot]
  
  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
- def exclusion(election: Election[ACTBallot], candidate: (Candidate, Rational), numVacancies: Int): (Election[ACTBallot],  List[(Candidate, Rational)] ) = { 
+ def exclusion(election: Election[ACTBallot], ccandidates: List[Candidate], candidate: (Candidate, Rational), numVacancies: Int): (Election[ACTBallot],  List[(Candidate, Rational)] ) = { 
    println("Vacancies left: " + numVacancies)
    
 
@@ -268,11 +274,11 @@ abstract class ACT extends STVMethod[ACTBallot]
     
     exhaustedBallots = ex._2
 
-    val totalsBeforeFractionLoss = computeTotals(newElection) // for computing LbF
+    val totalsBeforeFractionLoss = computeTotals(newElection, ccandidates) // for computing LbF
 
-    newElectionWithoutFractionInTotals = loseFraction(newElection) // perhaps it is better  to get rid of newws in a separate function
+    newElectionWithoutFractionInTotals = loseFraction(newElection, ccandidates) // perhaps it is better  to get rid of newws in a separate function
 
-    val totalsAfterFractionLoss = computeTotals(newElectionWithoutFractionInTotals)
+    val totalsAfterFractionLoss = computeTotals(newElectionWithoutFractionInTotals, ccandidates)
     
     val totalsWithIncorrectValueForCandidate = rewriteTotalOfCandidate(totalsAfterFractionLoss, candidate._1, newTotal) // simulating EVACS's incorrect total as a result of partial exclusion
     
@@ -293,7 +299,7 @@ abstract class ACT extends STVMethod[ACTBallot]
   // }
    var dws:  List[(Candidate, Rational)]  = List()
    if (ws.nonEmpty) {
-     val res = surplusesDistribution(newElectionWithoutFractionInTotals, numVacancies - ws.length)
+     val res = surplusesDistribution(newElectionWithoutFractionInTotals, ccandidates.filterNot { x => x == candidate }, numVacancies - ws.length)
      newElectionWithoutFractionInTotals = res._1
      dws = res._2
    }

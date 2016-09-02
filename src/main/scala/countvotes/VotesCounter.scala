@@ -40,8 +40,8 @@ object Main {
   val parser = new scopt.OptionParser[Config]("compress"){
     head("\nCommand Line Interface for Electronic Vote Counting\n\n  ")        
     
-    note("""The following arguments can be provided:""" + "\n" + 
-        """ -d -b -c -m -n [-k] [-t]""" + "\n \n"
+    note("""The arguments are as follows:""" + "\n" + 
+        """ -d [-b] -c -m -v [-k] [-t]""" + "\n \n"
     )  
         
     opt[String]('d', "directory") unbounded() action { (v, c) => 
@@ -58,11 +58,11 @@ object Main {
     
     opt[String]('m', "method") action { (v, c) =>
       c.copy(method = v) 
-    } text("use vote counting method of territory/state  <met>\n") valueName("<met>")
+    } text("use vote counting method  <met>\n") valueName("<met>")
     
-    opt[String]('n', "nvacancies") action { (v, c) =>
+    opt[String]('v', "nvacancies") action { (v, c) =>
       c.copy(nvacancies = v) 
-    } text("set number of vacancies  <num>\n") valueName("<num>")
+    } text("set number of vacancies  <numv>\n") valueName("<numv>")
     
     opt[String]('k', "nkandidates") action { (v, c) =>
       c.copy(nkandidates = Some(v)) 
@@ -82,53 +82,48 @@ object Main {
     }
       
     } text("set format of the output table <tbl>\n") valueName("<tbl>")
+    
+    note("""Possible values are as follows:""" + "\n" + 
+        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple""" + "\n" +
+        """for -t:  Concise, ACT""" + "\n \n" 
+    )  
   }
 
   
   def main(args: Array[String]): Unit = {
     
     
-    def callMethod(c: Config, election: List[WeightedBallot],  winnersfile:String, reportfile: String, order:  List[Candidate]) = {
+    def callMethod(c: Config, election: List[WeightedBallot],  winnersfile:String, reportfile: String, candidates_in_order:  List[Candidate]) = {
       c.method match {
-                case "IEVACS" =>  {
-                 var r = (new IEVACSMethod).runScrutiny(Election.weightedElectionToACTElection(election), order ,c.nvacancies.toInt) 
-                 c.table match {
-                   case ACT => if (order.nonEmpty) r.writeDistributionOfPreferencesACT(reportfile,Some(order)) else  r.writeDistributionOfPreferencesACT(reportfile,None)
-                   case _ => if (order.nonEmpty) r.writeDistributionOfPreferences(reportfile,Some(order)) else  r.writeDistributionOfPreferences(reportfile,None)
-                 }
-                 println("The scrutiny was recorded to " + reportfile)
-                 r.writeWinners(winnersfile)
-                 println("The winners were recorded to " + winnersfile)
-               }
                case "EVACS" =>  {
-                 var r = (new EVACSMethod).runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
+                 var r = (new EVACSMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt) 
                  c.table match {
-                   case ACT => if (order.nonEmpty) r.writeDistributionOfPreferencesACT(reportfile,Some(order)) else  r.writeDistributionOfPreferencesACT(reportfile,None)
-                   case _ => if (order.nonEmpty) r.writeDistributionOfPreferences(reportfile,Some(order)) else  r.writeDistributionOfPreferences(reportfile,None)
+                   case ACT =>  r.writeDistributionOfPreferencesACT(reportfile,Some(candidates_in_order))
+                   case _ =>  r.writeDistributionOfPreferences(reportfile,Some(candidates_in_order)) 
                  }
                  println("The scrutiny was recorded to " + reportfile)
                  r.writeWinners(winnersfile)
                  println("The winners were recorded to " + winnersfile)
                }
                case "EVACSnoLP" =>  {
-                 var r = (new EVACSnoLPMethod).runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
-                 if (order.nonEmpty)  r.writeDistributionOfPreferences(reportfile,Some(order)) else  r.writeDistributionOfPreferences(reportfile,None)
+                 var r = (new EVACSnoLPMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt) 
+                r.writeDistributionOfPreferences(reportfile,Some(candidates_in_order)) 
                  r.writeWinners(winnersfile)
                }
                case "EVACSDWD" =>  {
-                  var r = (new EVACSDelayedWDMethod).runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
-                  if (order.nonEmpty) r.writeDistributionOfPreferences(reportfile,Some(order)) else r.writeDistributionOfPreferences(reportfile,None)
+                  var r = (new EVACSDelayedWDMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt) 
+                  r.writeDistributionOfPreferences(reportfile,Some(candidates_in_order))
                   r.writeWinners(winnersfile)
                }
                case "Simple" =>  {
-                  var r = (new SimpleSTVMethod).runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt) 
+                  var r = (new SimpleSTVMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt) 
                   println(" Scrutiny table for method Simple is not implemented yet.")
                   r.writeWinners(winnersfile)
                }
                case "Test" =>  {
                   Test.testSDResolution
                }
-               case "" =>  println("Please, specify which algorithm should be used. Only option -a EVACS is currently available.")
+               case "" =>  println("Please, specify which algorithm should be used. Only option -m EVACS is currently stable.")
            }
     }
     

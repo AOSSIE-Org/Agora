@@ -1,5 +1,6 @@
 package countvotes.methods
 
+
 import countvotes.structures._
 import countvotes.algorithms._
 
@@ -14,7 +15,7 @@ import java.io._
 
 
 
-// Not exactly like EVACS. It does not take the list of candidates.
+
 class EVACSMethod extends ACT
  with TransferValueWithDenominatorWithNumOfMarkedContinuingBallotsOrOne
  with ACTSurplusDistribution

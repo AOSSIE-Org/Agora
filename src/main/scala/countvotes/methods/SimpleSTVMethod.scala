@@ -18,7 +18,7 @@ class SimpleSTVMethod extends STVMethod[WeightedBallot]
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  def runScrutiny(election: Election[WeightedBallot], numVacancies: Int):  Report[WeightedBallot]  = {  // all ballots of e are marked when the function is called
+  def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int):   Report[WeightedBallot]  = {  
    val quota = cutQuotaFraction(computeQuota(election.length, numVacancies))
    println("Quota = " + quota)
    result.setQuota(quota)
@@ -27,25 +27,27 @@ class SimpleSTVMethod extends STVMethod[WeightedBallot]
    print("\n INPUT ELECTION: \n")
    printElection(election)
    
-   val totals = computeTotals(election)
+   val totals = computeTotals(election, candidates) // Here are totals of candidates also not OCCURING in the ballots
    result.addTotalsToHistory(totals) 
  
-   report.setCandidates(getCandidates(election))
+   //report.setCandidates(getCandidates(election))  // Here are candidates OCCURING in the election
+   report.setCandidates(candidates)  // Here are candidates also not OCCURING in the election
+   
    report.newCount(Input, None, Some(election), Some(totals), None, None)
    
-   report.setWinners(computeWinners(election, numVacancies))   
+   report.setWinners(computeWinners(election, candidates, numVacancies))   
    
    report   
   }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  def computeWinners(election: Election[WeightedBallot], numVacancies: Int): List[(Candidate, Rational)] = {
+  def computeWinners(election: Election[WeightedBallot], ccandidates: List[Candidate],  numVacancies: Int): List[(Candidate, Rational)] = {
     
     println(" \n NEW RECURSIVE CALL \n")
     
     val ccands = getCandidates(election)
        
-    val totals = computeTotals(election)  
+    val totals = computeTotals(election, ccandidates)  
     println("Totals: " + totals)
     
     if (ccands.length <= numVacancies){
@@ -64,7 +66,7 @@ class SimpleSTVMethod extends STVMethod[WeightedBallot]
                 println("Vacancies are not yet filled.")
                 val newElection = surplusesDistribution(election, numVacancies-winners.length) 
                 printElection(newElection)
-                computeWinners(newElection, numVacancies-winners.length):::winners  // TODO: care should be taken that newElection is not empty?!
+                computeWinners(newElection, ccandidates.filterNot(winners.contains(_)), numVacancies-winners.length):::winners  // TODO: care should be taken that newElection is not empty?!
               }
               case true => winners
             } 
@@ -74,7 +76,7 @@ class SimpleSTVMethod extends STVMethod[WeightedBallot]
           result.addExcludedCandidate(leastVotedCandidate._1, leastVotedCandidate._2)
           val newElection = exclusion(election, leastVotedCandidate._1, numVacancies)
           printElection(newElection)
-          computeWinners(newElection, numVacancies)
+          computeWinners(newElection, ccandidates.filterNot(x => x == leastVotedCandidate._1), numVacancies)
       }
     }
   }
