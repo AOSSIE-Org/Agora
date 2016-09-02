@@ -26,29 +26,35 @@ abstract sealed class ScrutinyTableFormats
 object Main {
  
   case class Config(directory: String = "",
-                    file: Option[String] = None, 
+                    ballotsfile: Option[String] = None, 
                     method: String = "",
                     nvacancies: String = "",
-                    order: String = "",
-                    ncandidates: Option[String] = None, // for ordering numerical ordering purpose and for having candidates not occuring in the elections
+                    //order: String = "",
+                    nkandidates: Option[String] = None, 
+                    // for ordering numerical ordering purpose and for having candidates not occuring in the elections
                     // sufficient when candidates names are integers from 1 to ncandidates
                     // TODO: for a general case, a list of all candidates has to be provided
+                    candidatesfile: String = "",
                     table: ScrutinyTableFormats = Concise)    
   
   val parser = new scopt.OptionParser[Config]("compress"){
     head("\nCommand Line Interface for Electronic Vote Counting\n\n  ")        
     
     note("""The following arguments can be provided:""" + "\n" + 
-        """ -d -f -m -n [-o] [-c] [-t]""" + "\n \n"
+        """ -d -b -c -m -n [-k] [-t]""" + "\n \n"
     )  
         
     opt[String]('d', "directory") unbounded() action { (v, c) => 
       c.copy(directory = v)
     } text("set working directory to <dir>\n") valueName("<dir>")
     
-    opt[String]('f', "file") action { (v, c) =>
-      c.copy(file = Some(v)) 
-    } text("use preferences listed in <file>\n") valueName("<file>")
+    opt[String]('b', "ballotsfile") action { (v, c) =>
+      c.copy(ballotsfile = Some(v)) 
+    } text("use preferences listed in <bfile>\n") valueName("<bfile>")
+    
+    opt[String]('c', "candidatesfile") action { (v, c) =>
+      c.copy(candidatesfile = v) 
+    } text("use preferences listed in <cfile>\n") valueName("<cfile>")
     
     opt[String]('m', "method") action { (v, c) =>
       c.copy(method = v) 
@@ -58,14 +64,14 @@ object Main {
       c.copy(nvacancies = v) 
     } text("set number of vacancies  <num>\n") valueName("<num>")
     
-    opt[String]('c', "ncandidates") action { (v, c) =>
-      c.copy(ncandidates = Some(v)) 
-    } text("set number of candidates  <num>\n") valueName("<num>")
+    opt[String]('k', "nkandidates") action { (v, c) =>
+      c.copy(nkandidates = Some(v)) 
+    } text("set number of candidates  <numk>\n") valueName("<numk>")
     
-    opt[String]('o', "order") action { (v, c) =>
-      c.copy(order = v) 
-    } text("set order in which the candidates appear in output tables <ord>\n") valueName("<ord>")
-    
+    //opt[String]('o', "order") action { (v, c) =>
+    //  c.copy(order = v) 
+    //} text("set order in which the candidates appear in output tables <ord>\n") valueName("<ord>")
+        
     opt[String]('t', "table") action { (v, c) => {
       
       val tableFormat = v match {
@@ -129,130 +135,17 @@ object Main {
     
    parser.parse(args, Config()) map { c =>
         
-     var order: List[Candidate] = Nil
-     c.order match {
-       case "Numerical" => {
-         c.ncandidates match {
-           case None => 
-           case Some(ncand) => 
-            for (i <- (1 to ncand.toInt).reverse) 
-              order = new Candidate(i.toString()) :: order
-            
-         }
-       }
-       case "ACTGinninderra2004" =>     
-         order = List(new Candidate("Ben O'CALLAGHAN"), 
-                      new Candidate("Meredith HUNTER"),
-                      new Candidate("Adam PORTER"),
-                      new Candidate("Rose PAPPALARDO"),
-                      new Candidate("Roberta WOOD"), 
-                      new Candidate("Roslyn DUNDAS"), 
-                      new Candidate("Harold HIRD"), 
-                      new Candidate("Julie-Anne PAPATHANASIOU"), 
-                      new Candidate("Darcy HENRY"), 
-                      new Candidate("John E. GORMAN"),
-                      new Candidate("Bill STEFANIAK"), 
-                      new Candidate("Bob SOBEY"), 
-                      new Candidate("Briant CLARK"), 
-                      new Candidate("Ilona FRASER"), 
-                      new Candidate("Vicki DUNNE"), 
-                      new Candidate("Anne MOORE"), 
-                      new Candidate("Mike O'SHAUGHNESSY"), 
-                      new Candidate("Jon STANHOPE"), 
-                      new Candidate("Mary PORTER"), 
-                      new Candidate("Ross MAXWELL"), 
-                      new Candidate("Susan McCARTHY"), 
-                      new Candidate("Wayne BERRY"), 
-                      new Candidate("John SIMSONS"))
-       case "ACTBrindabella2004" =>
-         order = List(new Candidate("Erol Francis BYRNE"), 
-                      new Candidate("Thelma JANES"),
-                      new Candidate("Graham JENSEN"),
-                      new Candidate("Kathryn KELLY"),
-                      new Candidate("Brendan SMYTH"), 
-                      new Candidate("Karen SCHILLING"), 
-                      new Candidate("Megan PURCELL"), 
-                      new Candidate("Steve DOSZPOT"), 
-                      new Candidate("Steve PRATT"), 
-                      new Candidate("Marc EMERSON"),
-                      new Candidate("Rowena BEW"), 
-                      new Candidate("David GARRETT"), 
-                      new Candidate("Matthew HARDING"), 
-                      new Candidate("John HARGREAVES"), 
-                      new Candidate("Karin MacDONALD"), 
-                      new Candidate("Mick GENTLEMAN"), 
-                      new Candidate("Paschal LEAHY"), 
-                      new Candidate("Rebecca LOGUE"), 
-                      new Candidate("Burl DOBLE"), 
-                      new Candidate("Lance MUIR"), 
-                      new Candidate("Stephanie ELLIOTT"))
-       case "ACTGinninderra2004" =>
-         order = List(new Candidate("Fred LEFTWICH"), 
-                      new Candidate("Robert ROSE"),
-                      new Candidate("John HUMPHREYS"),
-                      new Candidate("Melanie SUTCLIFFE"),
-                      new Candidate("John FARRELL"),
-                      new Candidate("Robert FEARN"),
-                      new Candidate("Adina CIRSON"),
-                      new Candidate("Andrew BARR"),
-                      new Candidate("Katy GALLAGHER"),
-                      new Candidate("Kim SATTLER"),
-                      new Candidate("Mike HETTINGER"),
-                      new Candidate("Simon CORBELL"),
-                      new Candidate("Ted QUINLAN"),
-                      new Candidate("David KIBBEY"),
-                      new Candidate("Gordon SCOTT"),
-                      new Candidate("Jacqui BURKE"),
-                      new Candidate("Lucille BAILIE"),
-                      new Candidate("Richard MULCAHY"),
-                      new Candidate("Ron FORRESTER"),
-                      new Candidate("Zed SESELJA"),
-                      new Candidate("Amanda BRESNAN"),
-                      new Candidate("Charlie PAHLMAN"),
-                      new Candidate("Deb FOSKEY"),
-                      new Candidate("Jo McKINLEY"),
-                      new Candidate("Simone GRAY"),
-                      new Candidate("Helen CROSS"),
-                      new Candidate("Renee STRAMANDINOLI"),
-                      new Candidate("Jonathon REYNOLDS"),
-                      new Candidate("Nancy-Louise McCULLOUGH"),
-                      new Candidate("Ken HELM"),
-                      new Candidate("Kurt KENNEDY"),
-                      new Candidate("Luke GARNER"),
-                      new Candidate("Tony FARRELL"))
-       case "ACTBrindabella2012" =>
-         order = List(new Candidate("WALL Andrew"), 
-                      new Candidate("SMYTH Brendan"), 
-                      new Candidate("LAWDER Nicole"), 
-                      new Candidate("JEFFERY Val"), 
-                      new Candidate("SESELJA Zed"), 
-                      new Candidate("BRESNAN Amanda"), 
-                      new Candidate("MURPHY Ben"), 
-                      new Candidate("DAVIS Johnathan"), 
-                      new Candidate("BURCH Joy"), 
-                      new Candidate("MAFTOUM Karl"), 
-                      new Candidate("GENTLEMAN Mick"), 
-                      new Candidate("KINNIBURGH Mike"), 
-                      new Candidate("CODY Rebecca"), 
-                      new Candidate("HENSCHKE Adam"), 
-                      new Candidate("ERWOOD Mark"), 
-                      new Candidate("DOBLE Burl"), 
-                      new Candidate("JONES-ELLIS Kieran"),
-                      new Candidate("PEARCE Calvin"),
-                      new Candidate("GIBBONS Mark"),
-                      new Candidate("LINDFIELD Michael"))
-       case _ =>
-     }
-     
-     
-     c.file match {
+     c.ballotsfile match {
        case Some(filename) => { // ONLY ONE FILE IS ANALYSED
+            val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
+            println(candidates)
             val election =  PreferencesParser.read(c.directory + filename)
             val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
             val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename 
-            callMethod(c, election, winnersfile, reportfile, order) 
+            callMethod(c, election, winnersfile, reportfile, candidates) 
        }
        case None => {  // ALL FILES IN THE DIRECTORY ARE ANALYSED
+        val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
         val files = new java.io.File(c.directory).listFiles.filter(_.getName.endsWith(".kat"))
         for (file <- files){
           val filename = file.getName
@@ -262,7 +155,7 @@ object Main {
           val election =  PreferencesParser.read(c.directory + filename)
           val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
           val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename 
-          callMethod(c, election, winnersfile, reportfile, order) 
+          callMethod(c, election, winnersfile, reportfile, candidates) 
         }
        }
      }

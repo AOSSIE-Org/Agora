@@ -14,7 +14,9 @@ import scala.util.Sorting
 import java.io._
 
 
-
+// LIKE ACT, BUT TAKE A LIST OF CANDIDATES (INTEGERS) AS INPUT
+// HAS TO BE EXTENDED TO ANY TYPE OF CANDIDATES
+// THEN ACT CLASS CAN BE REMOVED
 abstract class IACT extends ISTVMethod[ACTBallot]
  with DroopQuota
  with NoFractionInQuota

@@ -48,23 +48,21 @@ Examples of TERMINAL COMMANDS to run the code:
 
 sbt -J-Xmx12G -J-Xms12G  
 
-run -d /directory/ [-f file_with_preferences.txt] -m method -n num_of_vacancies [-o order] [-t table]
+run -d /directory/ [-b ballots.txt] -c candidates.txt -m method -n num_of_vacancies [-k num_of_candidates] [-t table]
 
 
-run -d /home/users/u1017108/Documents/PreferenceData/ -m EVACS -n 5
+run -d /home/users/u1017108/Documents/PreferenceData/ACT/2004/ -b Preferences_ACT2004_Ginninderra.txt -c Candidates_ACT_2004_Ginninderra.txt -m EVACS -n 5 -t Concise
 
 -----------------------------------------------------------------
 
-java -jar countvotes-assembly-1.1.jar -d /directory/ [-f file_with_preferences.txt] -m method -n num_of_vacancies [-o order] [-t table]
+java -jar countvotes-assembly-1.1.jar parameters
 
 where
 
 method is either EVACS or Simple  
-order is the order of candidates in tally as appears in the Electorate Comission's tables and can be one of ACTGinninderra2004, ACTBrindabella2004, ACTGinninderra2004, ACTBrindabella2012.
+candidates is the file containing all candidates. The tally will be printed in the order as the candidates appear in this file.
 
 table is either ACT or Concise. Concise is default.
-
-If -o is ommited, candidates are unordered.
 
 If -f is ommited, all files in -d are analyzed.
 

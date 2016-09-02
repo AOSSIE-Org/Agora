@@ -72,7 +72,7 @@ abstract class ACT extends STVMethod[ACTBallot]
     
    println(" \n NEW RECURSIVE CALL \n")
    
-   println("Election: " + election)
+   //println("Election: " + election)
   
    if (election.isEmpty){Nil}  // If all ballots are removed by the candidate who reached the quota exactly, the election will be empty.
    //                             For example (3 seats, quota=2):

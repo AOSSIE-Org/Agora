@@ -43,10 +43,8 @@ abstract class ISTVMethod[B <: Ballot with Weight] extends VoteCountingMethod[B]
   
   def chooseCandidateForExclusion(totals: Map[Candidate, Rational]): (Candidate, Rational)
     
-
   def exclude(election: Election[B], candidate: Candidate, value: Option[Rational], newWinners: Option[List[Candidate]]): (Election[B], Set[B])
 
-  
   def removeWinnerWithoutSurplusFromElection(election: Election[B], winner: Candidate): Election[B]
 
   
@@ -56,7 +54,6 @@ abstract class ISTVMethod[B <: Ballot with Weight] extends VoteCountingMethod[B]
   //  report.clear
   //  output
   //}
-  
   
   
   def computeTotals(election: Election[WeightedBallot], candidates: List[Candidate]): Map[Candidate, Rational] = {
@@ -70,7 +67,6 @@ abstract class ISTVMethod[B <: Ballot with Weight] extends VoteCountingMethod[B]
             
      m
   }
-  
   
   def sumTotals(totals:  Map[Candidate, Rational]): Rational = {
     var sum: Rational = 0
@@ -87,7 +83,6 @@ abstract class ISTVMethod[B <: Ballot with Weight] extends VoteCountingMethod[B]
      r
   }
 
-
   def quotaReached(totals: Map[Candidate, Rational], quota: Rational): Boolean = {
      if (totals.exists(_._2 >= quota) ) {
        println("\nQuota: reached")
@@ -99,7 +94,6 @@ abstract class ISTVMethod[B <: Ballot with Weight] extends VoteCountingMethod[B]
      }
   }
   
-    
     
   def ballotsAreContinuing(c: Candidate, election: Election[B], pendingWinners:  List[Candidate]): Boolean = {
     var el = election
@@ -114,10 +108,6 @@ abstract class ISTVMethod[B <: Ballot with Weight] extends VoteCountingMethod[B]
     ballotsC
   }
     
-    
-  
-
-  
   //TODO: Optimize: as soon as we found continuing candidate, we can simply attach the rest of the list
   def filterPreferences(preferences: List[Candidate], candidates: List[Candidate]): List[Candidate] = { 
    var newpreferences: List[Candidate] = Nil
