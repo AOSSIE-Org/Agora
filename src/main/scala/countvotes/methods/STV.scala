@@ -15,7 +15,7 @@ import scala.util.Sorting
 import java.io._
 
 
-abstract class STVMethod[B <: Ballot with Weight] extends VoteCountingMethod[B] {
+abstract class STV[B <: Ballot with Weight] extends VoteCountingMethod[B] {
   //type E = Election[B]
   
   

@@ -51,8 +51,8 @@ class Rational(n: BigInt, d: BigInt) {
   override def hashCode: Int =
     41 * (41 + numerator.toInt) + denominator.toInt
   
-  override def toString = if (denominator == 1) numerator.toString else numerator + "/" + denominator // + " : " +  (numerator/denominator).toString()
- //   override def toString = if (denominator == 1) numerator.toString else (numerator/denominator).toString()
+  //override def toString = if (denominator == 1) numerator.toString else numerator + "/" + denominator // + " : " +  (numerator/denominator).toString()
+    override def toString = if (denominator == 1) numerator.toString else (numerator/denominator).toString()
   
   def toInt = (numerator/denominator ).toInt
 }

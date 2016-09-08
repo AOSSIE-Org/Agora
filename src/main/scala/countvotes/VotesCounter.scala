@@ -107,12 +107,17 @@ object Main {
                }
                case "EVACSnoLP" =>  {
                  var r = (new EVACSnoLPMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt) 
-                r.writeDistributionOfPreferences(reportfile,Some(candidates_in_order)) 
+                 r.writeDistributionOfPreferences(reportfile,Some(candidates_in_order)) 
                  r.writeWinners(winnersfile)
                }
                case "EVACSDWD" =>  {
                   var r = (new EVACSDelayedWDMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt) 
                   r.writeDistributionOfPreferences(reportfile,Some(candidates_in_order))
+                  r.writeWinners(winnersfile)
+               }
+               case "Senate" =>  {
+                  var r = (new SenateMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt) 
+                  println(" Scrutiny table for method Simple is not implemented yet.")
                   r.writeWinners(winnersfile)
                }
                case "Simple" =>  {
@@ -133,7 +138,7 @@ object Main {
      c.ballotsfile match {
        case Some(filename) => { // ONLY ONE FILE IS ANALYSED
             val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
-            println(candidates)
+            println("Candidates: " + candidates)
             val election =  PreferencesParser.read(c.directory + filename)
             val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
             val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename 

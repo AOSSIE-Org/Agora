@@ -11,7 +11,7 @@ import collection.mutable.{HashMap => Map}
 // ACT
 // This function takes a lot of time. The running time is large because of it.
 
-trait ACTFractionLoss extends STVMethod[ACTBallot]{
+trait ACTFractionLoss extends STV[ACTBallot]{
   
   def loseFraction(e: Election[ACTBallot], ccandidates: List[Candidate]): Election[ACTBallot] = {
     val pt = computeTotals(e,ccandidates)
@@ -29,6 +29,15 @@ trait ACTFractionLoss extends STVMethod[ACTBallot]{
       newe = neweste
     }  
    newe
+  }
+  
+}
+
+
+trait NoFractionLoss extends STV[ACTBallot]{
+  
+  def loseFraction(e: Election[ACTBallot], ccandidates: List[Candidate]): Election[ACTBallot] = {
+    e
   }
   
 }

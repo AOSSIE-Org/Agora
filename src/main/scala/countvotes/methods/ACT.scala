@@ -14,13 +14,11 @@ import scala.util.Sorting
 import java.io._
 
 
-// LIKE ACT, BUT TAKE A LIST OF CANDIDATES (INTEGERS) AS INPUT
-// HAS TO BE EXTENDED TO ANY TYPE OF CANDIDATES
-// THEN ACT CLASS CAN BE REMOVED
-abstract class ACT extends STVMethod[ACTBallot]
+
+abstract class ACT extends STVAustralia
  with DroopQuota
  with NoFractionInQuota
- with INewWinnersOrderedByTotals[ACTBallot]
+ with NewWinnersOrderedByTotals[ACTBallot]
  with ACTSurplusDistributionTieResolution
  with ACTFractionLoss
  with ACTExclusion
@@ -46,35 +44,14 @@ abstract class ACT extends STVMethod[ACTBallot]
     ballots
   }
   
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  def runScrutiny(election: Election[ACTBallot], candidates: List[Candidate], numVacancies: Int):  Report[ACTBallot] = {  // all ballots of e are marked when the function is called
-   val quota = cutQuotaFraction(computeQuota(election.length, numVacancies))
-   println("Number of ballots:" + election.length)
-   println("Quota: " + quota)
-   result.setQuota(quota)
-   report.setQuota(quota)
-    
-   val totals = computeTotals(election, candidates) // Here are totals of candidates also not OCCURING in the ballots
-   result.addTotalsToHistory(totals) 
- 
-   //report.setCandidates(getCandidates(election))  // Here are candidates OCCURING in the election
-   report.setCandidates(candidates)  // Here are candidates also not OCCURING in the election
-   
-   
-   report.newCount(Input, None, Some(election), Some(totals), None, None)
-   report.setLossByFractionToZero
-   
-   report.setWinners(computeWinners(election, candidates, numVacancies))   
-   
-   report
- }
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+  
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   def computeWinners(election: Election[ACTBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)] = {
     
    println(" \n NEW RECURSIVE CALL \n")
    
-   println("Election: " + election)
+   //println("Election: " + election)
   
    if (election.isEmpty){Nil}  // If all ballots are removed by the candidate who reached the quota exactly, the election will be empty.
    //                             For example (3 seats, quota=2):
@@ -108,8 +85,8 @@ abstract class ACT extends STVMethod[ACTBallot]
    }
    else {        
     quotaReached(totals, result.getQuota) match {
-      case true => 
-          val winners: List[(Candidate, Rational)] = returnNewWinners(totals, result.getQuota) // sorted!
+      case true => {
+          val winners: List[(Candidate, Rational)] = returnNewWinners(totals, result.getQuota) //  sorted! tie resolved!
           println("New winners: " + winners)
           result.addPendingWinners(winners.toList, Some(extractMarkings(election))) 
       
@@ -131,8 +108,8 @@ abstract class ACT extends STVMethod[ACTBallot]
                 }
               case true => winners
             }
-          
-      case false =>  
+      }    
+      case false => { 
           val leastVotedCandidate = chooseCandidateForExclusion(totals)
           println("Candidate to be excluded: " + leastVotedCandidate )
           result.addExcludedCandidate(leastVotedCandidate._1,leastVotedCandidate._2)
@@ -149,7 +126,7 @@ abstract class ACT extends STVMethod[ACTBallot]
             // if (for_each_candidate(candidates, &check_status,(void *)(CAND_ELECTED|CAND_PENDING)) == num_seats) return true;
             newWinners }           
           else computeWinners(newElection,ccandidates.filterNot(x => x == leastVotedCandidate._1), numVacancies-newWinners.length):::newWinners
-          
+      }    
       }
     
    }
@@ -168,22 +145,6 @@ abstract class ACT extends STVMethod[ACTBallot]
      markings
    }
   
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
- def surplusesDistribution(election: Election[ACTBallot], ccandidates: List[Candidate], numVacancies: Int): (Election[ACTBallot], List[(Candidate,Rational)]) = {
-  println("Distribution of surpluses.")
-   var newws: List[(Candidate, Rational)] = List() 
-   var newElection = election
-
-   while (result.getPendingWinners.nonEmpty && newws.length != numVacancies){
-    val (cand, ctotal, markings) = result.takeAndRemoveFirstPendingWinner
-    val res = tryToDistributeSurplusVotes(newElection, ccandidates, cand, ctotal, markings)
-    newElection = res._1
-    newws = newws ::: res._2
-    println("Are there pending candidates? " + result.getPendingWinners.nonEmpty)
-   }
-   (newElection, newws)
-  }
   
  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -309,22 +270,6 @@ abstract class ACT extends STVMethod[ACTBallot]
  }
   
  
- 
-// ACT Legislation:
-// 9(1): If a candidate is excluded in accordance with clause 8, the ballot papers counted for the candidate 
-// shall be sorted into groups according to their transfer values when counted for him or her. 
-//
- def determineStepsOfExclusion(election: Election[ACTBallot], candidate: Candidate): List[(Candidate, Rational)] = {
-   var s: Set[(Candidate, Rational)] = Set()
-
-   for (b <- election) { 
-      if (b.preferences.nonEmpty && b.preferences.head == candidate && !s.contains((candidate,b.value))) { 
-        s += ((candidate, b.value)) }
-    }
-   s.toList.sortBy(x => x._2).reverse //>
- }
-
-  
   
   
 }

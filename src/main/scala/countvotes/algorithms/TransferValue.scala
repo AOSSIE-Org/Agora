@@ -12,7 +12,7 @@ import java.io._
 
 
 
-trait TransferValueWithDenominatorWithNumOfMarkedContinuingBallots extends STVMethod[ACTBallot]{  
+trait TransferValueWithDenominatorWithNumOfMarkedContinuingBallots extends STV[ACTBallot]{  
   def computeTransferValue(surplus: Rational, election: Election[ACTBallot], pendingWinners:  List[Candidate], candidate: Candidate, markings: Option[Set[Int]]): Rational = {
     //println("Pending winners: " + pendingWinners)
     var num = 0
@@ -52,11 +52,24 @@ trait TransferValueWithDenominatorWithNumOfMarkedContinuingBallotsOrOne {
 }
 
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+trait TransferValueWithDenominatorWithNumOfBallots extends STV[ACTBallot]{  
+  def computeTransferValue(surplus: Rational, election: Election[ACTBallot], pendingWinners:  List[Candidate], candidate: Candidate, markings: Option[Set[Int]]): Rational = {
+    var num = 0
+      for (b <- election if !b.preferences.isEmpty) { 
+        if ( b.preferences.head == candidate ) {num = num + 1}
+      }
+      // println("Denominator: " + num)
+      surplus/num
+  }
+}
+
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-trait TransferValueWithDenominatorWithNumOfAllContinuingBallots extends STVMethod[ACTBallot]{  
+trait TransferValueWithDenominatorWithNumOfAllContinuingBallots extends STV[ACTBallot]{  
   def computeTransferValue(surplus: Rational, election: Election[ACTBallot], pendingWinners:  List[Candidate], candidate: Candidate, markings: Option[Set[Int]]): Rational = {
     var num = 0
       for (b <- election if !b.preferences.isEmpty) { 
@@ -68,7 +81,7 @@ trait TransferValueWithDenominatorWithNumOfAllContinuingBallots extends STVMetho
 }
 
 
-trait TransferValueWithDenominatorWithNumOfAllContinuingBallotsOrOne extends STVMethod[ACTBallot]{  
+trait TransferValueWithDenominatorWithNumOfAllContinuingBallotsOrOne extends STV[ACTBallot]{  
   def computeTransferValue(surplus: Rational, election: Election[ACTBallot], pendingWinners:  List[Candidate], candidate: Candidate, markings: Option[Set[Int]]): Rational = {
     var num = 0
       for (b <- election if !b.preferences.isEmpty) { 
@@ -87,7 +100,7 @@ trait TransferValueWithDenominatorWithNumOfAllContinuingBallotsOrOne extends STV
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  
 // TV = surplus /  total of continuing ballot papers (i.e. with further continuing preferences)
-trait TransferValueWithDenominatorWithTotalOfContinuingBallots extends STVMethod[WeightedBallot]{  
+trait TransferValueWithDenominatorWithTotalOfContinuingBallots extends STV[WeightedBallot]{  
   def computeTransferValue(surplus: Rational, election: Election[WeightedBallot], pendingWinners:  List[Candidate], candidate: Candidate, markings: Option[Set[Int]]): Rational = {
     var num:Rational = 0
       for (b <- election if !b.preferences.isEmpty) { 
@@ -103,7 +116,7 @@ trait TransferValueWithDenominatorWithTotalOfContinuingBallots extends STVMethod
 /* 
  * TV =  surplus /  total 
  * */
-trait TransferValueWithDenominatorEqualToTotal extends STVMethod[WeightedBallot]{  
+trait TransferValueWithDenominatorEqualToTotal extends STV[WeightedBallot]{  
   def computeTransferValue(surplus: Rational, election: Election[WeightedBallot], pendingWinners:  List[Candidate], candidate: Candidate, markings: Option[Set[Int]]): Rational = {
     surplus/computeTotal(election, candidate)
   }

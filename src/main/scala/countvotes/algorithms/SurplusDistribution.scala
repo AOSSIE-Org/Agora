@@ -29,7 +29,7 @@ import java.io._
 // i.e.:
 // if (tv > weight_i) then weight_(i+1) = weight_i else weight_(i+1) = tv
 //
-trait ACTSurplusDistribution extends STVMethod[ACTBallot]{
+trait ACTSurplusDistribution extends STV[ACTBallot]{
   
   
  def distributeSurplusVotes(election: Election[ACTBallot], candidate: Candidate, total:Rational, markings: Option[Set[Int]], pendingWinners: List[Candidate], transferValue: Rational):  (Election[ACTBallot], Set[ACTBallot], Option[Election[ACTBallot]]) = {  
@@ -70,9 +70,34 @@ trait ACTSurplusDistribution extends STVMethod[ACTBallot]{
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Section 273 (9)
+trait SenateSurplusDistribution extends STV[ACTBallot]{ 
+ def distributeSurplusVotes(election: Election[ACTBallot], candidate: Candidate, total:Rational, markings: Option[Set[Int]], pendingWinners: List[Candidate], transferValue: Rational):  (Election[ACTBallot], Set[ACTBallot], Option[Election[ACTBallot]]) = {  
+    var list: Election[ACTBallot] = Nil
+    var listIgnored: Election[ACTBallot] = Nil
+    var setExhausted: Set[ACTBallot] = Set()
+
+      for (b <- election if !b.preferences.isEmpty){    
+        if (b.preferences.head == candidate) { 
+          val continuingPreferences = filterPreferences(b.preferences.tail, candidate::pendingWinners)
+          if (continuingPreferences.nonEmpty) 
+            list = ACTBallot(continuingPreferences, b.id, true, transferValue, transferValue)::list 
+          else setExhausted += b // this ballot is exhausted
+        }
+        else 
+        list = ACTBallot(b.preferences.head::filterPreferences(b.preferences.tail filter {_!= candidate}, pendingWinners), b.id, false, b.weight, b.value)::list
+      }  
+   // println("setExhausted " + setExhausted)
+   // println("listIgnored " + listIgnored)
+  (list, setExhausted, Some(listIgnored))
+ }
+}
 
 
-trait ACTScrutinyWithAllContinuingBallotsInSurplusDistribution extends STVMethod[ACTBallot]{
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+trait ACTScrutinyWithAllContinuingBallotsInSurplusDistribution extends STV[ACTBallot]{
 
  def distributeSurplusVotes(election: Election[ACTBallot], candidate: Candidate, total:Rational, markings: Option[Set[Int]], pendingWinners: List[Candidate], transferValue: Rational):  (Election[ACTBallot], Set[ACTBallot], Option[Election[ACTBallot]]) = {  
    
@@ -105,7 +130,7 @@ trait ACTScrutinyWithAllContinuingBallotsInSurplusDistribution extends STVMethod
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-trait ScrutinyWithAllContinuingBallotsInSurplusDistribution extends STVMethod[WeightedBallot]{
+trait ScrutinyWithAllContinuingBallotsInSurplusDistribution extends STV[WeightedBallot]{
 
  def distributeSurplusVotes(election: Election[WeightedBallot], candidate: Candidate, total:Rational, markings: Option[Set[Int]], pendingWinners: List[Candidate], transferValue: Rational):  (Election[WeightedBallot], Set[WeightedBallot], Option[Election[WeightedBallot]]) = {  
    
@@ -132,7 +157,7 @@ trait ScrutinyWithAllContinuingBallotsInSurplusDistribution extends STVMethod[We
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-trait ScrutinyWithAllBallotsInSurplusDistribution extends STVMethod[WeightedBallot]{
+trait ScrutinyWithAllBallotsInSurplusDistribution extends STV[WeightedBallot]{
 
  def distributeSurplusVotes(election: Election[WeightedBallot], candidate: Candidate, total:Rational, markings: Option[Set[Int]], pendingWinners: List[Candidate], transferValue: Rational):  (Election[WeightedBallot], Set[WeightedBallot], Option[Election[WeightedBallot]]) = {  
    

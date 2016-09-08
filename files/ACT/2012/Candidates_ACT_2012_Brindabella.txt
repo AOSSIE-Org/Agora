@@ -1,4 +1,4 @@
-WALL Andrew 
+WALL Andrew
 SMYTH Brendan
 LAWDER Nicole
 JEFFERY Val
@@ -7,12 +7,12 @@ BRESNAN Amanda
 MURPHY Ben
 DAVIS Johnathan
 BURCH Joy
-MAFTOUM Karl 
-GENTLEMAN Mick 
-KINNIBURGH Mike 
-CODY Rebecca 
-HENSCHKE Adam 
-ERWOOD Mark 
+MAFTOUM Karl
+GENTLEMAN Mick
+KINNIBURGH Mike
+CODY Rebecca
+HENSCHKE Adam
+ERWOOD Mark
 DOBLE Burl
 JONES-ELLIS Kieran
 PEARCE Calvin

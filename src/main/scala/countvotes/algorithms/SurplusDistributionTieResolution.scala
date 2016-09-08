@@ -12,8 +12,40 @@ trait SurplusDistributionTieResolution {
   def resolveSurpluseDistributionTie(equaltotals: Map[Candidate, Rational]): List[(Candidate, Rational)]
 }
 
+// Section 273 (22)
+trait SenateSurplusDistributionTieResolution extends STV[ACTBallot] with SurplusDistributionTieResolution{
+  
+  def resolveSurpluseDistributionTie(totalsOfWinners: Map[Candidate, Rational]): List[(Candidate, Rational)] = {
+   val candidates = totalsOfWinners.map(_._1).toSet
+   val listwithtieresolved = recOrder(candidates, result.getTotalsHistoryClone) 
+   val totals = result.getTotalsHistoryClone.head
+   for (l <- listwithtieresolved ) yield (l, totals(l))
+  }
+  
+   def recOrder(candidates: Set[Candidate], totalshistory: List[Map[Candidate, Rational]]): List[Candidate] = {
+    if (candidates.nonEmpty) {
+      if (totalshistory.nonEmpty){
+        val totals = totalshistory.head.clone()
+        println(" totals: " + totals)
+        var setOfValues: Set[Rational] = Set()
+        for (candidate <- totals filterKeys {candidates} map (_._1)){    
+         if (setOfValues.contains(totals(candidate))) recOrder(candidates, totalshistory.tail)
+         else setOfValues = setOfValues + totals(candidate)
+        }
+        // they are pairwise different, we just need to sort them by their totals
+        totals.filter(p => candidates.contains(p._1)).toList.sortBy(x => x._2).reverse.map(_._1)
+      }
+      else { // the Australian Electoral Officer shall determine the order 
+       Random.shuffle(candidates.toList)  // If did not manage to resolve the tie, shuffle them randomly  
+      }
+    }
+    else throw new Exception("Empty set of winners with equal surplus.")
+  }
 
-trait ACTSurplusDistributionTieResolution extends STVMethod[ACTBallot] with SurplusDistributionTieResolution{
+}
+
+
+trait ACTSurplusDistributionTieResolution extends STV[ACTBallot] with SurplusDistributionTieResolution{
   
  def recOrderIdentical(equaltotals: List[Candidate], totalshistory: List[Map[Candidate, Rational]]): List[Candidate] = {
       
@@ -59,7 +91,7 @@ trait ACTSurplusDistributionTieResolution extends STVMethod[ACTBallot] with Surp
 
   
   def resolveSurpluseDistributionTie(totalsOfWinners: Map[Candidate, Rational]): List[(Candidate, Rational)] = {
-   var sortedList = totalsOfWinners.toList.sortBy(x => x._2).reverse // >
+   val sortedList = totalsOfWinners.toList.sortBy(x => x._2).reverse // >
    //println("sortedList: " + sortedList)
    val listwithtieresolved = recOrderDifferent(totalsOfWinners, sortedList, result.getTotalsHistoryClone) 
    for (l <- listwithtieresolved ) yield (l, totalsOfWinners(l))
@@ -69,7 +101,7 @@ trait ACTSurplusDistributionTieResolution extends STVMethod[ACTBallot] with Surp
 
 
 
-trait SimpleSurplusDistributionTieResolution extends STVMethod[WeightedBallot] with SurplusDistributionTieResolution{
+trait SimpleSurplusDistributionTieResolution extends STV[WeightedBallot] with SurplusDistributionTieResolution{
   def resolveSurpluseDistributionTie(equaltotals: Map[Candidate, Rational]): List[(Candidate, Rational)] = {
     equaltotals.toList.sortBy(x => x._2).reverse // >
   }
