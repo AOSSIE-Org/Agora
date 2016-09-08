@@ -60,8 +60,14 @@ import collection.mutable.{HashMap => Map}
      h
     }
     
+    
+    def takeButRetainFirstPendingWinner: (Candidate, Rational, Option[Set[Int]]) = {
+     pendingWinners.head
+    }
+    
+    
     def removePendingWinner(c: Candidate) = { 
-     pendingWinners = pendingWinners.filter(_ != c)
+     pendingWinners = pendingWinners.filterNot(p => p._1.name == c.name) 
     }
     
    

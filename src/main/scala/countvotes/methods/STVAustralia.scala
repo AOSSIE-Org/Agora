@@ -46,21 +46,7 @@ abstract class STVAustralia extends STV[ACTBallot] {
  
  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  def surplusesDistribution(election: Election[ACTBallot], ccandidates: List[Candidate], numVacancies: Int): (Election[ACTBallot], List[(Candidate,Rational)]) = {
-  println("Distribution of surpluses.")
-   var newws: List[(Candidate, Rational)] = List() 
-   var newElection = election
 
-   while (result.getPendingWinners.nonEmpty && newws.length != numVacancies){
-    val (cand, ctotal, markings) = result.takeAndRemoveFirstPendingWinner
-    val res = tryToDistributeSurplusVotes(newElection, ccandidates, cand, ctotal, markings)
-    newElection = res._1
-    newws = newws ::: res._2
-    println("Are there pending candidates? " + result.getPendingWinners.nonEmpty)
-   }
-   (newElection, newws)
-  }
-  
   
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -117,8 +117,13 @@ object Main {
                }
                case "Senate" =>  {
                   var r = (new SenateMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt) 
-                  println(" Scrutiny table for method Simple is not implemented yet.")
-                  r.writeWinners(winnersfile)
+                  c.table match {
+                   case ACT =>  r.writeDistributionOfPreferencesACT(reportfile,Some(candidates_in_order))
+                   case _ =>  r.writeDistributionOfPreferences(reportfile,Some(candidates_in_order)) 
+                 }
+                 println("The scrutiny was recorded to " + reportfile)
+                 r.writeWinners(winnersfile)
+                 println("The winners were recorded to " + winnersfile)
                }
                case "Simple" =>  {
                   var r = (new SimpleSTVMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt) 

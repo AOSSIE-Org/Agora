@@ -60,7 +60,8 @@ trait TransferValueWithDenominatorWithNumOfBallots extends STV[ACTBallot]{
       for (b <- election if !b.preferences.isEmpty) { 
         if ( b.preferences.head == candidate ) {num = num + 1}
       }
-      // println("Denominator: " + num)
+      println("Denominator: " + num)
+      println("Surplus: " + surplus)
       surplus/num
   }
 }
