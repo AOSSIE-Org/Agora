@@ -55,5 +55,14 @@ abstract class VoteCountingMethod[B <: Ballot with Weight] {
     print("\n")
  }
   
+ 
+ def printTotal(total: Map[Candidate, Rational]) = {
+    print("\n")
+    for (t <- total) {
+      var pr = ""
+      println(t)
+    }
+    print("\n")
+ }
     
 }

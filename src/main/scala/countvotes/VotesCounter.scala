@@ -116,7 +116,8 @@ object Main {
                   r.writeWinners(winnersfile)
                }
                case "Senate" =>  {
-                  var r = (new SenateMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt) 
+                  val electionwithIds = for (b<-election) yield WeightedBallot(b.preferences, election.indexOf(b)+1, Rational(1,1))
+                  var r = (new SenateMethod).runScrutiny(Election.weightedElectionToACTElection(electionwithIds), candidates_in_order, c.nvacancies.toInt) 
                   c.table match {
                    case ACT =>  r.writeDistributionOfPreferencesACT(reportfile,Some(candidates_in_order))
                    case _ =>  r.writeDistributionOfPreferences(reportfile,Some(candidates_in_order)) 
@@ -144,7 +145,7 @@ object Main {
        case Some(filename) => { // ONLY ONE FILE IS ANALYSED
             val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
             println("Candidates: " + candidates)
-            val election =  PreferencesParser.read(c.directory + filename)
+            val election =  PreferencesWithoutIDAndWeightParser.read(c.directory + filename)
             val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
             val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename 
             callMethod(c, election, winnersfile, reportfile, candidates) 

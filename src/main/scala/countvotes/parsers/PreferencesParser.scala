@@ -34,6 +34,25 @@ object PreferencesParser extends ElectionParser[WeightedBallot] with RegexParser
 }
 
 
+object PreferencesWithoutIDAndWeightParser extends ElectionParser[WeightedBallot] with RegexParsers {
+  
+  // the method line returns a Parser of type ACTBallotPapersDataStructure 
+   def line : Parser[WeightedBallot] = preferences ^^ { 
+     case  p  => 
+       {  //println(p)
+          WeightedBallot(p, 0, Rational(1,1))
+       }
+   }
+   
+   def candidate : Parser[Candidate] = """[0-9A-Za-z\-\,\.\ \']*""".r ^^ { s => Candidate(s) }
+   
+   
+   def preferences : Parser[List[Candidate]] = repsep(candidate, ">") 
+   
+  
+   
+}
+
 
 /*
 

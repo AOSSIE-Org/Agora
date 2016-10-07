@@ -24,6 +24,7 @@ package object structures {
   case object ExactWinner extends Actions
   case object Input extends Actions
   case object VictoryWithoutQuota extends Actions
+  case object TwoLastCandidatesForOneVacancy extends Actions
   
   
 }

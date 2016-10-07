@@ -28,7 +28,7 @@ import collection.mutable.{HashMap => Map}
     
     
     def setLossByFractionToZero = {
-      countHistory.head.setLossByFraction(0)
+      countHistory.head.setLossByFraction(Rational(0,1))
     }
     
     def setLossByFraction(oldtotals: Map[Candidate, Rational], newtotals:  Map[Candidate, Rational]) = {
@@ -132,7 +132,9 @@ import collection.mutable.{HashMap => Map}
    val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)))      
      //writer.write(result.getWinners.toString())
      var sw = ""  
+     println("\n WINNERS \n")
      for ( w <- winners){
+       println(w._1 + ": " + w._2.numerator/w._2.denominator + "\n")
          sw = sw + w._1 + ": " + w._2.numerator/w._2.denominator + "\n"
      }
      writer.write(sw)
@@ -249,6 +251,7 @@ import collection.mutable.{HashMap => Map}
       //println("Exhausted ballots: " + count.getExhaustedBallots)
       line +=   count.getInitiator + separator + count.getAction + separator + winners + separator + count.getLossByFraction.toInt   + separator 
      
+      //println(line + "\n")
       
       val exhaustedBallots = count.getExhaustedBallots
       val ignoredBallots = count.getIgnoredBallots
