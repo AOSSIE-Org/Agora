@@ -1,6 +1,6 @@
 //
 // EXACTLY LIKE EVACS METHOD
-// EXCEPT TWO FOLLOWING TRAITS: 
+// EXCEPT TWO FOLLOWING TRAITS:
 // TransferValueWithDenominatorWithNumOfContinuingBallots
 // ACTScrutinyWithAllContinuingBallotsInSurplusDistribution
 //
@@ -11,7 +11,7 @@ import countvotes.structures._
 import countvotes.algorithms._
 
 
-object EVACSnoLPMethod extends STVMethod[ACTBallot] 
+object EVACSnoLPMethod extends STVMethod[ACTBallot]
  with DroopQuota
  with NoFractionInQuota
  with NewWinnersOrderedByTotals[ACTBallot]
@@ -20,44 +20,44 @@ object EVACSnoLPMethod extends STVMethod[ACTBallot]
  with ACTSurplusDistributionTieResolution
  with ACTFractionLoss
  with ACTExclusion
- with ACTExclusionTieResolution 
+ with ACTExclusionTieResolution
  with ACTExactWinnerRemoval
- {  
-  
+ {
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   def runScrutiny(election: Election[ACTBallot], numVacancies: Int):  Report[ACTBallot] = {  // all ballots of e are marked when the function is called
-  
+
    val quota = cutQuotaFraction(computeQuota(election.length, numVacancies))
    println("Quota = " + quota)
    result.setQuota(quota)
    report.setQuota(quota)
-    
+
    val totals = computeTotals(election)
-   result.addTotalsToHistory(totals) 
- 
+   result.addTotalsToHistory(totals)
+
    report.setCandidates(getCandidates(election))
    report.newCount(Input, None, Some(election), Some(totals), None, None)
    report.setLossByFractionToZero
-   
-   report.setWinners(computeWinners(election, numVacancies))   
-   
+
+   report.setWinners(computeWinners(election, numVacancies))
+
    report
  }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  def computeWinners(election: Election[ACTBallot], numVacancies: Int): List[(Candidate,Rational)] = {
-    
+  override def computeWinners(election: Election[ACTBallot], numVacancies: Int): List[(Candidate,Rational)] = {
+
    println(" \n NEW RECURSIVE CALL \n")
-        
+
    val ccands = getCandidates(election)
    //println("Continuing candidates: " + ccands)
-       
-   val totals = computeTotals(election)  
+
+   val totals = computeTotals(election)
    println("Totals: " + totals)
-       
+
    //result.addTotalsToHistory(totals)
-    
-   // Notice: There may be more new winners than available vacancies!!! 
+
+   // Notice: There may be more new winners than available vacancies!!!
    // Apparently EVACS does not check this condition. See step 8.  Or in count.c
    // while (for_each_candidate(e->candidates, &check_status,
 	//			  (void *)(CAND_PENDING|CAND_ELECTED))
@@ -69,21 +69,21 @@ object EVACSnoLPMethod extends STVMethod[ACTBallot]
      report.setLossByFractionToZero
      for (c <- ccands) yield (c, totals(c))
    }
-   else {  
+   else {
     quotaReached(totals, result.getQuota) match {
-      case true => 
+      case true =>
           println("The quota is reached.")
           val winners: List[(Candidate, Rational)] = returnNewWinners(totals, result.getQuota) // sorted!
           println("New winners: " + winners)
-          result.addPendingWinners(winners.toList, Some(extractMarkings(election))) 
-      
+          result.addPendingWinners(winners.toList, Some(extractMarkings(election)))
+
           vacanciesFilled(winners.length, numVacancies) match {
               case false =>  {
                 println("Vacancies are not yet filled.")
                 val res = surplusesDistribution(election,numVacancies-winners.length)
                 val newElection: Election[ACTBallot] = res._1
                 val newWinners: List[(Candidate, Rational)] = res._2
-                
+
                 val nws = winners.length + newWinners.length
                 println("Number of winners in this recursive call: "  + nws)
                 if (nws == numVacancies) { winners:::newWinners }
@@ -91,94 +91,94 @@ object EVACSnoLPMethod extends STVMethod[ACTBallot]
               }
               case true => winners
             }
-          
-      case false =>  
+
+      case false =>
           val leastVotedCandidate = chooseCandidateForExclusion(totals)
           //println("Excluding " + leastVotedCandidate )
           result.addExcludedCandidate(leastVotedCandidate._1,leastVotedCandidate._2)
           val res = exclusion(election, leastVotedCandidate._1, numVacancies)
           val newElection: Election[ACTBallot] = res._1
           val newWinners: List[(Candidate, Rational)] = res._2
-          
+
           println("new Winners " + newWinners)
           println("Number of winners in this recursive call: "  + newWinners.length)
-          if (newWinners.length == numVacancies) { 
-            // Notice: There may be more new winners than available vacancies!!! 
+          if (newWinners.length == numVacancies) {
+            // Notice: There may be more new winners than available vacancies!!!
             // Apparently EVACS does not check this condition. See step 42. Or in count.c
             // if (for_each_candidate(candidates, &check_status,(void *)(CAND_ELECTED|CAND_PENDING)) == num_seats) return true;
-            newWinners }           
+            newWinners }
           else computeWinners(newElection, numVacancies-newWinners.length):::newWinners
-          
+
       }
-    
+
    }
   }
- 
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
    def extractMarkings(election: Election[ACTBallot]): Set[Int] = {
      var markings: Set[Int]  = Set()
      for (b <- election){
        if (b.marking) {
-         markings += b.id 
+         markings += b.id
        }
      }
      markings
    }
-  
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
  def surplusesDistribution(election: Election[ACTBallot], numVacancies: Int): (Election[ACTBallot], List[(Candidate,Rational)]) = {
   println("Distribution of surpluses.")
-   var newws: List[(Candidate, Rational)] = List() 
+   var newws: List[(Candidate, Rational)] = List()
    var newElection = election
    while (result.getPendingWinners.nonEmpty && newws.length != numVacancies){
     val (cand, ctotal, markings) = result.takeAndRemoveFirstPendingWinner
-    
+
     val res = tryToDistributeSurplusVotes(newElection, cand, ctotal, markings)
     newElection = res._1
     newws = newws ::: res._2
-        
+
     println("Are there pending candidates? " + result.getPendingWinners.nonEmpty)
    }
    (newElection, newws)
   }
-  
+
  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
  def tryToDistributeSurplusVotes(election: Election[ACTBallot], winner: Candidate, ctotal:Rational, markings: Option[Set[Int]] ): (Election[ACTBallot], List[(Candidate,Rational)]) = {
- 
+
   val pendingWinners = result.getPendingWinners.map(x => x._1)
-  
-  if (ctotal == result.getQuota || !ballotsAreContinuing(winner, election, pendingWinners) )  
-   { 
+
+  if (ctotal == result.getQuota || !ballotsAreContinuing(winner, election, pendingWinners) )
+   {
       val newElection = removeWinnerWithoutSurplusFromElection(election, winner) // should not we remove the candidate from all preferences in ballots???
       result.removePendingWinner(winner)
       (newElection, List())
    }
   else {
-    println("Distributing the surplus of " + winner) 
-    
+    println("Distributing the surplus of " + winner)
+
     val surplus = ctotal - result.getQuota
-    
-    val tv = computeTransferValue(surplus, election, pendingWinners, winner, markings) 
+
+    val tv = computeTransferValue(surplus, election, pendingWinners, winner, markings)
     println("tv = " + tv)
-        
-    val (newElection, exhaustedBallots, ignoredBallots) = distributeSurplusVotes(election, winner, ctotal, markings, pendingWinners, tv)  
+
+    val (newElection, exhaustedBallots, ignoredBallots) = distributeSurplusVotes(election, winner, ctotal, markings, pendingWinners, tv)
     val newElectionWithoutFractionInTotals = loseFraction(newElection)
-           
+
     val newtotalsWithoutFraction = computeTotals(newElectionWithoutFractionInTotals)
-    val newtotalsWithoutFractionWithoutpendingwinners = newtotalsWithoutFraction.clone().retain((k,v) => !pendingWinners.contains(k)) 
-    
+    val newtotalsWithoutFractionWithoutpendingwinners = newtotalsWithoutFraction.clone().retain((k,v) => !pendingWinners.contains(k))
+
     result.removePendingWinner(winner)
-    
+
     result.addTotalsToHistory(newtotalsWithoutFractionWithoutpendingwinners)
     var ws:  List[(Candidate,Rational)] = List()
     if (quotaReached(newtotalsWithoutFractionWithoutpendingwinners, result.getQuota)){
      ws = returnNewWinners(newtotalsWithoutFractionWithoutpendingwinners, result.getQuota) // sorted for further surplus distribution!
-     result.addPendingWinners(ws.toList, Some(extractMarkings(newElection))) 
+     result.addPendingWinners(ws.toList, Some(extractMarkings(newElection)))
     }
-    
+
     //------------ Reporting ------------------------------------------
     if (ws.nonEmpty) report.newCount(SurplusDistribution, Some(winner), Some(newElectionWithoutFractionInTotals), Some(newtotalsWithoutFraction), Some(ws), Some(exhaustedBallots))
     else report.newCount(SurplusDistribution, Some(winner), Some(newElectionWithoutFractionInTotals), Some(newtotalsWithoutFraction), None, Some(exhaustedBallots))
@@ -188,15 +188,15 @@ object EVACSnoLPMethod extends STVMethod[ACTBallot]
       case None =>
     }
     //------------------------------------------------------------------
-    
-    
+
+
     (newElectionWithoutFractionInTotals, ws)
   }
  }
- 
+
  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
- def exclusion(election: Election[ACTBallot], candidate: Candidate, numVacancies: Int): (Election[ACTBallot],  List[(Candidate, Rational)] ) = { 
+ def exclusion(election: Election[ACTBallot], candidate: Candidate, numVacancies: Int): (Election[ACTBallot],  List[(Candidate, Rational)] ) = {
    println("Exclusion of " + candidate)
    println("Vacancies left: " + numVacancies)
    var ws: List[(Candidate,Rational)] = List()
@@ -221,7 +221,7 @@ object EVACSnoLPMethod extends STVMethod[ACTBallot]
     if (quotaReached(totalsWithoutNewWinners, result.getQuota) ) {
       newws = returnNewWinners(totalsWithoutNewWinners, result.getQuota) // sorted!
       println("New winners as a result of the current partial exclusion: " + newws)
-      result.addPendingWinners(newws.toList, Some(extractMarkings(newElectionWithoutFractionInTotals))) 
+      result.addPendingWinners(newws.toList, Some(extractMarkings(newElectionWithoutFractionInTotals)))
       ws = ws ::: newws // check that the order is correct here!!!
       //------------ Reporting ------------------------------------------
       report.newCount(Exclusion, Some(candidate), Some(newElectionWithoutFractionInTotals), Some(newtotals), Some(newws), Some(exhaustedBallots))
@@ -232,7 +232,7 @@ object EVACSnoLPMethod extends STVMethod[ACTBallot]
     //report.setIgnoredBallots(List())
    }
   // TODO  distribute remaining votes
-  // if (vacanciesFilled(ws.length, numVacancies)) { 
+  // if (vacanciesFilled(ws.length, numVacancies)) {
   // }
    var dws:  List[(Candidate, Rational)]  = List()
    if (ws.nonEmpty) {
@@ -240,25 +240,25 @@ object EVACSnoLPMethod extends STVMethod[ACTBallot]
      newElectionWithoutFractionInTotals = res._1
      dws = res._2
    }
-   
+
    (newElectionWithoutFractionInTotals, ws:::dws)
  }
-  
- 
+
+
 // ACT Legislation:
-// 9(1): If a candidate is excluded in accordance with clause 8, the ballot papers counted for the candidate 
-// shall be sorted into groups according to their transfer values when counted for him or her. 
+// 9(1): If a candidate is excluded in accordance with clause 8, the ballot papers counted for the candidate
+// shall be sorted into groups according to their transfer values when counted for him or her.
 //
  def determineStepsOfExclusion(election: Election[ACTBallot], candidate: Candidate): List[(Candidate, Rational)] = {
    var s: Set[(Candidate, Rational)] = Set()
 
-   for (b <- election) { 
-      if (b.preferences.nonEmpty && b.preferences.head == candidate && !s.contains((candidate,b.value))) { 
+   for (b <- election) {
+      if (b.preferences.nonEmpty && b.preferences.head == candidate && !s.contains((candidate,b.value))) {
         s += ((candidate, b.value)) }
     }
    s.toList.sortBy(x => x._2).reverse //>
  }
 
-  
-  
+
+
 }

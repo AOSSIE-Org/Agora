@@ -80,9 +80,9 @@ object Main {
         println(" Scrutiny table for method Simple is not implemented yet.")
         r.writeWinners(winnersfile)
        }
-       case "Bruno" =>  {
-        var r = BrunoMethod.runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt)
-        println(" Scrutiny table for method Bruno is not implemented yet.")
+       case "Egalitarian" =>  {
+        var r = EgalitarianDPImplementation.runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt)
+        println(" Scrutiny table for method Egalitarian is not implemented yet.")
         r.writeWinners(winnersfile)
        }
        case "Test" =>  {

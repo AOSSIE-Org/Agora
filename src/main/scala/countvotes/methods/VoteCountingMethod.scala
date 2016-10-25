@@ -17,23 +17,24 @@ import java.io._
 
 abstract class VoteCountingMethod[B <: Ballot with Weight] {
 
-  
-  def vacanciesFilled(numWinners:Int, numVacancies:Int): Boolean = 
+  def computeWinners(election: Election[B], numVacancies: Int): List[(Candidate,Rational)]
+
+  def vacanciesFilled(numWinners:Int, numVacancies:Int): Boolean =
     numWinners >= numVacancies
-  
- 
- 
-  
+
+
+
+
  def getCandidates(election: Election[B]): List[Candidate] = {
    var set = new HashSet[Candidate]()
    for (b <- election) {
      for (c <- b.preferences)
-       if (!set.exists(n => n == c) ) set = set + c 
+       if (!set.exists(n => n == c) ) set = set + c
     }
    set.toList
   }
-    
-       
+
+
  // just printing in terminal
  def printElection(election: Election[B]) = {
     print("\n")
@@ -44,6 +45,6 @@ abstract class VoteCountingMethod[B <: Ballot with Weight] {
     }
     print("\n")
  }
-  
-    
+
+
 }
