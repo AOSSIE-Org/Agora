@@ -15,8 +15,6 @@ object EgalitarianNaiveImplementation extends EgalitarianVotingMethod[WeightedBa
   }
 
   override def computeWinners(election: Election[WeightedBallot], numVacancies: Int): List[(Candidate,Rational)] = {
-    val fairness: Double = 2
-
     //The candidate list wouldn't have to be determined this way (would be supplied from the data)
     val candidateCount: Int = allCandidates.length
     val candidateSubsets: List[List[Candidate]] = getCandidateSubsets(allCandidates,candidateCount,List.empty,0,numVacancies)
@@ -24,10 +22,10 @@ object EgalitarianNaiveImplementation extends EgalitarianVotingMethod[WeightedBa
     if(candidateCount < numVacancies) {println("not enough candidates") }
 
     var currentMax: Double = 0
-    var contemplatedMax: Double = 0
     var currentCandidates: List[Candidate] = List.empty
 
     for(i <- candidateSubsets){
+      var contemplatedMax: Double = 0
       contemplatedMax = socialWelfare(election, i, fairness)
       if(currentMax < contemplatedMax){
         currentMax = contemplatedMax

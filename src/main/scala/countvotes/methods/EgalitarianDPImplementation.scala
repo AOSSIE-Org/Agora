@@ -17,8 +17,6 @@ object EgalitarianDPImplementation extends EgalitarianVotingMethod[WeightedBallo
   }
 
   override def computeWinners(election: Election[WeightedBallot], numVacancies: Int): List[(Candidate,Rational)] = {
-    val fairness: Double = 2
-
     val candidateCount: Int = allCandidates.length
     if(candidateCount < numVacancies) {println("not enough candidates") }
 

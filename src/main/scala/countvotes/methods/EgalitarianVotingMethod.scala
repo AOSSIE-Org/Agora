@@ -6,8 +6,7 @@ import scala.math._
 
 abstract class EgalitarianVotingMethod[B <: WeightedBallot with Weight] extends VoteCountingMethod[B] {
   val report: Report[B] = new Report[B]
-
-  //def computeWinners(election: Election[B], numVacancies: Int): List[(Candidate,Rational)]
+  val fairness: Double = 2
   var allCandidates: List[Candidate];
 
   def getCandidateList(election: Election[B]): List[Candidate] = {
