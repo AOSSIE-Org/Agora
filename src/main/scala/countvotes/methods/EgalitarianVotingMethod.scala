@@ -41,7 +41,7 @@ abstract class EgalitarianVotingMethod[B <: WeightedBallot with Weight] extends 
     sum
   }
 
-  def socialWelfare(election: Election[B], candidates: List[Candidate], fairness: Double): Double = {
+  def socialWelfare(election: Election[B], candidates: List[Candidate]): Double = {
     var sum: Double = 0
     for(i <- 0 to (election.length-1)){
       sum = sum + exp((1/fairness) * log((election(i).weight).toDouble * utilitySet(election,i,candidates)))

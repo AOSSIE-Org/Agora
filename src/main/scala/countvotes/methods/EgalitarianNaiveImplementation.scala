@@ -26,7 +26,7 @@ object EgalitarianNaiveImplementation extends EgalitarianVotingMethod[WeightedBa
 
     for(i <- candidateSubsets){
       var contemplatedMax: Double = 0
-      contemplatedMax = socialWelfare(election, i, fairness)
+      contemplatedMax = socialWelfare(election, i)
       if(currentMax < contemplatedMax){
         currentMax = contemplatedMax
         currentCandidates = i

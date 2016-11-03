@@ -21,7 +21,7 @@ object EgalitarianDPImplementation extends EgalitarianVotingMethod[WeightedBallo
     if(candidateCount < numVacancies) {println("not enough candidates") }
 
     var winningCandidates: List[Candidate] = List.empty
-    winningCandidates = recursiveWinnersComputation(allCandidates, numVacancies, election, fairness)
+    winningCandidates = recursiveWinnersComputation(allCandidates, numVacancies, election)
 
     var candidatesForReturn : List[(Candidate,Rational)] = List.empty
     for(i <- winningCandidates){
@@ -30,7 +30,7 @@ object EgalitarianDPImplementation extends EgalitarianVotingMethod[WeightedBallo
     candidatesForReturn
   }
 
-  def recursiveWinnersComputation(candidateList: List[Candidate], numVacancies: Int, election: Election[WeightedBallot], fairness: Double): List[Candidate] = numVacancies match {
+  def recursiveWinnersComputation(candidateList: List[Candidate], numVacancies: Int, election: Election[WeightedBallot]): List[Candidate] = numVacancies match {
     case 0 => List.empty
     case n => {
       if(memo.contains((numVacancies,candidateList.toSet))){
@@ -38,9 +38,9 @@ object EgalitarianDPImplementation extends EgalitarianVotingMethod[WeightedBallo
       }
       var contemplatedSets : List[List[Candidate]] = List.empty
       for(i <- candidateList){
-        contemplatedSets = contemplatedSets :+ (recursiveWinnersComputation(candidateList.filterNot(elem => elem == i), numVacancies-1, election, fairness) :+ i)
+        contemplatedSets = contemplatedSets :+ (recursiveWinnersComputation(candidateList.filterNot(elem => elem == i), numVacancies-1, election) :+ i)
       }
-      val contemplatedSetsWelfareTuple: List[(Double,List[Candidate])] = contemplatedSets.map(x => (socialWelfare(election, x, fairness),x))
+      val contemplatedSetsWelfareTuple: List[(Double,List[Candidate])] = contemplatedSets.map(x => (socialWelfare(election, x),x))
       val result: List[Candidate] = (contemplatedSetsWelfareTuple.foldLeft ((0.0, candidateList)) ((x,y) => maxTuple1(x,y)))._2   //Error if all less than 0
       memo += (((numVacancies,candidateList.toSet),result))
       return result
