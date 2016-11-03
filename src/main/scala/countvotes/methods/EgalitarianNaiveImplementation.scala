@@ -5,10 +5,11 @@ import countvotes.algorithms._
 import scala.math._
 
 object EgalitarianNaiveImplementation extends EgalitarianVotingMethod[WeightedBallot] {
+  var allCandidates: List[Candidate] = List.empty
 
   def runScrutiny(election: Election[WeightedBallot], numVacancies: Int):  Report[WeightedBallot] = {
+    allCandidates = getCandidateList(election)
     println("Number of WeightedBallots: " + election.length)
-    //Last parameter activates the dynamic programming approach when true
     report.setWinners(computeWinners(election, numVacancies))
     report
   }
@@ -17,9 +18,8 @@ object EgalitarianNaiveImplementation extends EgalitarianVotingMethod[WeightedBa
     val fairness: Double = 2
 
     //The candidate list wouldn't have to be determined this way (would be supplied from the data)
-    val candidateList: List[Candidate] = getCandidateList(election)
-    val candidateCount: Int = candidateList.length
-    val candidateSubsets: List[List[Candidate]] = getCandidateSubsets(candidateList,candidateCount,List.empty,0,numVacancies)
+    val candidateCount: Int = allCandidates.length
+    val candidateSubsets: List[List[Candidate]] = getCandidateSubsets(allCandidates,candidateCount,List.empty,0,numVacancies)
 
     if(candidateCount < numVacancies) {println("not enough candidates") }
 

@@ -8,6 +8,7 @@ abstract class EgalitarianVotingMethod[B <: WeightedBallot with Weight] extends 
   val report: Report[B] = new Report[B]
 
   //def computeWinners(election: Election[B], numVacancies: Int): List[(Candidate,Rational)]
+  var allCandidates: List[Candidate];
 
   def getCandidateList(election: Election[B]): List[Candidate] = {
     var candidateList:List[Candidate] = List()
@@ -31,7 +32,7 @@ abstract class EgalitarianVotingMethod[B <: WeightedBallot with Weight] extends 
   }
 
   def utilityIndividual(election: Election[B], voter: Int, candidate: Candidate): Int = rank(election,voter,candidate) match {
-    case (true,rank) => return getCandidateList(election).length + 1 - rank
+    case (true,rank) => return allCandidates.length - rank
     case (false,_) => return 0
     return 0
   }

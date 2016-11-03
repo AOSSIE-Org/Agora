@@ -7,8 +7,10 @@ import scala.collection.mutable.{HashMap => MMap}
 
 object EgalitarianDPImplementation extends EgalitarianVotingMethod[WeightedBallot] {
   val memo = new MMap[(Int,Set[Candidate]), List[Candidate]] ()
+  var allCandidates: List[Candidate] = List.empty
 
   def runScrutiny(election: Election[WeightedBallot], numVacancies: Int):  Report[WeightedBallot] = {
+    allCandidates = getCandidateList(election)
     println("Number of WeightedBallots: " + election.length)
     report.setWinners(computeWinners(election, numVacancies))
     report
@@ -17,13 +19,11 @@ object EgalitarianDPImplementation extends EgalitarianVotingMethod[WeightedBallo
   override def computeWinners(election: Election[WeightedBallot], numVacancies: Int): List[(Candidate,Rational)] = {
     val fairness: Double = 2
 
-    val candidateList: List[Candidate] = getCandidateList(election)
-    val candidateCount: Int = candidateList.length
-
+    val candidateCount: Int = allCandidates.length
     if(candidateCount < numVacancies) {println("not enough candidates") }
 
     var winningCandidates: List[Candidate] = List.empty
-    winningCandidates = recursiveWinnersComputation(candidateList, numVacancies, election, fairness)
+    winningCandidates = recursiveWinnersComputation(allCandidates, numVacancies, election, fairness)
 
     var candidatesForReturn : List[(Candidate,Rational)] = List.empty
     for(i <- winningCandidates){
