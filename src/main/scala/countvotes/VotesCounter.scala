@@ -81,7 +81,7 @@ object Main {
         r.writeWinners(winnersfile)
        }
        case "Egalitarian" =>  {
-        var r = EgalitarianDPImplementation.runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt)
+        var r = EgalitarianImplementation.runScrutiny(Election.weightedElectionToACTElection(election), c.nvacancies.toInt)
         println(" Scrutiny table for method Egalitarian is not implemented yet.")
         r.writeWinners(winnersfile)
        }

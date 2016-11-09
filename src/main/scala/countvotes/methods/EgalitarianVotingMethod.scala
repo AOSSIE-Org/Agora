@@ -22,7 +22,7 @@ abstract class EgalitarianVotingMethod[B <: WeightedBallot with Weight] extends 
   }
 
   def rank(election: Election[B], voter: Int, candidate: Candidate): (Boolean,Int) = {
-    for(i <- 0 to (election(voter).preferences.length-1)) { //Kept in "old" format as the rank itself is returned. Seems to be the simplest way, instead of getting the candidates, then searching back for their index.
+    for(i <- 0 to (election(voter).preferences.length-1)) {
       if(election(voter).preferences(i) == candidate){
         return (true,i)
       }
