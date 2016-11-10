@@ -5,7 +5,7 @@ import countvotes.algorithms._
 import scala.math._
 import scala.collection.mutable.{HashMap => MMap}
 
-object EgalitarianDPImplementation extends EgalitarianVotingMethod[WeightedBallot] {
+object EgalitarianDPAttempt extends EgalitarianVotingMethod[WeightedBallot] {
   val memo = new MMap[(Int,Set[Candidate]), List[Candidate]] ()
   var allCandidates: List[Candidate] = List.empty
 
