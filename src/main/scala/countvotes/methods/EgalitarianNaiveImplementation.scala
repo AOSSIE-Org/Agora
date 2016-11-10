@@ -4,7 +4,7 @@ import countvotes.structures._
 import countvotes.algorithms._
 import scala.math._
 
-object EgalitarianImplementation extends EgalitarianVotingMethod[WeightedBallot] {
+object EgalitarianNaiveImplementation extends EgalitarianVotingMethod[WeightedBallot] {
   var allCandidates: List[Candidate] = List.empty
 
   def runScrutiny(election: Election[WeightedBallot], numVacancies: Int):  Report[WeightedBallot] = {
@@ -15,6 +15,7 @@ object EgalitarianImplementation extends EgalitarianVotingMethod[WeightedBallot]
   }
 
   override def computeWinners(election: Election[WeightedBallot], numVacancies: Int): List[(Candidate,Rational)] = {
+    //The candidate list wouldn't have to be determined this way (would be supplied from the data)
     val candidateCount: Int = allCandidates.length
     val candidateSubsets: List[List[Candidate]] = getCandidateSubsets(allCandidates,candidateCount,List.empty,0,numVacancies)
 
