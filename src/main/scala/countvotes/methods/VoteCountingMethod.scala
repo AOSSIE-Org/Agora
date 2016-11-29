@@ -16,15 +16,15 @@ import java.io._
 
 
 abstract class VoteCountingMethod[B <: Ballot with Weight] {
-
+  
+ def computeWinners(e: Election[B], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)] 
   
  def vacanciesFilled(numWinners:Int, numVacancies:Int): Boolean = 
     numWinners >= numVacancies
   
- 
-    
+   
  // When candidates' names are from 1 to N
- // Implemented to to compare EVoting outputs with Jeremy's outputs
+ // Implemented to compare EVoting outputs with Jeremy's outputs
  def generateNIntCandidates(n: Integer): List[Candidate] = {
   var lcand: List[Candidate] = Nil
   for (i <- 1 to n){
@@ -33,17 +33,17 @@ abstract class VoteCountingMethod[B <: Ballot with Weight] {
   lcand
  }
  
-  
+
+
  def getCandidates(election: Election[B]): List[Candidate] = {
    var set = new HashSet[Candidate]()
    for (b <- election) {
      for (c <- b.preferences)
-       if (!set.exists(n => n == c) ) set = set + c 
+       if (!set.exists(n => n == c) ) set = set + c
     }
    set.toList
   }
-    
-       
+
  // just printing in terminal
  def printElection(election: Election[B]) = {
     print("\n")
@@ -54,8 +54,7 @@ abstract class VoteCountingMethod[B <: Ballot with Weight] {
     }
     print("\n")
  }
-  
- 
+
  def printTotal(total: Map[Candidate, Rational]) = {
     print("\n")
     for (t <- total) {
@@ -66,3 +65,6 @@ abstract class VoteCountingMethod[B <: Ballot with Weight] {
  }
     
 }
+
+
+

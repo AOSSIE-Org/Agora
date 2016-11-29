@@ -24,7 +24,7 @@ abstract sealed class ScrutinyTableFormats
 
 
 object Main {
- 
+
   case class Config(directory: String = "",
                     ballotsfile: Option[String] = None, 
                     method: String = "",
@@ -87,11 +87,11 @@ object Main {
         """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple""" + "\n" +
         """for -t:  Concise, ACT""" + "\n \n" 
     )  
+
   }
 
-  
-  def main(args: Array[String]): Unit = {
-    
+
+  def main(args: Array[String]): Unit = {    
     
     def callMethod(c: Config, election: List[WeightedBallot],  winnersfile:String, reportfile: String, candidates_in_order:  List[Candidate]) = {
       c.method match {
@@ -131,21 +131,26 @@ object Main {
                   println(" Scrutiny table for method Simple is not implemented yet.")
                   r.writeWinners(winnersfile)
                }
+               case "Egalitarian" =>  {
+                  var r = EgalitarianImplementation.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+                  println(" Scrutiny table for method Egalitarian is not implemented yet.")
+                  r.writeWinners(winnersfile)
+               }
                case "Test" =>  {
                   Test.testSDResolution
                }
                case "" =>  println("Please, specify which algorithm should be used. Only option -m EVACS is currently stable.")
            }
     }
-    
-    
+ 
    parser.parse(args, Config()) map { c =>
         
      c.ballotsfile match {
        case Some(filename) => { // ONLY ONE FILE IS ANALYSED
             val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
             println("Candidates: " + candidates)
-            val election =  PreferencesWithoutIDAndWeightParser.read(c.directory + filename)
+            val election =  PreferencesParser.read(c.directory + filename)
+            //println("Election: " + election)
             val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
             val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename 
             callMethod(c, election, winnersfile, reportfile, candidates) 
@@ -165,6 +170,7 @@ object Main {
         }
        }
      }
+
    }
   }
 

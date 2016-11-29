@@ -43,14 +43,14 @@ Folder "files" contains preference data of the following elections in format acc
 3) ACT Legislative Assembly 2012  
 
 -----------------------------------------------------------------   
-Examples of TERMINAL COMMANDS to run the code:  
+TERMINAL COMMANDS to run the code:  
 -----------------------------------------------------------------  
 
 sbt -J-Xmx12G -J-Xms12G  
 
 run -d /directory/ [-b ballots.txt] -c candidates.txt -m method -v num_of_vacancies [-k num_of_candidates] [-t table]
 
-
+Example:  
 run -d /home/users/u1017108/Documents/PreferenceData/ACT/2004/ -b Preferences_ACT2004_Ginninderra.txt -c Candidates_ACT_2004_Ginninderra.txt -m EVACS -v 5 -t Concise
 
 -----------------------------------------------------------------

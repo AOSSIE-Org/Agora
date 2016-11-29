@@ -39,7 +39,7 @@ object PreferencesWithoutIDAndWeightParser extends ElectionParser[WeightedBallot
   // the method line returns a Parser of type ACTBallotPapersDataStructure 
    def line : Parser[WeightedBallot] = preferences ^^ { 
      case  p  => 
-       {  //println(p)
+       {  println(p)
           WeightedBallot(p, 0, Rational(1,1))
        }
    }
