@@ -32,13 +32,13 @@ object EgalitarianImplementation extends EgalitarianVotingMethod[WeightedBallot]
         currentCandidates = i
       }
     }
-
     var currentCandidatesForReturn : List[(Candidate,Rational)] = List.empty
     for(i <- currentCandidates){
       currentCandidatesForReturn = currentCandidatesForReturn :+ (i,new Rational(n=1,d=1))
     }
     currentCandidatesForReturn
   }
+  
   def getCandidateSubsets(candidates: List[Candidate], candidateCount: Int, stub: List[Candidate], location: Int, remaining: Int): List[List[Candidate]] = {
     var combinations: List[List[Candidate]] = List.empty
     if(remaining == 1){

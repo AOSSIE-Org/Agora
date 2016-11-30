@@ -21,7 +21,6 @@ abstract class VoteCountingMethod[B <: Ballot with Weight] {
   
  def vacanciesFilled(numWinners:Int, numVacancies:Int): Boolean = 
     numWinners >= numVacancies
-  
    
  // When candidates' names are from 1 to N
  // Implemented to compare EVoting outputs with Jeremy's outputs
@@ -33,8 +32,6 @@ abstract class VoteCountingMethod[B <: Ballot with Weight] {
   lcand
  }
  
-
-
  def getCandidates(election: Election[B]): List[Candidate] = {
    var set = new HashSet[Candidate]()
    for (b <- election) {

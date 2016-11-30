@@ -14,7 +14,6 @@ import scala.util.Sorting
 import java.io._
 
 
-
 abstract class ACT extends STVAustralia
  with DroopQuota
  with NoFractionInQuota
@@ -45,7 +44,6 @@ abstract class ACT extends STVAustralia
   }
   
 
-  
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   def computeWinners(election: Election[ACTBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)] = {
     
