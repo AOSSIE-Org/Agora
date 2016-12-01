@@ -23,6 +23,7 @@ abstract class EgalitarianVotingMethod[B <: WeightedBallot with Weight] extends 
   }
   */
   
+
   def rank(election: Election[B], voter: Int, candidate: Candidate): (Boolean,Int) = {
     for(i <- 0 to (election(voter).preferences.length-1)) {
       if(election(voter).preferences(i) == candidate){

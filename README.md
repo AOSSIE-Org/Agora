@@ -46,25 +46,27 @@ Folder "files" contains preference data of the following elections in format acc
 TERMINAL COMMANDS to run the code:  
 -----------------------------------------------------------------  
 
+java -jar countvotes-assembly-1.1.jar parameters
+
+OR
+
 sbt -J-Xmx12G -J-Xms12G  
 
 run -d /directory/ [-b ballots.txt] -c candidates.txt -m method -v num_of_vacancies [-k num_of_candidates] [-t table]
 
 Example:  
+
 run -d /home/users/u1017108/Documents/PreferenceData/ACT/2004/ -b Preferences_ACT2004_Ginninderra.txt -c Candidates_ACT_2004_Ginninderra.txt -m EVACS -v 5 -t Concise
-
------------------------------------------------------------------
-
-java -jar countvotes-assembly-1.1.jar parameters
 
 where
 
-method is either EVACS or Simple  
-candidates is the file containing all candidates. The tally will be printed in the order as the candidates appear in this file.
+* method is either EVACS, Egalitarian or Simple  
 
-table is either ACT or Concise. Concise is default.
+* candidates is the file containing all candidates. The tally will be printed in the order as the candidates appear in this file.
 
-If -f is ommited, all files in -d are analyzed.
+* table is either ACT (a simulation of ACT's scrutiny tables) or Concise. Concise is default.
+
+Note: If -f is ommited, all files in -d are analyzed.
 
 -----------------------------------------------------------------
 TODO:
