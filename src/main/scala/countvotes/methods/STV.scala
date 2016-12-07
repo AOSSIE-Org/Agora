@@ -18,19 +18,15 @@ import java.io._
 abstract class STV[B <: Ballot with Weight] extends VoteCountingMethod[B] {
   //type E = Election[B]
 
-
   // GLOBAL MUTABLE VARIABLES
   // DON'T FORGET TO RESET
   protected val result: Result = new Result
   protected val report: Report[B] = new Report[B]
   
-  
   def runScrutiny(e: Election[B], ccandidates: List[Candidate], numVacancies: Int):   Report[B]
- // Marshall's
- // override def computeWinners(e: Election[B], numVacancies: Int): List[(Candidate,Rational)] 
-  //def computeWinners(e: Election[B], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)] 
-
+  
   def computeQuota(numVotes: Int, numVacancies: Int): Rational
+  
   def cutQuotaFraction(num: Rational): Rational
 
   def returnNewWinners(totals: Map[Candidate, Rational], quota: Rational): List[(Candidate,Rational)]
@@ -39,7 +35,6 @@ abstract class STV[B <: Ballot with Weight] extends VoteCountingMethod[B] {
    
   def distributeSurplusVotes(election: Election[B],  candidate: Candidate, total:Rational, markings: Option[Set[Int]], pendingWinners: List[Candidate], transferValue: Rational): (Election[B], Set[B], Option[Election[B]])
   
-
   def resolveSurpluseDistributionTie(equaltotals: Map[Candidate, Rational]): List[(Candidate, Rational)]
 
   def chooseCandidateForExclusion(totals: Map[Candidate, Rational]): (Candidate, Rational)
@@ -94,8 +89,6 @@ abstract class STV[B <: Ballot with Weight] extends VoteCountingMethod[B] {
        false
      }
   }
-
-
 
   def ballotsAreContinuing(c: Candidate, election: Election[B], pendingWinners:  List[Candidate]): Boolean = {
     var el = election
