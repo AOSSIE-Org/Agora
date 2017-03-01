@@ -14,8 +14,6 @@ import scala.util.Sorting
 import java.io._
 
 
-
-
 class EVACSMethod extends ACT
  with TransferValueWithDenominatorWithNumOfMarkedContinuingBallotsOrOne
  with ACTSurplusDistribution

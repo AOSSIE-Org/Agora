@@ -16,10 +16,10 @@ import java.io._
 
 
 class EVACSDelayedWDMethod extends ACT
-with TransferValueWithDenominatorWithNumOfMarkedContinuingBallotsOrOne
-with ACTSurplusDistribution
-with NoNewWinnersDuringSurplusesDistribution
-with NoNewWinnersDuringExclusion
-with ACTTotalsDuringExclusion
+ with TransferValueWithDenominatorWithNumOfMarkedContinuingBallotsOrOne
+ with ACTSurplusDistribution
+ with NoNewWinnersDuringSurplusesDistribution
+ with NoNewWinnersDuringExclusion
+ with ACTTotalsDuringExclusion
 {  
 }

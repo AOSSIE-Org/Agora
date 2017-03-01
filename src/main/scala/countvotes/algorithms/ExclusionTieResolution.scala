@@ -1,7 +1,5 @@
 package countvotes.algorithms
 
-
-
 import countvotes.structures._
 import countvotes.methods._
 import collection.mutable.{HashMap => Map}
