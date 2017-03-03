@@ -16,9 +16,10 @@ Remark: When EVACSMethod is run on real data the computation is slow because of 
 ### Ballots
 
 ```
-id1 weight preference1 > ... > preferenceN  
-id2 weight preference1 > ... > preferenceM  
-id3 weight preference1 > ... > preferenceK  
+id1 weight preference_1^1 > ... > preference_1^{N_1}  
+id2 weight preference_2^1 > ... > preference_2^{N_2}
+...  
+idK weight preference_K^1 > ... > preference_K^{N_K}  
 ```
 Weight has to be a rational number and it is initially normally equal to 1/1.  
 
