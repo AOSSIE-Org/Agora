@@ -5,18 +5,18 @@ import countvotes.algorithms._
 import scala.math._
 import scala.collection.mutable.{HashMap => MMap}
 
-object EgalitarianDPAttempt extends EgalitarianVotingMethod[WeightedBallot] {
+object EgalitarianDPMethod extends Egalitarian[WeightedBallot] {
   val memo = new MMap[(Int,Set[Candidate]), List[Candidate]] ()
   var allCandidates: List[Candidate] = List.empty
 
   def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int):  Report[WeightedBallot] = {
     allCandidates = candidates
     println("Number of WeightedBallots: " + election.length)
-    report.setWinners(computeWinners(election, candidates, numVacancies))
+    report.setWinners(winners(election, candidates, numVacancies))
     report
   }
 
-  def computeWinners(election: Election[WeightedBallot],  ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)] = {
+  def winners(election: Election[WeightedBallot],  ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)] = {
     val candidateCount: Int = allCandidates.length
     if(candidateCount < numVacancies) {println("not enough candidates") }
 

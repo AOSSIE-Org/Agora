@@ -3,7 +3,7 @@ package countvotes.methods
 import countvotes.structures._
 import countvotes.algorithms._
 
-object MajorityRuleImplementation extends MajorityRule[WeightedBallot] {
+object MajorityRuleMethod extends MajorityRule[WeightedBallot] {
   
   def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int):   Report[WeightedBallot]  = {
       print("\n INPUT ELECTION: \n")
@@ -15,14 +15,14 @@ object MajorityRuleImplementation extends MajorityRule[WeightedBallot] {
       report.setCandidates(candidates) 
       report.newCount(Input, None, Some(election), Some(totals), None, None)
     
-      report.setWinners(computeWinners(election, candidates, numVacancies))
+      report.setWinners(winners(election, candidates, numVacancies))
       
       report
   }
 
-  def computeWinners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int ): 
+  def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int ): 
   List[(Candidate,Rational)] = {
-      require(numVacancies == 1, "Only one winner is possible")
+      require(numVacancies == 1, "Only one winner is possible in Majority rule")
       var reqMajority = Rational(1,2)
       val ccands = getCandidates(election)
       val totals = computeTotals(election, ccandidates)

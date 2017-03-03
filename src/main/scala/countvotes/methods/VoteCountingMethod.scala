@@ -17,7 +17,7 @@ import java.io._
 
 abstract class VoteCountingMethod[B <: Ballot with Weight] {
   
- def computeWinners(e: Election[B], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)] 
+ def winners(e: Election[B], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)] 
   
  def vacanciesFilled(numWinners:Int, numVacancies:Int): Boolean = 
     numWinners >= numVacancies

@@ -39,7 +39,7 @@ abstract class STVAustralia extends STV[ACTBallot] {
    report.newCount(Input, None, Some(election), Some(totals), None, None)
    report.setLossByFractionToZero
    
-   report.setWinners(computeWinners(election, candidates, numVacancies))   
+   report.setWinners(winners(election, candidates, numVacancies))   
    
    report
  }

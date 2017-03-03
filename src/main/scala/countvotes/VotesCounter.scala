@@ -22,7 +22,6 @@ abstract sealed class ScrutinyTableFormats
   case object Concise extends ScrutinyTableFormats
 
 
-
 object Main {
 
   case class Config(directory: String = "",
@@ -31,8 +30,8 @@ object Main {
                     nvacancies: String = "",
                     //order: String = "",
                     nkandidates: Option[String] = None, 
-                    // for ordering numerical ordering purpose and for having candidates not occuring in the elections
-                    // sufficient when candidates names are integers from 1 to ncandidates
+                    // for numerical ordering and for having candidates not occuring in the elections
+                    // sufficient when candidates' names are integers from 1 to ncandidates
                     // TODO: for a general case, a list of all candidates has to be provided
                     candidatesfile: String = "",
                     table: ScrutinyTableFormats = Concise)    
@@ -129,17 +128,17 @@ object Main {
                case "Simple" =>  {
                   var r = (new SimpleSTVMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt) 
                   println(" Scrutiny table for method Simple is not implemented yet.")
-                  r.writeWinners(winnersfile)
+                  //r.writeWinners(winnersfile)
                }
                case "Egalitarian" =>  {
-                  var r = EgalitarianImplementation.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+                  var r = EgalitarianMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                   println(" Scrutiny table for method Egalitarian is not implemented yet.")
-                  r.writeWinners(winnersfile)
+                  //r.writeWinners(winnersfile)
                }
                case "Majority" => {
-                  var r = MajorityRuleImplementation.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+                  var r = MajorityRuleMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                   println(" Scrutiny table for method Majority is not implemented yet.")
-                  r.writeWinners(winnersfile)
+                  //r.writeWinners(winnersfile)
                }
 
                case "Test" =>  {

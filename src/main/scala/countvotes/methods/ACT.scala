@@ -45,7 +45,7 @@ abstract class ACT extends STVAustralia
   
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  def computeWinners(election: Election[ACTBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)] = {
+  def winners(election: Election[ACTBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)] = {
     
    println(" \n NEW RECURSIVE CALL \n")
    
@@ -84,27 +84,27 @@ abstract class ACT extends STVAustralia
    else {        
     quotaReached(totals, result.getQuota) match {
       case true => {
-          val winners: List[(Candidate, Rational)] = returnNewWinners(totals, result.getQuota) //  sorted! tie resolved!
-          println("New winners: " + winners)
-          result.addPendingWinners(winners.toList, Some(extractMarkings(election))) 
+          val ws: List[(Candidate, Rational)] = returnNewWinners(totals, result.getQuota) //  sorted! tie resolved!
+          println("New winners: " + ws)
+          result.addPendingWinners(ws.toList, Some(extractMarkings(election))) 
       
-          vacanciesFilled(winners.length, numVacancies) match {
+          vacanciesFilled(ws.length, numVacancies) match {
               case false =>  {
                 println("Vacancies: not yet filled.")
-                val res = surplusesDistribution(election, ccandidates, numVacancies-winners.length)
+                val res = surplusesDistribution(election, ccandidates, numVacancies-ws.length)
                 val newElection: Election[ACTBallot] = res._1
                 val newWinners: List[(Candidate, Rational)] = res._2
                 
-                val nws = winners.length + newWinners.length
+                val nws = ws.length + newWinners.length
                 println("Number of winners in this recursive call: "  + nws)
-                val allWinners = winners:::newWinners 
+                val allWinners = ws:::newWinners 
                 if (nws == numVacancies) { allWinners } 
                 else {
                   val setAllWinners = allWinners.map{_._1}.toSet
-                  computeWinners(newElection, ccandidates.filterNot(setAllWinners.contains(_)) ,numVacancies-nws):::allWinners  // TODO: care should be taken that newElection is not empty?!
+                  winners(newElection, ccandidates.filterNot(setAllWinners.contains(_)) ,numVacancies-nws):::allWinners  // TODO: care should be taken that newElection is not empty?!
                 }
                 }
-              case true => winners
+              case true => ws
             }
       }    
       case false => { 
@@ -123,7 +123,7 @@ abstract class ACT extends STVAustralia
             // Apparently EVACS does not check this condition. See step 42. Or in count.c
             // if (for_each_candidate(candidates, &check_status,(void *)(CAND_ELECTED|CAND_PENDING)) == num_seats) return true;
             newWinners }           
-          else computeWinners(newElection,ccandidates.filterNot(x => x == leastVotedCandidate._1), numVacancies-newWinners.length):::newWinners
+          else winners(newElection,ccandidates.filterNot(x => x == leastVotedCandidate._1), numVacancies-newWinners.length):::newWinners
       }    
       }
     
