@@ -84,7 +84,7 @@ object Main {
     } text("set format of the output table <tbl>\n") valueName("<tbl>")
     
     note("""Possible values are as follows:""" + "\n" + 
-        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple""" + "\n" +
+        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority""" + "\n" +
         """for -t:  Concise, ACT""" + "\n \n" 
     )  
 
@@ -136,6 +136,12 @@ object Main {
                   println(" Scrutiny table for method Egalitarian is not implemented yet.")
                   r.writeWinners(winnersfile)
                }
+               case "Majority" => {
+                  var r = MajorityRuleImplementation.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+                  println(" Scrutiny table for method Majority is not implemented yet.")
+                  r.writeWinners(winnersfile)
+               }
+
                case "Test" =>  {
                   Test.testSDResolution
                }
