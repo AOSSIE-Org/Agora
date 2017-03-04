@@ -27,13 +27,13 @@ class SimpleSTVMethod extends STV[WeightedBallot]
    print("\n INPUT ELECTION: \n")
    printElection(election)
    
-   val totals = computeTotals(election, candidates) // Here are totals of candidates also not OCCURING in the ballots
-   result.addTotalsToHistory(totals) 
+   val tls = totals(election, candidates) // Here are totals of candidates also not OCCURING in the ballots
+   result.addTotalsToHistory(tls)
  
    //report.setCandidates(getCandidates(election))  // Here are candidates OCCURING in the election
    report.setCandidates(candidates)  // Here are candidates also not OCCURING in the election
    
-   report.newCount(Input, None, Some(election), Some(totals), None, None)
+   report.newCount(Input, None, Some(election), Some(tls), None, None)
    
    report.setWinners(winners(election, candidates, numVacancies))   
    
@@ -47,18 +47,18 @@ class SimpleSTVMethod extends STV[WeightedBallot]
 
     val ccands = getCandidates(election)
        
-    val totals = computeTotals(election, ccandidates)  
+    val tls = totals(election, ccandidates)
 
-    println("Totals: " + totals)
+    println("Totals: " + tls)
 
     if (ccands.length <= numVacancies){
-      for (c <- ccands) yield (c, totals(c))
+      for (c <- ccands) yield (c, tls(c))
     }
     else {
-      quotaReached(totals, result.getQuota) match {
+      quotaReached(tls, result.getQuota) match {
         case true =>
           println("The quota is reached.")
-          val ws: List[(Candidate, Rational)] = returnNewWinners(totals, result.getQuota)
+          val ws: List[(Candidate, Rational)] = returnNewWinners(tls, result.getQuota)
           println("New winners: " + ws)
           result.addPendingWinners(ws.toList, None)
 
@@ -72,7 +72,7 @@ class SimpleSTVMethod extends STV[WeightedBallot]
               case true => ws
             }
         case false =>
-          val leastVotedCandidate = chooseCandidateForExclusion(totals)
+          val leastVotedCandidate = chooseCandidateForExclusion(tls)
           println("Excluding " + leastVotedCandidate)
           result.addExcludedCandidate(leastVotedCandidate._1, leastVotedCandidate._2)
           val newElection = exclusion(election, leastVotedCandidate._1, numVacancies)

@@ -9,11 +9,11 @@ object MajorityRuleMethod extends MajorityRule[WeightedBallot] {
       print("\n INPUT ELECTION: \n")
       printElection(election)
       
-      var totals = computeTotals(election, candidates)
-      result.addTotalsToHistory(totals)
+      var tls = totals(election, candidates)
+      result.addTotalsToHistory(tls)
 
       report.setCandidates(candidates) 
-      report.newCount(Input, None, Some(election), Some(totals), None, None)
+      report.newCount(Input, None, Some(election), Some(tls), None, None)
     
       report.setWinners(winners(election, candidates, numVacancies))
       
@@ -25,10 +25,10 @@ object MajorityRuleMethod extends MajorityRule[WeightedBallot] {
       require(numVacancies == 1, "Only one winner is possible in Majority rule")
       var reqMajority = Rational(1,2)
       val ccands = getCandidates(election)
-      val totals = computeTotals(election, ccandidates)
+      val tls = totals(election, ccandidates)
       
       val numVoters: Int = election.length 
-      for(c <- ccands if (reqMajority < Rational(totals(c).toInt, numVoters))) yield (c, totals(c))
+      for(c <- ccands if (reqMajority < Rational(tls(c).toInt, numVoters))) yield (c, tls(c))
   }
 }
 

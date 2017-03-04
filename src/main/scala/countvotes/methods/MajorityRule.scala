@@ -18,19 +18,6 @@ abstract class MajorityRule[B <: WeightedBallot with Weight] extends VoteCountin
   
   protected val result: Result = new Result 
   protected val report: Report[B] = new Report[B]
-  
-    
-   def computeTotals(election: Election[B], candidates: List[Candidate]): Map[Candidate, Rational] = {
-       
-     val m = new Map[Candidate, Rational]
-    
-      for (c<-candidates) m(c) = 0
-      
-      for (b <- election if !b.preferences.isEmpty) {
-        m(b.preferences.head) = b.weight + (m.getOrElse(b.preferences.head, 0))
-      }         
-     m
-  }
 
 }
 
