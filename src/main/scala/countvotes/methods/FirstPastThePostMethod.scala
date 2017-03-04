@@ -3,7 +3,7 @@ package countvotes.methods
 import countvotes.structures._
 import countvotes.algorithms._
 
-object fptpMethod extends fptp[WeightedBallot] {
+object FirstPastThePostMethod extends FirstPastThePost[WeightedBallot] {
 
   def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int):   Report[WeightedBallot]  = {
       print("\n INPUT ELECTION: \n")
@@ -23,14 +23,15 @@ object fptpMethod extends fptp[WeightedBallot] {
   def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int ):
   List[(Candidate,Rational)] = {
       require(numVacancies == 1, "Only one winner is possible in First past the post rule")
-      
+
       val ccands = getCandidates(election)
-      val totals = computeTotals(election, ccandidates)
+      val totals = totals(election, ccandidates)
 
       var cand= ccands(0)
 
-      for(c <- ccands if (totals(cand).toInt < totals(c).toInt))
-      {cand=c}
+      for(c <- ccands if (totals(cand) < totals(c))){
+      cand=c
+      }
       return (cand,totals(cand))
   }
 }

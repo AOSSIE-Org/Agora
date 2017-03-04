@@ -16,7 +16,7 @@ import java.io._
 
 
 abstract class VoteCountingMethod[B <: Ballot with Weight] {
-  
+
  def winners(e: Election[B], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)]
 
  def totals(election: Election[WeightedBallot], candidates: List[Candidate]): Map[Candidate, Rational] = {
@@ -30,9 +30,9 @@ abstract class VoteCountingMethod[B <: Ballot with Weight] {
     m
  }
 
- def vacanciesFilled(numWinners:Int, numVacancies:Int): Boolean = 
+ def vacanciesFilled(numWinners:Int, numVacancies:Int): Boolean =
     numWinners >= numVacancies
-   
+
  // When candidates' names are from 1 to N
  // Implemented to compare EVoting outputs with Jeremy's outputs
  def generateNIntCandidates(n: Integer): List[Candidate] = {
@@ -42,7 +42,7 @@ abstract class VoteCountingMethod[B <: Ballot with Weight] {
   }
   lcand
  }
- 
+
  def getCandidates(election: Election[B]): List[Candidate] = {
    var set = new HashSet[Candidate]()
    for (b <- election) {
@@ -71,8 +71,5 @@ abstract class VoteCountingMethod[B <: Ballot with Weight] {
     }
     print("\n")
  }
-    
+
 }
-
-
-
