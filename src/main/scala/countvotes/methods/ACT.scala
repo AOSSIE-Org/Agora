@@ -63,8 +63,8 @@ abstract class ACT extends STVAustralia
    //val ccands = getCandidates(election)
    println("Continuing candidates: " + ccandidates)
        
-   val totals = computeTotals(election, ccandidates)  
-   println("Totals: " + totals)
+   val tls = totals(election, ccandidates)
+   println("Totals: " + tls)
         
    //result.addTotalsToHistory(totals)
     
@@ -76,15 +76,15 @@ abstract class ACT extends STVAustralia
    // That is why we also check only equality here
    if (ccandidates.length == numVacancies){
      var ws: List[(Candidate,Rational)] = List()
-     for (c <- ccandidates) ws = (c, totals.getOrElse(c, Rational(0,1)))::ws
+     for (c <- ccandidates) ws = (c, tls.getOrElse(c, Rational(0,1)))::ws
      report.newCount(VictoryWithoutQuota, None, None, None, Some(ws), None)
      report.setLossByFractionToZero
-     for (c <- ccandidates) yield (c, totals.getOrElse(c, Rational(0,1)))
+     for (c <- ccandidates) yield (c, tls.getOrElse(c, Rational(0,1)))
    }
    else {        
-    quotaReached(totals, result.getQuota) match {
+    quotaReached(tls, result.getQuota) match {
       case true => {
-          val ws: List[(Candidate, Rational)] = returnNewWinners(totals, result.getQuota) //  sorted! tie resolved!
+          val ws: List[(Candidate, Rational)] = returnNewWinners(tls, result.getQuota) //  sorted! tie resolved!
           println("New winners: " + ws)
           result.addPendingWinners(ws.toList, Some(extractMarkings(election))) 
       
@@ -108,7 +108,7 @@ abstract class ACT extends STVAustralia
             }
       }    
       case false => { 
-          val leastVotedCandidate = chooseCandidateForExclusion(totals)
+          val leastVotedCandidate = chooseCandidateForExclusion(tls)
           println("Candidate to be excluded: " + leastVotedCandidate )
           result.addExcludedCandidate(leastVotedCandidate._1,leastVotedCandidate._2)
 
@@ -191,7 +191,7 @@ abstract class ACT extends STVAustralia
     val (newElection, exhaustedBallots, ignoredBallots) = distributeSurplusVotes(election, winner, ctotal, markings, pendingWinners, tv)  
     val newElectionWithoutFractionInTotals = loseFraction(newElection, ccandidates)
            
-    val newtotalsWithoutFraction = computeTotals(newElectionWithoutFractionInTotals, ccandidates)
+    val newtotalsWithoutFraction = totals(newElectionWithoutFractionInTotals, ccandidates)
     val newtotalsWithoutFractionWithoutpendingwinners = newtotalsWithoutFraction.clone().retain((k,v) => !pendingWinners.contains(k)) 
     
     
@@ -203,7 +203,7 @@ abstract class ACT extends STVAustralia
     //------------ Reporting ------------------------------------------
     if (ws.nonEmpty) report.newCount(SurplusDistribution, Some(winner), Some(newElectionWithoutFractionInTotals), Some(newtotalsWithoutFraction), Some(ws), Some(exhaustedBallots))
     else report.newCount(SurplusDistribution, Some(winner), Some(newElectionWithoutFractionInTotals), Some(newtotalsWithoutFraction), None, Some(exhaustedBallots))
-    report.setLossByFraction(computeTotals(newElection,ccandidates), newtotalsWithoutFraction)
+    report.setLossByFraction(totals(newElection,ccandidates), newtotalsWithoutFraction)
     ignoredBallots match { // ballots ignored because they don't belong to the last parcel of the winner
       case Some(ib) => report.setIgnoredBallots(ib)
       case None =>
@@ -249,11 +249,11 @@ abstract class ACT extends STVAustralia
     
     exhaustedBallots = ex._2
 
-    val totalsBeforeFractionLoss = computeTotals(newElection, ccandidates) // for computing LbF
+    val totalsBeforeFractionLoss = totals(newElection, ccandidates) // for computing LbF
 
     newElectionWithoutFractionInTotals = loseFraction(newElection, ccandidates) // perhaps it is better  to get rid of newws in a separate function
 
-    val totalsAfterFractionLoss = computeTotals(newElectionWithoutFractionInTotals, ccandidates)
+    val totalsAfterFractionLoss = totals(newElectionWithoutFractionInTotals, ccandidates)
     
     val totalsWithIncorrectValueForCandidate = rewriteTotalOfCandidate(totalsAfterFractionLoss, candidate._1, newTotal) // simulating EVACS's incorrect total as a result of partial exclusion
     

@@ -211,19 +211,19 @@ class SenateMethod extends STVAustralia
    //val ccands = getCandidates(election)
    println("Continuing candidates: " + ccandidates)
        
-   val totals = computeTotals(election, ccandidates)  
-   printTotal(totals)
+   val tls = totals(election, ccandidates)
+   printTotal(tls)
         
-   //result.addTotalsToHistory(totals)
+   //result.addTotalsToHistory(tls)
     
    // TODO: Section 273(17) (when only two continuing candidates remain for a single seat)
    // Notice: There may be more new winners than available vacancies!!! 
    if (ccandidates.length == numVacancies){ // Section 273(18)
      println("HERE")
-     val ws = for (c <- ccandidates) yield (c, totals.getOrElse(c, Rational(0,1)))
+     val ws = for (c <- ccandidates) yield (c, tls.getOrElse(c, Rational(0,1)))
      report.newCount(VictoryWithoutQuota, None, None, None, Some(ws), None)
      report.setLossByFractionToZero
-     for (c <- ccandidates) yield (c, totals.getOrElse(c, Rational(0,1)))
+     for (c <- ccandidates) yield (c, tls.getOrElse(c, Rational(0,1)))
    }
    else { 
    if (numVacancies==1 && ccandidates.length==2) {
@@ -231,16 +231,16 @@ class SenateMethod extends STVAustralia
      var ws: List[(Candidate, Rational)] = List()
      val c1 = ccandidates(0)
      val c2 = ccandidates(1)
-     if (totals(c1)>totals(c2)) {
-        ws = (c1, totals.getOrElse(c1, Rational(0,1)))::ws
+     if (tls(c1)>tls(c2)) {
+        ws = (c1, tls.getOrElse(c1, Rational(0,1)))::ws
      }
      else {
-      if (totals(c1)<totals(c2)) {
-        ws = (c2, totals.getOrElse(c2, Rational(0,1)))::ws
+      if (tls(c1)<tls(c2)) {
+        ws = (c2, tls.getOrElse(c2, Rational(0,1)))::ws
       }
       else {
        println("Tie has to be resolved!")
-       ws = (c1, totals.getOrElse(c1, Rational(0,1)))::ws
+       ws = (c1, tls.getOrElse(c1, Rational(0,1)))::ws
       }
      }
      report.newCount(TwoLastCandidatesForOneVacancy, None, None, None, Some(ws), None)
@@ -248,9 +248,9 @@ class SenateMethod extends STVAustralia
      ws
    }
    else {
-    quotaReached(totals, result.getQuota) match {
+    quotaReached(tls, result.getQuota) match {
       case true => {
-          val ws: List[(Candidate, Rational)] = returnNewWinners(totals, result.getQuota) // sorted! tie resolved!
+          val ws: List[(Candidate, Rational)] = returnNewWinners(tls, result.getQuota) // sorted! tie resolved!
           println("New winners: " + ws)
           result.addPendingWinners(ws.toList, None) 
       
@@ -274,7 +274,7 @@ class SenateMethod extends STVAustralia
       }    
       case false =>  {
         // Section 273 (13)(b) => (13A) and (13)(a) => (13AA) 
-         val candidatesToExclude = getCandidatesToExclude(totals, numVacancies, result.getQuota, ExclusionBulk, None)
+         val candidatesToExclude = getCandidatesToExclude(tls, numVacancies, result.getQuota, ExclusionBulk, None)
          val res = exclusion(election, ccandidates, candidatesToExclude, numVacancies)       
          val newElection: Election[ACTBallot]  = res._1
          val newWinners: List[(Candidate, Rational)] = res._2
@@ -324,8 +324,8 @@ class SenateMethod extends STVAustralia
    while (result.getPendingWinners.nonEmpty && newws.length != numVacancies){
     val (cand, ctotal, markings) = result.takeButRetainFirstPendingWinner  // IT IS NOT REMOVED FROM PENDING YET
     
-    val totals = computeTotals(newElection, ccandidates)
-    val candidatesToExclude = getCandidatesToExclude(totals, numVacancies, result.getQuota, SurplusDistributionBulk, Some(ctotal-result.getQuota))
+    val tls = totals(newElection, ccandidates)
+    val candidatesToExclude = getCandidatesToExclude(tls, numVacancies, result.getQuota, SurplusDistributionBulk, Some(ctotal-result.getQuota))
     
     if (candidatesToExclude.nonEmpty){ // Section 273, (13C) - HERE I DO ONLY ONE BULK EXCLUSION IF IT IS POSSIBLE. CAN THERE BE ANOTHER BULK EXCLUSION AFTER THIS ONE - is unclear from (13C)
       println("\n Bulk exclusion: type 2. \n ")
@@ -386,7 +386,7 @@ class SenateMethod extends STVAustralia
     val newElectionWithoutFractionInTotals = loseFraction(newElection, ccandidates)
 
     
-    val newtotalsWithoutFraction = computeTotals(newElectionWithoutFractionInTotals, ccandidates)
+    val newtotalsWithoutFraction = totals(newElectionWithoutFractionInTotals, ccandidates)
     
     val newtotalsWithoutFractionWithoutpendingwinners = newtotalsWithoutFraction.clone().retain((k,v) => !pendingWinners.contains(k)) 
     
@@ -404,7 +404,7 @@ class SenateMethod extends STVAustralia
      //------------ Reporting ------------------------------------------
     if (ws.nonEmpty) report.newCount(SurplusDistribution, Some(winner), Some(newElectionWithoutFractionInTotals), Some(newtotalsWithoutFraction), Some(ws), Some(exhaustedBallots))
     else report.newCount(SurplusDistribution, Some(winner), Some(newElectionWithoutFractionInTotals), Some(newtotalsWithoutFraction), None, Some(exhaustedBallots))
-    report.setLossByFraction(computeTotals(newElection,ccandidates), newtotalsWithoutFraction)
+    report.setLossByFraction(totals(newElection,ccandidates), newtotalsWithoutFraction)
     ignoredBallots match { // ballots ignored because they don't belong to the last parcel of the winner
       case Some(ib) => report.setIgnoredBallots(ib)
       case None =>
@@ -449,11 +449,11 @@ class SenateMethod extends STVAustralia
          newElection = ex._1
          exhaustedBallots = ex._2
          
-         val totalsBeforeFractionLoss = computeTotals(newElection, ccandidates) // for computing LbF
+         val totalsBeforeFractionLoss = totals(newElection, ccandidates) // for computing LbF
          
          newElectionWithoutFractionInTotals = loseFraction(newElection, ccandidates) // perhaps it is better  to get rid of newws in a separate function
 
-         val totalsAfterFractionLoss = computeTotals(newElectionWithoutFractionInTotals, ccandidates)
+         val totalsAfterFractionLoss = totals(newElectionWithoutFractionInTotals, ccandidates)
 
          val totalsWithoutNewWinners = totalsAfterFractionLoss.clone().retain((k,v) => !ws.map(_._1).contains(k)) // excluding winners that are already identified in the while-loop
     

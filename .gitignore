@@ -46,7 +46,12 @@ project/plugins/project/
 .scala_dependencies
 .worksheet
 
+# IntelliJ
+.idea
+*.iml
+*.cache-main
 
 
 .metadata
+
 

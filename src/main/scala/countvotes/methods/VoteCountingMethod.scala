@@ -17,8 +17,19 @@ import java.io._
 
 abstract class VoteCountingMethod[B <: Ballot with Weight] {
   
- def winners(e: Election[B], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)] 
-  
+ def winners(e: Election[B], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)]
+
+ def totals(election: Election[WeightedBallot], candidates: List[Candidate]): Map[Candidate, Rational] = {
+    val m = new Map[Candidate, Rational]
+
+    for (c<-candidates) m(c) = 0
+
+    for (b <- election if !b.preferences.isEmpty) {
+      m(b.preferences.head) = b.weight + (m.getOrElse(b.preferences.head, 0))
+    }
+    m
+ }
+
  def vacanciesFilled(numWinners:Int, numVacancies:Int): Boolean = 
     numWinners >= numVacancies
    
