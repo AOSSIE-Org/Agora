@@ -23,15 +23,13 @@ object FirstPastThePostMethod extends FirstPastThePost[WeightedBallot] {
   def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int ):
   List[(Candidate,Rational)] = {
       require(numVacancies == 1, "Only one winner is possible in First past the post rule")
-
-      val ccands = getCandidates(election)
-      val totals = totals(election, ccandidates)
-
+      var ccands = getCandidates(election)
+      val tls = totals(election, ccandidates)
       var cand= ccands(0)
 
-      for(c <- ccands if (totals(cand) < totals(c))){
-      cand=c
+      for(c <- ccands if (totals(cand) < tls(c))){
+        cand=c
       }
-      return (cand,totals(cand))
+      return (cand,tls(cand))
   }
 }
