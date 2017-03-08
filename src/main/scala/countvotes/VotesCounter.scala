@@ -43,7 +43,7 @@ object Main {
         """ -d [-b] -c -m -v [-k] [-t]""" + "\n \n"
     )  
         
-    opt[String]('d', "directory") unbounded() action { (v, c) => 
+    opt[String]('d', "directory") required() unbounded() action { (v, c) => 
       c.copy(directory = v)
     } text("set working directory to <dir>\n") valueName("<dir>")
     
@@ -51,15 +51,15 @@ object Main {
       c.copy(ballotsfile = Some(v)) 
     } text("use preferences listed in <bfile>\n") valueName("<bfile>")
     
-    opt[String]('c', "candidatesfile") action { (v, c) =>
+    opt[String]('c', "candidatesfile") required() action { (v, c) =>
       c.copy(candidatesfile = v) 
     } text("use preferences listed in <cfile>\n") valueName("<cfile>")
     
-    opt[String]('m', "method") action { (v, c) =>
+    opt[String]('m', "method") required() action { (v, c) =>
       c.copy(method = v) 
     } text("use vote counting method  <met>\n") valueName("<met>")
     
-    opt[String]('v', "nvacancies") action { (v, c) =>
+    opt[String]('v', "nvacancies") required() action { (v, c) =>
       c.copy(nvacancies = v) 
     } text("set number of vacancies  <numv>\n") valueName("<numv>")
     
