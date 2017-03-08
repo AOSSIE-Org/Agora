@@ -41,32 +41,33 @@ object Main {
 
     note("""The arguments are as follows:""" + "\n" +
         """ -d [-b] -c -m -v [-k] [-t]""" + "\n \n"
-    )
-
-    opt[String]('d', "directory") unbounded() action { (v, c) =>
+    )  
+        
+    opt[String]('d', "directory") required() unbounded() action { (v, c) => 
       c.copy(directory = v)
     } text("set working directory to <dir>\n") valueName("<dir>")
 
     opt[String]('b', "ballotsfile") action { (v, c) =>
       c.copy(ballotsfile = Some(v))
     } text("use preferences listed in <bfile>\n") valueName("<bfile>")
-
-    opt[String]('c', "candidatesfile") action { (v, c) =>
-      c.copy(candidatesfile = v)
+    
+    opt[String]('c', "candidatesfile") required() action { (v, c) =>
+      c.copy(candidatesfile = v) 
     } text("use preferences listed in <cfile>\n") valueName("<cfile>")
-
-    opt[String]('m', "method") action { (v, c) =>
-      c.copy(method = v)
+    
+    opt[String]('m', "method") required() action { (v, c) =>
+      c.copy(method = v) 
     } text("use vote counting method  <met>\n") valueName("<met>")
-
-    opt[String]('v', "nvacancies") action { (v, c) =>
-      c.copy(nvacancies = v)
+    
+    opt[String]('v', "nvacancies") required() action { (v, c) =>
+      c.copy(nvacancies = v) 
     } text("set number of vacancies  <numv>\n") valueName("<numv>")
 
     opt[String]('k', "nkandidates") action { (v, c) =>
       c.copy(nkandidates = Some(v))
     } text("set number of candidates  <numk>\n") valueName("<numk>")
-
+   
+    
     //opt[String]('o', "order") action { (v, c) =>
     //  c.copy(order = v)
     //} text("set order in which the candidates appear in output tables <ord>\n") valueName("<ord>")
