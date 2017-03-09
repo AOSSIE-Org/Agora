@@ -6,7 +6,9 @@ import collection.mutable.{HashMap => Map}
 import collection.mutable.HashSet
 import scala.util.Sorting
 
-import scala.languageFeature.implicitConversions
+import scala.language.implicitConversions
+
+
 
 package object structures {
   

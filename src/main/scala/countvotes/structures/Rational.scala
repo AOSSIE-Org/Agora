@@ -2,6 +2,8 @@ package countvotes.structures
 
 import java.math.{BigInteger}
 
+import scala.language.implicitConversions
+
 class Rational(n: BigInt, d: BigInt) {
 
   require(d != 0)
