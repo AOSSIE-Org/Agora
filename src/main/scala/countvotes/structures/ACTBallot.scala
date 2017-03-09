@@ -1,6 +1,6 @@
 package countvotes.structures
 
-import scala.languageFeature.implicitConversions
+import scala.language.implicitConversions
 
 class ACTBallot(p: List[Candidate], override val id: Int,  m:Boolean, w: Rational, v: Rational) 
 extends MarkedWeightedBallot(p, id, m, w) with Value {
