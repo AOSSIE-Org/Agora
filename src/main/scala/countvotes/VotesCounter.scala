@@ -1,4 +1,3 @@
-
 package countvotes
 
 
@@ -138,13 +137,13 @@ object Main {
                case "Majority" => {
                   var r = MajorityRuleMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                   println(" Scrutiny table for method Majority is not implemented yet.")
-                  r.writeWinners(winnersfile)
+                  //r.writeWinners(winnersfile)
                }
 
                case "Borda" => {
                  var r = BordaRuleMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                  println(" Scrutiny table for method Borda is not implemented yet.")
-                 r.writeWinners(winnersfile)
+                 //r.writeWinners(winnersfile)
                }
 
                case "Test" =>  {
