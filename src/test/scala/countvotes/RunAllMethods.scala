@@ -15,8 +15,16 @@ import scala.collection.mutable
 class RunAllMethods extends Specification {
 
   def test(method: String, electionFile: String, candidatesFile: String): Boolean = {
-    Main.main(Seq("-d", "files/Examples/", "-b", electionFile, "-c", candidatesFile, "-m", method).toArray)
+    Main.main(Seq("-d", "files/Examples/", "-b", electionFile, "-c", candidatesFile, "-v", "2", "-m", method).toArray)
     return true
+  }
+  
+  def str(i: Int) = if (i < 10) "0" + i else i.toString
+  
+  def run(method: String): Boolean = {
+    (1 to 12) map { i => str(i) } map { 
+      i: String => test(method, s"$i-example.txt",s"$i-candidates.txt")
+    } reduce { (b1,b2) => b1 && b2}
   }
 
   "Agora" should {
