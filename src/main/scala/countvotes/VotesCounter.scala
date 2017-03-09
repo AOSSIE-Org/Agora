@@ -86,7 +86,8 @@ object Main {
         """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority""" + "\n" +
         """for -t:  Concise, ACT""" + "\n \n" 
     )  
-
+    
+    help("help").text("prints this usage text")
   }
 
 
