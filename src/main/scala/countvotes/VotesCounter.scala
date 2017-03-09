@@ -82,7 +82,7 @@ object Main {
     } text("set format of the output table <tbl>\n") valueName("<tbl>")
     
     note("""Possible values are as follows:""" + "\n" + 
-        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda""" + "\n" +
+        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Nanson""" + "\n" +
         """for -t:  Concise, ACT""" + "\n \n" 
     )  
 
@@ -142,6 +142,12 @@ object Main {
 
                case "Borda" => {
                  var r = BordaRuleMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+                 println(" Scrutiny table for method Borda is not implemented yet.")
+                 //r.writeWinners(winnersfile)
+               }
+
+               case "Nanson" => {
+                 var r = NansonRuleMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                  println(" Scrutiny table for method Borda is not implemented yet.")
                  //r.writeWinners(winnersfile)
                }
