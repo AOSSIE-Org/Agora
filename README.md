@@ -1,3 +1,7 @@
+
+[![build status](https://gitlab.com/aossie/Agora/badges/master/build.svg)](https://gitlab.com/aossie/Agora/commits/master)
+[![coverage report](https://gitlab.com/aossie/Agora/badges/master/coverage.svg)](https://gitlab.com/aossie/Agora/commits/master)
+
 Agora is a library of data structures and algorithms for counting votes in elections.
 
 
