@@ -5,6 +5,8 @@ import countvotes.algorithms._
 
 object MajorityRuleMethod extends MajorityRule[WeightedBallot] {
   
+  val majorityThreshold = Rational(1,2)
+  
   def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int):   Report[WeightedBallot]  = {
       print("\n INPUT ELECTION: \n")
       printElection(election)
@@ -22,13 +24,9 @@ object MajorityRuleMethod extends MajorityRule[WeightedBallot] {
 
   def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int ): 
   List[(Candidate,Rational)] = {
-      require(numVacancies == 1, "Only one winner is possible in Majority rule")
-      var reqMajority = Rational(1,2)
-      val ccands = getCandidates(election)
-      val tls = totals(election, ccandidates)
-      
-      val numVoters: Int = election.length 
-      for(c <- ccands if (reqMajority < Rational(tls(c).toInt, numVoters))) yield (c, tls(c))
+      totals(election, ccandidates).toList sortWith {
+        (ct1, ct2) => ct1._2 > ct2._2
+      } take(numVacancies) filter { case (c, t) => t > majorityThreshold }
   }
 }
 
