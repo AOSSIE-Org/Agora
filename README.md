@@ -71,7 +71,7 @@ run -d /directory/ [-b ballots.txt] -c candidates.txt -m method -v num_of_vacanc
 
 Example:  
 
-run -d /Users/lebedka/Code/Voting/Agora/files/Examples/ -b 02-example.txt -c 02-candidates.txt -m Majority -v 1
+run -d files/Examples/ -b 02-example.txt -c 02-candidates.txt -m Majority -v 1
 
 where
 
