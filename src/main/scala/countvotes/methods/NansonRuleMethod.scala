@@ -41,7 +41,6 @@ object NansonRuleMethod extends VoteCountingMethod[WeightedBallot] {
         m(candidate) = m.getOrElse(candidate, new Rational(0, 1)) + (bordaCounter - 1)
         bordaCounter -= 1
       })
-
     }
     m
   }
@@ -54,7 +53,6 @@ object NansonRuleMethod extends VoteCountingMethod[WeightedBallot] {
     case len if (len > 1) => {
       // removing the lowest borda score candidate from the candidate list
       var lowestBordaCandidate = totals(election, candidates).minBy(_._2)
-      println("Removed lowest score borda candidate " + lowestBordaCandidate)
       winners(election, candidates.filter(_ != lowestBordaCandidate._1), numVacancies)
     }
   }
