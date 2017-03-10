@@ -141,6 +141,12 @@ object Main {
                   //r.writeWinners(winnersfile)
                }
 
+               case "Kemeny-Young" => {
+                 var r = KemenyYoungMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+                 println(" Scrutiny table for method Majority is not implemented yet.")
+                 //r.writeWinners(winnersfile)
+               }
+
                case "Test" =>  {
                   Test.testSDResolution
                }
