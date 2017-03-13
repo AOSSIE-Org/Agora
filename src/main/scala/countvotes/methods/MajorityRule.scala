@@ -15,8 +15,8 @@ import scala.util.Sorting
 import java.io._
 
 abstract class MajorityRule[B <: WeightedBallot with Weight] extends VoteCountingMethod[B] {
-  
-  protected val result: Result = new Result 
+
+  protected val result: Result = new Result
   protected val report: Report[B] = new Report[B]
 
 }

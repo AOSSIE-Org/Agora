@@ -10,11 +10,11 @@ import scala.util.parsing.combinator._
 
 
 abstract class ElectionParser[T] extends RegexParsers {
-  
+
   def line: Parser[T]
-  
+
   def read(filename: String): List[T] = {
-   
+
     val bufferedSource = io.Source.fromFile(filename)
     val lines = bufferedSource.getLines.toList
     //val lineswithoutheading = lines.tail
@@ -25,11 +25,11 @@ abstract class ElectionParser[T] extends RegexParsers {
         case Success(sucLine,_) => sucLine
         case _ => throw new Exception("Should never happen")
       }
-    } 
+    }
     bufferedSource.close()
     output
   }
-  
-  
-  
+
+
+
 }
