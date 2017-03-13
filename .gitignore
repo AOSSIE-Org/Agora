@@ -50,8 +50,10 @@ project/plugins/project/
 .idea
 *.iml
 *.cache-main
+*.cache-tests
 
 
 .metadata
 
-
+files/Examples/reports/
+files/Examples/winners/

@@ -5,6 +5,7 @@ import countvotes.methods._
 import collection.mutable.{HashMap => Map}
 import scala.util.Random
 
+import scala.language.postfixOps
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
