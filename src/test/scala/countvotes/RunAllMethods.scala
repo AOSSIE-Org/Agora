@@ -36,6 +36,7 @@ class RunAllMethods extends Specification {
     "execute Egalitarian" in { test("Egalitarian", "02-example.txt", "02-candidates.txt") shouldEqual true }
     "execute Majority" in { test("Majority", "02-example.txt", "02-candidates.txt") shouldEqual true }
     "execute Borda" in {test("Borda", "13-example.txt", "13-candidates.txt") shouldEqual true}
+    "execute Kemeny-Young" in {test("Borda", "14-example.txt", "14-candidates.txt") shouldEqual true}
 
   }
 }
