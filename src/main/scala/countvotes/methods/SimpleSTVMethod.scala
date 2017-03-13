@@ -18,7 +18,7 @@ class SimpleSTVMethod extends STV[WeightedBallot]
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int):   Report[WeightedBallot]  = {  
+  def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int):   Report[WeightedBallot]  = {
    val quota = cutQuotaFraction(computeQuota(election.length, numVacancies))
    println("Quota = " + quota)
    result.setQuota(quota)
@@ -26,27 +26,27 @@ class SimpleSTVMethod extends STV[WeightedBallot]
 
    print("\n INPUT ELECTION: \n")
    printElection(election)
-   
+
    val tls = totals(election, candidates) // Here are totals of candidates also not OCCURING in the ballots
    result.addTotalsToHistory(tls)
- 
+
    //report.setCandidates(getCandidates(election))  // Here are candidates OCCURING in the election
    report.setCandidates(candidates)  // Here are candidates also not OCCURING in the election
-   
+
    report.newCount(Input, None, Some(election), Some(tls), None, None)
-   
-   report.setWinners(winners(election, candidates, numVacancies))   
-   
-   report   
+
+   report.setWinners(winners(election, candidates, numVacancies))
+
+   report
   }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   override def winners(election: Election[WeightedBallot], ccandidates: List[Candidate],  numVacancies: Int): List[(Candidate, Rational)] = {
-    
+
     println(" \n NEW RECURSIVE CALL \n")
 
     val ccands = getCandidates(election)
-       
+
     val tls = totals(election, ccandidates)
 
     println("Totals: " + tls)
@@ -67,7 +67,8 @@ class SimpleSTVMethod extends STV[WeightedBallot]
                 println("Vacancies are not yet filled.")
                 val newElection = surplusesDistribution(election, numVacancies-ws.length)
                 printElection(newElection)
-                winners(newElection, ccandidates.filterNot(ws.contains(_)), numVacancies-ws.length):::ws  // TODO: care should be taken that newElection is not empty?!
+                winners(newElection, ccandidates.filterNot(ws.contains(_)), numVacancies-ws.length):::ws  
+                // TODO: care should be taken that newElection is not empty?!
               }
               case true => ws
             }

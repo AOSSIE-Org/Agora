@@ -10,7 +10,7 @@ trait NewWinnersOrderedByTotals[B <: Ballot with Weight] extends STV[B] with Sur
   def returnNewWinners(totals: Map[Candidate, Rational], quota: Rational): List[(Candidate,Rational)] = {
     val ws = totals.clone().retain((k,v) => v >= quota)
     // val lws = ws.toSeq.sortWith(_._2 < _._2).toList
-    resolveSurpluseDistributionTie(ws) 
+    resolveSurpluseDistributionTie(ws)
   }
 }
 

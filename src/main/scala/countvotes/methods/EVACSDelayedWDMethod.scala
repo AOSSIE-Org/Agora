@@ -21,5 +21,5 @@ class EVACSDelayedWDMethod extends ACT
  with NoNewWinnersDuringSurplusesDistribution
  with NoNewWinnersDuringExclusion
  with ACTTotalsDuringExclusion
-{  
+{
 }

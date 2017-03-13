@@ -13,7 +13,7 @@ trait ACTNewWinnersDuringExclusion extends ACT{
     if (quotaReached(totalsWithoutNewWinners, result.getQuota) ) {
       newws = returnNewWinners(totalsWithoutNewWinners, result.getQuota) // sorted!
       println("New winners as a result of the current partial exclusion: " + newws)
-      result.addPendingWinners(newws.toList, Some(extractMarkings(newElection))) 
+      result.addPendingWinners(newws.toList, Some(extractMarkings(newElection)))
       //------------ Reporting ------------------------------------------
       report.newCount(Exclusion, Some(candidate), Some(newElection), Some(newtotals), Some(newws), Some(exhaustedBallots))
     }
@@ -30,7 +30,7 @@ trait SenateNewWinnersDuringExclusion extends STV[ACTBallot]{
     if (quotaReached(totalsWithoutNewWinners, result.getQuota) ) {
       newws = returnNewWinners(totalsWithoutNewWinners, result.getQuota) // sorted!
       println("New winners as a result of the current partial exclusion: " + newws)
-      result.addPendingWinners(newws.toList, None) 
+      result.addPendingWinners(newws.toList, None)
       //------------ Reporting ------------------------------------------
       report.newCount(Exclusion, Some(candidate), Some(newElection), Some(newtotals), Some(newws), Some(exhaustedBallots))
     }
