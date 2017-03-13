@@ -22,7 +22,7 @@ class RunAllMethods extends Specification {
   def str(i: Int) = if (i < 10) "0" + i else i.toString
   
   def run(method: String): Boolean = {
-    (1 to 12) map { i => str(i) } map { 
+    (1 to 13) map { i => str(i) } map {
       i: String => test(method, s"$i-example.txt",s"$i-candidates.txt")
     } reduce { (b1,b2) => b1 && b2}
   }
@@ -35,6 +35,9 @@ class RunAllMethods extends Specification {
     "execute Simple" in { test("Simple", "02-example.txt", "02-candidates.txt") shouldEqual true }
     "execute Egalitarian" in { test("Egalitarian", "02-example.txt", "02-candidates.txt") shouldEqual true }
     "execute Majority" in { test("Majority", "02-example.txt", "02-candidates.txt") shouldEqual true }
+    "execute Borda" in {test("Borda", "13-example.txt", "13-candidates.txt") shouldEqual true}
+    "execute Nanson" in {test("Nanson", "13-example.txt", "13-candidates.txt") shouldEqual true}
+
   }
 }
 

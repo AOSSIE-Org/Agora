@@ -34,13 +34,11 @@ object BordaRuleMethod extends VoteCountingMethod[WeightedBallot]{
     val totalCandidates = getCandidates(election).length
 
     for (b <- election if !b.preferences.isEmpty) {
-      // need to take the size of the list first and then calculate the borda scores
-      var bordaCounter = totalCandidates
 
-      b.preferences.map(x => {
-        m(x) = m.getOrElse(x, new Rational(0,1)) + (bordaCounter-1)
-        bordaCounter -= 1
-      })
+      // need to take the size of the list first and then calculate the borda scores
+     b.preferences.zipWithIndex.foreach(preference => {
+       m(preference._1) = m.getOrElse(preference._1, new Rational(0,1)) + ((totalCandidates - 1 - preference._2) * b.weight.numerator.toInt)
+     })
 
     }
     m
