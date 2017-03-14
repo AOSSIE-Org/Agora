@@ -22,19 +22,23 @@ abstract class STV[B <: Ballot with Weight] extends VoteCountingMethod[B] {
   // DON'T FORGET TO RESET
   protected val result: Result = new Result
   protected val report: Report[B] = new Report[B]
-  
+
   def runScrutiny(e: Election[B], ccandidates: List[Candidate], numVacancies: Int):   Report[B]
-  
+
   def computeQuota(numVotes: Int, numVacancies: Int): Rational
-  
+
   def cutQuotaFraction(num: Rational): Rational
 
   def returnNewWinners(totals: Map[Candidate, Rational], quota: Rational): List[(Candidate,Rational)]
 
-  def computeTransferValue(surplus: Rational, election: Election[B], pendingWinners:  List[Candidate], candidate: Candidate, markings: Option[Set[Int]]): Rational
-   
-  def distributeSurplusVotes(election: Election[B],  candidate: Candidate, total:Rational, markings: Option[Set[Int]], pendingWinners: List[Candidate], transferValue: Rational): (Election[B], Set[B], Option[Election[B]])
-  
+  def computeTransferValue(
+    surplus: Rational, election: Election[B], pendingWinners:  List[Candidate], 
+    candidate: Candidate, markings: Option[Set[Int]]): Rational
+
+  def distributeSurplusVotes(
+    election: Election[B],  candidate: Candidate, total:Rational, markings: Option[Set[Int]], 
+    pendingWinners: List[Candidate], transferValue: Rational): (Election[B], Set[B], Option[Election[B]])
+
   def resolveSurpluseDistributionTie(equaltotals: Map[Candidate, Rational]): List[(Candidate, Rational)]
 
   def chooseCandidateForExclusion(totals: Map[Candidate, Rational]): (Candidate, Rational)
@@ -57,7 +61,7 @@ abstract class STV[B <: Ballot with Weight] extends VoteCountingMethod[B] {
     var sum: Rational = 0
     for (t <- totals) {
       sum += t._2
-    } 
+    }
     sum
   }
 
@@ -91,7 +95,7 @@ abstract class STV[B <: Ballot with Weight] extends VoteCountingMethod[B] {
     println("Has continuing candidates?: " + ballotsC)
     ballotsC
   }
-    
+
   //TODO: Optimize: as soon as we found continuing candidate, we can simply attach the rest of the list
   def filterPreferences(preferences: List[Candidate], candidates: List[Candidate]): List[Candidate] = {
    var newpreferences: List[Candidate] = Nil
@@ -103,9 +107,9 @@ abstract class STV[B <: Ballot with Weight] extends VoteCountingMethod[B] {
   }
   newpreferences.reverse
  }
-  
-  
+
+
 }
-  
+
 
 

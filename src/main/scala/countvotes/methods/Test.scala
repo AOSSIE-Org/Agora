@@ -28,19 +28,24 @@ object Test{
       println("biggest candidates: " + biggestcandidates)
       val lbiggestcandidates = biggestcandidates.toList.map(x => x._1)
       println("list of biggest candidates: " + lbiggestcandidates)
-      val totalsofremainingcandidates = totalshistory.head.clone().retain ((k,v) => lbiggestcandidates.toSet.contains(k) == false && equaltotals.toSet.contains(k) == true)
+      val totalsofremainingcandidates = totalshistory.head.clone().retain ((k,v) => lbiggestcandidates.toSet.contains(k) == false 
+        && equaltotals.toSet.contains(k) == true)
       val listoftotalsofremainingcandidates =  totalsofremainingcandidates.toList.sortBy(x => x._2).reverse
       println("listoftotalsofremainingcandidates " + listoftotalsofremainingcandidates)
 
       if (biggestcandidates.size > 1)
-        recOrderIdentical(lbiggestcandidates, totalshistory.tail):::recOrderDifferent(totalsofremainingcandidates, listoftotalsofremainingcandidates, totalshistory)
+        recOrderIdentical(lbiggestcandidates, totalshistory.tail):::recOrderDifferent(
+          totalsofremainingcandidates, listoftotalsofremainingcandidates, totalshistory)
       else
         lbiggestcandidates.head :: recOrderDifferent(totalsofremainingcandidates, listoftotalsofremainingcandidates, totalshistory)
      }
      else Nil
   }
 
-  def recOrderDifferent(totalsOfWinners: Map[Candidate, Rational], sortedlist: List[(Candidate, Rational)], totalshistory: List[Map[Candidate, Rational]]): List[Candidate] = {
+  def recOrderDifferent(
+    totalsOfWinners: Map[Candidate, Rational], sortedlist: List[(Candidate, Rational)], 
+    totalshistory: List[Map[Candidate, Rational]]): List[Candidate] = {
+
     println(" \n recOrderDifferent \n")
     println("totalsOfWinners: " + totalsOfWinners)
     println("sortedlist: " + sortedlist)
@@ -75,24 +80,28 @@ object Test{
           smallestcandidate = c
         }
       }
-      recFindSmallest(equaltotals.clone() filter { p => totalshistory.head(p._1) == totalshistory.head(smallestcandidate)}, totalshistory.tail) // it may be not unique!!!
+      recFindSmallest(equaltotals.clone() filter { 
+      p => totalshistory.head(p._1) == totalshistory.head(smallestcandidate)}, totalshistory.tail) // it may be not unique!!!
      }
      else equaltotals
    }
 
 
 
-  def testSDResolution = {
+  def testSDResolution: Unit = {
 
-    //val totals1: Map[Candidate, Rational] =  Map(Candidate("A", None, None) -> 9, Candidate("B", None, None) -> 1, Candidate("C", None, None) -> 1, Candidate("D", None, None) -> 9, Candidate("E", None, None) -> 7, Candidate("F", None, None) -> 1)
-    //val totals2: Map[Candidate, Rational] =  Map(Candidate("A", None, None) -> 10, Candidate("B", None, None) -> 11, Candidate("C", None, None) -> 9, Candidate("D", None, None) -> 9, Candidate("E", None, None) -> 7, Candidate("F", None, None) -> 1)
-    //val totals3: Map[Candidate, Rational] =  Map(Candidate("A", None, None) -> 11, Candidate("B", None, None) -> 11, Candidate("C", None, None) -> 10, Candidate("D", None, None) -> 9, Candidate("E", None, None) -> 7, Candidate("F", None, None) -> 1)
-    //val totals4: Map[Candidate, Rational] =  Map(Candidate("A", None, None) -> 14, Candidate("B", None, None) -> 14, Candidate("C", None, None) -> 14, Candidate("D", None, None) -> 14, Candidate("E", None, None) -> 14, Candidate("F", None, None) -> 15)
-
-    val totals1: Map[Candidate, Rational] =  Map(Candidate("A", None, None) -> 1, Candidate("B", None, None) -> 1, Candidate("C", None, None) -> 1, Candidate("D", None, None) -> 1, Candidate("E", None, None) -> 2)
-    val totals2: Map[Candidate, Rational] =  Map(Candidate("A", None, None) -> 1, Candidate("B", None, None) -> 1, Candidate("C", None, None) -> 6, Candidate("D", None, None) -> 7, Candidate("E", None, None) -> 6)
-    val totals3: Map[Candidate, Rational] =  Map(Candidate("A", None, None) -> 3, Candidate("B", None, None) -> 9, Candidate("C", None, None) -> 7, Candidate("D", None, None) -> 7, Candidate("E", None, None) -> 8)
-    val totals4: Map[Candidate, Rational] =  Map(Candidate("A", None, None) -> 19, Candidate("B", None, None) -> 10, Candidate("C", None, None) -> 10, Candidate("D", None, None) -> 10, Candidate("E", None, None) -> 10)
+    val totals1: Map[Candidate, Rational] =  Map(
+      Candidate("A", None, None) -> 1, Candidate("B", None, None) -> 1, Candidate("C", None, None) -> 1, 
+      Candidate("D", None, None) -> 1, Candidate("E", None, None) -> 2)
+    val totals2: Map[Candidate, Rational] =  Map(
+      Candidate("A", None, None) -> 1, Candidate("B", None, None) -> 1, Candidate("C", None, None) -> 6, 
+      Candidate("D", None, None) -> 7, Candidate("E", None, None) -> 6)
+    val totals3: Map[Candidate, Rational] =  Map(
+      Candidate("A", None, None) -> 3, Candidate("B", None, None) -> 9, Candidate("C", None, None) -> 7, 
+      Candidate("D", None, None) -> 7, Candidate("E", None, None) -> 8)
+    val totals4: Map[Candidate, Rational] =  Map(
+      Candidate("A", None, None) -> 19, Candidate("B", None, None) -> 10, Candidate("C", None, None) -> 10, 
+      Candidate("D", None, None) -> 10, Candidate("E", None, None) -> 10)
 
 
     var totalsHistory: List[Map[Candidate, Rational]] =   totals4 :: totals3 :: totals2 :: totals1 :: List()
@@ -117,7 +126,9 @@ object Test{
 
 
     if (recFindSmallest(equaltotals, totalsHistory.tail).size > 1) {
-      var  resultsmallest: (Candidate, Rational)  = Random.shuffle(equaltotals.toList).head // If did not manage to resolve tie, take a random candidate (the commissioner decided according to the ACT Electorate act)
+      var  resultsmallest: (Candidate, Rational)  = Random.shuffle(equaltotals.toList).head 
+      // If did not manage to resolve tie, take a random candidate (the commissioner decided according to the ACT Electorate act)
+
       println("The smallest candidate was not found. " +  resultsmallest + " is picked up.")
 
     }

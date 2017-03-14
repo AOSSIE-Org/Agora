@@ -34,7 +34,7 @@ object EgalitarianDPMethod extends Egalitarian[WeightedBallot] {
     case 0 => List.empty
     case n => {
       if(memo.contains((numVacancies,candidateList.toSet))){
-        return memo((numVacancies,candidateList.toSet))
+        memo((numVacancies,candidateList.toSet))
       }
       var contemplatedSets : List[List[Candidate]] = List.empty
       for(i <- candidateList){
@@ -43,7 +43,7 @@ object EgalitarianDPMethod extends Egalitarian[WeightedBallot] {
       val contemplatedSetsWelfareTuple: List[(Double,List[Candidate])] = contemplatedSets.map(x => (socialWelfare(election, x),x))
       val result: List[Candidate] = (contemplatedSetsWelfareTuple.foldLeft ((0.0, candidateList)) ((x,y) => maxTuple1(x,y)))._2   //Error if all less than 0
       memo += (((numVacancies,candidateList.toSet),result))
-      return result
+      result
     }
   }
 }

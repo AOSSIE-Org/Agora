@@ -18,13 +18,13 @@ class Rational(n: BigInt, d: BigInt) {
 
 
 
-  def +(that: Rational) =
+  def +(that: Rational): Rational =
     new Rational(numerator * that.denominator + that.numerator * denominator, denominator * that.denominator)
-  def -(that: Rational) =
+  def -(that: Rational): Rational =
     new Rational(numerator * that.denominator - that.numerator * denominator, denominator * that.denominator)
-  def *(that: Rational) =
+  def *(that: Rational): Rational =
    new Rational(numerator * that.numerator, denominator * that.denominator)
-  def /(that: Rational) = 
+  def /(that: Rational): Rational =
     new Rational(numerator * that.denominator, denominator * that.numerator)
   def <(that: Rational): Boolean =
     numerator * that.denominator < that.numerator * denominator
@@ -53,12 +53,12 @@ class Rational(n: BigInt, d: BigInt) {
   override def hashCode: Int =
     41 * (41 + numerator.toInt) + denominator.toInt
 
-  override def toString = if (denominator == 1) numerator.toString else numerator + "/" + denominator // + " : " +  (numerator/denominator).toString()
+  override def toString: String = if (denominator == 1) numerator.toString else numerator + "/" + denominator // + " : " +  (numerator/denominator).toString()
  //   override def toString = if (denominator == 1) numerator.toString else (numerator/denominator).toString()
 
-  def toInt = (numerator/denominator ).toInt
+  def toInt: Int = (numerator/denominator ).toInt
 
-  def toDouble = (numerator/denominator ).toDouble
+  def toDouble: Double = (numerator/denominator ).toDouble
 }
 
 object Rational{

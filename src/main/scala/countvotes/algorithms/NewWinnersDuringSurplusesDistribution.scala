@@ -10,7 +10,7 @@ trait ACTNewWinnersDuringSurplusesDistribution extends ACT{
     var ws:  List[(Candidate,Rational)] = List()
     if (quotaReached(totals, result.getQuota)){
      ws = returnNewWinners(totals, result.getQuota) // sorted for further surplus distribution!
-     result.addPendingWinners(ws.toList, Some(extractMarkings(election))) 
+     result.addPendingWinners(ws.toList, Some(extractMarkings(election)))
     }
     ws
   }
@@ -23,7 +23,7 @@ trait SenateNewWinnersDuringSurplusesDistribution extends STV[ACTBallot]{
     var ws:  List[(Candidate,Rational)] = List()
     if (quotaReached(totals, result.getQuota)){
      ws = returnNewWinners(totals, result.getQuota) // sorted for further surplus distribution!
-     result.addPendingWinners(ws.toList, None) 
+     result.addPendingWinners(ws.toList, None)
     }
     ws
   }

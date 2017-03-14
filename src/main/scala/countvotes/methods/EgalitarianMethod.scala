@@ -16,7 +16,7 @@ object EgalitarianMethod extends Egalitarian[WeightedBallot] {
 
   def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)] = {
     val candidateCount: Int = allCandidates.length
-    
+
     val candidateSubsets: List[List[Candidate]] = getCandidateSubsets(ccandidates,candidateCount,List.empty,0,numVacancies)
 
     if(candidateCount < numVacancies) {println("not enough candidates") }
@@ -38,7 +38,7 @@ object EgalitarianMethod extends Egalitarian[WeightedBallot] {
     }
     currentCandidatesForReturn
   }
-  
+
   def getCandidateSubsets(candidates: List[Candidate], candidateCount: Int, stub: List[Candidate], location: Int, remaining: Int): List[List[Candidate]] = {
     var combinations: List[List[Candidate]] = List.empty
     if(remaining == 1){

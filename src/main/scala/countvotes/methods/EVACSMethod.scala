@@ -20,5 +20,5 @@ class EVACSMethod extends ACT
  with ACTNewWinnersDuringSurplusesDistribution
  with ACTNewWinnersDuringExclusion
  with ACTTotalsDuringExclusion
-{  
+{
 }
