@@ -56,7 +56,7 @@ object KemenyYoungMethod extends VoteCountingMethod[WeightedBallot] {
 
         voterPreference.zipWithIndex.foreach(candidate => {
 
-          if ((preference._2 != candidate._2) && (preference._2 < candidate._2)) {
+          if (preference._2 < candidate._2) {
             candidatePairKey.put(preference._1, candidate._1)
             tallyTable.put(candidatePairKey, tallyTable.get(candidatePairKey).get + b.weight.numerator.toInt)
             candidatePairKey.clear()
