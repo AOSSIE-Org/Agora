@@ -11,15 +11,15 @@ import scala.language.implicitConversions
 
 
 package object structures {
-  
+
   type Election[B <: Ballot] = List[B]
-  
+
   object Election {
     implicit def weightedElectionToACTElection(we: Election[WeightedBallot]): Election[ACTBallot] = {
       for (b <- we) yield ACTBallot.fromWeightedBallot(b) // b // ACTBallot.fromWeightedBallot(b)
-    } 
+    }
   }
-       
+
   abstract sealed class Actions
   case object Exclusion extends Actions
   case object SurplusDistribution extends Actions
@@ -27,6 +27,6 @@ package object structures {
   case object Input extends Actions
   case object VictoryWithoutQuota extends Actions
   case object TwoLastCandidatesForOneVacancy extends Actions
-  
-  
+
+
 }

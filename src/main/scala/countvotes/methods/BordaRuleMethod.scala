@@ -37,7 +37,7 @@ object BordaRuleMethod extends VoteCountingMethod[WeightedBallot]{
 
       // need to take the size of the list first and then calculate the borda scores
      b.preferences.zipWithIndex.foreach(preference => {
-       m(preference._1) = m.getOrElse(preference._1, new Rational(0,1)) + (totalCandidates - 1 - preference._2)
+       m(preference._1) = m.getOrElse(preference._1, new Rational(0,1)) + ((totalCandidates - 1 - preference._2) * b.weight.numerator.toInt)
      })
 
     }

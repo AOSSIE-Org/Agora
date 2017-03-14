@@ -22,21 +22,20 @@ abstract class Egalitarian[B <: WeightedBallot with Weight] extends VoteCounting
     candidateList
   }
   */
-  
+
 
   def rank(election: Election[B], voter: Int, candidate: Candidate): (Boolean,Int) = {
     for(i <- 0 to (election(voter).preferences.length-1)) {
       if(election(voter).preferences(i) == candidate){
-        return (true,i)
+        (true,i)
       }
     }
-    return (false,0)
+    (false,0)
   }
 
   def utilityIndividual(election: Election[B], voter: Int, candidate: Candidate): Int = rank(election,voter,candidate) match {
-    case (true,rank) => return allCandidates.length - rank
-    case (false,_) => return 0
-    return 0
+    case (true,rank) => allCandidates.length - rank
+    case _ => 0
   }
 
   def utilitySet(election: Election[B], voter: Int, candidates: List[Candidate]): Int = {
