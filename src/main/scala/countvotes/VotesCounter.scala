@@ -165,7 +165,7 @@ object Main {
                case "Coomb" => {
                  var r = CoombRuleMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                  println(" Scrutiny table for method Coomb is not implemented yet.")
-                 r.writeWinners(winnersfile)
+                 //r.writeWinners(winnersfile)
                }
 
 

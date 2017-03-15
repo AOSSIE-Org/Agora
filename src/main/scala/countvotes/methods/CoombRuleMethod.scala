@@ -48,7 +48,7 @@ object CoombRuleMethod extends VoteCountingMethod[WeightedBallot]{
         coombsCandidateMap.update(firstCandidate, firstCandidateNewValue)
 
         if (firstCandidateNewValue._1 > majorityThreshold * getTotalVoters(election)) {
-          winnerMap.put(firstCandidate, firstCandidateNewValue._1)
+          winnerMap(firstCandidate) = firstCandidateNewValue._1
           return winnerMap.toList
         }
       })
@@ -64,7 +64,7 @@ object CoombRuleMethod extends VoteCountingMethod[WeightedBallot]{
 
     if (lastRankValueList.head._2._2 == lastRankValueList.last._2._2) {
         coombsCandidateMap.toList.foreach(candidiateMap => {
-          winnerMap.put(candidiateMap._1, candidiateMap._2._1)
+          winnerMap(candidiateMap._1) = candidiateMap._2._1
         })
         return winnerMap.toList
       }
