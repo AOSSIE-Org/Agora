@@ -164,7 +164,7 @@ object Main {
 
                case "Nanson" => {
                  var r = NansonRuleMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
-                 println(" Scrutiny table for method Borda is not implemented yet.")
+                 println(" Scrutiny table for method Nanson is not implemented yet.")
                  //r.writeWinners(winnersfile)
                }
 
