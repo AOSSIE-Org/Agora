@@ -5,47 +5,26 @@ import countvotes.parsers.{CandidatesParser, PreferencesParser}
 import countvotes.structures.Candidate
 import org.specs2.mutable.Specification
 
-import scala.collection.mutable.ListBuffer
 
 /**
   * This test is to verify the election results with the wikipedia example https://en.wikipedia.org/wiki/Kemeny–Young_method
   */
 class KemenyYoungTest extends Specification{
 
-  // https://en.wikipedia.org/wiki/Kemeny–Young_method rankings are Nashville > Chattanooga > Kknxville > Memphis
+  val expectedKemenyYoungWinnerList = List(Candidate("Nashville"), Candidate("Chattanooga"), Candidate("Knoxville"), Candidate("Memphis"))
 
   "KemenyYoung Test " should {
 
-    "verify result" in { kemenyYoungMethodVerification("14-example.txt") shouldEqual true }
-
+    "verify result" in { kemenyYoungMethodVerification("14-example.txt") shouldEqual expectedKemenyYoungWinnerList }
   }
 
-  def kemenyYoungMethodVerification(electionFile: String): Boolean = {
+  def kemenyYoungMethodVerification(electionFile: String): List[Candidate] = {
 
-    val candidates = CandidatesParser.read("/Users/deepeshpandey/Desktop/aossie/agora/Agora/files/Examples/14-candidates.txt")
-    val election =  PreferencesParser.read("/Users/deepeshpandey/Desktop/aossie/agora/Agora/files/Examples/" + electionFile)
-    val winnersfile = "/Users/deepeshpandey/Desktop/aossie/agora/Agora/files/Examples/" + "winners/" + "Winners_" + "Schulze" + "_InputFile_" + electionFile
-    val reportfile = "/Users/deepeshpandey/Desktop/aossie/agora/Agora/files/Examples/" + "reports/" + "Report_" + "Schulze" + "_InputFile_" + electionFile
-    val methodWinnersList = KemenyYoungMethod.winners(election, candidates, 1)
-    val correctWinnerResult = getKemenyYoungWinnerList(candidates)
+    val candidates = CandidatesParser.read("../Agora/files/Examples/14-candidates.txt")
+    val election =  PreferencesParser.read("../Agora/files/Examples/" + electionFile)
 
-    var matchSize = methodWinnersList.zip(correctWinnerResult).filter(x => {x._1._1 == x._2}).size
-
-    matchSize == candidates.length
-
+    KemenyYoungMethod.winners(election, candidates, 1).map(pair => pair match {
+      case (candidate, rational) => candidate
+    })
   }
-
-  def getKemenyYoungWinnerList(candidates: List[Candidate]): List[(Candidate)] = {
-    // correct rankings from https://en.wikipedia.org/wiki/Kemeny–Young_method
-    val kemenyYoungWinnerList = new ListBuffer[Candidate]
-
-    kemenyYoungWinnerList.insert(0, new Candidate("Nashville"))
-    kemenyYoungWinnerList.insert(1, new Candidate("Chattanooga"))
-    kemenyYoungWinnerList.insert(2, new Candidate("Knoxville"))
-    kemenyYoungWinnerList.insert(3, new Candidate("Memphis"))
-
-    kemenyYoungWinnerList.toList
-  }
-
-
 }
