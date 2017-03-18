@@ -23,8 +23,6 @@ class KemenyYoungTest extends Specification{
     val candidates = CandidatesParser.read("../Agora/files/Examples/14-candidates.txt")
     val election =  PreferencesParser.read("../Agora/files/Examples/" + electionFile)
 
-    KemenyYoungMethod.winners(election, candidates, 1).map(pair => pair match {
-      case (candidate, rational) => candidate
-    })
+    KemenyYoungMethod.winners(election, candidates, 1).map {_._1}
   }
 }

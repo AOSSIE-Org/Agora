@@ -12,6 +12,7 @@ object KemenyYoungMethod extends VoteCountingMethod[WeightedBallot] {
 
   private val result: Result = new Result
   private val report: Report[WeightedBallot] = new Report[WeightedBallot]
+  private val rationalZero = Rational(0, 1)
 
   def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int): Report[WeightedBallot] = {
 
@@ -35,19 +36,21 @@ object KemenyYoungMethod extends VoteCountingMethod[WeightedBallot] {
 
     var tallyTable = new Map[Map[Candidate, Candidate], Integer]
     var candidatePairKey = new Map[Candidate, Candidate]
+    val candidates = ccandidates.zipWithIndex
 
     // initialise the tally table
-    ccandidates.zipWithIndex.foreach(candidate => {
-      ccandidates.zipWithIndex.foreach(preference => {
-        if (preference._2 != candidate._2) {
+    candidates.foreach { case (c1, i1) => {
+      candidates.foreach { case (c2, i2) => {
+        if (i2 != i1) {
 
           var candidatePair = new Map[Candidate, Candidate]
-          candidatePair.put(candidate._1, preference._1)
-          tallyTable.put(candidatePair, 0)
+          candidatePair(c1) = c2
+          tallyTable(candidatePair) = 0
         }
-      })
-
-    })
+      }
+      }
+    }
+    }
 
     // update the tally table using election
     for (b <- election if !b.preferences.isEmpty) {
@@ -74,34 +77,30 @@ object KemenyYoungMethod extends VoteCountingMethod[WeightedBallot] {
     ccandidates.permutations.toList.foreach(ranking => {
 
       var currentRankingScore = 0
-      ranking.zipWithIndex.foreach(candidate => {
+      val currentRanking = ranking.zipWithIndex
 
-        ranking.zipWithIndex.foreach(preference => {
+      currentRanking.foreach { case (c1, i1) => {
 
-          if (candidate._2 < preference._2) {
+        currentRanking.foreach { case (c2, i2) => {
+
+          if (i1 < i2) {
             var candidatePairKey = new Map[Candidate, Candidate]
-            candidatePairKey.put(candidate._1, preference._1)
+            candidatePairKey.put(c1, c2)
             currentRankingScore = currentRankingScore + tallyTable.get(candidatePairKey).get
-
           }
-        })
-      })
+        }
+        }
+      }
+      }
       // keep track of the maximum score and rankings
+
       if (currentRankingScore > maxRankingScore) {
         maxRankingScore = currentRankingScore
         maxRanking = ranking.toArray
       }
     })
 
-    // return the final kemeny-Young rankings
-    var kemenyYoungRanking = new Array[(Candidate, Rational)](ccandidates.length)
-
-    maxRanking.toList.zipWithIndex.foreach(candidate => {
-
-      kemenyYoungRanking.update(candidate._2, (candidate._1, new Rational(0,1)))
-    })
-
-    kemenyYoungRanking.toList
+    maxRanking.map(candidate => (candidate, rationalZero)).toList
   }
 
 }
