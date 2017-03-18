@@ -74,8 +74,6 @@ object CoombRuleMethod extends VoteCountingMethod[WeightedBallot]{
       winners(election, ccandidates.filter(_ != maximumLowestRankedCandidate._1), numVacancies)
   }
 
-  def getZeroTuple() : (Rational, Rational) = {
-    (new Rational (0, 1), new Rational(0, 1))
-  }
+  def getZeroTuple() : (Rational, Rational) = { (Rational (0, 1), Rational(0, 1)) }
 
 }
