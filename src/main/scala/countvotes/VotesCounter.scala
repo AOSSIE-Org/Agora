@@ -83,11 +83,11 @@ object Main {
     
     note("""Possible values are as follows:""" + "\n" + 
 
-        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Nanson""" + "\n" +
+        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Nanson, Kemeny-Young""" + "\n" +
 
         """for -t:  Concise, ACT""" + "\n \n" 
     )  
-    
+
     help("help").text("prints this usage text")
   }
 
@@ -156,9 +156,15 @@ object Main {
                  //r.writeWinners(winnersfile)
                }
 
+               case "Kemeny-Young" => {
+                 var r = KemenyYoungMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+                 println(" Scrutiny table for method Kemeny-Young is not implemented yet.")
+                 //r.writeWinners(winnersfile)
+               }
+
                case "Nanson" => {
                  var r = NansonRuleMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
-                 println(" Scrutiny table for method Borda is not implemented yet.")
+                 println(" Scrutiny table for method Nanson is not implemented yet.")
                  //r.writeWinners(winnersfile)
                }
 
