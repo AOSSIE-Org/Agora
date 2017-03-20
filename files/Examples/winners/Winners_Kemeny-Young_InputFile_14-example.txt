@@ -1,4 +1,1 @@
 Nashville: 0
-Chattanooga: 0
-Knoxville: 0
-Memphis: 0

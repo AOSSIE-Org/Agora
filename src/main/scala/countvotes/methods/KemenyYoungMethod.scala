@@ -100,7 +100,7 @@ object KemenyYoungMethod extends VoteCountingMethod[WeightedBallot] {
       }
     })
 
-    maxRanking.map(candidate => (candidate, rationalZero)).toList
+    maxRanking.map(candidate => (candidate, rationalZero)).toList.take(numVacancies)
   }
 
 }
