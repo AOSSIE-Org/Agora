@@ -39,7 +39,7 @@ class RunAllMethods extends Specification {
     "execute Borda" in { test("Borda", "13-example.txt", "13-candidates.txt") shouldEqual true }
     "execute Nanson" in { test("Nanson", "13-example.txt", "13-candidates.txt") shouldEqual true }
     "execute Kemeny-Young" in { test("Kemeny-Young", "14-example.txt", "14-candidates.txt") shouldEqual true }
-    "execute Contingent" in { test("Contingent", "13-example.txt", "13-candidates.txt") shouldEqual true }
+    "execute Contingent" in { test("Contingent", "14-example.txt", "14-candidates.txt") shouldEqual true }
 
   }
 }
