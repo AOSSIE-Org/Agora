@@ -83,7 +83,7 @@ object Main {
     
     note("""Possible values are as follows:""" + "\n" + 
 
-        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Nanson, Kemeny-Young""" + "\n" +
+        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Nanson, Kemeny-Young, Contingent""" + "\n" +
 
         """for -t:  Concise, ACT""" + "\n \n" 
     )  
@@ -168,6 +168,11 @@ object Main {
                  //r.writeWinners(winnersfile)
                }
 
+               case "Contingent" => {
+                 var r = ContingentMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+                 println(" Scrutiny table for method Contingent is not implemented yet.")
+                 //r.writeWinners(winnersfile)
+               }
 
                case "Test" =>  {
                   Test.testSDResolution
