@@ -66,7 +66,7 @@ object CoombRuleMethod extends VoteCountingMethod[WeightedBallot]{
         coombsCandidateMap.toList.foreach(candidiateMap => {
           winnerMap(candidiateMap._1) = candidiateMap._2._1
         })
-        return winnerMap.toList
+        return winnerMap.toList.take(numVacancies)
       }
 
       // remove the minimum ranked alternative from the candidates list and recurse
