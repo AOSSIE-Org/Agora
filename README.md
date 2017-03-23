@@ -4,14 +4,16 @@
 
 Agora is a library of data structures and algorithms for counting votes in elections.
 
-
 Currently the following methods are implemented:  
 
-1) EVACSMethod (imitation of ACT's EVACS system)  
-2) SimpleSTVMetod (a simple STV counting algorithm)  
-3) Egalitarian method  
-4) Majority rule method   
-
+* `EVACS` - an imitation of Evacs, the STV system used for counting votes in Australian Capital Territory  
+* `Simple` - a simple STV counting algorithm  
+* `Egalitarian`  
+* `Majority` 
+* `Borda`
+* `Approval`
+* `Nanson`
+* `Kemeny-Young` 
 
 Remark: When EVACSMethod is run on real data the computation is slow because of ACTFractionLoss
 
@@ -25,7 +27,7 @@ id2 weight preference_2^1 > ... > preference_2^{N_2}
 ...  
 idK weight preference_K^1 > ... > preference_K^{N_K}  
 ```
-Weight has to be a rational number and it is initially normally equal to 1/1.  
+Weight has to be a rational number and its initial value is normally equal to 1/1.  
 
 Example:  
 
@@ -63,27 +65,39 @@ Folder "files" contains
 
 * some simple examples of elections (for testing)
 
-## Running the code 
+## Usage Instructions 
 
-java -jar countvotes-assembly-1.1.jar parameters
+You must have [SBT](http://www.scala-sbt.org/release/docs/Setup.html) (version >= 0.13) installed. SBT automatically downloads all compilers and libraries on which  Agora depends.
 
-OR
+To start SBT, go to Agora's home folder using the terminal and run:
+```
+$ sbt
+```
 
-sbt -J-Xmx12G -J-Xms12G  
+EVACS (an imitation of ACT's Evacs STV system) requires more memory, thus run:
+```
+$ sbt -J-Xmx12G -J-Xms12G  
+```
+(you may change the values after Xmx and Xms to suit your needs)
 
-run -d /directory/ [-b ballots.txt] -c candidates.txt -m method -v num_of_vacancies [-k num_of_candidates] [-t table]
+Then you can run Agora within SBT's command line. The following command runs the Majority method on preferences given by file `02-example.txt` and candidates enumerated in file `02-candidates.txt` looking for one winner.
 
-Example:  
-
+```
 run -d files/Examples/ -b 02-example.txt -c 02-candidates.txt -m Majority -v 1
+```
+The general command to call Agora is as follows:
+
+```
+run -d /directory/ [-b ballots.txt] -c candidates.txt -m method -v num_of_vacancies [-k num_of_candidates] [-t table]
+```
 
 where
 
-* method is either EVACS, Simple, Egalitarian or Majority  
+* method is `EVACS`, `Simple`, `Egalitarian`, `Majority`, `Approval`, `Borda`, `Kemeny-Young` or `Nanson`
 
-* candidates.txt is the file containing all candidates. The tally will be printed in the order as the candidates appear in this file.
+* `candidates.txt` is the file containing all candidates. The tally will be printed in the order as the candidates appear in this file.
 
-* table is either ACT (a simulation of ACT's scrutiny tables) or Concise. Concise is default.
+* `table` is either `ACT` (a simulation of ACT's scrutiny tables) or `Concise`. Concise is default.
 
 Note: If -b is omitted, all files in -d are analysed.
 
