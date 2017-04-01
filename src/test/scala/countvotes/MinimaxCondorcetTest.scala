@@ -22,7 +22,6 @@ class MinimaxCondorcetTest extends Specification{
     val candidates = CandidatesParser.read("../Agora/files/Examples/14-candidates.txt")
     val election =  PreferencesParser.read("../Agora/files/Examples/" + electionFile)
 
-    // because its a single winner election
     MinimaxCondorcetMethod.winners(election, candidates, 1).map {_._1}
   }
 

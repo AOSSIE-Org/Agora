@@ -35,14 +35,14 @@ object MinimaxCondorcetMethod extends VoteCountingMethod[WeightedBallot] {
   List[(Candidate, Rational)] = {
 
     val tallyTable = new MMap[MMap[Candidate, Candidate], Rational]
+    val winnerMap = new MMap[Candidate, Rational]
     val candidatePairKey = new MMap[Candidate, Candidate]
-    val candidates = ccandidates.zipWithIndex
+    val totalVoters = getTotalVoters(election)
 
     // initialise the tally table
-    candidates.foreach { case (c1, i1) => {
-      candidates.foreach { case (c2, i2) => {
-        if (i2 != i1) {
-
+    ccandidates.foreach { c1 => {
+      ccandidates.foreach { c2 => {
+        if (c1 != c2) {
           var candidatePair = new MMap[Candidate, Candidate]
           candidatePair(c1) = c2
           tallyTable(candidatePair) = 0
@@ -54,45 +54,42 @@ object MinimaxCondorcetMethod extends VoteCountingMethod[WeightedBallot] {
 
     // update the tally table using election
     for (b <- election if !b.preferences.isEmpty) {
-      val voterPreference = b.preferences
-      voterPreference.zipWithIndex.foreach(preference => {
-
-        voterPreference.zipWithIndex.foreach(candidate => {
-
-          if (preference._2 < candidate._2) {
-            candidatePairKey.put(preference._1, candidate._1)
-            tallyTable.put(candidatePairKey, tallyTable.get(candidatePairKey).get + b.weight.numerator.toInt)
+      val voterPreference = b.preferences.zipWithIndex
+      voterPreference.foreach { case (c1, i1) => {
+        voterPreference.foreach { case (c2, i2) => {
+          if (i1 < i2) {
+            candidatePairKey(c1) = c2
+            tallyTable(candidatePairKey) = tallyTable.getOrElse(candidatePairKey, rational0) + b.weight.numerator.toInt
             candidatePairKey.clear()
           }
-
-        })
-      })
-    }
-
-    var c1WorstDefeat = rational0
-    val listBuffer = new ListBuffer[(Candidate, Rational)]
-    val totalVoters = election.length
-
-    // find the worst pair wise defeat for each pair and find the minimum one
-    candidates.foreach { case (c1, i1) => {
-
-      c1WorstDefeat = rational0
-      candidates.filter { case (c2, i2) => c2 != c1 } foreach { case (c3, i3) => {
-
-        candidatePairKey.put(c3, c1)
-        val c3c1ElectionResult = tallyTable.get(candidatePairKey).get
-
-        if ((c3c1ElectionResult > majorityThreshold * totalVoters) && (c3c1ElectionResult > c1WorstDefeat)) {
-          c1WorstDefeat = c3c1ElectionResult
         }
-        candidatePairKey.clear()
+        }
       }
       }
-      listBuffer.insert(i1, (c1, c1WorstDefeat))
     }
+
+    def isWinner(x: Candidate, y: Candidate): Boolean = {
+      val candidatePairKey = new MMap[Candidate, Candidate]
+      candidatePairKey(x) = y
+      if (tallyTable.get(candidatePairKey).get > majorityThreshold * getTotalVoters(election)) true else false
+
     }
-    listBuffer.sortWith(_._2 < _._2).take(numVacancies).toList
+
+    def tallyValue(x: Candidate, y: Candidate): Rational = {
+      val pairKey = new MMap[Candidate, Candidate]
+      pairKey(x) = y
+      tallyTable.get(pairKey).get
+    }
+
+    ccandidates.foreach(x => {
+      winnerMap(x) = rational0
+      ccandidates.filter(y => (x != y) && isWinner(y, x)).foreach(z => {
+        if (tallyValue(z, x) > winnerMap.getOrElse(x, 0)) {
+          winnerMap.update(x, tallyValue(z, x))
+        }
+      })
+    })
+
+    winnerMap.toList.sortWith(_._2 < _._2).take(numVacancies)
   }
-
-
 }
