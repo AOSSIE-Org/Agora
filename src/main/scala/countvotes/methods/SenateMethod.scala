@@ -1,3 +1,19 @@
+// Copyright (C) 2011-2012 the original author or authors.
+// See the LICENCE.txt file distributed with this work for additional
+// information regarding copyright ownership.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package countvotes.methods
 
 import countvotes.structures._
@@ -43,7 +59,7 @@ class SenateMethod extends STVAustralia
 
   // Section 273 (29)
   def computeNotionalVotes(candidate: Candidate, totals: Map[Candidate, Rational]): Rational = {
-    totals.clone().filter(p => p._2 < totals(candidate)).foldLeft(Rational(0,1))(_+_._2)
+    totals.clone().filter(p => p._2 < totals(candidate)).foldLeft(Rational(0,1))(_ + _._2)
   }
 
   def computeAdjustedNotionalVotes(candidate: Candidate, totals: Map[Candidate, Rational], surplus: Option[Rational]): Rational = {
@@ -62,7 +78,7 @@ class SenateMethod extends STVAustralia
   }
 
   def computeVacancyShortfall(totals: Map[Candidate, Rational], numRemainingVacancies: Int,  quota: Rational): Rational = {
-    val orderedTotals = totals.toList.sortBy(_._2).reverse  
+    val orderedTotals = totals.toList.sortBy(_._2).reverse
     // it does not matter how tie of equal values is resolved here, because we care only about values, hence - simple sort
    // orderedTotals.take(numRemainingVacancies).foldLeft(Rational(0,1))(_+(quota-totals(_._2)))
    var aggregate = Rational(0,1)
@@ -71,8 +87,8 @@ class SenateMethod extends STVAustralia
   }
 
  def returnCandidateA(
-   totals: Map[Candidate, Rational], vacancyShortfall: Rational, 
-   bulktype: BulkExclusionType, surplus: Option[Rational]): 
+   totals: Map[Candidate, Rational], vacancyShortfall: Rational,
+   bulktype: BulkExclusionType, surplus: Option[Rational]):
  Option[Candidate] ={
 
    var pickedTotals: Map[Candidate, Rational] = Map()
@@ -83,20 +99,24 @@ class SenateMethod extends STVAustralia
    }
    if (pickedTotals.nonEmpty){
     pickedTotals.filter(p => p._2 == pickedTotals.valuesIterator.min)
-    if (pickedTotals.size != 1){ 
-      // not specified in the legislation how this case should be addressed.  
+    if (pickedTotals.size != 1){
+      // not specified in the legislation how this case should be addressed.
       // Section 273 (13A)(a) says "stands lower or lowest in the poll"
       println("More than one candidate satisfy conditions of Candidate A: Section 273 (13A)(a). One of them is picked: " + pickedTotals.head._1)
       Some(pickedTotals.head._1)
     }
-    else Some(pickedTotals.head._1)
+    else {
+      Some(pickedTotals.head._1)
+    }
    }
-   else None // CandidateA is unidentified
+   else {
+     None // CandidateA is unidentified
+   }
  }
 
  def returnCandidateB(
    totals: Map[Candidate, Rational], candidateA: Option[Candidate],
-   vacancyShortfall: Rational, bulktype: BulkExclusionType, surplus: Option[Rational]): 
+   vacancyShortfall: Rational, bulktype: BulkExclusionType, surplus: Option[Rational]):
  Option[Candidate] = {
 
    var totalsOfCandidatesPotentiallyB:  Map[Candidate, Rational] = Map()
@@ -108,27 +128,29 @@ class SenateMethod extends STVAustralia
     case None => {
        bulktype match {
           case ExclusionBulk => totalsOfCandidatesPotentiallyB = totals.clone().filter(p => computeNotionalVotes(p._1, totals) < vacancyShortfall)
-          case SurplusDistributionBulk =>  totalsOfCandidatesPotentiallyB = 
+          case SurplusDistributionBulk =>  totalsOfCandidatesPotentiallyB =
             totals.clone().filter(p => computeAdjustedNotionalVotes(p._1, totals, surplus) < vacancyShortfall)
        }
       //val candidateB = totals.clone().filter(p => p._2 == valueOfCandidateB).head._1
     }
   }
-  if  (totalsOfCandidatesPotentiallyB.nonEmpty){
+  if  (totalsOfCandidatesPotentiallyB.nonEmpty) {
     val orderedTotalsOfCandidatesPotentiallyB = totalsOfCandidatesPotentiallyB.toList.sortBy(_._2) //TODO: sort appropriately
     val candidatesB = for (
-      (left,right) <- (orderedTotalsOfCandidatesPotentiallyB zip orderedTotalsOfCandidatesPotentiallyB.tail) 
+      (left,right) <- (orderedTotalsOfCandidatesPotentiallyB zip orderedTotalsOfCandidatesPotentiallyB.tail)
       if (computeNotionalVotes(left._1, totals) < right._2)) yield left
     if (candidatesB.nonEmpty) Some(candidatesB.head._1) else None  // TODO: tail?
   }
-  else None
+  else {
+    None
+  }
 
  }
 
 
  def returnCandidateC(
-   totals: Map[Candidate, Rational], leadingShortFall: Rational, 
-   bulktype: BulkExclusionType, surplus: Option[Rational]): 
+   totals: Map[Candidate, Rational], leadingShortFall: Rational,
+   bulktype: BulkExclusionType, surplus: Option[Rational]):
  Option[Candidate] = {
 
    var potentialCandidatesC: Map[Candidate, Rational] = Map()
@@ -138,15 +160,18 @@ class SenateMethod extends STVAustralia
             p => computeAdjustedNotionalVotes(p._1, totals, surplus)<leadingShortFall)
    }
   println("potentialCandidatesC " + potentialCandidatesC)
-  if (potentialCandidatesC.nonEmpty)
+  if (potentialCandidatesC.nonEmpty) {
     Some(potentialCandidatesC.toList.sortBy(_._2).head._1) //TODO: sort appropriately
-  else None
+  }
+  else {
+    None
+  }
  }
 
 
  def selectCandidatesForBulkExclusion(
    totals: Map[Candidate, Rational], numRemainingVacancies: Int, quota: Rational,
-   bulktype: BulkExclusionType, surplus: Option[Rational]): 
+   bulktype: BulkExclusionType, surplus: Option[Rational]):
     List[(Candidate, Rational)] = {
 
    val orderedCandidates = totals.toList.sortBy(_._2) //TODO: sort appropriately
@@ -177,7 +202,7 @@ class SenateMethod extends STVAustralia
         }
         val leadingShortfall = returnLeadingShortfall(totals, quota)
         if (notionalVotesOfB < leadingShortfall){ // Section273 (13A)(c)
-          orderedCandidates.take(orderedCandidates.indexOf(cB)+1)
+          orderedCandidates.take(orderedCandidates.indexOf(cB) + 1)
         }
         else { // Section273 (13A)(d)
           var candidateC: Option[Candidate] = None
@@ -188,11 +213,11 @@ class SenateMethod extends STVAustralia
               candidateC = returnCandidateC(totals, leadingShortfall, SurplusDistributionBulk, surplus)
           }
           candidateC match {
-            case Some(cC) => orderedCandidates.take(orderedCandidates.indexOf(candidateC)+1)
+            case Some(cC) => orderedCandidates.take(orderedCandidates.indexOf(candidateC) + 1)
             case None => List()
               //throw new Exception(
-              //"CandidateC is None in selectCandidatesForBulkExclusion. 
-              //Is this case allowed/possible meaning that we can continue the scrutiny? 
+              //"CandidateC is None in selectCandidatesForBulkExclusion.
+              //Is this case allowed/possible meaning that we can continue the scrutiny?
               //This is unclear from 13(A)(d). But can be analogously with 13(A)(b),(c) and (d) for CandidateB.")
           }
         }
@@ -291,7 +316,7 @@ class SenateMethod extends STVAustralia
                 val allWinners = ws:::newWinners
                 if (nws == numVacancies) { allWinners }
                 else {
-                  winners(newElection, ccandidates.filterNot(allWinners.map{_._1}.toSet.contains(_)) ,numVacancies-nws):::allWinners  
+                  winners(newElection, ccandidates.filterNot(allWinners.map{_._1}.toSet.contains(_)) ,numVacancies-nws):::allWinners
                   // TODO: care should be taken that newElection is not empty?!
                 }
                 }
@@ -310,7 +335,9 @@ class SenateMethod extends STVAustralia
             // Notice: There may be more new winners than available vacancies!!!
             // if (for_each_candidate(candidates, &check_status,(void *)(CAND_ELECTED|CAND_PENDING)) == num_seats) return true;
             newWinners }
-         else winners(newElection,ccandidates.filterNot(x => candidatesToExclude.map(_._1).contains(x)), numVacancies-newWinners.length):::newWinners
+         else {
+           winners(newElection,ccandidates.filterNot(x => candidatesToExclude.map(_._1).contains(x)), numVacancies-newWinners.length):::newWinners
+         }
       }
       }
 
@@ -320,8 +347,8 @@ class SenateMethod extends STVAustralia
   }
 
  def getCandidatesToExclude(
-   totals: Map[Candidate, Rational], numRemainingVacancies: Int, quota: Rational, 
-   bulktype: BulkExclusionType, surplus: Option[Rational]):  
+   totals: Map[Candidate, Rational], numRemainingVacancies: Int, quota: Rational,
+   bulktype: BulkExclusionType, surplus: Option[Rational]):
     List[(Candidate, Rational)]  = {
 
    var candidatesToExclude:  List[(Candidate, Rational)] = List()
@@ -346,7 +373,7 @@ class SenateMethod extends STVAustralia
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
  def surplusesDistribution(
-   election: Election[ACTBallot], ccandidates: List[Candidate], numVacancies: Int): 
+   election: Election[ACTBallot], ccandidates: List[Candidate], numVacancies: Int):
     (Election[ACTBallot], List[(Candidate,Rational)]) = {
   println(" \n Distribution of surpluses. \n ")
    var newws: List[(Candidate, Rational)] = List()
@@ -358,10 +385,10 @@ class SenateMethod extends STVAustralia
     val tls = totals(newElection, ccandidates)
     val candidatesToExclude = getCandidatesToExclude(tls, numVacancies, result.getQuota, SurplusDistributionBulk, Some(ctotal-result.getQuota))
 
-    if (candidatesToExclude.nonEmpty){ 
-      // Section 273, (13C) - HERE I DO ONLY ONE BULK EXCLUSION 
+    if (candidatesToExclude.nonEmpty){
+      // Section 273, (13C) - HERE I DO ONLY ONE BULK EXCLUSION
       //IF IT IS POSSIBLE. CAN THERE BE ANOTHER BULK EXCLUSION AFTER THIS ONE - is unclear from (13C)
- 
+
       println("\n Bulk exclusion: type 2. \n ")
       val res = exclusion(election, ccandidates, candidatesToExclude, numVacancies): (Election[ACTBallot],  List[(Candidate, Rational)] )
       newElection = res._1
@@ -383,8 +410,8 @@ class SenateMethod extends STVAustralia
  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // like ACT, but no fraction loss
  def tryToDistributeSurplusVotes(
-   election: Election[ACTBallot], ccandidates: List[Candidate], winner: Candidate, 
-   ctotal:Rational, markings: Option[Set[Int]] ): 
+   election: Election[ACTBallot], ccandidates: List[Candidate], winner: Candidate,
+   ctotal:Rational, markings: Option[Set[Int]] ):
     (Election[ACTBallot], List[(Candidate,Rational)]) = {
 
   val pendingWinners = result.getPendingWinners.map(x => x._1)
@@ -439,12 +466,16 @@ class SenateMethod extends STVAustralia
         printElection(newElection)
 
      //------------ Reporting ------------------------------------------
-    if (ws.nonEmpty) report.newCount(
-      SurplusDistribution, Some(winner), Some(newElectionWithoutFractionInTotals), 
-      Some(newtotalsWithoutFraction), Some(ws), Some(exhaustedBallots))
-    else report.newCount(
-      SurplusDistribution, Some(winner), Some(newElectionWithoutFractionInTotals), 
-      Some(newtotalsWithoutFraction), None, Some(exhaustedBallots))
+    if (ws.nonEmpty) {
+      report.newCount(
+        SurplusDistribution, Some(winner), Some(newElectionWithoutFractionInTotals),
+        Some(newtotalsWithoutFraction), Some(ws), Some(exhaustedBallots))
+    }
+    else {
+      report.newCount(
+        SurplusDistribution, Some(winner), Some(newElectionWithoutFractionInTotals),
+        Some(newtotalsWithoutFraction), None, Some(exhaustedBallots))
+    }
     report.setLossByFraction(totals(newElection,ccandidates), newtotalsWithoutFraction)
     ignoredBallots match { // ballots ignored because they don't belong to the last parcel of the winner
       case Some(ib) => report.setIgnoredBallots(ib)
@@ -461,9 +492,9 @@ class SenateMethod extends STVAustralia
 // similar to ACT's exclusion.
 // but it also implements bulk exclusion
  def exclusion(
-   election: Election[ACTBallot], ccandidates: List[Candidate], candidatesForExclusion: List[(Candidate, Rational)], 
+   election: Election[ACTBallot], ccandidates: List[Candidate], candidatesForExclusion: List[(Candidate, Rational)],
    numVacancies: Int): (Election[ACTBallot],  List[(Candidate, Rational)] ) = {
-   
+
      println("Vacancies left: " + numVacancies)
 
   var ws: List[(Candidate,Rational)] = List()
@@ -498,13 +529,13 @@ class SenateMethod extends STVAustralia
 
          val totalsAfterFractionLoss = totals(newElectionWithoutFractionInTotals, ccandidates)
 
-         val totalsWithoutNewWinners = totalsAfterFractionLoss.clone().retain((k,v) => !ws.map(_._1).contains(k)) 
+         val totalsWithoutNewWinners = totalsAfterFractionLoss.clone().retain((k,v) => !ws.map(_._1).contains(k))
          // excluding winners that are already identified in the while-loop
 
          result.addTotalsToHistory(totalsWithoutNewWinners)
          printTotal(totalsWithoutNewWinners)
 
-         newws = 
+         newws =
            declareNewWinnersWhileExcluding(
              candidate._1, exhaustedBallots, totalsWithoutNewWinners,totalsWithoutNewWinners, newElectionWithoutFractionInTotals)
 

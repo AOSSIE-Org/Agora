@@ -1,3 +1,19 @@
+// Copyright (C) 2011-2012 the original author or authors.
+// See the LICENCE.txt file distributed with this work for additional
+// information regarding copyright ownership.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package countvotes.methods
 
 
@@ -32,11 +48,11 @@ abstract class STV[B <: Ballot with Weight] extends VoteCountingMethod[B] {
   def returnNewWinners(totals: Map[Candidate, Rational], quota: Rational): List[(Candidate,Rational)]
 
   def computeTransferValue(
-    surplus: Rational, election: Election[B], pendingWinners:  List[Candidate], 
+    surplus: Rational, election: Election[B], pendingWinners:  List[Candidate],
     candidate: Candidate, markings: Option[Set[Int]]): Rational
 
   def distributeSurplusVotes(
-    election: Election[B],  candidate: Candidate, total:Rational, markings: Option[Set[Int]], 
+    election: Election[B],  candidate: Candidate, total:Rational, markings: Option[Set[Int]],
     pendingWinners: List[Candidate], transferValue: Rational): (Election[B], Set[B], Option[Election[B]])
 
   def resolveSurpluseDistributionTie(equaltotals: Map[Candidate, Rational]): List[(Candidate, Rational)]
@@ -88,8 +104,9 @@ abstract class STV[B <: Ballot with Weight] extends VoteCountingMethod[B] {
     var ballotsC = false
     while (ballotsC==false && el.nonEmpty){
       val ballot = el.head
-      if (ballot.preferences.head == c && !ballot.preferences.tail.diff(pendingWinners).isEmpty )
+      if (ballot.preferences.head == c && !ballot.preferences.tail.diff(pendingWinners).isEmpty) {
         ballotsC = true
+      }
       el = el.tail
     }
     println("Has continuing candidates?: " + ballotsC)
