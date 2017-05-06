@@ -13,11 +13,13 @@ libraryDependencies ++= Seq(
   "com.github.scopt" %% "scopt" % "3.3.0",
   "org.specs2" %% "specs2-core" % "3.8.6" % "test",
   "com.storm-enroute" %% "scalameter" % "0.7",
-  "com.lihaoyi" %% "ammonite-ops" % "0.8.1"
+  "com.lihaoyi" %% "ammonite-ops" % "0.8.1",
+  "ch.qos.logback" % "logback-classic" % "1.1.7",
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0"
 )
 
 testFrameworks += new TestFramework("org.scalameter.ScalaMeterFramework")
-  
+
 logBuffered := false
 
 
