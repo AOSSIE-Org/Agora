@@ -53,12 +53,12 @@ object ContingentMethod extends VoteCountingMethod[WeightedBallot] {
       List((tls1.head._1, tls1.head._2))
     }
     else {
-      val tlsSecondRound = tls.toList.sortWith(_._2 > _._2).take(2)
+      val tlsSecondRound = tls1.take(2)
       val ccands: List[Candidate] = ccandidates.filterNot(m => m!=tlsSecondRound.head._1 && m!=tlsSecondRound.tail.head._1)
       var newElection = new MMap[Candidate, Rational]
       for(c <-ccands) newElection(c) = 0
       for(b<-election if !b.preferences.isEmpty){
-        b.preferences.filter(m => ccands.contains(m)).take(1).foreach(m => newElection(m)=  newElection(m) + 1)
+        b.preferences.find(m => ccands.contains(m)).foreach(m => newElection(m)=  newElection(m) + 1)
       }
       List((newElection.toList.sortWith(_._2 > _._2).head._1, newElection.toList.sortWith(_._2 > _._2).head._2))
     }
