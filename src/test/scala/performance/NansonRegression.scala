@@ -6,12 +6,11 @@ import org.scalameter.api._
 /**
   * Created by deepeshpandey on 13/05/17.
   */
-trait NansonRegression extends Agorabenchmark {
+trait NansonRegression extends AgoraBenchmark {
 
   performance of "VotingMethod" in {
     measure method votingMethodName() config (
       exec.benchRuns -> 15
-
       ) in {
       using(election) in {
         preferences => votingMethod(preferences)
@@ -26,11 +25,11 @@ trait NansonRegression extends Agorabenchmark {
     NansonRuleMethod.winners(election, randomPreference(), 1)
   }
 
-  override def persistor: Persistor = new GZIPJSONSerializationPersistor("target/benchmarks/nanson/memory")
+  override def persistor: Persistor = new GZIPJSONSerializationPersistor("target/benchmarks/nanson/time")
 
 }
 
-trait NansonMemoryRegression extends Agorabenchmark {
+trait NansonMemoryRegression extends AgoraBenchmark {
 
   performance of "MemoryFootprint" in {
     performance of votingMethodName() in {
@@ -59,8 +58,6 @@ trait NansonMemoryRegression extends Agorabenchmark {
 
 object NansonRegressionTest extends Bench.Group {
 
-  reports.resultDir -> "target/benchmarks/nanson/memory"
-
   //  perform regression for Nanson method
   performance of "memory" config(
     reports.resultDir -> "target/benchmarks/nanson/memory"
@@ -68,10 +65,10 @@ object NansonRegressionTest extends Bench.Group {
     include(new NansonMemoryRegression {})
   }
 
- /* performance of "running time" config(
+  performance of "running time" config(
     reports.resultDir -> "target/benchmarks/nanson/time"
     ) in {
     include(new NansonRegression {})
-  }*/
+  }
 
 }

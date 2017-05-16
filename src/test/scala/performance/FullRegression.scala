@@ -7,7 +7,7 @@ import org.scalameter.api._
 /**
   * Created by deepeshpandey on 13/05/17.
   */
-object PerformFullRegression extends Bench.Group {
+object FullRegression extends Bench.Group {
 
   //  perform regression for Nanson method
   performance of "memory" config(

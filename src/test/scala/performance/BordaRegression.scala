@@ -8,7 +8,7 @@ import org.scalameter.persistence.GZIPJSONSerializationPersistor
 /**
   * Created by deepeshpandey on 13/05/17.
   */
-trait BordaRegression extends Agorabenchmark {
+trait BordaRegression extends AgoraBenchmark {
 
   override def persistor: Persistor = new GZIPJSONSerializationPersistor("target/benchmarks/borda/time")
 
@@ -22,16 +22,16 @@ trait BordaRegression extends Agorabenchmark {
     }
   }
 
-  override  def votingMethodName(): String = "Nanson"
+  override  def votingMethodName(): String = "Borda"
 
   override  def votingMethod(election: List[WeightedBallot]): Unit = {
 
-    NansonRuleMethod.winners(election, randomPreference(), 1)
+    BordaRuleMethod.winners(election, randomPreference(), 1)
   }
 
 }
 
-trait BordaMemoryRegression extends Agorabenchmark {
+trait BordaMemoryRegression extends AgoraBenchmark {
 
   override def measurer = new Measurer.MemoryFootprint
 
@@ -58,16 +58,17 @@ trait BordaMemoryRegression extends Agorabenchmark {
 
 }
 
+// existing issue : not overriding reports
 object BordaRegressionTest extends Bench.Group {
   //  perform regression for borda method
   performance of "memory" config(
-    reports.resultDir -> "target/benchmarks/nanson/memory"
+    reports.resultDir -> "target/benchmarks/borda/memory"
     ) in {
     include(new BordaMemoryRegression {})
   }
 
   performance of "running time" config(
-    reports.resultDir -> "target/benchmarks/nanson/time"
+    reports.resultDir -> "target/benchmarks/borda/time"
     ) in {
     include(new BordaRegression {})
   }

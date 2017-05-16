@@ -12,7 +12,7 @@ import scala.util.Random
 /**
   * Created by deepeshpandey on 13/05/17.
   */
-class Agorabenchmark extends Bench.OfflineRegressionReport {
+class AgoraBenchmark extends Bench.OfflineRegressionReport {
 
   val preferenceSet: ListSet[Candidate] = ListSet(Candidate("A"), Candidate("B"), Candidate("C"), Candidate("D"), Candidate("E"))
   val electionSizes: Gen[Int] = Gen.range("electionSize")(10000, 20000, 5000)
