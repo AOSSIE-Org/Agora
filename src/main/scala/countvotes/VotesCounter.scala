@@ -129,45 +129,43 @@ object Main {
                case "Simple" =>  {
                   var r = (new SimpleSTVMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                   println(" Scrutiny table for method Simple is not implemented yet.")
-                  //r.writeWinners(winnersfile)
+                  r.writeWinners(winnersfile)
                }
                case "Egalitarian" =>  {
                   var r = EgalitarianMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                   println(" Scrutiny table for method Egalitarian is not implemented yet.")
-                  //r.writeWinners(winnersfile)
+                  r.writeWinners(winnersfile)
                }
                case "Majority" => {
                  var r = MajorityRuleMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                  println(" Scrutiny table for method Majority is not implemented yet.")
-                 //r.writeWinners(winnersfile)
+                 r.writeWinners(winnersfile)
                }
-
 
                case "Approval" =>  {
                    var r = ApprovalRule.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                    println(" Scrutiny table for method Approval is not implemented yet.")
-                   //r.writeWinners(winnersfile)
+                   r.writeWinners(winnersfile)
                  }
 
                case "Borda" => {
                  var r = BordaRuleMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                  println(" Scrutiny table for method Borda is not implemented yet.")
-                 //r.writeWinners(winnersfile)
+                 r.writeWinners(winnersfile)
                }
 
                case "Kemeny-Young" => {
                  var r = KemenyYoungMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                  println(" Scrutiny table for method Kemeny-Young is not implemented yet.")
-                 //r.writeWinners(winnersfile)
+                 r.writeWinners(winnersfile)
                }
 
                case "Nanson" => {
                  var r = NansonRuleMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                  println(" Scrutiny table for method Nanson is not implemented yet.")
-                 //r.writeWinners(winnersfile)
+                 r.writeWinners(winnersfile)
                }
-
-
+                 
                case "Test" =>  {
                   Test.testSDResolution
                }
