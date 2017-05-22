@@ -28,7 +28,6 @@ object Testing {
   lazy val testAllQuickSettings = Seq(
     testAll := (),
     testAll := {(test in VerificationTest).value},
-    testAll := {(test in VerificationTest).value},
     testAll := {(test in Test).value}
   )
 
