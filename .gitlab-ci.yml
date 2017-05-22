@@ -12,4 +12,4 @@ before_script:
 
 test:
   script:
-    - sbt clean coverage test verification-test:test scalastyle coverageReport
+    - sbt clean coverage verification-test:test scalastyle coverageReport

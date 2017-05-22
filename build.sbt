@@ -1,3 +1,5 @@
+import language.postfixOps
+
 name := "countvotes"
 
 organization := "AOSSIE"
@@ -13,7 +15,7 @@ resolvers += "Sonatype OSS Snapshots" at
 libraryDependencies ++= Seq(
   "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4",
   "com.github.scopt" %% "scopt" % "3.3.0",
-  "org.specs2" %% "specs2-core" % "3.8.6" % "test",
+  "org.specs2" %% "specs2-core" % "3.8.6" % "test,verification-test,bench",
   "com.lihaoyi" %% "ammonite-ops" % "0.8.1",
   "ch.qos.logback" % "logback-classic" % "1.1.7",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
