@@ -33,6 +33,14 @@ scalacOptions in (Compile, doc) ++= Seq("-diagrams","-implicits")
 
 scalacOptions in Test ++= Seq("-Yrangepos")
 
+val allSettings = Defaults.coreDefaultSettings
+
+
+lazy val project = Project("agora", file("."), settings = allSettings)
+  .configs(Testing.configs: _*)
+  .settings(Testing.settings: _*)
+
+
 licenses := Seq("CC BY-NC-SA" -> url("http://creativecommons.org/licenses/by-nc-sa/4.0/"))
 
 homepage := Some(url("https://www.gitlab.com/aossie/Agora"))
