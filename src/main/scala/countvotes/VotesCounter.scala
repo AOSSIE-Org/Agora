@@ -182,6 +182,8 @@ object Main {
             val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
             println("Candidates: " + candidates)
             val election =  PreferencesParser.read(c.directory + filename)
+            //val election = PreferencesParserWithoutRankWithScore.read(c.directory + filename)
+            //val election =  PreferencesParserWithRankWithoutScore.read(c.directory + filename)
             //val election =  PreferencesParserWithRankAndScore.read(c.directory + filename)
             //println("Election: " + election)
             val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
