@@ -32,13 +32,14 @@ object Main {
                     // sufficient when candidates' names are integers from 1 to ncandidates
                     // TODO: for a general case, a list of all candidates has to be provided
                     candidatesfile: String = "",
+                    nselections: Option[String] = None,
                     table: ScrutinyTableFormats = Concise)
 
   val parser = new scopt.OptionParser[Config]("compress"){
     head("\nCommand Line Interface for Electronic Vote Counting\n\n  ")
 
     note("""The arguments are as follows:""" + "\n" +
-        """ -d [-b] -c -m -v [-k] [-t]""" + "\n \n"
+        """ -d [-b] -c -m -v [-k] [-s] [-t]""" + "\n \n"
     )
 
     opt[String]('d', "directory") required() unbounded() action { (v, c) =>
@@ -64,6 +65,10 @@ object Main {
     opt[String]('k', "nkandidates") action { (v, c) =>
       c.copy(nkandidates = Some(v))
     } text("set number of candidates  <numk>\n") valueName("<numk>")
+
+    opt[String]('s', "nselections") action { (v, c) =>
+      c.copy(nselections = Some(v))
+    } text("set number of selections  <nums>\n") valueName("<nums>")
 
     //opt[String]('o', "order") action { (v, c) =>
     //  c.copy(order = v)
@@ -93,7 +98,7 @@ object Main {
 
   def main(args: Array[String]): Unit = {
 
-    def callMethod(c: Config, election: List[WeightedBallot],  winnersfile:String, reportfile: String, candidates_in_order:  List[Candidate]) = {
+    def callMethod(c: Config, election: List[WeightedBallot],  winnersfile:String, reportfile: String, candidates_in_order:  List[Candidate], number_of_selections: Int) = {
       c.method match {
                case "EVACS" =>  {
                  var r = (new EVACSMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
@@ -177,30 +182,60 @@ object Main {
 
      c.ballotsfile match {
        case Some(filename) => { // ONLY ONE FILE IS ANALYSED
-            val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
-            println("Candidates: " + candidates)
-            val election =  PreferencesParser.read(c.directory + filename)
-            //println("Election: " + election)
-            val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
-            val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename
-            callMethod(c, election, winnersfile, reportfile, candidates)
+            c.nselections match {
+              case Some(selection) => {
+                val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
+                println("Candidates: " + candidates)
+                val election = PreferencesParser.read(c.directory + filename)
+                //println("Election: " + election)
+                val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
+                val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename
+                callMethod(c, election, winnersfile, reportfile, candidates, selection.toInt)
+              }
+              case None => {
+                val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
+                println("Candidates: " + candidates)
+                val election = PreferencesParser.read(c.directory + filename)
+                //println("Election: " + election)
+                val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
+                val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename
+                callMethod(c, election, winnersfile, reportfile, candidates, -1)
+              }
+            }
        }
        case None => {  // ALL FILES IN THE DIRECTORY ARE ANALYSED
-        val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
-        val files = new java.io.File(c.directory).listFiles.filter(_.getName.endsWith(".kat"))
-        for (file <- files){
-          val filename = file.getName
-          println("------------------------------------------------")
-          println("\n" + "    NEW ELECTION: " + file.getName + "\n")
-          println("------------------------------------------------")
-          val election =  PreferencesParser.read(c.directory + filename)
-          val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
-          val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename
-          callMethod(c, election, winnersfile, reportfile, candidates)
-        }
+         c.nselections match {
+           case Some(selection) => {
+             val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
+             val files = new java.io.File(c.directory).listFiles.filter(_.getName.endsWith(".kat"))
+             for (file <- files) {
+               val filename = file.getName
+               println("------------------------------------------------")
+               println("\n" + "    NEW ELECTION: " + file.getName + "\n")
+               println("------------------------------------------------")
+               val election = PreferencesParser.read(c.directory + filename)
+               val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
+               val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename
+               callMethod(c, election, winnersfile, reportfile, candidates, selection.toInt)
+             }
+           }
+           case None => {
+             val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
+             val files = new java.io.File(c.directory).listFiles.filter(_.getName.endsWith(".kat"))
+             for (file <- files) {
+               val filename = file.getName
+               println("------------------------------------------------")
+               println("\n" + "    NEW ELECTION: " + file.getName + "\n")
+               println("------------------------------------------------")
+               val election = PreferencesParser.read(c.directory + filename)
+               val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
+               val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename
+               callMethod(c, election, winnersfile, reportfile, candidates, -1)
+             }
+           }
+         }
        }
      }
-
    }
   }
 
