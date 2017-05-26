@@ -17,6 +17,17 @@ trait Marking extends Ballot {
   val marking: Boolean
 }
 
+trait ScoredWeight extends ScoredBallot {
+  val weight: Rational
+}
+
+trait ScoredValue extends ScoredBallot {
+  val value: Rational
+}
+
+trait ScoredMarking extends ScoredBallot {
+  val marking: Boolean
+}
 
 class WeightedBallot(p: List[Candidate], id: Int, w: Rational)
   extends Ballot(p, id) with Weight {
@@ -45,7 +56,7 @@ object MarkedWeightedBallot{
 }
 
 class WeightedScoredBallot(p: List[(Candidate,Int)], id: Int, w: Rational)
-  extends ScoredBallot(p, id) with Weight {
+  extends ScoredBallot(p, id) with ScoredWeight {
   val weight = w
   override def toString: String = "[" + id + ", " + p + ", " + w + "]"
 }
@@ -56,7 +67,7 @@ object WeightedScoredBallot {
 
 
 class MarkedWeightedScoredBallot(p: List[(Candidate,Int)], id: Int,  m: Boolean, w: Rational)
-  extends WeightedScoredBallot(p, id, w) with Marking {
+  extends WeightedScoredBallot(p, id, w) with ScoredMarking {
   val marking = m
 }
 object MarkedWeightedScoredBallot{
