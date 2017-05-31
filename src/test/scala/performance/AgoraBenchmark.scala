@@ -1,12 +1,10 @@
 package performance
 
-import countvotes.methods.NansonRuleMethod
 import countvotes.structures.{Candidate, WeightedBallot}
 import org.scalameter.Bench
 import org.scalameter.api._
 
 import scala.collection.immutable.ListSet
-import scala.collection.mutable.ListBuffer
 import scala.util.Random
 
 /**
@@ -17,19 +15,12 @@ class AgoraBenchmark extends Bench.OfflineRegressionReport {
   val preferenceSet: ListSet[Candidate] = ListSet(Candidate("A"), Candidate("B"), Candidate("C"), Candidate("D"), Candidate("E"))
   val electionSizes: Gen[Int] = Gen.range("electionSize")(10000, 20000, 5000)
 
-  val election: Gen[List[WeightedBallot]] = for {
+  val election = for {
     size <- electionSizes
-  } yield getRandomElectionOfSize(size)
-
-  def getRandomElectionOfSize(size: Int): List[WeightedBallot] = {
-
-    val electionBuffer: ListBuffer[WeightedBallot] = new ListBuffer[WeightedBallot]
-
-    for (i <- 1 to size) {
-      electionBuffer.insert(i - 1, WeightedBallot(randomPreference(), i, 1))
-    }
-
-    electionBuffer.toList
+  } yield {
+    for {
+      i <- List.range(1, size)
+    } yield WeightedBallot(randomPreference(), i, 1)
   }
 
   def randomPreference(): List[Candidate] = {
@@ -38,7 +29,9 @@ class AgoraBenchmark extends Bench.OfflineRegressionReport {
     Random.shuffle(preferenceSet).toList
   }
 
-  def votingMethodName(): String = {""}
+  def votingMethodName(): String = {
+    ""
+  }
 
   def votingMethod(election: List[WeightedBallot]) = {}
 }
