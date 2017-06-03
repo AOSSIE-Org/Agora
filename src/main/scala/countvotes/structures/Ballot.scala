@@ -3,7 +3,6 @@ package countvotes.structures
 import scala.languageFeature.implicitConversions
 
 class Ballot(val preferences: List[Candidate], val id: Int)
-class ScoredBallot(val preferences: List[(Candidate,Int)], val id: Int)
 
 trait Weight extends Ballot {
   val weight: Rational
@@ -17,16 +16,8 @@ trait Marking extends Ballot {
   val marking: Boolean
 }
 
-trait ScoredWeight extends ScoredBallot {
-  val weight: Rational
-}
-
-trait ScoredValue extends ScoredBallot {
-  val value: Rational
-}
-
-trait ScoredMarking extends ScoredBallot {
-  val marking: Boolean
+trait Score extends Ballot {
+  val scores : List[Int]
 }
 
 class WeightedBallot(p: List[Candidate], id: Int, w: Rational)
@@ -55,22 +46,14 @@ object MarkedWeightedBallot{
   // }
 }
 
-class WeightedScoredBallot(p: List[(Candidate,Int)], id: Int, w: Rational)
-  extends ScoredBallot(p, id) with ScoredWeight {
-  val weight = w
-  override def toString: String = "[" + id + ", " + p + ", " + w + "]"
+class ScoredWeightedBallot(p: List[Candidate], id: Int, w: Rational, s: List[Int])
+  extends WeightedBallot(p, id, w) with Score {
+  val scores = s
+  override def toString: String = "[" + id + ", " + s + ", " + p + ", " + w + "]"
 }
 
-object WeightedScoredBallot {
-  def apply(p: List[(Candidate,Int)], id: Int, w: Rational): WeightedScoredBallot  = new WeightedScoredBallot(p, id, w)
+object ScoredWeightedBallot {
+  def apply(p: List[Candidate], id: Int, w: Rational, s: List[Int]): ScoredWeightedBallot  = new ScoredWeightedBallot(p, id, w, s)
 }
 
-
-class MarkedWeightedScoredBallot(p: List[(Candidate,Int)], id: Int,  m: Boolean, w: Rational)
-  extends WeightedScoredBallot(p, id, w) with ScoredMarking {
-  val marking = m
-}
-object MarkedWeightedScoredBallot{
-  def apply(p: List[(Candidate,Int)], id: Int, m:Boolean, w: Rational): MarkedWeightedScoredBallot = new MarkedWeightedScoredBallot(p, id, m, w)
-}
 
