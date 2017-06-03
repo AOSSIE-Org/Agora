@@ -50,7 +50,16 @@ abstract class VoteCountingMethod[B <: Ballot with Weight] {
    set.toList
   }
 
- // just printing in terminal
+  def getTotalVoters(election: Election[B]): Rational = {
+    var totalVoters = new Rational(0, 1)
+    for (b <- election  if !b.preferences.isEmpty) {
+      totalVoters = totalVoters + b.weight
+    }
+    totalVoters
+  }
+
+
+  // just printing in terminal
  def printElection(election: Election[B]): Unit = {
     print("\n")
     for (e <- election.sortBy(x => x.id)) {
