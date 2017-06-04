@@ -142,6 +142,12 @@ object Main {
                  r.writeWinners(winnersfile)
                }
 
+               case "PreferentialBlockVoting" => {
+                 var r = PreferentialBlockvoting1.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+                 println(" Scrutiny table for method Preferential block voting is not implemented yet.")
+                 r.writeWinners(winnersfile)
+               }
+
                case "Approval" =>  {
                    var r = ApprovalRule.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                    println(" Scrutiny table for method Approval is not implemented yet.")
