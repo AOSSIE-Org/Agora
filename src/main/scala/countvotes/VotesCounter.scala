@@ -93,9 +93,14 @@ object Main {
 
   def main(args: Array[String]): Unit = {
 
-    def callMethod(c: Config, election: List[WeightedBallot],  winnersfile:String, reportfile: String, candidates_in_order:  List[Candidate]) = {
+    def callMethod(c: Config, filename:String,  winnersfile:String, reportfile: String, candidates_in_order:  List[Candidate]) = {
       c.method match {
                case "EVACS" =>  {
+                 val election =  PreferencesParser.read(c.directory + filename)
+                 //val election = PreferencesParserWithoutRankWithScore.read(c.directory + filename)
+                 //val election =  PreferencesParserWithRankWithoutScore.read(c.directory + filename)
+                 //val election =  PreferencesParserWithRankAndScore.read(c.directory + filename)
+                 //println("Election: " + election)
                  var r = (new EVACSMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                  c.table match {
                    case ACT =>  r.writeDistributionOfPreferencesACT(reportfile,Some(candidates_in_order))
@@ -106,16 +111,31 @@ object Main {
                  println("The winners were recorded to " + winnersfile)
                }
                case "EVACSnoLP" =>  {
+                 val election =  PreferencesParser.read(c.directory + filename)
+                 //val election = PreferencesParserWithoutRankWithScore.read(c.directory + filename)
+                 //val election =  PreferencesParserWithRankWithoutScore.read(c.directory + filename)
+                 //val election =  PreferencesParserWithRankAndScore.read(c.directory + filename)
+                 //println("Election: " + election)
                  var r = (new EVACSnoLPMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                  r.writeDistributionOfPreferences(reportfile,Some(candidates_in_order))
                  r.writeWinners(winnersfile)
                }
                case "EVACSDWD" =>  {
+                 val election =  PreferencesParser.read(c.directory + filename)
+                 //val election = PreferencesParserWithoutRankWithScore.read(c.directory + filename)
+                 //val election =  PreferencesParserWithRankWithoutScore.read(c.directory + filename)
+                 //val election =  PreferencesParserWithRankAndScore.read(c.directory + filename)
+                 //println("Election: " + election)
                   var r = (new EVACSDelayedWDMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                   r.writeDistributionOfPreferences(reportfile,Some(candidates_in_order))
                   r.writeWinners(winnersfile)
                }
                case "Senate" =>  {
+                 val election =  PreferencesParser.read(c.directory + filename)
+                 //val election = PreferencesParserWithoutRankWithScore.read(c.directory + filename)
+                 //val election =  PreferencesParserWithRankWithoutScore.read(c.directory + filename)
+                 //val election =  PreferencesParserWithRankAndScore.read(c.directory + filename)
+                 //println("Election: " + election)
                   val electionwithIds = for (b<-election) yield WeightedBallot(b.preferences, election.indexOf(b) + 1, Rational(1,1))
                   var r = (new SenateMethod).runScrutiny(Election.weightedElectionToACTElection(electionwithIds), candidates_in_order, c.nvacancies.toInt)
                   c.table match {
@@ -127,16 +147,31 @@ object Main {
                  println("The winners were recorded to " + winnersfile)
                }
                case "Simple" =>  {
+                 val election =  PreferencesParser.read(c.directory + filename)
+                 //val election = PreferencesParserWithoutRankWithScore.read(c.directory + filename)
+                 //val election =  PreferencesParserWithRankWithoutScore.read(c.directory + filename)
+                 //val election =  PreferencesParserWithRankAndScore.read(c.directory + filename)
+                 //println("Election: " + election)
                   var r = (new SimpleSTVMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                   println(" Scrutiny table for method Simple is not implemented yet.")
                   //r.writeWinners(winnersfile)
                }
                case "Egalitarian" =>  {
+                 val election =  PreferencesParser.read(c.directory + filename)
+                 //val election = PreferencesParserWithoutRankWithScore.read(c.directory + filename)
+                 //val election =  PreferencesParserWithRankWithoutScore.read(c.directory + filename)
+                 //val election =  PreferencesParserWithRankAndScore.read(c.directory + filename)
+                 //println("Election: " + election)
                   var r = EgalitarianMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                   println(" Scrutiny table for method Egalitarian is not implemented yet.")
                   //r.writeWinners(winnersfile)
                }
                case "Majority" => {
+                 val election =  PreferencesParser.read(c.directory + filename)
+                 //val election = PreferencesParserWithoutRankWithScore.read(c.directory + filename)
+                 //val election =  PreferencesParserWithRankWithoutScore.read(c.directory + filename)
+                 //val election =  PreferencesParserWithRankAndScore.read(c.directory + filename)
+                 //println("Election: " + election)
                  var r = MajorityRuleMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                  println(" Scrutiny table for method Majority is not implemented yet.")
                  //r.writeWinners(winnersfile)
@@ -144,24 +179,44 @@ object Main {
 
 
                case "Approval" =>  {
+                 val election =  PreferencesParser.read(c.directory + filename)
+                 //val election = PreferencesParserWithoutRankWithScore.read(c.directory + filename)
+                 //val election =  PreferencesParserWithRankWithoutScore.read(c.directory + filename)
+                 //val election =  PreferencesParserWithRankAndScore.read(c.directory + filename)
+                 //println("Election: " + election)
                    var r = ApprovalRule.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                    println(" Scrutiny table for method Approval is not implemented yet.")
                    //r.writeWinners(winnersfile)
                  }
 
                case "Borda" => {
+                 val election =  PreferencesParser.read(c.directory + filename)
+                 //val election = PreferencesParserWithoutRankWithScore.read(c.directory + filename)
+                 //val election =  PreferencesParserWithRankWithoutScore.read(c.directory + filename)
+                 //val election =  PreferencesParserWithRankAndScore.read(c.directory + filename)
+                 //println("Election: " + election)
                  var r = BordaRuleMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                  println(" Scrutiny table for method Borda is not implemented yet.")
                  //r.writeWinners(winnersfile)
                }
 
                case "Kemeny-Young" => {
+                 val election =  PreferencesParser.read(c.directory + filename)
+                 //val election = PreferencesParserWithoutRankWithScore.read(c.directory + filename)
+                 //val election =  PreferencesParserWithRankWithoutScore.read(c.directory + filename)
+                 //val election =  PreferencesParserWithRankAndScore.read(c.directory + filename)
+                 //println("Election: " + election)
                  var r = KemenyYoungMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                  println(" Scrutiny table for method Kemeny-Young is not implemented yet.")
                  //r.writeWinners(winnersfile)
                }
 
                case "Nanson" => {
+                 val election =  PreferencesParser.read(c.directory + filename)
+                 //val election = PreferencesParserWithoutRankWithScore.read(c.directory + filename)
+                 //val election =  PreferencesParserWithRankWithoutScore.read(c.directory + filename)
+                 //val election =  PreferencesParserWithRankAndScore.read(c.directory + filename)
+                 //println("Election: " + election)
                  var r = NansonRuleMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                  println(" Scrutiny table for method Nanson is not implemented yet.")
                  //r.writeWinners(winnersfile)
@@ -181,14 +236,14 @@ object Main {
        case Some(filename) => { // ONLY ONE FILE IS ANALYSED
             val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
             println("Candidates: " + candidates)
-            val election =  PreferencesParser.read(c.directory + filename)
+            //val election =  PreferencesParser.read(c.directory + filename)
             //val election = PreferencesParserWithoutRankWithScore.read(c.directory + filename)
             //val election =  PreferencesParserWithRankWithoutScore.read(c.directory + filename)
             //val election =  PreferencesParserWithRankAndScore.read(c.directory + filename)
             //println("Election: " + election)
             val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
             val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename
-            callMethod(c, election, winnersfile, reportfile, candidates)
+            callMethod(c, filename, winnersfile, reportfile, candidates)
        }
        case None => {  // ALL FILES IN THE DIRECTORY ARE ANALYSED
         val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
@@ -198,10 +253,10 @@ object Main {
           println("------------------------------------------------")
           println("\n" + "    NEW ELECTION: " + file.getName + "\n")
           println("------------------------------------------------")
-          val election =  PreferencesParser.read(c.directory + filename)
+          //val election =  PreferencesParser.read(c.directory + filename)
           val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
           val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename
-          callMethod(c, election, winnersfile, reportfile, candidates)
+          callMethod(c, filename, winnersfile, reportfile, candidates)
         }
        }
      }
