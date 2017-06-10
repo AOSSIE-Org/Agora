@@ -6,6 +6,7 @@ import scala.util.Random
 
 /**
   * Created by deepeshpandey on 03/06/17.
+  * Algorithm : https://en.wikipedia.org/wiki/Random_ballot
   */
 object RandomBallotMethod extends VoteCountingMethod[WeightedBallot] {
 
