@@ -6,6 +6,7 @@ import collection.mutable.{HashMap => Map}
 
 /**
   * Created by deepeshpandey on 03/06/17.
+  * Algorithm : https://en.wikipedia.org/wiki/Two-round_system
   */
 object Runoff2Round extends VoteCountingMethod[WeightedBallot] {
 
