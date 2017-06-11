@@ -32,14 +32,14 @@ object Main {
                     // sufficient when candidates' names are integers from 1 to ncandidates
                     // TODO: for a general case, a list of all candidates has to be provided
                     candidatesfile: String = "",
-                    fileformat: String = "",
+                    fileformat: Option[String] = None,
                     table: ScrutinyTableFormats = Concise)
 
   val parser = new scopt.OptionParser[Config]("compress"){
     head("\nCommand Line Interface for Electronic Vote Counting\n\n  ")
 
     note("""The arguments are as follows:""" + "\n" +
-        """ -d [-b] -c -m -v -f [-k] [-t]""" + "\n \n"
+        """ -d [-b] -c -m -v [-f] [-k] [-t]""" + "\n \n"
     )
 
     opt[String]('d', "directory") required() unbounded() action { (v, c) =>
@@ -62,8 +62,8 @@ object Main {
       c.copy(nvacancies = v)
     } text("set number of vacancies  <numv>\n") valueName("<numv>")
 
-    opt[String]('f', "fileformat") required() action { (v, c) =>
-      c.copy(fileformat = v)
+    opt[String]('f', "fileformat") action { (v, c) =>
+      c.copy(fileformat = Some(v))
     } text("use file format  <ff>\n") valueName("<ff>")
 
     opt[String]('k', "nkandidates") action { (v, c) =>
@@ -98,28 +98,34 @@ object Main {
 
   def main(args: Array[String]): Unit = {
 
+    def fileformatdenoter(c:Config, filename:String) : List[WeightedBallot] = {
+      c.fileformat match {
+        case Some(f) => {
+          f match {
+            case "1" => {
+              PreferencesParser.read(c.directory + filename)
+            }
+            case "2" => {
+              PreferencesParserWithoutRankWithScore.read(c.directory + filename)
+            }
+            case "3" => {
+              PreferencesParserWithRankWithoutScore.read(c.directory + filename)
+            }
+            case "4" => {
+              PreferencesParserWithRankAndScore.read(c.directory + filename)
+            }
+          }
+        }
+        case None => {
+          PreferencesParser.read(c.directory + filename)
+        }
+      }
+    }
+
     def callMethod(c: Config, filename:String,  winnersfile:String, reportfile: String, candidates_in_order:  List[Candidate]) = {
       c.method match {
                case "EVACS" =>  {
-                 var election: List[WeightedBallot] = Nil
-                 c.fileformat match {
-                   case "1" => {
-                     election =  PreferencesParser.read(c.directory + filename)
-                   }
-                   case "2" => {
-                     election = PreferencesParserWithoutRankWithScore.read(c.directory + filename)
-                   }
-                   case "3" => {
-                     election =  PreferencesParserWithRankWithoutScore.read(c.directory + filename)
-                   }
-                   case "4" => {
-                     election =  PreferencesParserWithRankAndScore.read(c.directory + filename)
-                   }
-                   case "" => {
-                     println("Default case is used")
-                     election =  PreferencesParser.read(c.directory + filename)
-                   }
-                 }
+                 var election: List[WeightedBallot] = fileformatdenoter(c, filename)
                  var r = (new EVACSMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                  c.table match {
                    case ACT =>  r.writeDistributionOfPreferencesACT(reportfile,Some(candidates_in_order))
@@ -130,73 +136,19 @@ object Main {
                  println("The winners were recorded to " + winnersfile)
                }
                case "EVACSnoLP" =>  {
-                 var election: List[WeightedBallot] = Nil
-                 c.fileformat match {
-                   case "1" => {
-                     election =  PreferencesParser.read(c.directory + filename)
-                   }
-                   case "2" => {
-                     election = PreferencesParserWithoutRankWithScore.read(c.directory + filename)
-                   }
-                   case "3" => {
-                     election =  PreferencesParserWithRankWithoutScore.read(c.directory + filename)
-                   }
-                   case "4" => {
-                     election =  PreferencesParserWithRankAndScore.read(c.directory + filename)
-                   }
-                   case "" => {
-                     println("Default case is used")
-                     election =  PreferencesParser.read(c.directory + filename)
-                   }
-                 }
+                 var election: List[WeightedBallot] = fileformatdenoter(c, filename)
                  var r = (new EVACSnoLPMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                  r.writeDistributionOfPreferences(reportfile,Some(candidates_in_order))
                  r.writeWinners(winnersfile)
                }
                case "EVACSDWD" =>  {
-                 var election: List[WeightedBallot] = Nil
-                 c.fileformat match {
-                   case "1" => {
-                     election =  PreferencesParser.read(c.directory + filename)
-                   }
-                   case "2" => {
-                     election = PreferencesParserWithoutRankWithScore.read(c.directory + filename)
-                   }
-                   case "3" => {
-                     election =  PreferencesParserWithRankWithoutScore.read(c.directory + filename)
-                   }
-                   case "4" => {
-                     election =  PreferencesParserWithRankAndScore.read(c.directory + filename)
-                   }
-                   case "" => {
-                     println("Default case is used")
-                     election =  PreferencesParser.read(c.directory + filename)
-                   }
-                 }
+                 var election: List[WeightedBallot] = fileformatdenoter(c, filename)
                   var r = (new EVACSDelayedWDMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                   r.writeDistributionOfPreferences(reportfile,Some(candidates_in_order))
                   r.writeWinners(winnersfile)
                }
                case "Senate" =>  {
-                 var election: List[WeightedBallot] = Nil
-                 c.fileformat match {
-                   case "1" => {
-                     election =  PreferencesParser.read(c.directory + filename)
-                   }
-                   case "2" => {
-                     election = PreferencesParserWithoutRankWithScore.read(c.directory + filename)
-                   }
-                   case "3" => {
-                     election =  PreferencesParserWithRankWithoutScore.read(c.directory + filename)
-                   }
-                   case "4" => {
-                     election =  PreferencesParserWithRankAndScore.read(c.directory + filename)
-                   }
-                   case "" => {
-                     println("Default case is used")
-                     election =  PreferencesParser.read(c.directory + filename)
-                   }
-                 }
+                 var election: List[WeightedBallot] = fileformatdenoter(c, filename)
                   val electionwithIds = for (b<-election) yield WeightedBallot(b.preferences, election.indexOf(b) + 1, Rational(1,1))
                   var r = (new SenateMethod).runScrutiny(Election.weightedElectionToACTElection(electionwithIds), candidates_in_order, c.nvacancies.toInt)
                   c.table match {
@@ -208,73 +160,19 @@ object Main {
                  println("The winners were recorded to " + winnersfile)
                }
                case "Simple" =>  {
-                 var election: List[WeightedBallot] = Nil
-                 c.fileformat match {
-                   case "1" => {
-                     election =  PreferencesParser.read(c.directory + filename)
-                   }
-                   case "2" => {
-                     election = PreferencesParserWithoutRankWithScore.read(c.directory + filename)
-                   }
-                   case "3" => {
-                     election =  PreferencesParserWithRankWithoutScore.read(c.directory + filename)
-                   }
-                   case "4" => {
-                     election =  PreferencesParserWithRankAndScore.read(c.directory + filename)
-                   }
-                   case "" => {
-                     println("Default case is used")
-                     election =  PreferencesParser.read(c.directory + filename)
-                   }
-                 }
+                 var election: List[WeightedBallot] = fileformatdenoter(c, filename)
                   var r = (new SimpleSTVMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                   println(" Scrutiny table for method Simple is not implemented yet.")
                   //r.writeWinners(winnersfile)
                }
                case "Egalitarian" =>  {
-                 var election: List[WeightedBallot] = Nil
-                 c.fileformat match {
-                   case "1" => {
-                     election =  PreferencesParser.read(c.directory + filename)
-                   }
-                   case "2" => {
-                     election = PreferencesParserWithoutRankWithScore.read(c.directory + filename)
-                   }
-                   case "3" => {
-                     election =  PreferencesParserWithRankWithoutScore.read(c.directory + filename)
-                   }
-                   case "4" => {
-                     election =  PreferencesParserWithRankAndScore.read(c.directory + filename)
-                   }
-                   case "" => {
-                     println("Default case is used")
-                     election =  PreferencesParser.read(c.directory + filename)
-                   }
-                 }
+                 var election: List[WeightedBallot] = fileformatdenoter(c, filename)
                   var r = EgalitarianMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                   println(" Scrutiny table for method Egalitarian is not implemented yet.")
                   //r.writeWinners(winnersfile)
                }
                case "Majority" => {
-                 var election: List[WeightedBallot] = Nil
-                 c.fileformat match {
-                   case "1" => {
-                     election =  PreferencesParser.read(c.directory + filename)
-                   }
-                   case "2" => {
-                     election = PreferencesParserWithoutRankWithScore.read(c.directory + filename)
-                   }
-                   case "3" => {
-                     election =  PreferencesParserWithRankWithoutScore.read(c.directory + filename)
-                   }
-                   case "4" => {
-                     election =  PreferencesParserWithRankAndScore.read(c.directory + filename)
-                   }
-                   case "" => {
-                     println("Default case is used")
-                     election =  PreferencesParser.read(c.directory + filename)
-                   }
-                 }
+                 var election: List[WeightedBallot] = fileformatdenoter(c, filename)
                  var r = MajorityRuleMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                  println(" Scrutiny table for method Majority is not implemented yet.")
                  //r.writeWinners(winnersfile)
@@ -282,100 +180,29 @@ object Main {
 
 
                case "Approval" =>  {
-                 var election: List[WeightedBallot] = Nil
-                 c.fileformat match {
-                   case "1" => {
-                     election =  PreferencesParser.read(c.directory + filename)
-                   }
-                   case "2" => {
-                     election = PreferencesParserWithoutRankWithScore.read(c.directory + filename)
-                   }
-                   case "3" => {
-                     election =  PreferencesParserWithRankWithoutScore.read(c.directory + filename)
-                   }
-                   case "4" => {
-                     election =  PreferencesParserWithRankAndScore.read(c.directory + filename)
-                   }
-                   case "" => {
-                     println("Default case is used")
-                     election =  PreferencesParser.read(c.directory + filename)
-                   }
-                 }
+                 var election: List[WeightedBallot] = fileformatdenoter(c, filename)
                    var r = ApprovalRule.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                    println(" Scrutiny table for method Approval is not implemented yet.")
                    //r.writeWinners(winnersfile)
                  }
 
                case "Borda" => {
-                 var election: List[WeightedBallot] = Nil
-                 c.fileformat match {
-                   case "1" => {
-                     election =  PreferencesParser.read(c.directory + filename)
-                   }
-                   case "2" => {
-                     election = PreferencesParserWithoutRankWithScore.read(c.directory + filename)
-                   }
-                   case "3" => {
-                     election =  PreferencesParserWithRankWithoutScore.read(c.directory + filename)
-                   }
-                   case "4" => {
-                     election =  PreferencesParserWithRankAndScore.read(c.directory + filename)
-                   }
-                   case "" => {
-                     println("Default case is used")
-                     election =  PreferencesParser.read(c.directory + filename)
-                   }
-                 }
+                 var election: List[WeightedBallot] = fileformatdenoter(c, filename)
                  var r = BordaRuleMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                  println(" Scrutiny table for method Borda is not implemented yet.")
                  //r.writeWinners(winnersfile)
                }
 
                case "Kemeny-Young" => {
-                 var election: List[WeightedBallot] = Nil
-                 c.fileformat match {
-                   case "1" => {
-                     election =  PreferencesParser.read(c.directory + filename)
-                   }
-                   case "2" => {
-                     election = PreferencesParserWithoutRankWithScore.read(c.directory + filename)
-                   }
-                   case "3" => {
-                     election =  PreferencesParserWithRankWithoutScore.read(c.directory + filename)
-                   }
-                   case "4" => {
-                     election =  PreferencesParserWithRankAndScore.read(c.directory + filename)
-                   }
-                   case "" => {
-                     println("Default case is used")
-                     election =  PreferencesParser.read(c.directory + filename)
-                   }
-                 }
+                 var election: List[WeightedBallot] = fileformatdenoter(c, filename)
+                 println(election)
                  var r = KemenyYoungMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                  println(" Scrutiny table for method Kemeny-Young is not implemented yet.")
-                 //r.writeWinners(winnersfile)
+                 r.writeWinners(winnersfile)
                }
 
                case "Nanson" => {
-                 var election: List[WeightedBallot] = Nil
-                 c.fileformat match {
-                   case "1" => {
-                     election =  PreferencesParser.read(c.directory + filename)
-                   }
-                   case "2" => {
-                     election = PreferencesParserWithoutRankWithScore.read(c.directory + filename)
-                   }
-                   case "3" => {
-                     election =  PreferencesParserWithRankWithoutScore.read(c.directory + filename)
-                   }
-                   case "4" => {
-                     election =  PreferencesParserWithRankAndScore.read(c.directory + filename)
-                   }
-                   case "" => {
-                     println("Default case is used")
-                     election =  PreferencesParser.read(c.directory + filename)
-                   }
-                 }
+                 var election: List[WeightedBallot] = fileformatdenoter(c, filename)
                  var r = NansonRuleMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                  println(" Scrutiny table for method Nanson is not implemented yet.")
                  //r.writeWinners(winnersfile)

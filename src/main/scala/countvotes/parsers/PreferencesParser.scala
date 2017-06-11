@@ -15,6 +15,8 @@ trait essentials extends RegexParsers {
 
   def preferences: Parser[List[Candidate]] = repsep(candidate, ")(")
 
+  def preferences0: Parser[List[Candidate]] = repsep(candidate, ">")
+
   def preferences1: Parser[List[String]] = repsep(choice, ")(")
 
   //def weight : Parser[Double] = """[0-9]*\/?[0-9]+""".r ^^ { _.toDouble }
@@ -35,7 +37,7 @@ trait essentials extends RegexParsers {
 object PreferencesParser extends ElectionParser[WeightedBallot] with RegexParsers with essentials {
 
   // the method line returns a Parser of type ACTBallotPapersDataStructure
-  def line: Parser[WeightedBallot] = id ~ numerator ~ "/" ~ denominator ~ preferences ^^ {
+  def line: Parser[WeightedBallot] = id ~ numerator ~ "/" ~ denominator ~ preferences0 ^^ {
     case ~(~(~(~(i, n), "/"), d), p) => {
       //println(p)
       WeightedBallot(p, i, Rational(n, d))
