@@ -12,6 +12,11 @@ package object structures {
   type Election[B <: Ballot] = List[B]
 
   object Election {
+
+    lazy val totalWeightedVoters = (election: Election[WeightedBallot]) => {
+      election filter { _.preferences.nonEmpty} map {_.weight} reduce { _ + _ }
+    }
+
     implicit def weightedElectionToACTElection(we: Election[WeightedBallot]): Election[ACTBallot] = {
       for (b <- we) yield ACTBallot.fromWeightedBallot(b) // b // ACTBallot.fromWeightedBallot(b)
     }

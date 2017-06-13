@@ -18,32 +18,47 @@ object RandomBallotMethod extends VoteCountingMethod[WeightedBallot] {
     print("\n INPUT ELECTION: \n")
     printElection(election)
 
-    var tls = totals(election, candidates)
-
-    result.addTotalsToHistory(tls)
-
     report.setCandidates(candidates)
-    report.newCount(Input, None, Some(election), Some(tls), None, None)
 
     report.setWinners(winners(election, candidates, numVacancies))
 
     report
+
   }
 
   override def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
+
+    randomBallotWinner(election, ccandidates, numVacancies, true)
+  }
+
+  def randomBallotWinner(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int,
+                         prod: Boolean): List[(Candidate, Rational)] = {
 
     // here we need to apply random func on total voters not on election length as it might contain weights and this
     // rule is based on the probability of the voters favoring any candidate
 
     val zeroRational = Rational(0, 1)
-    val totalVoters = getTotalVoters(election)
-    val randomDictator = Random.nextInt(totalVoters.toInt + 1)
+    val totalVoters = Election.totalWeightedVoters(election)
 
-    var counter = 0
+    var randomDictator = prod match {
+      case true => {
+        Random.nextInt(totalVoters.toInt + 1)
+      }
+      case false => {
+        new Random(6142).nextInt(totalVoters.toInt + 1)
+      }
+    }
 
-    election.filter(e => {
-      counter += e.weight.toInt
-      counter >= randomDictator
-    }).take(1).map(e => (e.preferences)).flatMap(f => (f.map(c => (c, zeroRational))))
+    // number of index to be dropped before reaching the random voter preference
+    var index = 0
+    for (e <- election if e.preferences.nonEmpty && randomDictator > 0) {
+      randomDictator -= e.weight.toInt
+      if (randomDictator > 0) {
+        index += 1
+      }
+    }
+
+    election.slice(index, index + 1).map(e => e.preferences).flatMap(f => f.map(c => (c, zeroRational)))
+
   }
 }
