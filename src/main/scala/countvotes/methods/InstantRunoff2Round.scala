@@ -7,8 +7,12 @@ import collection.mutable.{HashMap => Map}
 /**
   * Created by deepeshpandey on 03/06/17.
   * Algorithm : https://en.wikipedia.org/wiki/Two-round_system
+  * Comments : It's a hybrid algorithm combining Instant Run-Off and 2-round voting. Two round voting cannot be handled exclusively
+  *            becuase of its nature of having two rounds at different times
+  * Assumptions : voters vote only once with preferential ballots
+  * Rounds : only 2 as per 2-round voting
   */
-object Runoff2Round extends VoteCountingMethod[WeightedBallot] {
+object InstantRunoff2Round extends VoteCountingMethod[WeightedBallot] {
 
   private val result: Result = new Result
   private val report: Report[WeightedBallot] = new Report[WeightedBallot]
@@ -34,7 +38,8 @@ object Runoff2Round extends VoteCountingMethod[WeightedBallot] {
 
     val majorityRational = Rational(1, 2)
     val rnd1Winners = totals(election, ccandidates).toList.sortWith(_._2 > _._2).take(2)
-    val totalVoters = getTotalVoters(election)
+    val totalVoters = Election.totalWeightedVoters(election)
+
     if (rnd1Winners.head._2 > majorityRational * totalVoters)
       List(rnd1Winners.head)
     else

@@ -70,16 +70,6 @@ abstract class VoteCountingMethod[B <: Ballot with Weight] {
     print("\n")
  }
 
-  def getTotalVoters(election: Election[B]): Rational = {
-    var totalVoters = new Rational(0, 1)
-    for (b <- election if !b.preferences.isEmpty) {
-
-      totalVoters = totalVoters + b.weight
-    }
-    totalVoters
-  }
-
-
 }
 
 

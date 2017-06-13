@@ -166,8 +166,8 @@ object Main {
                  r.writeWinners(winnersfile)
                }
 
-               case "Runoff2Round" => {
-                 var r = Runoff2Round.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+               case "InstantRunoff2Round" => {
+                 var r = InstantRunoff2Round.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                  println(" Scrutiny table for method Runoff2Round is not implemented yet.")
                  r.writeWinners(winnersfile)
                }

@@ -1,5 +1,5 @@
 
-import countvotes.methods.Runoff2Round
+import countvotes.methods.InstantRunoff2Round
 import countvotes.parsers.{CandidatesParser, PreferencesParser}
 import countvotes.structures.Candidate
 import org.specs2.mutable.Specification
@@ -7,7 +7,7 @@ import org.specs2.mutable.Specification
 /**
   * Created by deepeshpandey on 03/06/17.
   */
-class Runoff2RoundTest extends Specification {
+class InstantRunoff2RoundTest extends Specification {
 
   val expectedRunoff2RoundMethodWinnerList = List(Candidate("icecream"))
 
@@ -21,6 +21,6 @@ class Runoff2RoundTest extends Specification {
     val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
     val election =  PreferencesParser.read("../Agora/files/Examples/" + electionFile)
 
-    Runoff2Round.winners(election, candidates, 1).map {_._1}
+    InstantRunoff2Round.winners(election, candidates, 1).map {_._1}
   }
 }
