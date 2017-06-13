@@ -177,31 +177,30 @@ object Main {
 
      c.ballotsfile match {
        case Some(filename) => { // ONLY ONE FILE IS ANALYSED
-            val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
-            println("Candidates: " + candidates)
-            val election =  PreferencesParser.read(c.directory + filename)
-            //println("Election: " + election)
-            val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
-            val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename
-            callMethod(c, election, winnersfile, reportfile, candidates)
-       }
+                val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
+                println("Candidates: " + candidates)
+                val election = PreferencesParser.read(c.directory + filename)
+                //println("Election: " + election)
+                val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
+                val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename
+                callMethod(c, election, winnersfile, reportfile, candidates)
+              }
        case None => {  // ALL FILES IN THE DIRECTORY ARE ANALYSED
-        val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
-        val files = new java.io.File(c.directory).listFiles.filter(_.getName.endsWith(".kat"))
-        for (file <- files){
-          val filename = file.getName
-          println("------------------------------------------------")
-          println("\n" + "    NEW ELECTION: " + file.getName + "\n")
-          println("------------------------------------------------")
-          val election =  PreferencesParser.read(c.directory + filename)
-          val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
-          val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename
-          callMethod(c, election, winnersfile, reportfile, candidates)
-        }
+             val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
+             val files = new java.io.File(c.directory).listFiles.filter(_.getName.endsWith(".kat"))
+             for (file <- files) {
+               val filename = file.getName
+               println("------------------------------------------------")
+               println("\n" + "    NEW ELECTION: " + file.getName + "\n")
+               println("------------------------------------------------")
+               val election = PreferencesParser.read(c.directory + filename)
+               val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
+               val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename
+               callMethod(c, election, winnersfile, reportfile, candidates)
+             }
+           }
+         }
        }
      }
-
    }
-  }
 
-}
