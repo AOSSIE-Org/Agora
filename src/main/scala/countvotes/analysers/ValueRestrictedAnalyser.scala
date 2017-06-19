@@ -10,9 +10,9 @@ import countvotes.structures.{Candidate, Election, Rational, WeightedBallot}
 object ValueRestrictedAnalyser extends PreferenceAnalysisMethod[WeightedBallot] {
 
   /**
-    * assumption : voters preference relations are complete over set of candidates
-    * for every triple of candidates check if any of Sen's conditions are true
-    * for any triplet(A, B, C) check if (a(ABC) = 0 or a(BCA) = 0 or a(CAB) = 0) and (a(CBA) = 0 or a(ACB) = 0 or a(BAC) = 0)
+    * assumption : voters preference relations are complete over set of candidates.
+    * for every triplet of candidates check if any of value restricted conditions are true.
+    * For any triplet(A, B, C) check if (a(ABC) = 0 or a(BCA) = 0 or a(CAB) = 0) and (a(CBA) = 0 or a(ACB) = 0 or a(BAC) = 0)
     *
     * @param election    => election file assuming preferences with ordering ">"
     * @param ccandidates => candidates list

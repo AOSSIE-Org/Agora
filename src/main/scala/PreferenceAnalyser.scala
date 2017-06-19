@@ -5,7 +5,7 @@ import countvotes.structures.{Candidate, WeightedBallot}
 import countvotes.{ACT, Concise, ScrutinyTableFormats}
 
 /**
-  * Created by deepeshpandey on 18/06/17.
+  * Main entry point for the preference analysis tasks
   */
 object PreferenceAnalyser {
 
