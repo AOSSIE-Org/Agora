@@ -22,7 +22,7 @@ class RandomBallotTest extends Specification {
     val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
     val election =  PreferencesParser.read("../Agora/files/Examples/" + electionFile)
 
-    RandomBallotMethod.randomBallotWinner(election, candidates, candidates.length, false).map {_._1}
+    RandomBallotMethod.randomBallotWinner(election, candidates, candidates.length, true).map {_._1}
   }
 
   // to get the expected list for any other election file - run this method
