@@ -171,6 +171,12 @@ object Main {
                  println(" Scrutiny table for method Runoff2Round is not implemented yet.")
                  r.writeWinners(winnersfile)
                }
+
+               case "ExhaustiveDropOff" => {
+                 var r = ExhaustiveDropOffRule.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+                 println(" Scrutiny table for method Exhaustive Ballot with Drop off is not implemented yet.")
+                 r.writeWinners(winnersfile)
+               }
                  
                case "Test" =>  {
                   Test.testSDResolution
