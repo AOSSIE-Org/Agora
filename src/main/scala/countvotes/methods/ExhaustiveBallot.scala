@@ -64,7 +64,7 @@ object ExhaustiveBallot extends VoteCountingMethod[WeightedBallot] {
     val tls = totals(election,ccandidates)
     if(tls.size>2){
       val losingCand =  tls.toList.sortWith(_._2>_._2).reverse.head
-      println(losingCand)
+      //println(losingCand)
       val newElection = exclude(election,losingCand._1)._1
       winners(newElection, ccandidates.filterNot(x => x == losingCand._1), numVacancies)
     } else {
