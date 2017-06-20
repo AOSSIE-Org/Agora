@@ -82,7 +82,7 @@ object Main {
 
     note("""Possible values are as follows:""" + "\n" +
 
-        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Nanson, Kemeny-Young, Runoff2Round""" + "\n" +
+        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Nanson, Kemeny-Young, Runoff2Round, SAV""" + "\n" +
 
         """for -t:  Concise, ACT""" + "\n \n"
     )
@@ -169,6 +169,12 @@ object Main {
                case "InstantRunoff2Round" => {
                  var r = InstantRunoff2Round.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                  println(" Scrutiny table for method Runoff2Round is not implemented yet.")
+                 r.writeWinners(winnersfile)
+               }
+
+               case "SAV" => {
+                 var r = SatisfactionApprovalVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+                 println(" Scrutiny table for method SAV is not implemented yet.")
                  r.writeWinners(winnersfile)
                }
                  
