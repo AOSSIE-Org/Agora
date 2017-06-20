@@ -1,13 +1,11 @@
 package countvotes.parsers
 
-
 import countvotes.structures._
 
 import scala.io.Source
 import java.io.{FileReader, FileNotFoundException, IOException}
 
 import scala.util.parsing.combinator._
-
 
 abstract class ElectionParser[T] extends RegexParsers {
 

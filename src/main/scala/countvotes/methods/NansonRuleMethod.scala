@@ -1,5 +1,6 @@
 package countvotes.methods
 
+import com.typesafe.scalalogging.LazyLogging
 import countvotes.structures._
 
 import collection.mutable.{HashMap => Map}
@@ -8,7 +9,7 @@ import scala.collection.mutable
 /**
   * Created by deepeshpandey on 09/03/17.
   */
-object NansonRuleMethod extends VoteCountingMethod[WeightedBallot] {
+object NansonRuleMethod extends VoteCountingMethod[WeightedBallot] with LazyLogging {
 
   private val result: Result = new Result
   private val report: Report[WeightedBallot] = new Report[WeightedBallot]
@@ -46,14 +47,19 @@ object NansonRuleMethod extends VoteCountingMethod[WeightedBallot] {
   }
 
   def winners(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int):
-  List[(Candidate, Rational)] = candidates.length match {
+  List[(Candidate, Rational)] = {
 
-    case 1 => totals(election, candidates).toList
+    logger.info("Nanson rule method called")
 
-    case len if (len > 1) => {
-      // removing the lowest borda score candidate from the candidate list
-      var lowestBordaCandidate = totals(election, candidates).minBy(_._2)
-      winners(election, candidates.filter(_ != lowestBordaCandidate._1), numVacancies)
+    candidates.length match {
+
+      case 1 => totals(election, candidates).toList
+
+      case len if (len > 1) => {
+        // removing the lowest borda score candidate from the candidate list
+        var lowestBordaCandidate = totals(election, candidates).minBy(_._2)
+        winners(election, candidates.filter(_ != lowestBordaCandidate._1), numVacancies)
+      }
     }
   }
 

@@ -1,11 +1,9 @@
 package countvotes.parsers
 
-
 import countvotes._
 import countvotes.structures._
 
 import scala.util.parsing.combinator._
-
 
 object PreferencesParser extends ElectionParser[WeightedBallot] with RegexParsers {
 

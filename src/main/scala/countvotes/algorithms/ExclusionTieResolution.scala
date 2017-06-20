@@ -33,7 +33,9 @@ trait ACTExclusionTieResolution extends STV[ACTBallot] with ExclusionTieResoluti
           smallestcandidate = c
         }
       }
-      recFindSmallest(equaltotals.clone() filter { p => totalshistory.head.getOrElse(p._1, Rational(0,1)) == totalshistory.head.getOrElse(smallestcandidate, Rational(0,1))}, totalshistory.tail) // it may be not unique!!!
+      recFindSmallest(equaltotals.clone() filter {
+        p => totalshistory.head.getOrElse(p._1, Rational(0, 1)) == totalshistory.head.getOrElse(smallestcandidate, Rational(0, 1))
+      }, totalshistory.tail) // it may be not unique!!!
      }
      else {
        equaltotals
@@ -49,8 +51,10 @@ trait ACTExclusionTieResolution extends STV[ACTBallot] with ExclusionTieResoluti
     //println("Equal smallest totals: " + equaltotals)
     val smallestCandidate = recFindSmallest(equaltotals, result.getTotalsHistoryClone.tail)
     if (smallestCandidate.size > 1) {
-      //Random.shuffle(equaltotals.toList).head      // If did not manage to resolve tie, take a random candidate (the commissioner decided according to the ACT Electorate act)
-     equaltotals.minBy(_._1.name)  // If did not manage to resolve tie, the candidate with the "smallest name" (the commissioner decided according to the ACT Electorate act)
+      // If did not manage to resolve tie, take a random candidate (the commissioner decided according to the ACT Electorate act)
+      //Random.shuffle(equaltotals.toList).head
+     // If did not manage to resolve tie, the candidate with the "smallest name" (the commissioner decided according to the ACT Electorate act)
+     equaltotals.minBy(_._1.name)
     }
     else {
      smallestCandidate.toList.head

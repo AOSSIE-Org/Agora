@@ -20,11 +20,17 @@ trait ACTFractionLoss extends STV[ACTBallot]{
       val n = BigDecimal(v.numerator / v.denominator).setScale(0, BigDecimal.RoundingMode.DOWN).toInt
       //println("k: " + k + "; v: " + v + "; n: " + n)
       val neweste = for (b <- newe if !b.preferences.isEmpty) yield {
-        if (b.preferences.head == k){
-          if (v.numerator != 0) ACTBallot(b.preferences, b.id, b.marking, b.weight * (n / v), b.value )
-          else ACTBallot(b.preferences, b.id, b.marking, Rational(0,1),  Rational(0,1))
+        if (b.preferences.head == k) {
+          if (v.numerator != 0) {
+            ACTBallot(b.preferences, b.id, b.marking, b.weight * (n / v), b.value )
+          }
+          else {
+            ACTBallot(b.preferences, b.id, b.marking, Rational(0,1),  Rational(0,1))
+          }
         }
-        else b
+        else {
+          b
+        }
       }
       newe = neweste
     }
