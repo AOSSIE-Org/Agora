@@ -45,7 +45,7 @@ object RandomBallotMethod extends VoteCountingMethod[WeightedBallot] {
 
     // number of index to be dropped before reaching the random voter preference
     var index = 0
-    for (e <- election if e.preferences.nonEmpty && randomDictator > 0) {
+    for (e <- election if randomDictator > 0) {
       randomDictator -= e.weight.toInt
       if (randomDictator > 0) {
         index += 1
