@@ -7,7 +7,7 @@ import countvotes.structures._
 import scala.util.parsing.combinator._
 import scala.util.matching.Regex
 
-trait essentials extends RegexParsers {
+trait ElectionParsers extends RegexParsers {
 
   def candidate: Parser[Candidate] = """[0-9A-Za-z\-\,\.\ \']*""".r ^^ { s => Candidate(s) }
 
@@ -34,7 +34,7 @@ trait essentials extends RegexParsers {
   def score: Parser[Int] = """[0-9]+""".r ^^ { _.toInt }
 }
 
-object PreferencesParser extends ElectionParser[WeightedBallot] with RegexParsers with essentials {
+object PreferencesParser extends ElectionParser[WeightedBallot] with RegexParsers with ElectionParsers {
 
   // the method line returns a Parser of type ACTBallotPapersDataStructure
   def line: Parser[WeightedBallot] = id ~ numerator ~ "/" ~ denominator ~ preferences0 ^^ {
@@ -45,7 +45,7 @@ object PreferencesParser extends ElectionParser[WeightedBallot] with RegexParser
   }
 }
 
-object PreferencesParserWithRankAndScore extends ElectionParser[WeightedBallot] with RegexParsers with essentials {
+object PreferencesParserWithRankAndScore extends ElectionParser[WeightedBallot] with RegexParsers with ElectionParsers {
 
   // the method line returns a Parser of type ACTBallotPapersDataStructure
   def line: Parser[WeightedBallot] = id ~ numerator ~ "/" ~ denominator ~ "(" ~ preferences1 ~ ")" ^^ {
@@ -79,7 +79,7 @@ object PreferencesParserWithRankAndScore extends ElectionParser[WeightedBallot] 
   }
 }
 
-object PreferencesParserWithRankWithoutScore extends ElectionParser[WeightedBallot] with RegexParsers with essentials {
+object PreferencesParserWithRankWithoutScore extends ElectionParser[WeightedBallot] with RegexParsers with ElectionParsers {
 
   // the method line returns a Parser of type ACTBallotPapersDataStructure
   def line: Parser[WeightedBallot] = id ~ numerator ~ "/" ~ denominator ~ "(" ~ preferences1 ~ ")" ^^ {
@@ -113,7 +113,7 @@ object PreferencesParserWithRankWithoutScore extends ElectionParser[WeightedBall
   }
 }
 
-object PreferencesParserWithoutRankWithScore extends ElectionParser[WeightedBallot] with RegexParsers with essentials {
+object PreferencesParserWithoutRankWithScore extends ElectionParser[WeightedBallot] with RegexParsers with ElectionParsers {
 
   // the method line returns a Parser of type ACTBallotPapersDataStructure
   def line: Parser[WeightedBallot] = id ~ numerator ~ "/" ~ denominator ~ "(" ~ preferences1 ~ ")" ^^ {
@@ -147,7 +147,7 @@ object PreferencesParserWithoutRankWithScore extends ElectionParser[WeightedBall
   }
 }
 
-object PreferencesWithoutIDAndWeightParser extends ElectionParser[WeightedBallot] with RegexParsers with essentials {
+object PreferencesWithoutIDAndWeightParser extends ElectionParser[WeightedBallot] with RegexParsers with ElectionParsers {
 
   // the method line returns a Parser of type ACTBallotPapersDataStructure
   def line: Parser[WeightedBallot] = preferences ^^ {
