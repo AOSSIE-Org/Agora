@@ -86,7 +86,7 @@ object Main extends RegexParsers {
 
     note("""Possible values are as follows:""" + "\n" +
 
-        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Nanson, Kemeny-Young""" + "\n" +
+        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Nanson, Kemeny-Young, Runoff2Round""" + "\n" +
 
         """for -t:  Concise, ACT""" + "\n \n"
     )
@@ -160,30 +160,29 @@ object Main extends RegexParsers {
                case "Simple" =>  {
                   var r = (new SimpleSTVMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                   println(" Scrutiny table for method Simple is not implemented yet.")
-                  //r.writeWinners(winnersfile)
+                  r.writeWinners(winnersfile)
                }
                case "Egalitarian" =>  {
                   var r = EgalitarianMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                   println(" Scrutiny table for method Egalitarian is not implemented yet.")
-                  //r.writeWinners(winnersfile)
+                  r.writeWinners(winnersfile)
                }
                case "Majority" => {
                  var r = MajorityRuleMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                  println(" Scrutiny table for method Majority is not implemented yet.")
-                 //r.writeWinners(winnersfile)
+                 r.writeWinners(winnersfile)
                }
-
 
                case "Approval" =>  {
                    var r = ApprovalRule.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                    println(" Scrutiny table for method Approval is not implemented yet.")
-                   //r.writeWinners(winnersfile)
+                   r.writeWinners(winnersfile)
                  }
 
                case "Borda" => {
                  var r = BordaRuleMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                  println(" Scrutiny table for method Borda is not implemented yet.")
-                 //r.writeWinners(winnersfile)
+                 r.writeWinners(winnersfile)
                }
 
                case "Kemeny-Young" => {
@@ -195,10 +194,15 @@ object Main extends RegexParsers {
                case "Nanson" => {
                  var r = NansonRuleMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                  println(" Scrutiny table for method Nanson is not implemented yet.")
-                 //r.writeWinners(winnersfile)
+                 r.writeWinners(winnersfile)
                }
 
-
+               case "InstantRunoff2Round" => {
+                 var r = InstantRunoff2Round.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+                 println(" Scrutiny table for method Runoff2Round is not implemented yet.")
+                 r.writeWinners(winnersfile)
+               }
+                 
                case "Test" =>  {
                   Test.testSDResolution
                }
@@ -238,8 +242,5 @@ object Main extends RegexParsers {
         }
        }
      }
-
    }
-  }
 
-}
