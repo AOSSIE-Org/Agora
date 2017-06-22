@@ -11,33 +11,28 @@ trait ElectionParsers extends RegexParsers {
 
   def candidate: Parser[Candidate] = """[0-9A-Za-z\-\,\.\ \']*""".r ^^ { s => Candidate(s) }
 
-  //def candidate : Parser[Candidate] = """[A-Za-z]+-? ?[A-Za-z]*\,?[A-Za-z]* ?[A-Za-z]*""".r ^^ { s => Candidate(s) }
-
-  def preferences: Parser[List[Candidate]] = repsep(candidate, ")(")
-
-  def preferences0: Parser[List[Candidate]] = repsep(candidate, ">")
-
-  def preferences1: Parser[List[String]] = repsep(choice, ")(")
-
-  //def weight : Parser[Double] = """[0-9]*\/?[0-9]+""".r ^^ { _.toDouble }
-
   def numerator: Parser[BigInt] = """[0-9]*""".r ^^ { s => BigInt(s) }
 
   def denominator: Parser[BigInt] = """[0-9]*""".r ^^ { s => BigInt(s) }
 
   def id: Parser[Int] = """[0-9]+""".r ^^ { _.toInt }
 
-  def choice: Parser[String] = """[0-9A-Za-z\-\,\;\.\ \']*""".r ^^ { _.toString }
-
   def rank: Parser[Int] = """[0-9]+""".r ^^ { _.toInt }
 
   def score: Parser[Int] = """[0-9]+""".r ^^ { _.toInt }
 }
 
+trait ChoiceParsers extends RegexParsers {
+  def choice: Parser[String] = """[0-9A-Za-z\-\,\;\.\ \']*""".r ^^ { _.toString }
+  def preferences: Parser[List[String]] = repsep(choice, ")(")
+}
+
 object PreferencesParser extends ElectionParser[WeightedBallot] with RegexParsers with ElectionParsers {
+  
+  def preferences: Parser[List[Candidate]] = repsep(candidate, ">")
 
   // the method line returns a Parser of type ACTBallotPapersDataStructure
-  def line: Parser[WeightedBallot] = id ~ numerator ~ "/" ~ denominator ~ preferences0 ^^ {
+  def line: Parser[WeightedBallot] = id ~ numerator ~ "/" ~ denominator ~ preferences ^^ {
     case ~(~(~(~(i, n), "/"), d), p) => {
       //println(p)
       WeightedBallot(p, i, Rational(n, d))
@@ -45,10 +40,10 @@ object PreferencesParser extends ElectionParser[WeightedBallot] with RegexParser
   }
 }
 
-object PreferencesParserWithRankAndScore extends ElectionParser[WeightedBallot] with RegexParsers with ElectionParsers {
+object PreferencesParserWithRankAndScore extends ElectionParser[WeightedBallot] with RegexParsers with ElectionParsers with ChoiceParsers {
 
   // the method line returns a Parser of type ACTBallotPapersDataStructure
-  def line: Parser[WeightedBallot] = id ~ numerator ~ "/" ~ denominator ~ "(" ~ preferences1 ~ ")" ^^ {
+  def line: Parser[WeightedBallot] = id ~ numerator ~ "/" ~ denominator ~ "(" ~ preferences ~ ")" ^^ {
     case ~(~(~(~(~(~(i, n), "/"), d), "("), p), ")") => {
       //println(p)
       def line2: Parser[List[(Candidate, Int, Int)]] = candidate ~ ";" ~ rank ~ ";" ~ score ^^ {
@@ -79,10 +74,10 @@ object PreferencesParserWithRankAndScore extends ElectionParser[WeightedBallot] 
   }
 }
 
-object PreferencesParserWithRankWithoutScore extends ElectionParser[WeightedBallot] with RegexParsers with ElectionParsers {
+object PreferencesParserWithRankWithoutScore extends ElectionParser[WeightedBallot] with RegexParsers with ElectionParsers with ChoiceParsers {
 
   // the method line returns a Parser of type ACTBallotPapersDataStructure
-  def line: Parser[WeightedBallot] = id ~ numerator ~ "/" ~ denominator ~ "(" ~ preferences1 ~ ")" ^^ {
+  def line: Parser[WeightedBallot] = id ~ numerator ~ "/" ~ denominator ~ "(" ~ preferences ~ ")" ^^ {
     case ~(~(~(~(~(~(i, n), "/"), d), "("), p), ")") => {
       //println(p)
       def line2: Parser[List[(Candidate, Int, Int)]] = candidate ~ ";" ~ rank ~ ";"  ^^ {
@@ -113,10 +108,9 @@ object PreferencesParserWithRankWithoutScore extends ElectionParser[WeightedBall
   }
 }
 
-object PreferencesParserWithoutRankWithScore extends ElectionParser[WeightedBallot] with RegexParsers with ElectionParsers {
+object PreferencesParserWithoutRankWithScore extends ElectionParser[WeightedBallot] with RegexParsers with ElectionParsers with ChoiceParsers {
 
-  // the method line returns a Parser of type ACTBallotPapersDataStructure
-  def line: Parser[WeightedBallot] = id ~ numerator ~ "/" ~ denominator ~ "(" ~ preferences1 ~ ")" ^^ {
+  def line: Parser[WeightedBallot] = id ~ numerator ~ "/" ~ denominator ~ "(" ~ preferences ~ ")" ^^ {
     case ~(~(~(~(~(~(i, n), "/"), d), "("), p), ")") => {
       //println(p)
       def line2: Parser[List[(Candidate, Int, Int)]] = candidate ~ ";" ~ ";" ~ score ^^ {
@@ -149,37 +143,13 @@ object PreferencesParserWithoutRankWithScore extends ElectionParser[WeightedBall
 
 object PreferencesWithoutIDAndWeightParser extends ElectionParser[WeightedBallot] with RegexParsers with ElectionParsers {
 
-  // the method line returns a Parser of type ACTBallotPapersDataStructure
+  def preferences: Parser[List[Candidate]] = repsep(candidate, ")(")
+  
   def line: Parser[WeightedBallot] = preferences ^^ {
     case p => {
-      println(p)
+      //println(p)
       WeightedBallot(p, 0, Rational(1, 1))
     }
   }
 }
 
-
-/*
-
-object PreferencesParser extends ElectionParser[Ballot] with RegexParsers {
-
-  // the method line returns a Parser of type ACTBallotPapersDataStructure
-   def line : Parser[Ballot] = id ~ weight ~ preferences ^^ {
-     case  ~(~(i,w),p)  =>
-       { //println(p)
-         new Ballot(p, w, i)
-       }
-   }
-
-   def candidate : Parser[Candidate] = """[A-Za-z\-\,\ ]*""".r ^^ { s => Candidate(s) }
-
-   //def candidate : Parser[Candidate] = """[A-Za-z]+-? ?[A-Za-z]*\,?[A-Za-z]* ?[A-Za-z]*""".r ^^ { s => Candidate(s) }
-
-   def preferences : Parser[List[Candidate]] = repsep(candidate, ">")
-
-   def weight : Parser[Double] = """[0|1][.][0-9]+""".r ^^ { _.toDouble }
-
-   def id : Parser[Int] = """[0-9]+""".r ^^ { _.toInt }
-
-}
-*/
