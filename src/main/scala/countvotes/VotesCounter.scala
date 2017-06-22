@@ -117,10 +117,10 @@ object Main extends RegexParsers {
               PreferencesParser.read(c.directory + filename)
             }
             case "es" => {
-              PreferencesParserWithoutRankWithScore.read(c.directory + filename)
+              PreferencesParserWithRankAndScore.read(c.directory + filename)
             }
             case "er" => {
-              PreferencesParserWithRankWithoutScore.read(c.directory + filename)
+              PreferencesParserWithRankAndScore.read(c.directory + filename)
             }
             case "esr" => {
               PreferencesParserWithRankAndScore.read(c.directory + filename)
