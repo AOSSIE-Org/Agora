@@ -16,15 +16,20 @@ trait ElectionParsers extends RegexParsers {
   def denominator: Parser[BigInt] = """[0-9]*""".r ^^ { s => BigInt(s) }
 
   def id: Parser[Int] = """[0-9]+""".r ^^ { _.toInt }
+}
 
+trait ChoiceParsers extends RegexParsers with ElectionParsers {
+  def choice: Parser[(Candidate, Int, Int)] = candidate ~ ";" ~ rank ~ ";" ~ score ^^ {
+        case ~(~(~(~(candidate, ";"), rank), ";"), score) => {
+          (candidate, rank, score)
+        }
+      }
+  
+  def preferences: Parser[List[(Candidate, Int, Int)]] = repsep(choice, ")(")
+  
   def rank: Parser[Int] = """[0-9]+""".r ^^ { _.toInt }
 
   def score: Parser[Int] = """[0-9]+""".r ^^ { _.toInt }
-}
-
-trait ChoiceParsers extends RegexParsers {
-  def choice: Parser[String] = """[0-9A-Za-z\-\,\;\.\ \']*""".r ^^ { _.toString }
-  def preferences: Parser[List[String]] = repsep(choice, ")(")
 }
 
 object PreferencesParser extends ElectionParser[WeightedBallot] with RegexParsers with ElectionParsers {
@@ -46,30 +51,10 @@ object PreferencesParserWithRankAndScore extends ElectionParser[WeightedBallot] 
   def line: Parser[WeightedBallot] = id ~ numerator ~ "/" ~ denominator ~ "(" ~ preferences ~ ")" ^^ {
     case ~(~(~(~(~(~(i, n), "/"), d), "("), p), ")") => {
       //println(p)
-      def line2: Parser[List[(Candidate, Int, Int)]] = candidate ~ ";" ~ rank ~ ";" ~ score ^^ {
-        case ~(~(~(~(candidate, ";"), rank), ";"), score) => {
-          List((candidate, rank, score))
-        }
-      }
 
-      var temp: List[(Candidate, Int, Int)] = Nil
+      val sortedPreferences = p.sortWith(_._2 < _._2)
 
-      for (i <- p if !p.isEmpty) {
-        parse(line2, i) match {
-          case Success(sucLine, _) => temp = sucLine ::: temp
-          case _ => throw new Exception("Should never happen")
-        }
-      }
-
-      temp = temp.sortWith(_._2 < _._2)
-
-      var ccand: List[Candidate] = Nil
-
-      for (f <- temp if !temp.isEmpty) {
-        ccand = f._1 :: ccand
-      }
-
-      WeightedBallot(ccand.reverse, i, Rational(n, d))
+      WeightedBallot(sortedPreferences map {_._1}, i, Rational(n, d))
     }
   }
 }
