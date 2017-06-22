@@ -24,8 +24,8 @@ object PreferencesParser extends ElectionParser[WeightedBallot] with RegexParser
   def preferences: Parser[List[Candidate]] = repsep(candidate, ">")
 
   // the method line returns a Parser of type ACTBallotPapersDataStructure
-  def line: Parser[WeightedBallot] = id ~ numerator ~ "/" ~ denominator ~ preferences ^^ {
-    case ~(~(~(~(i, n), "/"), d), prefs) => { WeightedBallot(prefs, i, Rational(n, d)) }
+  def line: Parser[WeightedBallot] = id ~ numerator ~ "/" ~ denominator ~ opt("(") ~ preferences ~ opt(")") ^^ {
+    case ~(~(~(~(~(~(i, n), "/"), d), _), prefs), _) => { WeightedBallot(prefs, i, Rational(n, d)) }
   }
 }
 
@@ -50,8 +50,8 @@ object PreferencesParserWithRankAndScore extends ElectionParser[WeightedBallot] 
   }
   
   // the method line returns a Parser of type ACTBallotPapersDataStructure
-  def line: Parser[WeightedBallot] = id ~ numerator ~ "/" ~ denominator ~ "(" ~ preferences ~ ")" ^^ {
-    case ~(~(~(~(~(~(i, n), "/"), d), "("), prefs), ")") => { WeightedBallot(prefs map {_._1}, i, Rational(n, d)) }
+  def line: Parser[WeightedBallot] = id ~ numerator ~ "/" ~ denominator ~ opt("(") ~ preferences ~ opt(")") ^^ {
+    case ~(~(~(~(~(~(i, n), "/"), d), _), prefs), _) => { WeightedBallot(prefs map {_._1}, i, Rational(n, d)) }
   }
 }
 
