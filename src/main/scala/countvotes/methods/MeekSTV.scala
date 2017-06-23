@@ -1,5 +1,10 @@
 package countvotes.methods
 
+/**
+  * http://blog.opavote.com/2017/04/meek-stv-explained.html
+  * https://en.wikipedia.org/wiki/Counting_single_transferable_votes#Meek
+  */
+
 import countvotes.structures._
 import countvotes.algorithms._
 import collection.mutable.{HashMap => MMap}
