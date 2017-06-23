@@ -11,6 +11,7 @@ import collection.mutable.{HashMap => Map}
     private var totalsHistory: List[Map[Candidate, Rational]] = Nil  // required for ACT's ties resolutions
 
     private var winners: List[(Candidate, Rational)] = Nil
+    private var keepFactor = new Map[Candidate, Rational]
 
     def clear: Unit = {
       quota = None
@@ -31,6 +32,14 @@ import collection.mutable.{HashMap => Map}
         case None  =>  throw new Exception("quota is not set yet.")
       }
     }
+
+   def setKF(kf: Map[Candidate, Rational]): Unit = {
+     keepFactor = kf
+   }
+
+   def getKF: Map[Candidate, Rational] = {
+     keepFactor
+   }
 
     def addPendingWinners(pendWinners: List[(Candidate, Rational)], markings: Option[Set[Int]]): Unit = {
      if (pendWinners.nonEmpty) {

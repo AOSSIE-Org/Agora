@@ -173,6 +173,11 @@ object Main extends RegexParsers {
           println(" Scrutiny table for method Simple is not implemented yet.")
           r.writeWinners(winnersfile)
         }
+        case "Meek" => {
+          var r = MeekSTV.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method MeekSTV is not implemented yet.")
+          r.writeWinners(winnersfile)
+        }
         case "Egalitarian" => {
           var r = EgalitarianMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Egalitarian is not implemented yet.")
