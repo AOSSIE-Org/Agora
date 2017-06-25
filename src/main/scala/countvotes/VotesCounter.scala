@@ -82,7 +82,7 @@ object Main {
 
     note("""Possible values are as follows:""" + "\n" +
 
-        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Nanson, Kemeny-Young""" + "\n" +
+        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Nanson, Kemeny-Young, PBV1, PBV2""" + "\n" +
 
         """for -t:  Concise, ACT""" + "\n \n"
     )
@@ -142,8 +142,14 @@ object Main {
                  r.writeWinners(winnersfile)
                }
 
-               case "PreferentialBlockVoting" => {
+               case "PBV1" => {
                  var r = PreferentialBlockvoting1.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+                 println(" Scrutiny table for method Preferential block voting is not implemented yet.")
+                 r.writeWinners(winnersfile)
+               }
+
+               case "PBV2" => {
+                 var r = PreferentialBlockvoting2.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
                  println(" Scrutiny table for method Preferential block voting is not implemented yet.")
                  r.writeWinners(winnersfile)
                }
