@@ -15,6 +15,8 @@ import java.io._
 
 abstract class VoteCountingMethod[B <: Ballot with Weight] {
 
+  type MatrixD2 = Array[Array[Rational]]
+
  def winners(e: Election[B], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)]
 
  def totals(election: Election[WeightedBallot], candidates: List[Candidate]): Map[Candidate, Rational] = {
@@ -69,6 +71,28 @@ abstract class VoteCountingMethod[B <: Ballot with Weight] {
     }
     print("\n")
  }
+
+  def getPairwiseComparison(election: Election[WeightedBallot], candidates: List[Candidate]): MatrixD2 = {
+
+    val zeroRational = Rational(0, 1)
+    val responseMatrix = BaseMatrix[Rational](candidates.size, candidates.size) { (i: Int, j: Int) => {
+      zeroRational
+    }
+    }
+
+    for (b <- election if !b.preferences.isEmpty) {
+      val pref = b.preferences
+      b.preferences.zipWithIndex.foreach(c1 => {
+        pref.zipWithIndex.foreach(c2 => {
+          if (c1._2 < c2._2) {
+            responseMatrix(candidates.indexOf(c1._1))(candidates.indexOf(c2._1)) += b.weight
+          }
+        })
+      })
+    }
+    responseMatrix
+  }
+
 
 }
 
