@@ -213,6 +213,9 @@ object Main extends RegexParsers {
           println(" Scrutiny table for method Runoff2Round is not implemented yet.")
           r.writeWinners(winnersfile)
         }
+        case "Copeland" => {
+
+        }
 
         case "Test" => {
           Test.testSDResolution
