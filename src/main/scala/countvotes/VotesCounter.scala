@@ -214,6 +214,9 @@ object Main extends RegexParsers {
           r.writeWinners(winnersfile)
         }
         case "Copeland" => {
+          var r = CopelandMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method Copeland is not implemented yet. ")
+          r.writeWinners(winnersfile)
 
         }
 
