@@ -1,13 +1,17 @@
 package countvotes.methods
 
 import com.sun.rowset.internal.Row
+import com.typesafe.scalalogging.LazyLogging
 import countvotes.structures._
 
 /**
   * Algorithm via multiplication
   * http://www.alg.ewi.tudelft.nl/mates2010/media/matesslides/BrandtTournament%20Solutions%20(MATES).pdf
+  * The Uncovered Set(UC) consists of all uncovered alternatives
+  * x covers y (x C y) if D(y) is a subset of D(x)
+  * where D(x) = { y ⍷ A | x >(majority) y}
   */
-object UncoveredSetMethod extends VoteCountingMethod[WeightedBallot] {
+object UncoveredSetMethod extends VoteCountingMethod[WeightedBallot] with LazyLogging{
 
   private val result: Result = new Result
   private val report: Report[WeightedBallot] = new Report[WeightedBallot]
@@ -26,6 +30,7 @@ object UncoveredSetMethod extends VoteCountingMethod[WeightedBallot] {
 
   override def winners(e: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 
+    logger.info("Computing Uncovered Set")
     val zeroRational = Rational(0, 1)
     val majorityRational = Rational(1, 2)
     val electionResponse = getPairwiseComparison(e, ccandidates)
@@ -52,7 +57,7 @@ object UncoveredSetMethod extends VoteCountingMethod[WeightedBallot] {
     val uncoveredMatrix = addmatrix(addmatrix(square(ucMatrix, ccandidates.size), ucMatrix), identitiMatrix(ccandidates.size))
 
     uncoveredMatrix.zipWithIndex.filter(row => !row._1.contains(Rational(0, 1)))
-      .map(row => (ccandidates(row._1), Rational(0, 1))).toList
+      .map(row => (ccandidates(row._2), Rational(0, 1))).toList
   }
 
   def addmatrix(m1: Array[Array[Rational]], m2: Array[Array[Rational]]): Array[Array[Rational]] ={
@@ -88,7 +93,9 @@ object UncoveredSetMethod extends VoteCountingMethod[WeightedBallot] {
     for (i <- 0 until size)
       for (j <- 0 until size)
         if (i<j) {
-          (matrix(i)(j), matrix(j)(i)) = (matrix(j)(i), matrix(i)(j))
+          val temp = matrix(i)(j)
+          matrix(i)(j) = matrix(j)(i)
+          matrix(i)(j) = temp
         }
 
     matrix
