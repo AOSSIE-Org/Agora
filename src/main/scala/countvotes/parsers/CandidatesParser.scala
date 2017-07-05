@@ -14,8 +14,9 @@ object CandidatesParser extends ElectionParser[Candidate] with RegexParsers {
        }
    }
 
-   def name : Parser[String] = """[0-9A-Za-z\-\,\.\ \']*""".r ^^ { _.toString }
-   def party : Parser[String] = """[0-9A-Za-z\-\,\.\ \']+""".r ^^ { _.toString }
+   def name = string
+   def party = string
+   def string: Parser[String] = """[0-9A-Za-z\-\,\.\ \']*""".r ^^ { _.toString }
    def id : Parser[Int] = """[0-9]+""".r ^^ { _.toInt }
 
 }

@@ -1,28 +1,23 @@
 package countvotes.structures
 
 case class Candidate(val name: String, val id: Option[Int] = None, val party: Option[String] = None) {
-  id match {
+  override def toString: String = Seq(id, Some(name), party) filter{_.isDefined} map{_.get} mkString("[",",","]")
+  /***
+  override def toString:String = id match {
     case Some(i) => {
       party match {
-        case Some(p) => {
-          def toString: String = "[" + i + "," + name + "," + p + "]"
-        }
-        case None => {
-          def toString: String = "[" + i + "," + name + "]"
-        }
+        case Some(p) => "[" + i + "," + name + "," + p + "]"
+        case None => "[" + i + "," + name + "]"
       }
     }
     case None => {
       party match {
-        case Some(p) => {
-          def toString: String = "[" + name + "," + p + "]"
-        }
-        case None => {
-          def toString: String = name
-        }
+        case Some(p) => "[" + name + "," + p + "]"
+        case None => name
       }
     }
-  }
+    }
+    ***/
 }
 
 //object Candidate {
