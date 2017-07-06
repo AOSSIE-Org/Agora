@@ -26,8 +26,8 @@ abstract class ACT extends STVAustralia
  {
 
   def declareNewWinnersWhileExcluding(
-    candidate: Candidate, exhaustedBallots: Set[ACTBallot], newtotals: Map[Candidate, Rational], 
-    totalsWithoutNewWinners: Map[Candidate, Rational], newElectionWithoutFractionInTotals: Election[ACTBallot]):  
+    candidate: Candidate, exhaustedBallots: Set[ACTBallot], newtotals: Map[Candidate, Rational],
+    totalsWithoutNewWinners: Map[Candidate, Rational], newElectionWithoutFractionInTotals: Election[ACTBallot]):
   List[(Candidate,Rational)]
 
   def declareNewWinnersWhileDistributingSurpluses(totals: Map[Candidate, Rational], election:Election[ACTBallot]):  List[(Candidate,Rational)]
@@ -74,8 +74,8 @@ abstract class ACT extends STVAustralia
     // Notice: There may be more new winners than available vacancies!!!
     // Apparently EVACS does not check this condition. See step 8.  Or in count.c
    // while (for_each_candidate(e->candidates, &check_status,
-	//			  (void *)(CAND_PENDING|CAND_ELECTED))
-	 //      != e->electorate->num_seats) {
+  //        (void *)(CAND_PENDING|CAND_ELECTED))
+   //      != e->electorate->num_seats) {
    // That is why we also check only equality here
    if (ccandidates.length == numVacancies){
      var ws: List[(Candidate,Rational)] = List()
@@ -104,7 +104,7 @@ abstract class ACT extends STVAustralia
                 if (nws == numVacancies) { allWinners }
                 else {
                   val setAllWinners = allWinners.map{_._1}.toSet
-                  winners(newElection, ccandidates.filterNot(setAllWinners.contains(_)) ,numVacancies-nws):::allWinners  
+                  winners(newElection, ccandidates.filterNot(setAllWinners.contains(_)) ,numVacancies-nws):::allWinners
                   // TODO: care should be taken that newElection is not empty?!
                 }
                 }
@@ -126,8 +126,11 @@ abstract class ACT extends STVAustralia
             // Notice: There may be more new winners than available vacancies!!!
             // Apparently EVACS does not check this condition. See step 42. Or in count.c
             // if (for_each_candidate(candidates, &check_status,(void *)(CAND_ELECTED|CAND_PENDING)) == num_seats) return true;
-            newWinners }
-          else winners(newElection,ccandidates.filterNot(x => x == leastVotedCandidate._1), numVacancies-newWinners.length):::newWinners
+            newWinners
+          }
+          else {
+            winners(newElection,ccandidates.filterNot(x => x == leastVotedCandidate._1), numVacancies-newWinners.length):::newWinners
+          }
       }
       }
 
@@ -150,7 +153,7 @@ abstract class ACT extends STVAustralia
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   def surplusesDistribution(
-    election: Election[ACTBallot], ccandidates: List[Candidate], numVacancies: Int): 
+    election: Election[ACTBallot], ccandidates: List[Candidate], numVacancies: Int):
   (Election[ACTBallot], List[(Candidate,Rational)]) = {
   println("Distribution of surpluses.")
    var newws: List[(Candidate, Rational)] = List()
@@ -169,8 +172,8 @@ abstract class ACT extends STVAustralia
  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
  def tryToDistributeSurplusVotes(
-   election: Election[ACTBallot], ccandidates: List[Candidate], winner: Candidate, 
-   ctotal:Rational, markings: Option[Set[Int]] ): 
+   election: Election[ACTBallot], ccandidates: List[Candidate], winner: Candidate,
+   ctotal:Rational, markings: Option[Set[Int]] ):
  (Election[ACTBallot], List[(Candidate,Rational)]) = {
 
   val pendingWinners = result.getPendingWinners.map(x => x._1)
@@ -210,12 +213,16 @@ abstract class ACT extends STVAustralia
     var ws = declareNewWinnersWhileDistributingSurpluses(newtotalsWithoutFractionWithoutpendingwinners,newElection)
 
     //------------ Reporting ------------------------------------------
-    if (ws.nonEmpty) report.newCount(
-      SurplusDistribution, Some(winner), Some(newElectionWithoutFractionInTotals), 
-      Some(newtotalsWithoutFraction), Some(ws), Some(exhaustedBallots))
-    else report.newCount(
-      SurplusDistribution, Some(winner), Some(newElectionWithoutFractionInTotals), 
-      Some(newtotalsWithoutFraction), None, Some(exhaustedBallots))
+    if (ws.nonEmpty) {
+      report.newCount(
+        SurplusDistribution, Some(winner), Some(newElectionWithoutFractionInTotals),
+        Some(newtotalsWithoutFraction), Some(ws), Some(exhaustedBallots))
+    }
+    else {
+      report.newCount(
+        SurplusDistribution, Some(winner), Some(newElectionWithoutFractionInTotals),
+        Some(newtotalsWithoutFraction), None, Some(exhaustedBallots))
+    }
     report.setLossByFraction(totals(newElection,ccandidates), newtotalsWithoutFraction)
     ignoredBallots match { // ballots ignored because they don't belong to the last parcel of the winner
       case Some(ib) => report.setIgnoredBallots(ib)
@@ -230,8 +237,8 @@ abstract class ACT extends STVAustralia
  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
  def exclusion(
-   election: Election[ACTBallot], ccandidates: List[Candidate], 
-   candidate: (Candidate, Rational), numVacancies: Int): 
+   election: Election[ACTBallot], ccandidates: List[Candidate],
+   candidate: (Candidate, Rational), numVacancies: Int):
  (Election[ACTBallot],  List[(Candidate, Rational)] ) = {
    println("Vacancies left: " + numVacancies)
 
@@ -271,18 +278,18 @@ abstract class ACT extends STVAustralia
 
     val totalsAfterFractionLoss = totals(newElectionWithoutFractionInTotals, ccandidates)
 
-    val totalsWithIncorrectValueForCandidate = rewriteTotalOfCandidate(totalsAfterFractionLoss, candidate._1, newTotal) 
+    val totalsWithIncorrectValueForCandidate = rewriteTotalOfCandidate(totalsAfterFractionLoss, candidate._1, newTotal)
     // simulating EVACS's incorrect total as a result of partial exclusion
 
-    val totalsWithoutNewWinners = totalsWithIncorrectValueForCandidate.clone().retain((k,v) => !ws.map(_._1).contains(k)) 
+    val totalsWithoutNewWinners = totalsWithIncorrectValueForCandidate.clone().retain((k,v) => !ws.map(_._1).contains(k))
     // excluding winners that are already identified in the while-loop
-    
+
     result.addTotalsToHistory(totalsWithIncorrectValueForCandidate)
     println("Totals: " + totalsWithIncorrectValueForCandidate)
 
-    newws = 
+    newws =
       declareNewWinnersWhileExcluding(
-        candidate._1, exhaustedBallots, totalsWithIncorrectValueForCandidate,totalsWithoutNewWinners, 
+        candidate._1, exhaustedBallots, totalsWithIncorrectValueForCandidate,totalsWithoutNewWinners,
         newElectionWithoutFractionInTotals)
 
     ws = ws ::: newws

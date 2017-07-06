@@ -5,7 +5,6 @@ import countvotes.structures._
 
 import scala.util.parsing.combinator._
 
-
 object CandidatesParser extends ElectionParser[Candidate] with RegexParsers {
 
   // the method line returns a Parser of type ACTBallotPapersDataStructure

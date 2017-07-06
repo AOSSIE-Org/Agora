@@ -49,7 +49,7 @@ object EgalitarianMethod extends Egalitarian[WeightedBallot] {
     }
     else{
       for(i <- location to (candidateCount-remaining)) {
-        combinations = combinations ::: getCandidateSubsets(candidates, candidateCount, stub :+ candidates(i),i+1,remaining-1)
+        combinations = combinations ::: getCandidateSubsets(candidates, candidateCount, stub :+ candidates(i),i + 1, remaining - 1)
       }
     }
     combinations

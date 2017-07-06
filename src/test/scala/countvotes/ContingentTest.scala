@@ -13,7 +13,7 @@ class ContingentTest extends Specification{
 
   "Contingent Test " should {
 
-    "verify result" in { contingentMethodVerification("15-example.txt") shouldEqual expectedContingentWinner }
+    "verify result" in { contingentMethodVerification("15-example.e") shouldEqual expectedContingentWinner }
   }
 
   def contingentMethodVerification(electionFile: String): List[Candidate] = {
