@@ -5,7 +5,6 @@ import countvotes.structures._
 import scala.util.Random
 
 /**
-  * Created by deepeshpandey on 03/06/17.
   * Algorithm : https://en.wikipedia.org/wiki/Random_ballot
   */
 object RandomBallotMethod extends VoteCountingMethod[WeightedBallot] {
@@ -28,31 +27,26 @@ object RandomBallotMethod extends VoteCountingMethod[WeightedBallot] {
 
   override def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 
-    randomBallotWinner(election, ccandidates, numVacancies, false)
+    randomBallotWinner(election, ccandidates, numVacancies, None)
   }
 
   def randomBallotWinner(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int,
-                         useFixedSeed: Boolean): List[(Candidate, Rational)] = {
+                         useFixedSeed: Option[Int]): List[(Candidate, Rational)] = {
 
-    // here we need to apply random func on total voters not on election length as it might contain weights and this
-    // rule is based on the probability of the voters favoring any candidate
-
-    val zeroRational = Rational(0, 1)
     val totalVoters = Election.totalWeightedVoters(election)
-    val r = if (useFixedSeed) new Random(6142) else new Random()
 
-    var randomDictator = r.nextInt(totalVoters.toInt + 1)
-
-    // number of index to be dropped before reaching the random voter preference
-    var index = 0
-    for (e <- election if randomDictator > 0) {
-      randomDictator -= e.weight.toInt
-      if (randomDictator > 0) {
-        index += 1
-      }
+    val random = useFixedSeed match {
+      case Some(seed) => new Random(seed).nextInt(totalVoters.toInt + 1)
+      case None => new Random().nextInt(totalVoters.toInt + 1)
     }
 
-    election(index).preferences.take(numVacancies).map(c => (c, zeroRational))
+    val cumulative = election.map(_.weight).scanLeft(Rational(0, 1))(_ + _)
+
+    val dictator = cumulative.indexWhere(_ >= random)
+
+    // case when random generator gives 0 as an output - one of the test case
+    if (dictator == 0) List()
+    else election(dictator-1).preferences.take(numVacancies).map(c => (c, Rational(0, 1)))
 
   }
 }
