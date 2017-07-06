@@ -15,6 +15,9 @@ import java.io._
 
 import countvotes.methods.VoteCountingMethod
 
+/**
+  * https://en.wikipedia.org/wiki/Contingent_vote
+  */
 object ContingentMethod extends VoteCountingMethod[WeightedBallot] {
 
   protected val result: Result = new Result
@@ -60,7 +63,8 @@ object ContingentMethod extends VoteCountingMethod[WeightedBallot] {
       for(b<-election if !b.preferences.isEmpty){
         b.preferences.find(m => ccands.contains(m)).foreach(m => newElection(m)=  newElection(m) + 1)
       }
-      List((newElection.toList.sortWith(_._2 > _._2).head._1, newElection.toList.sortWith(_._2 > _._2).head._2))
+      val w = newElection.toList.sortWith(_._2 > _._2).head
+      List((w._1, w._2))
     }
   }
 

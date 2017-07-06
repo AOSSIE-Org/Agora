@@ -13,10 +13,10 @@ class ContingentTest extends Specification{
 
   "Contingent Test " should {
 
-    "verify result" in { ContingentMethodVerification("15-example.txt") shouldEqual expectedContingentWinner }
+    "verify result" in { contingentMethodVerification("15-example.txt") shouldEqual expectedContingentWinner }
   }
 
-  def ContingentMethodVerification(electionFile: String): List[Candidate] = {
+  def contingentMethodVerification(electionFile: String): List[Candidate] = {
 
     val candidates = CandidatesParser.read("../Agora/files/Examples/15-candidates.txt")
     val election =  PreferencesParser.read("../Agora/files/Examples/" + electionFile)
