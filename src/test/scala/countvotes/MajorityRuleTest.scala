@@ -11,7 +11,7 @@ import org.specs2.mutable.Specification
 class MajorityRuleTest extends Specification{
 
   val expectedMajorityRuleWinnerList1 = List()
-  val expectedMajorityRuleWinnerList2 = List(Candidate("A"))
+  val expectedMajorityRuleWinnerList2 = List(Candidate("A", None, Some("")))
 
 
   "MajorityRule Test " should {
