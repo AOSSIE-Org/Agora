@@ -16,12 +16,12 @@ class RandomBallotTest extends Specification {
 
   "RandomBallot Test " should {
 
-    "verify result" in { randomBallotMethodVerification("16-example.txt", "16-candidates.txt", Option(6142), 2) shouldEqual expectedRandomBallotWinnerList1 }
-    "verify result" in { randomBallotMethodVerification("16-example.txt", "16-candidates.txt", Option(2416), 1) shouldEqual expectedRandomBallotWinnerList2 }
-    "verify result" in { randomBallotMethodVerification("16-example.txt", "16-candidates.txt", Option(1426), 2) shouldEqual expectedRandomBallotWinnerList3 }
-    "verify result" in { randomBallotMethodVerification("16-example.txt", "16-candidates.txt", Option(4216), 3) shouldEqual expectedRandomBallotWinnerList4 }
-    "verify result" in { randomBallotMethodVerification("16-example.txt", "16-candidates.txt", Option(1264), 2) shouldEqual expectedRandomBallotWinnerList5 }
-    "verify result" in { randomBallotMethodVerification("16-example.txt", "16-candidates.txt", Option(2614), 4) shouldEqual expectedRandomBallotWinnerList6 }
+    "verify result" in { randomBallotMethodVerification("21-example.e", "21-candidates.txt", Option(6142), 2) shouldEqual expectedRandomBallotWinnerList1 }
+    "verify result" in { randomBallotMethodVerification("21-example.e", "21-candidates.txt", Option(2416), 1) shouldEqual expectedRandomBallotWinnerList2 }
+    "verify result" in { randomBallotMethodVerification("21-example.e", "21-candidates.txt", Option(1426), 2) shouldEqual expectedRandomBallotWinnerList3 }
+    "verify result" in { randomBallotMethodVerification("21-example.e", "21-candidates.txt", Option(4216), 3) shouldEqual expectedRandomBallotWinnerList4 }
+    "verify result" in { randomBallotMethodVerification("21-example.e", "21-candidates.txt", Option(1264), 2) shouldEqual expectedRandomBallotWinnerList5 }
+    "verify result" in { randomBallotMethodVerification("21-example.e", "21-candidates.txt", Option(2614), 4) shouldEqual expectedRandomBallotWinnerList6 }
 
   }
 

@@ -1,5 +1,6 @@
 package countvotes.methods
 
+import com.typesafe.scalalogging.LazyLogging
 import countvotes.structures._
 
 import scala.util.Random
@@ -7,7 +8,7 @@ import scala.util.Random
 /**
   * Algorithm : https://en.wikipedia.org/wiki/Random_ballot
   */
-object RandomBallotMethod extends VoteCountingMethod[WeightedBallot] {
+object RandomBallotMethod extends VoteCountingMethod[WeightedBallot] with LazyLogging {
 
   private val result: Result = new Result
   private val report: Report[WeightedBallot] = new Report[WeightedBallot]
@@ -32,6 +33,8 @@ object RandomBallotMethod extends VoteCountingMethod[WeightedBallot] {
 
   def randomBallotWinner(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int,
                          useFixedSeed: Option[Int]): List[(Candidate, Rational)] = {
+
+    logger.info("computing random ballot winner")
 
     val totalVoters = Election.totalWeightedVoters(election)
 
