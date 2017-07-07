@@ -50,15 +50,15 @@ object ContingentMethod extends VoteCountingMethod[WeightedBallot] {
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   override def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
-    var tls = totals(election, ccandidates)
-    var tls1: List[(Candidate, Rational)] = tls.toList.sortWith(_._2 > _._2)
+    val tls = totals(election, ccandidates)
+    val tls1: List[(Candidate, Rational)] = tls.toList.sortWith(_._2 > _._2)
     if (tls1.head._2 > majorityThreshold * election.length) {
       List((tls1.head._1, tls1.head._2))
     }
     else {
       val tlsSecondRound = tls1.take(2)
       val ccands: List[Candidate] = ccandidates.filterNot(m => m!=tlsSecondRound.head._1 && m!=tlsSecondRound.tail.head._1)
-      var newElection = new MMap[Candidate, Rational]
+      val newElection = new MMap[Candidate, Rational]  //mutable map, so making it val
       for(c <-ccands) newElection(c) = 0
       for(b<-election if !b.preferences.isEmpty){
         b.preferences.find(m => ccands.contains(m)).foreach(m => newElection(m)=  newElection(m) + 1)
