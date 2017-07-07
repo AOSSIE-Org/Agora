@@ -28,7 +28,7 @@ trait CoombMemoryRegression extends MemoryRegression {
 
 object CoombRegressionTest extends Bench.Group {
 
-  //  perform regression for Nanson method
+  //  perform regression for Coomb method
   performance of "memory" config(
     reports.resultDir -> "target/benchmarks/coomb/memory"
     ) in {
