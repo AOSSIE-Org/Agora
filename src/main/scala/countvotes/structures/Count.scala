@@ -1,5 +1,3 @@
-
-
 package countvotes.structures
 
 import collection.mutable.{HashMap => Map}
@@ -12,7 +10,7 @@ class Count[B <: Ballot with Weight]  {
 
     private var election: Option[Election[B]] = None  //  election resulting from performing the action
 
-    //private var modifiedelection: Option[Election[B]] = None  
+    //private var modifiedelection: Option[Election[B]] = None
     // outcome election resulting from performing the action and modifications, as for example lbf or random removal of ballots
 
     private var totals: Option[Map[Candidate, Rational] ] = None // outcome of the count

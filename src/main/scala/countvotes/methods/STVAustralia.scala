@@ -20,13 +20,13 @@ abstract class STVAustralia extends STV[ACTBallot]
 
 
  def tryToDistributeSurplusVotes(
-   election: Election[ACTBallot], ccandidates: List[Candidate], winner: Candidate, 
-   ctotal:Rational, markings: Option[Set[Int]] ): 
+   election: Election[ACTBallot], ccandidates: List[Candidate], winner: Candidate,
+   ctotal:Rational, markings: Option[Set[Int]] ):
     (Election[ACTBallot], List[(Candidate,Rational)])
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
- def runScrutiny(election: Election[ACTBallot], candidates: List[Candidate], numVacancies: Int):  
+ def runScrutiny(election: Election[ACTBallot], candidates: List[Candidate], numVacancies: Int):
     Report[ACTBallot] = {  // all ballots of e are marked when the function is called
    val quota = cutQuotaFraction(computeQuota(election.length, numVacancies))
    println("Number of ballots:" + election.length)
@@ -34,7 +34,7 @@ abstract class STVAustralia extends STV[ACTBallot]
    result.setQuota(quota)
    report.setQuota(quota)
 
-   val tls = totals(election, candidates) // Here are totals also of those candidates 
+   val tls = totals(election, candidates) // Here are totals also of those candidates
                                           // that are NOT OCCURING in the ballots (i.e. when nobody mentioned them in preferences)
    result.addTotalsToHistory(tls)
 

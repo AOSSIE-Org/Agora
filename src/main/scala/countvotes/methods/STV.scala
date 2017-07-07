@@ -32,11 +32,11 @@ abstract class STV[B <: Ballot with Weight] extends VoteCountingMethod[B] {
   def returnNewWinners(totals: Map[Candidate, Rational], quota: Rational): List[(Candidate,Rational)]
 
   def computeTransferValue(
-    surplus: Rational, election: Election[B], pendingWinners:  List[Candidate], 
+    surplus: Rational, election: Election[B], pendingWinners:  List[Candidate],
     candidate: Candidate, markings: Option[Set[Int]]): Rational
 
   def distributeSurplusVotes(
-    election: Election[B],  candidate: Candidate, total:Rational, markings: Option[Set[Int]], 
+    election: Election[B],  candidate: Candidate, total:Rational, markings: Option[Set[Int]],
     pendingWinners: List[Candidate], transferValue: Rational): (Election[B], Set[B], Option[Election[B]])
 
   def resolveSurpluseDistributionTie(equaltotals: Map[Candidate, Rational]): List[(Candidate, Rational)]
@@ -88,8 +88,9 @@ abstract class STV[B <: Ballot with Weight] extends VoteCountingMethod[B] {
     var ballotsC = false
     while (ballotsC==false && el.nonEmpty){
       val ballot = el.head
-      if (ballot.preferences.head == c && !ballot.preferences.tail.diff(pendingWinners).isEmpty )
+      if (ballot.preferences.head == c && !ballot.preferences.tail.diff(pendingWinners).isEmpty) {
         ballotsC = true
+      }
       el = el.tail
     }
     println("Has continuing candidates?: " + ballotsC)

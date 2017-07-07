@@ -7,16 +7,14 @@ import org.specs2.mutable.Specification
 
 import scala.collection.mutable.ListBuffer
 
-/**
-  * Created by deepeshpandey on 15/03/17.
-  */
+
 class CoombTest extends Specification {
 
   val expectedCoombWinnerList = List(Candidate("Nashville"))
 
   "Coomb Test" should {
     "verify result" in {
-      coombMethodVerification("18-example.txt", "18-candidates.txt") shouldEqual expectedCoombWinnerList
+      coombMethodVerification("14-example.e", "14-candidates.txt") shouldEqual expectedCoombWinnerList
     }
   }
 

@@ -1,6 +1,5 @@
 package countvotes.methods
 
-
 import countvotes.structures._
 import countvotes.algorithms._
 
@@ -13,7 +12,6 @@ import collection.breakOut
 import scala.util.Random
 import scala.util.Sorting
 import java.io._
-
 
 abstract class VoteCountingMethod[B <: Ballot with Weight] {
 
