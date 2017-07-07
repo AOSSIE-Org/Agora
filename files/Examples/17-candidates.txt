@@ -1,4 +1,4 @@
-icecream;;
-apple;;
-fruit;;
-celery;;
+icecream
+apple
+fruit
+celery
