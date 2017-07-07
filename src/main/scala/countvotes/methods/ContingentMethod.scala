@@ -51,20 +51,22 @@ object ContingentMethod extends VoteCountingMethod[WeightedBallot] {
 
   override def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
     val tls = totals(election, ccandidates)
-    val tls1: List[(Candidate, Rational)] = tls.toList.sortWith(_._2 > _._2)
-    if (tls1.head._2 > majorityThreshold * election.length) {
-      List((tls1.head._1, tls1.head._2))
+    val ctSorted: List[(Candidate, Rational)] = tls.toList.sortWith(_._2 > _._2)
+    if (ctSorted.head._2 > majorityThreshold * election.length) {
+      List(ctSorted.head)
     }
     else {
-      val tlsSecondRound = tls1.take(2)
+      val tlsSecondRound = ctSorted.take(2)
       val ccands: List[Candidate] = ccandidates.filterNot(m => m!=tlsSecondRound.head._1 && m!=tlsSecondRound.tail.head._1)
-      val newElection = new MMap[Candidate, Rational] 
-      for(c <-ccands) newElection(c) = 0
-      for(b<-election if !b.preferences.isEmpty){
-        b.preferences.find(m => ccands.contains(m)).foreach(m => newElection(m)=  newElection(m) + 1)
+      val newElectionScoreMap = new MMap[Candidate, Rational]
+      for(b<-election if !b.preferences.isEmpty) {
+        val preferredCandidate = b.preferences.find(ccands.contains(_))
+        preferredCandidate match {
+          case Some(c) => newElectionScoreMap(c) = b.weight + (newElectionScoreMap.getOrElse(c, 0))
+          case _ =>
       }
-      val w = newElection.toList.sortWith(_._2 > _._2).head
-      List((w._1, w._2))
+      }
+      List(newElectionScoreMap.toList.sortWith(_._2 > _._2).head)
     }
   }
 
