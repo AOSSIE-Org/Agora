@@ -9,7 +9,7 @@ import scala.util.matching.Regex
 
 trait ElectionParsers extends RegexParsers {
 
-  def candidate: Parser[Candidate] = """[0-9A-Za-z\-\,\.\ \']*""".r ^^ { s => Candidate(s) } // same as Candidate(s, None, None)
+  def candidate: Parser[Candidate] = """[0-9A-Za-z\-\,\.\ \']*""".r ^^ { s => Candidate(s) } 
 
   def numerator: Parser[BigInt] = """[0-9]*""".r ^^ { s => BigInt(s) }
 
