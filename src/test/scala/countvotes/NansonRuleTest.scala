@@ -12,7 +12,7 @@ class NansonRuleTest extends Specification{
 
   "Nanson Rule Test " should {
 
-    "verify result" in { nansonRuleMethodVerification("14-example.txt") shouldEqual expectedNansonWinnerList }
+    "verify result" in { nansonRuleMethodVerification("14-example.e") shouldEqual expectedNansonWinnerList }
   }
 
   def nansonRuleMethodVerification(electionFile: String): List[Candidate] = {

@@ -12,7 +12,7 @@ class BordaRuleTest extends Specification{
 
   "Borda Rule Test " should {
 
-    "verify result" in { bordaRuleMethodVerification("14-example.txt") shouldEqual expectedBordaWinnerList }
+    "verify result" in { bordaRuleMethodVerification("14-example.e") shouldEqual expectedBordaWinnerList }
   }
 
   def bordaRuleMethodVerification(electionFile: String): List[Candidate] = {
