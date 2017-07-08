@@ -39,7 +39,7 @@ object NansonRuleMethod extends VoteCountingMethod[WeightedBallot] with LazyLogg
       var bordaCounter = candidates.length
 
       b.preferences.filter(candidate => candidates.contains(candidate)).map(candidate => {
-        m(candidate) = m.getOrElse(candidate, new Rational(0, 1) + ((bordaCounter - 1)) * b.weight.numerator.toInt)
+        m(candidate) = m.getOrElse(candidate, new Rational(0, 1)) + ((bordaCounter - 1) * b.weight.numerator.toInt)
         bordaCounter -= 1
       })
     }
