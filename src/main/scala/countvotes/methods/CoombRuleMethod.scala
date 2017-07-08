@@ -38,11 +38,19 @@ object CoombRuleMethod extends VoteCountingMethod[WeightedBallot] with LazyLoggi
 
     for (e <- election if e.preferences.nonEmpty) {
 
-      val firstRankedCandidate = e.preferences.filter(ccandidates.contains(_)).take(1).head
-      val lastRankedCandidate = e.preferences.reverse.filter(ccandidates.contains(_)).take(1).head
+      val firstRankedCandidate = e.preferences.find(c => ccandidates.contains(c))
+      val lastRankedCandidate = e.preferences.reverseIterator.find(c => ccandidates.contains(c))
 
-      firstRankedMap(firstRankedCandidate) = firstRankedMap.getOrElse(firstRankedCandidate, Rational(0, 1)) + e.weight
-      lastRankedMap(lastRankedCandidate) = lastRankedMap.getOrElse(lastRankedCandidate, Rational(0, 1)) + e.weight
+      firstRankedCandidate match {
+        case Some(candidate) => firstRankedMap(candidate) = firstRankedMap.getOrElse(candidate, Rational(0, 1)) + e.weight
+        case None => {}
+      }
+
+      lastRankedCandidate match {
+        case Some(candidate) => lastRankedMap(candidate) = lastRankedMap.getOrElse(candidate, Rational(0, 1)) + e.weight
+        case None => {}
+      }
+
     }
 
 
