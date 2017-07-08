@@ -11,10 +11,12 @@ import scala.collection.mutable.ListBuffer
 class CoombTest extends Specification {
 
   val expectedCoombWinnerList = List(Candidate("Nashville"))
+  val expectedCoombWinnerList1 = List(Candidate("B")) // tie resolution test case both A/B could be a winner here
 
   "Coomb Test" should {
     "verify result" in {
       coombMethodVerification("14-example.e", "14-candidates.txt") shouldEqual expectedCoombWinnerList
+      coombMethodVerification("21-example.e", "21-candidates.txt") shouldEqual expectedCoombWinnerList1
     }
   }
 
