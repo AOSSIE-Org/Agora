@@ -7,11 +7,11 @@ import org.specs2.mutable.Specification
 class RandomBallotTest extends Specification {
 
   val expectedRandomBallotWinnerList1 = List(Candidate("B"), Candidate("D"))
-  val expectedRandomBallotWinnerList2 = List(Candidate("E"))
-  val expectedRandomBallotWinnerList3 = List(Candidate("E"), Candidate("C"))
-  val expectedRandomBallotWinnerList4 = List()
+  val expectedRandomBallotWinnerList2 = List(Candidate("B"))
+  val expectedRandomBallotWinnerList3 = List(Candidate("C"), Candidate("E"))
+  val expectedRandomBallotWinnerList4 = List(Candidate("A"), Candidate("B"), Candidate("C"))
   val expectedRandomBallotWinnerList5 = List(Candidate("E"), Candidate("C"))
-  val expectedRandomBallotWinnerList6 = List(Candidate("C"), Candidate("D"), Candidate("B"), Candidate("A"))
+  val expectedRandomBallotWinnerList6 = List(Candidate("D"), Candidate("E"), Candidate("C"), Candidate("B"))
 
 
   "RandomBallot Test " should {

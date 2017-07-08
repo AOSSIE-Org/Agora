@@ -214,6 +214,12 @@ object Main extends RegexParsers {
           r.writeWinners(winnersfile)
         }
 
+        case "RandomBallot" => {
+          var r = RandomBallotMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method Random Ballot is not implemented yet.")
+          r.writeWinners(winnersfile)
+        }
+
         case "Test" => {
           Test.testSDResolution
         }
