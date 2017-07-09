@@ -12,7 +12,7 @@ class BaldwinTest extends Specification{
 
   "Baldwin Test " should {
 
-    "verify result" in { baldwinVerification("13-example.txt") shouldEqual expectedBaldwinWinnerList }
+    "verify result" in { baldwinVerification("13-example.e") shouldEqual expectedBaldwinWinnerList }
   }
 
   def baldwinVerification(electionFile: String): List[Candidate] = {
