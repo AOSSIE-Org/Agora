@@ -10,10 +10,10 @@ class InstantExhaustiveBallotTest extends Specification {
 
   "InstantExhaustiveBallot Test " should {
 
-    "verify result" in { InstantExhaustiveBallotVerification("14-example.e", "14-candidates.txt") shouldEqual expectedInstantExhaustiveBallotWinnerList }
+    "verify result" in { instantExhaustiveBallotVerification("14-example.e", "14-candidates.txt") shouldEqual expectedInstantExhaustiveBallotWinnerList }
   }
 
-  def InstantExhaustiveBallotVerification(electionFile: String, candidatesFile: String): List[Candidate] = {
+  def instantExhaustiveBallotVerification(electionFile: String, candidatesFile: String): List[Candidate] = {
 
     val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
     val election =  PreferencesParser.read("../Agora/files/Examples/" + electionFile)
