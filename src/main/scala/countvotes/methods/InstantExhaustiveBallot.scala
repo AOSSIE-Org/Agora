@@ -1,5 +1,8 @@
 package countvotes.methods
 
+/**
+  * https://en.wikipedia.org/wiki/Exhaustive_ballot
+  */
 
 import countvotes.structures._
 import countvotes.algorithms._
@@ -7,34 +10,17 @@ import countvotes.algorithms._
 
 import countvotes.methods.VoteCountingMethod
 
-object ExhaustiveBallot extends VoteCountingMethod[WeightedBallot] {
+object InstantExhaustiveBallot extends VoteCountingMethod[WeightedBallot] {
 
   protected val result: Result = new Result
   protected val report: Report[WeightedBallot] = new Report[WeightedBallot]
 
-  def exclude(election: Election[WeightedBallot],
-              candidate: Candidate): (Election[WeightedBallot], Set[WeightedBallot] ) = {
-    var list: Election[WeightedBallot]  = Nil
-    var setExhausted: Set[WeightedBallot] = Set()
-    for (b <- election if !b.preferences.isEmpty) {
-      if (b.preferences.head == candidate ) {
-        if (b.preferences.tail.nonEmpty) {
-          list = WeightedBallot(b.preferences.tail,  b.id,  b.weight)::list
-        }
-        else {
-          setExhausted += b
-        }
-      }
-      else {
-        list = WeightedBallot(b.preferences.head :: b.preferences.tail filter {
-          _ != candidate
-        }, b.id, b.weight) :: list
-      }
+  def exclude(election: Election[WeightedBallot], candidate: Candidate): Election[WeightedBallot] = {
+    election map { b =>
+      val newPrefs = b.preferences filter { _ != candidate}
+      WeightedBallot(newPrefs, b.id, b.weight)
     }
-
-    (list, setExhausted)
   }
-
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int):   Report[WeightedBallot]  = {
@@ -61,14 +47,13 @@ object ExhaustiveBallot extends VoteCountingMethod[WeightedBallot] {
 
   override def winners(election: Election[WeightedBallot], ccandidates: List[Candidate],  numVacancies: Int): List[(Candidate, Rational)] = {
 
-    val tls = totals(election,ccandidates)
-    if(tls.size>2){
-      val losingCand =  tls.toList.sortWith(_._2>_._2).reverse.head
-      //println(losingCand)
-      val newElection = exclude(election,losingCand._1)._1
-      winners(newElection, ccandidates.filterNot(x => x == losingCand._1), numVacancies)
+    val ct = totals(election,ccandidates)
+    if(ct.size>2){
+      val losingCand =  ct.toList.sortWith(_._2<_._2).head
+      val newElection = exclude(election, losingCand._1)
+      winners(newElection, ccandidates.filter( _ != losingCand._1), numVacancies)
     } else {
-      tls.toList.sortWith(_._2>_._2).head::List()
+      ct.toList.sortWith(_._2>_._2).head::List()
     }
   }
 }
