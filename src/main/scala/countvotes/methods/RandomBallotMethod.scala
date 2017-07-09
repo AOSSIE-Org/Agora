@@ -39,13 +39,13 @@ object RandomBallotMethod extends VoteCountingMethod[WeightedBallot] with LazyLo
     val totalVoters = Election.totalWeightedVoters(election)
 
     val random = seed match {
-      case Some(seed) => new Random(seed).nextInt(totalVoters.toInt)
-      case None => new Random().nextInt(totalVoters.toInt)
+      case Some(seed) => new Random(seed).nextDouble()
+      case None => new Random().nextDouble()
     }
 
     val cumulative = election.map(_.weight).scanLeft(Rational(0, 1))(_ + _)
 
-    val dictator = cumulative.lastIndexWhere(_ <= random)
+    val dictator = cumulative.lastIndexWhere(_.toDouble <= random * totalVoters.toDouble)
 
     election(dictator).preferences.take(numVacancies).map(c => (c, Rational(0, 1)))
 
