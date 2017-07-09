@@ -1,45 +1,45 @@
 package performance
-import countvotes.methods.NansonRuleMethod
+import countvotes.methods.BaldwinMethod
 import countvotes.structures.WeightedBallot
 import org.scalameter.api._
 
 /**
   * Created by deepeshpandey on 13/05/17.
   */
-trait NansonRegression extends RuntimeRegression {
+trait BaldwinRegression extends RuntimeRegression {
 
-  override  def votingMethodName(): String = "Nanson"
+  override  def votingMethodName(): String = "Baldwin"
 
   override  def votingMethod(election: List[WeightedBallot]): Unit = {
 
-    NansonRuleMethod.winners(election, randomPreference(), 1)
+    BaldwinMethod.winners(election, randomPreference(), 1)
   }
 
 }
 
-trait NansonMemoryRegression extends MemoryRegression {
+trait BaldwinMemoryRegression extends MemoryRegression {
 
-  override def votingMethodName(): String = "Nanson"
+  override def votingMethodName(): String = "Baldwin"
 
   override def votingMethod(election: List[WeightedBallot]): Unit = {
-    NansonRuleMethod.winners(election, randomPreference(), 1)
+    BaldwinMethod.winners(election, randomPreference(), 1)
   }
 
 }
 
-object NansonRegressionTest extends Bench.Group {
+object BaldwinRegressionTest extends Bench.Group {
 
-  //  perform regression for Nanson method
+  //  perform regression for Baldwin method
   performance of "memory" config(
-    reports.resultDir -> "target/benchmarks/nanson/memory"
+    reports.resultDir -> "target/benchmarks/baldwin/memory"
     ) in {
-    include(new NansonMemoryRegression {})
+    include(new BaldwinMemoryRegression {})
   }
 
   performance of "running time" config(
-    reports.resultDir -> "target/benchmarks/nanson/time"
+    reports.resultDir -> "target/benchmarks/baldwin/time"
     ) in {
-    include(new NansonRegression {})
+    include(new BaldwinRegression {})
   }
 
 }

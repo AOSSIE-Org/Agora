@@ -4,8 +4,11 @@ import countvotes.structures._
 
 import collection.mutable.{HashMap => Map}
 import scala.collection.mutable
+import countvotes.methods.BaldwinMethod.bordaScores
 
-
+/**
+  * https://en.wikipedia.org/wiki/Nanson%27s_method
+  */
 object NansonMethod extends VoteCountingMethod[WeightedBallot] {
 
   private val result: Result = new Result
@@ -28,44 +31,17 @@ object NansonMethod extends VoteCountingMethod[WeightedBallot] {
     report
   }
 
-  override def totals(election: Election[WeightedBallot], candidates: List[Candidate]): Map[Candidate, Rational] = {
-    val m = new Map[Candidate, Rational]
-
-    for (b <- election if !b.preferences.isEmpty) {
-      // need to take the size of the list first and then calculate the borda scores
-      var bordaCounter = candidates.length
-
-      b.preferences.filter(candidate => candidates.contains(candidate)).map(candidate => {
-        m(candidate) = m.getOrElse(candidate, new Rational(0, 1)) + (bordaCounter - 1) * b.weight.numerator.toInt
-        bordaCounter -= 1
-      })
-    }
-    m
-  }
-
-  def average(totals: Map[Candidate, Rational], candidates: List[Candidate]): Rational = {
-    var totalScore = Rational(0, 1)
-    for (c <- candidates) {
-      totalScore = totalScore + totals(c)
-    }
-    var averageScore = totalScore / Rational(candidates.length)
-    averageScore
-  }
-
   def winners(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int):
   List[(Candidate, Rational)] = {
-    
 
     candidates.length match {
 
-      case 1 => totals(election, candidates).toList
+      case 1 => bordaScores(election, candidates).toList
 
       case len if (len > 1) => {
-        var tls = totals(election, candidates)
-        var averageScore = average(tls,candidates)
-        println(tls)
-        println(averageScore)
-        winners(election, candidates.filter(x => tls(x) > averageScore), numVacancies)
+        var cbs = bordaScores(election, candidates) //borda scores of candidates
+        val average = (Rational(0,1) /: candidates)(_ + cbs(_)) / Rational(candidates.length)
+        winners(election, candidates.filter(x => cbs(x) > average), numVacancies)
       }
     }
   }
