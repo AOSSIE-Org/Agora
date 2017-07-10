@@ -16,7 +16,7 @@ class CoombTest extends Specification {
   "Coomb Test" should {
     "verify result" in {
       coombMethodVerification("14-example.e", "14-candidates.txt") shouldEqual expectedCoombWinnerList
-      coombMethodVerification("21-example.e", "21-candidates.txt") shouldEqual expectedCoombWinnerList1
+      coombMethodVerification("23-example.e", "23-candidates.txt") shouldEqual expectedCoombWinnerList1
     }
   }
 
