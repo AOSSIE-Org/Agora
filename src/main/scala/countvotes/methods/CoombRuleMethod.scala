@@ -36,37 +36,34 @@ object CoombRuleMethod extends VoteCountingMethod[WeightedBallot] with LazyLoggi
     logger.info("computing coomb winner")
 
     val firstRankedMap = new MMap[Candidate, Rational]
-    val lastRankedMap = new MMap[Candidate, Rational]
-    val totalVoters = Election.totalWeightedVoters(election)
 
     // check if there is a majority winner
 
-    for (e <- election if e.preferences.nonEmpty) {
+    for (b <- election if b.preferences.nonEmpty) {
 
-      val firstRankedCandidate = e.preferences.find(c => ccandidates.contains(c))
-
-      firstRankedCandidate match {
-        case Some(candidate) => firstRankedMap(candidate) = firstRankedMap.getOrElse(candidate, Rational(0, 1)) + e.weight
+        b.preferences.find(c => ccandidates.contains(c)) match {
+        case Some(candidate) => firstRankedMap(candidate) = firstRankedMap.getOrElse(candidate, Rational(0, 1)) + b.weight
         case None => {}
       }
     }
 
-    if(firstRankedMap.maxBy(_._2)._2 > Rational(1, 2) * totalVoters) {
+    if(firstRankedMap.maxBy(_._2)._2 > Rational(1, 2) * Election.totalWeightedVoters(election)) {
 
       List(firstRankedMap.maxBy(_._2))
 
     } else {
       // winner not found create the last ranked map and filter the highest last ranked candidate
 
-      for (e <- election if e.preferences.nonEmpty) {
-        val lastRankedCandidate = e.preferences.reverseIterator.find(c => ccandidates.contains(c))
+      val lastRankedMap = new MMap[Candidate, Rational]
+      for (b <- election if b.preferences.nonEmpty) {
 
-        lastRankedCandidate match {
-          case Some(candidate) => lastRankedMap(candidate) = lastRankedMap.getOrElse(candidate, Rational(0, 1)) + e.weight
+          b.preferences.reverseIterator.find(c => ccandidates.contains(c)) match {
+          case Some(candidate) => lastRankedMap(candidate) = lastRankedMap.getOrElse(candidate, Rational(0, 1)) + b.weight
           case None => {}
         }
 
       }
+
       winners(election, ccandidates.filter {_ != lastRankedMap.maxBy(_._2)._1}, numVacancies)
     }
 
