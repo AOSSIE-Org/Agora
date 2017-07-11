@@ -1,5 +1,8 @@
 package countvotes.methods
 
+/**
+  * https://en.wikipedia.org/wiki/Preferential_block_voting
+  */
 
 import countvotes.structures._
 import countvotes.algorithms._
@@ -14,7 +17,7 @@ import java.io._
 
 import countvotes.methods.VoteCountingMethod
 
-object PreferentialBlockvoting1 extends VoteCountingMethod[WeightedBallot] {
+object PreferentialBlockvoting extends VoteCountingMethod[WeightedBallot] {
 
   protected val result: Result = new Result
   protected val report: Report[WeightedBallot] = new Report[WeightedBallot]
@@ -50,29 +53,29 @@ object PreferentialBlockvoting1 extends VoteCountingMethod[WeightedBallot] {
     var vacancies = numVacancies
     var ccandidates1 = ccandidates
     while (vacancies != 0) {
-      var tls = totals1(election, ccandidates1)
-      var tls1: List[(Candidate, Rational)] = tls.toList.sortWith(_._2 > _._2)
-      if (tls1.head._2 > majorityThreshold * election.length && ccandidates1.length > vacancies) {
-        winnerlist = (tls1.head._1, tls1.head._2) :: winnerlist
-        vacancies = vacancies - 1
-        ccandidates1 = ccandidates1.filter(_ == tls.head._1)
+      val ct = totals1(election, ccandidates1).toList.sortWith(_._2 > _._2)
+      if (ct.head._2 > majorityThreshold * election.length && ccandidates1.length > vacancies) {
+        winnerlist = (ct.head._1, ct.head._2) :: winnerlist
+        vacancies -= 1
+        ccandidates1 = ccandidates1.filter(_ != ct.head._1)
       } else if (ccandidates1.length == vacancies) {
-        winnerlist = tls1 ::: winnerlist
+        winnerlist = ct ::: winnerlist
         vacancies = 0
       } else {
-        ccandidates1 = ccandidates1.filter(_ != tls1.reverse.head._1)
+        ccandidates1 = ccandidates1.filter(_ != ct.reverse.head._1)
       }
     }
     winnerlist
   }
 
   def totals1(election: Election[WeightedBallot], candidates: List[Candidate]): MMap[Candidate, Rational] = {
-    var mp = new MMap[Candidate, Rational]
-
-    for (c <- candidates) mp(c) = 0
-
+    val mp = new MMap[Candidate, Rational]
     for (b <- election if !b.preferences.isEmpty) {
-      b.preferences.find(m => candidates.contains(m)).foreach(m => mp(m) = mp(m) + 1)
+      val preferredCandidate = b.preferences.find(candidates.contains(_))
+      preferredCandidate match {
+        case Some(c) => mp(c) = b.weight + (mp.getOrElse(c, 0))
+        case _ =>
+      }
     }
     mp
   }

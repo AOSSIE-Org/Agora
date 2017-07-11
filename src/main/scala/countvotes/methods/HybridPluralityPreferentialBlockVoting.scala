@@ -1,5 +1,8 @@
 package countvotes.methods
 
+/**
+  * https://en.wikipedia.org/wiki/Preferential_block_voting
+  */
 
 import countvotes.structures._
 import countvotes.algorithms._
@@ -13,8 +16,9 @@ import scala.util.Sorting
 import java.io._
 
 import countvotes.methods.VoteCountingMethod
+import countvotes.methods.PreferentialBlockvoting.totals1
 
-object PreferentialBlockvoting2 extends VoteCountingMethod[WeightedBallot] {
+object HybridPluralityPreferentialBlockVoting extends VoteCountingMethod[WeightedBallot] {
 
   protected val result: Result = new Result
   protected val report: Report[WeightedBallot] = new Report[WeightedBallot]
