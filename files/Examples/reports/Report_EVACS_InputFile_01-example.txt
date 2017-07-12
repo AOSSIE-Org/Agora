@@ -1,5 +1,0 @@
-Count,A,B,C,Initiator,Action,Winners,~ Loss by Fraction,N Exhausted Ballots,~ Exhausted Votes,N Ignored Ballots,~ Ignored Votes
-0,4,3,3,no initiator,Input,,0, ,
-1,4,0,3,B,Exclusion,,0,0,0,
-2,4,,0,C,Exclusion,,0,0,0,
-3,,,,no initiator,VictoryWithoutQuota,A (4); ,0, ,
