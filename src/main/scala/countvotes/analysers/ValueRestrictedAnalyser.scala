@@ -1,6 +1,5 @@
 package countvotes.analysers
 
-import collection.mutable.{ListBuffer, HashMap => Map}
 import countvotes.structures.{Candidate, Election, Rational, WeightedBallot}
 
 /**
@@ -19,7 +18,7 @@ object ValueRestrictedAnalyser extends PreferenceAnalysisMethod[WeightedBallot] 
     * @param ccandidates => candidates list
     * @return
     */
-  def analyse(election: Election[WeightedBallot], ccandidates: List[Candidate]): Unit = {
+  override def analyse(election: Election[WeightedBallot], ccandidates: List[Candidate]): Boolean = {
 
 
     require(election forall (b => b.preferences.length == ccandidates.length))
@@ -39,8 +38,8 @@ object ValueRestrictedAnalyser extends PreferenceAnalysisMethod[WeightedBallot] 
     }))
 
     failingTriplet match {
-      case Some(list) => println("Preference profile is not value restricted for the triplet " + list.mkString(" , "))
-      case None => println("Preference profile is value restricted")
+      case Some(list) => println("Preference profile is not value restricted for the triplet " + list.mkString(" , ")); false
+      case None => println("Preference profile is value restricted"); true
     }
 
     // will compare the efficiency once a bigger preference profile is found
