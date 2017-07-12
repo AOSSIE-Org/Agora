@@ -13,6 +13,8 @@ object DodgsonMethod extends VoteCountingMethod[WeightedBallot] {
 
   def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int): Report[WeightedBallot] = {
 
+    require(election forall(b => b.weight.denominator == 1) )
+
     print("\n INPUT ELECTION: \n")
     printElection(election)
 
@@ -25,6 +27,7 @@ object DodgsonMethod extends VoteCountingMethod[WeightedBallot] {
 
   override def winners(e: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 
+    // find flip vector from min sum to max sum which satisfies condorcet condition
     val minDodgsonFlip = List.fill(Election.totalWeightedVoters(e).toInt)(0 to ccandidates.length)
       .flatten
       .combinations(Election.totalWeightedVoters(e).toInt)
@@ -33,6 +36,7 @@ object DodgsonMethod extends VoteCountingMethod[WeightedBallot] {
       .sortBy(_.sum)
       .find(list => getCondorcetWinnerIfExist(list, ccandidates, e).nonEmpty)
 
+    // find the dodgson winner based on this flip vector
     minDodgsonFlip match {
       case Some(list) => getCondorcetWinnerIfExist(list, ccandidates, e) match {
         case Some(candidate) => List((candidate, Rational(list.sum, 1)))
@@ -53,23 +57,26 @@ object DodgsonMethod extends VoteCountingMethod[WeightedBallot] {
     dodgsonWinner
   }
 
+  // returns an array where the value at index i represents total votes to param candidate against candidates(i)
+  // this is all required to calculate if the param candidate is condorcet winner or not
   def getCandidateMajorityArray(election: Election[WeightedBallot], candidate: Candidate, flipVector: List[Int],
                                 candidates: List[Candidate]): Option[Array[Int]] = {
 
-    val dispersedElection = getDispersedElection(election)
+    val dispersedElection = dispersed(election)
 
     assert(dispersedElection.length == flipVector.length)
 
-    val candidateMajorityMatrix = Array.ofDim[Int](candidates.size)
+    val candElectionResponse = Array.ofDim[Int](candidates.size)
 
-    val succesful = dispersedElection zip flipVector forall (ballotswithFlip => {
+    val succesful = dispersedElection zip flipVector forall (ballotsWithFlip => {
 
-      if (isFlippable(candidate, ballotswithFlip._2, ballotswithFlip._1.preferences)) {
+      if (isFlippable(candidate, ballotsWithFlip._2, ballotsWithFlip._1.preferences)) {
 
-        val prefs = ballotswithFlip._1.preferences
+        // no need to generate new list with updated positions just compare using indices
+        val prefs = ballotsWithFlip._1.preferences
         for (cand <- prefs) {
-          if ((prefs.indexOf(cand) >= prefs.indexOf(candidate) - ballotswithFlip._2) && candidate != cand) {
-            candidateMajorityMatrix {candidates.indexOf(cand)} += 1
+          if ((prefs.indexOf(cand) >= prefs.indexOf(candidate) - ballotsWithFlip._2) && candidate != cand) {
+            candElectionResponse {candidates.indexOf(cand)} += 1
           }
         }
         true
@@ -79,14 +86,14 @@ object DodgsonMethod extends VoteCountingMethod[WeightedBallot] {
     })
 
     if (succesful) {
-      Option(candidateMajorityMatrix)
+      Option(candElectionResponse)
     } else {
       None
     }
   }
 
 
-  def getDispersedElection(election: Election[WeightedBallot]): Election[WeightedBallot] = {
+  lazy val dispersed = (election: Election[WeightedBallot]) => {
     for {
       b <- election
       i <- 1 to b.weight.toInt
