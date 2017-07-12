@@ -21,22 +21,37 @@ object ValueRestrictedAnalyser extends PreferenceAnalysisMethod[WeightedBallot] 
     */
   def analyse(election: Election[WeightedBallot], ccandidates: List[Candidate]): Unit = {
 
-    // essentially try to find the triplet for which it fails otherwise just print on terminal
+
+    require(election forall (b => b.preferences.length == ccandidates.length))
+
+    // generate all the triplet of candidates
     val tripletlist = for (i <- ccandidates.indices;
                            j <- i + 1 until ccandidates.length;
                            k <- j + 1 until ccandidates.length)
       yield List(ccandidates(i), ccandidates(j), ccandidates(k))
 
 
-    val failingtriplet = tripletlist.takeWhile(triplet => !valueRestrictedTriplet(triplet, election)).take(1)
+    // try to find the failing triplet and print it out
+    val failingTriplet = tripletlist.find(triplet => !triplet.exists(cand => {
+      !election.exists(b => b.preferences.filter(p => triplet.contains(p)).indexOf(cand) == 0) ||
+        !election.exists(b => b.preferences.filter(p => triplet.contains(p)).indexOf(cand) == 1) ||
+        !election.exists(b => b.preferences.filter(p => triplet.contains(p)).indexOf(cand) == 2)
+    }))
 
-    if (failingtriplet.isEmpty) {
-      println("\n\nGiven election data satisfies value-restricted preferences.\n\n")
-    } else {
-      println("\n\nGiven election data does not satisfies value-restricted preferences for the following triplet:\n")
-      println(failingtriplet.flatten.mkString("\n"))
+    failingTriplet match {
+      case Some(list) => println("Preference profile is not value restricted for the triplet " + list.mkString(" , "))
+      case None => println("Preference profile is value restricted")
     }
 
+    // will compare the efficiency once a bigger preference profile is found
+    /*val failingtriplet = tripletlist.find(triplet => !valueRestrictedTriplet(triplet, election))
+
+        if (failingtriplet.isEmpty) {
+          println("\n\nGiven election data satisfies value-restricted preferences.\n\n")
+        } else {
+          println("\n\nGiven election data does not satisfies value-restricted preferences for the following triplet:\n")
+          println(failingtriplet.flatten.mkString("\n"))
+        }*/
   }
 
   /**
@@ -48,19 +63,15 @@ object ValueRestrictedAnalyser extends PreferenceAnalysisMethod[WeightedBallot] 
     */
   def valueRestrictedTriplet(triplet: List[Candidate], election: Election[WeightedBallot]): Boolean = {
 
-    val tripletRankings = Array(Array(0,0,0), Array(0,0,0), Array(0,0,0))
+    val tripletRankings = Array.ofDim[Int](3, 3)
 
     for (b <- election) {
-      b.preferences.filter(c => triplet.contains(c)).zipWithIndex.foreach(c => {
+      b.preferences.filter(triplet.contains(_)).zipWithIndex.foreach(c => {
         tripletRankings {triplet.indexOf(c._1)} {c._2} = 1
       })
     }
 
-    // candidate i has never been ranked j in the entire election
-    val hasAZeroEntry = for (i <- 0 until 3; j <- 0 until 3  if tripletRankings{i}{j} == 0) yield (i,j)
-
-    hasAZeroEntry.size > 0
-
+    tripletRankings.exists(p => p.contains(0))
 
   }
 }
