@@ -57,6 +57,7 @@ object CoombRuleMethod extends VoteCountingMethod[WeightedBallot] with LazyLoggi
       val lastRankedMap = new MMap[Candidate, Rational]
       for (b <- election if b.preferences.nonEmpty) {
 
+          assert(b.preferences.find(c => ccandidates.contains(c)) !=  b.preferences.reverseIterator.find(c => ccandidates.contains(c)))
           b.preferences.reverseIterator.find(c => ccandidates.contains(c)) match {
           case Some(candidate) => lastRankedMap(candidate) = lastRankedMap.getOrElse(candidate, Rational(0, 1)) + b.weight
           case None => {}
