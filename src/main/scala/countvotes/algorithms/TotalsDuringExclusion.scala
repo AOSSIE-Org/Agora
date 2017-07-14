@@ -21,8 +21,9 @@ trait ACTTotalsDuringExclusion extends ACT{
   {
     var numOccurences = 0
     for (b <- election)
-      if (b.preferences.head == step._1 && b.value == step._2)
+      if (b.preferences.head == step._1 && b.value == step._2) {
         numOccurences += 1
+      }
     val total = numOccurences * step._2
     val roundedtotal = BigDecimal(total.numerator / total.denominator).setScale(0, BigDecimal.RoundingMode.DOWN).toInt
     roundedtotal

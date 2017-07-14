@@ -67,7 +67,7 @@ class SimpleSTVMethod extends STV[WeightedBallot]
                 println("Vacancies are not yet filled.")
                 val newElection = surplusesDistribution(election, numVacancies-ws.length)
                 printElection(newElection)
-                winners(newElection, ccandidates.filterNot(ws.contains(_)), numVacancies-ws.length):::ws  
+                winners(newElection, ccandidates.filterNot(ws.contains(_)), numVacancies-ws.length):::ws
                 // TODO: care should be taken that newElection is not empty?!
               }
               case true => ws

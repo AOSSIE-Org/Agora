@@ -1,13 +1,15 @@
 package countvotes.methods
 
+import com.typesafe.scalalogging.{LazyLogging}
 import countvotes.structures.{Candidate, Input, Rational, Report, _}
 import countvotes.structures.{Candidate, Rational, _}
+
 import collection.mutable.{HashMap => Map}
 
 /**
   * Created by deepeshpandey on 07/03/17.
   */
-object BordaRuleMethod extends VoteCountingMethod[WeightedBallot]{
+object BordaRuleMethod extends VoteCountingMethod[WeightedBallot] with LazyLogging{
 
   private val result: Result = new Result
   private val report: Report[WeightedBallot] = new Report[WeightedBallot]
@@ -47,9 +49,12 @@ object BordaRuleMethod extends VoteCountingMethod[WeightedBallot]{
   def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int ):
   List[(Candidate,Rational)] = {
 
+
+    logger.info("Borda rule computation called")
+
     val tls = totals(election, ccandidates)
 
-    tls.toList.sortWith(_._2 > _._2)
+    tls.toList.sortWith(_._2 > _._2).take(numVacancies)
 
   }
 

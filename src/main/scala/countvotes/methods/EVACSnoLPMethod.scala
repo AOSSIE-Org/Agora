@@ -1,4 +1,3 @@
-
 package countvotes.methods
 
 import countvotes.structures._
@@ -13,8 +12,6 @@ import collection.breakOut
 import scala.util.Random
 import scala.util.Sorting
 import java.io._
-
-
 
 class EVACSnoLPMethod extends ACT
  with TransferValueWithDenominatorWithNumOfAllContinuingBallotsOrOne // instead of TransferValueWithDenominatorWithNumOfMarkedContinuingBallotsOrOne

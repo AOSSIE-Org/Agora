@@ -1,4 +1,3 @@
-
 package countvotes.methods
 
 
@@ -13,8 +12,6 @@ import collection.breakOut
 import scala.util.Random
 import scala.util.Sorting
 import java.io._
-
-import countvotes.methods.VoteCountingMethod
 
 object ApprovalRule extends VoteCountingMethod[WeightedBallot] {
 
