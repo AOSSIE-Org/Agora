@@ -14,10 +14,10 @@ class MinimaxCondorcetTest extends Specification{
 
   "MinimaxCondorcet Test " should {
 
-    "verify result" in { kemenyYoungMethodVerification("14-example.txt") shouldEqual expectedKemenyYoungWinnerList }
+    "verify result" in { minimaxCondorcetMethodVerification("14-example.e", "14-candidates.txt") shouldEqual expectedKemenyYoungWinnerList }
   }
 
-  def kemenyYoungMethodVerification(electionFile: String): List[Candidate] = {
+  def minimaxCondorcetMethodVerification(electionFile: String, candidatesFile: String): List[Candidate] = {
 
     val candidates = CandidatesParser.read("../Agora/files/Examples/14-candidates.txt")
     val election =  PreferencesParser.read("../Agora/files/Examples/" + electionFile)

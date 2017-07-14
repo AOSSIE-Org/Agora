@@ -225,6 +225,12 @@ object Main extends RegexParsers {
           println(" Scrutiny table for method Random Ballot is not implemented yet.")
           r.writeWinners(winnersfile)
         }
+        case "MinimaxCondorcet" => {
+          var r = MinimaxCondorcetMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method Random Ballot is not implemented yet.")
+          r.writeWinners(winnersfile)
+
+        }
 
         case "Test" => {
           Test.testSDResolution
