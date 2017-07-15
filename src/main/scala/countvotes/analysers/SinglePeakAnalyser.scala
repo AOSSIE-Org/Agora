@@ -6,81 +6,182 @@ import scala.annotation.tailrec
 import scala.collection.mutable.ListBuffer
 
 /**
-  * Created by deepeshpandey on 23/06/17.
+  * TODO: find online references of the algorithm described in prof. felix class
+  * when preferences are single peaked there is always a unique condorcet winner
   */
 object SinglePeakAnalyser extends PreferenceAnalysisMethod[WeightedBallot] {
 
-  def analyse(e: Election[WeightedBallot], ccandidates: List[Candidate]): Unit = {
+  def analyse(election: Election[WeightedBallot], candidates: List[Candidate]): Boolean = {
 
+    require(election.forall(b => b.preferences.size == candidates.size))
 
-    def singlePeakRecursiveUtil(leftList: ListBuffer[Candidate], rightList: ListBuffer[Candidate]): List[Candidate] = {
-      if ( leftList.size + rightList.size == ccandidates.size) {
-        return (leftList ++ rightList).toList
-      }
-
-      val B = e.map(b => b.preferences.reverse).flatMap(l => (l.filter(c => !leftList.contains(c) && !rightList.contains(c))).take(1)).toSet
-
-      // check if size of B is 1 and all candidates are placed in linear order
-      if (B.size == 1 && (leftList ++ rightList).size == ccandidates.size - 1) {
-        leftList.insert(leftList.size, B.head)
-        return singlePeakRecursiveUtil(leftList, rightList)
-      }
-
-      if (B.size > 2 || B.isEmpty) {
-        Nil
-      } else {
-        if (!(leftList.toList.isEmpty && rightList.toList.isEmpty)) {
-
-          val l = leftList.toList.last
-          val r = rightList.toList.head
-
-          val L = e.map(b => b.preferences).map(p => B.toList.filter(x => p.reverse.filter(c => B.contains(c)).head == x && p.indexOf(r) < p.indexOf(x) && (p.indexOf(x) < p.indexOf(l)))).flatten.toSet
-          val R = e.map(b => b.preferences).map(p => B.toList.filter(x => p.reverse.filter(c => B.contains(c)).head == x && p.indexOf(l) < p.indexOf(x) && (p.indexOf(x) < p.indexOf(r)))).flatten.toSet
-
-          if (L.size < 2 && R.size < 2 && L.intersect(R).isEmpty) {
-            L.size match {
-              case 0 => if ((B -- R).nonEmpty) leftList.insert(leftList.size, (B -- R).head)
-              case 1 => leftList.insert(leftList.toList.size, L.head)
-            }
-
-            R.size match {
-              case 0 => (B -- L).size match {
-                case 1 => if (L.nonEmpty) rightList.insert(0, (B -- L).head)
-                case 2 => {
-                  rightList.insert(0, (B -- L).tail.head)
-                }
-                case _ => {}
-              }
-              case 1 => rightList.insert(0, R.head)
-            }
-            singlePeakRecursiveUtil(leftList, rightList)
-          } else {
-            Nil
-          }
-
+    val singlePeakOrdering = getSinglePeakAxis(election, candidates)
+     singlePeakOrdering match {
+      case Some(axis) => {
+        if (checkSinglePeakAxis(axis, election)) {
+          println("Single Peaked with respect to ", axis.mkString(" > "))
+          true
         } else {
-          if (B.size == 2) {
-            leftList.insert(leftList.size, B.head)
-            rightList.insert(0, B.last)
-          } else {
-            leftList.insert(0, B.head)
-          }
-          return singlePeakRecursiveUtil(leftList, rightList)
+          println("\n\nNot Single Peaked!\n\n")
+          false
         }
       }
+      case None => {
+        println("\n\n Not Single Peaked!!!")
+        false
+      }
     }
+  }
 
-    val singlePeakLinearOrder = singlePeakRecursiveUtil(ListBuffer(), ListBuffer())
+  /**
+    * using the recursive util - singlePeakAxisUtil it returns the linear ordering if found or None if not
+    * @param election
+    * @param candidates
+    * @return
+    */
+  def getSinglePeakAxis(election: Election[WeightedBallot], candidates: List[Candidate]): Option[List[Candidate]] = {
 
-    if (singlePeakLinearOrder.size == ccandidates.size) {
-      println("Preference profile is single-peaked with respect to the following order.\n")
-      println(singlePeakLinearOrder.mkString(" "))
+    val B = election.map(_.preferences.reverseIterator.toList.head).toSet
+
+    if (B.size > 2) {
+      None
+    } else {
+      val left = new ListBuffer[Candidate]
+      val right = new ListBuffer[Candidate]
+      B.size match {
+        case 2 => {
+          left.insert(0, B.toList.head)
+          right.insert(0, B.toList.last)
+        }
+        case 1 =>
+          left.insert(0, B.toList.head)
+      }
+      singlePeakAxisUtil(left, right, election, candidates.filter(!B.contains(_)))
     }
-    else {
-      println("Preference profile is not single peaked \n\n")
-
-    }
-
 
   }
+
+
+  /**
+    * recursive utility which finds the last ranked candidates and set L and set R and places those candidates in left/right lists
+    * and then recurse
+    * @param left
+    * @param right
+    * @param election
+    * @param candidates
+    * @return
+    */
+  def singlePeakAxisUtil(left: ListBuffer[Candidate], right: ListBuffer[Candidate], election: Election[WeightedBallot],
+                         candidates: List[Candidate]): Option[List[Candidate]] = {
+
+    // if only one candidate needs to be placed
+    if (candidates.size == 1) {
+      left.insert(left.size, candidates.head)
+      Option((left ++ right).toList)
+    }
+
+    val B = election.filter(b => b.preferences.nonEmpty && b.preferences.exists(c => !(left ++ right).contains(c)))
+      .flatMap(_.preferences.reverseIterator.filter(c => !(left ++ right).contains(c)).take(1))
+      .toSet
+
+    if (B.isEmpty) {
+      Option((left ++ right).toList)
+    } else {
+
+      val l = if (left.nonEmpty) Option(left.last) else None
+      val r = if (right.nonEmpty) Option(right.head) else None
+
+      val L = B.filter(x => getNrxl(election, x, r, l, candidates))
+      val R = B.filter(x => getNrxl(election, x, l, r, candidates))
+
+      if (B.size <= 2 && L.size <= 1 && R.size <= 1 && L.intersect(R).isEmpty) {
+
+        val leftCandidate = if (L.nonEmpty) L.toList.headOption else (B -- R).toList.headOption
+        val rightCandidate = if (R.nonEmpty) R.toList.headOption else (B -- L).toList.lastOption
+
+        leftCandidate match {
+          case Some(candidate) => left.insert(left.size, candidate)
+          case None => {}
+        }
+
+        rightCandidate match {
+          case Some(candidate) => right.insert(0, candidate)
+          case None => {}
+        }
+
+        singlePeakAxisUtil(left, right, election, candidates.filter(!B.contains(_)))
+
+      } else {
+        None
+      }
+    }
+  }
+
+  /**
+    * return true if there are voters who have x as last ranked candidate also have a preference l > x > r
+    * @param election
+    * @param x
+    * @param l
+    * @param r
+    * @param candidates
+    * @return
+    */
+  def getNrxl(election: Election[WeightedBallot], x: Candidate, l: Option[Candidate], r: Option[Candidate],
+              candidates: List[Candidate]): Boolean = {
+
+    val xLastRankedN = election.map(_.preferences)
+      .filter(_.reverseIterator.filter(c => candidates.contains(c)).toList.headOption == Option(x))
+
+    (l, r) match {
+      case (left, right) if left.nonEmpty && right.nonEmpty => {
+            val res = xLastRankedN.exists(prefs => prefs.indexOf(left.get) < prefs.indexOf(x) && prefs.indexOf(x) < prefs.indexOf(right.get))
+        res
+      }
+      case (left, right) if left.isEmpty && right.nonEmpty => {
+        val y = xLastRankedN.exists(prefs => prefs.indexOf(x) < prefs.indexOf(right.get))
+        y
+      }
+      case (left, right) if left.nonEmpty && right.isEmpty => {
+        val z = xLastRankedN.exists(prefs => prefs.indexOf(left.get) < prefs.indexOf(x))
+        z
+      }
+    }
+  }
+
+
+  /**
+    * this checks if calculated axis is compatible with all the ballots
+    * as per definition 2 of http://www.lamsade.dauphine.fr/~lang/papers/elo-ecai08.pdf
+    * @param axis - single peak ordering
+    * @param election - election
+    * @return
+    */
+  def checkSinglePeakAxis(axis: List[Candidate], election : Election[WeightedBallot]): Boolean = {
+
+    election.forall(b => {
+
+      val prefs = b.preferences
+      val peak = b.preferences.head
+
+      prefs.tail.zipWithIndex.forall(c1 => {
+        prefs.tail.zipWithIndex.filter(c => c._2 > c1._2 && {
+          // check if c1 and c2 are on the same side of the axis
+          if (axis.indexOf(prefs.head) < axis.indexOf(c1._1) && axis.indexOf(prefs.head) < axis.indexOf(c._1)
+            || axis.indexOf(prefs.head) > axis.indexOf(c1._1) && axis.indexOf(prefs.head) > axis.indexOf(c._1)) {
+            true
+          } else{
+            false
+          }
+        }).forall(c2 => {
+            if ((axis.indexOf(peak) > axis.indexOf(c1._1) &&  axis.indexOf(c1._1) > axis.indexOf(c2._1)) ||
+              (axis.indexOf(c2._1) > axis.indexOf(c1._1) &&  axis.indexOf(c1._1) > axis.indexOf(peak))) {
+              true
+            } else {
+              false
+            }
+        })
+      })
+    })
+  }
+
 }

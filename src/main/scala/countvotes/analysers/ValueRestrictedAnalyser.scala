@@ -19,7 +19,7 @@ object ValueRestrictedAnalyser extends PreferenceAnalysisMethod[WeightedBallot] 
     * @param ccandidates => candidates list
     * @return
     */
-  def analyse(election: Election[WeightedBallot], ccandidates: List[Candidate]): Unit = {
+  def analyse(election: Election[WeightedBallot], ccandidates: List[Candidate]): Boolean = {
 
     // essentially try to find the triplet for which it fails otherwise just print on terminal
     val tripletlist = for (i <- ccandidates.indices;
@@ -32,9 +32,11 @@ object ValueRestrictedAnalyser extends PreferenceAnalysisMethod[WeightedBallot] 
 
     if (failingtriplet.isEmpty) {
       println("\n\nGiven election data satisfies value-restricted preferences.\n\n")
+      true
     } else {
       println("\n\nGiven election data does not satisfies value-restricted preferences for the following triplet:\n")
       println(failingtriplet.flatten.mkString("\n"))
+      false
     }
 
   }
