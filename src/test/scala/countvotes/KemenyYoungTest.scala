@@ -15,7 +15,7 @@ class KemenyYoungTest extends Specification{
 
   "KemenyYoung Test " should {
 
-    "verify result" in { kemenyYoungMethodVerification("14-example.txt") shouldEqual expectedKemenyYoungWinnerList }
+    "verify result" in { kemenyYoungMethodVerification("14-example.e") shouldEqual expectedKemenyYoungWinnerList }
   }
 
   def kemenyYoungMethodVerification(electionFile: String): List[Candidate] = {
