@@ -1,6 +1,5 @@
 package countvotes.methods
 
-import com.sun.rowset.internal.Row
 import com.typesafe.scalalogging.LazyLogging
 import countvotes.structures._
 
@@ -54,13 +53,13 @@ object UncoveredSetMethod extends VoteCountingMethod[WeightedBallot] with LazyLo
       })
     })
 
-    val uncoveredMatrix = addmatrix(addmatrix(square(ucMatrix, ccandidates.size), ucMatrix), identitiMatrix(ccandidates.size))
+    val uncoveredMatrix = addMatrix(addMatrix(square(ucMatrix, ccandidates.size), ucMatrix), identitiMatrix(ccandidates.size))
 
     uncoveredMatrix.zipWithIndex.filter(row => !row._1.contains(Rational(0, 1)))
       .map(row => (ccandidates(row._2), Rational(0, 1))).toList
   }
 
-  def addmatrix(m1: Array[Array[Rational]], m2: Array[Array[Rational]]): Array[Array[Rational]] ={
+  def addMatrix(m1: Array[Array[Rational]], m2: Array[Array[Rational]]): Array[Array[Rational]] ={
 
     m1.zip(m2).map{rows: (Array[Rational], Array[Rational]) => {
       rows._1.zip( rows._2 ).map{ items:(Rational,Rational) =>
@@ -97,7 +96,6 @@ object UncoveredSetMethod extends VoteCountingMethod[WeightedBallot] with LazyLo
           matrix(i)(j) = matrix(j)(i)
           matrix(i)(j) = temp
         }
-
     matrix
   }
 
