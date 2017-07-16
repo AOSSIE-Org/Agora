@@ -24,9 +24,9 @@ object SmithSetMethod extends VoteCountingMethod[WeightedBallot] {
   }
   override def winners(e: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 
-    val electionResponse = getPairwiseComparison(e, ccandidates)
+    val pairWiseComp = getPairwiseComparison(e, ccandidates)
 
-    val relationMatrix = getRelationMatrix(e, ccandidates, electionResponse)
+    val relationMatrix = getRelationMatrix(e, ccandidates, pairWiseComp)
 
     val maximalSet = floydWarshallMaximal(relationMatrix, ccandidates)
 
@@ -34,24 +34,14 @@ object SmithSetMethod extends VoteCountingMethod[WeightedBallot] {
 
   }
 
-  def getRelationMatrix(election: Election[WeightedBallot], ccandidates: List[Candidate], eResponseMap: MatrixD2): Array[Array[Boolean]] = {
+  def getRelationMatrix(election: Election[WeightedBallot], ccandidates: List[Candidate], pairWiseComp: MatrixD2): Array[Array[Boolean]] = {
 
-    val relationMatrix = BaseMatrix[Boolean](ccandidates.size, ccandidates.size){(i: Int, j: Int) => {
-      false
-    }}
+    val relationMatrix = BaseMatrix[Boolean](ccandidates.size, ccandidates.size){(i: Int, j: Int) => false}
 
-    ccandidates.foreach(c1 => {
-      ccandidates.foreach(c2 => {
-        if (c1 != c2) {
-
-          val c1c2PairValue = eResponseMap{ccandidates.indexOf(c1)}{ccandidates.indexOf(c2)}
-          val c2c1PairValue = eResponseMap{ccandidates.indexOf(c2)}{ccandidates.indexOf(c1)}
-
-          if (c1c2PairValue >= c2c1PairValue) {
-            relationMatrix{ccandidates.indexOf(c1)}{ccandidates.indexOf(c2)} = true
-          } else {
-            relationMatrix{ccandidates.indexOf(c1)}{ccandidates.indexOf(c2)} = false
-          }
+    ccandidates.zipWithIndex.foreach(c1 => {
+      ccandidates.zipWithIndex.foreach(c2 => {
+        if (c1._2 != c2._2) {
+          relationMatrix{c1._2}{c2._2} = pairWiseComp{c1._2}{c2._2} >= pairWiseComp{c2._2}{c1._2}
         }
       })
     })
@@ -69,10 +59,7 @@ object SmithSetMethod extends VoteCountingMethod[WeightedBallot] {
     for (i <- ccandidates.indices)
       for (j <- ccandidates.indices)
         if (i != j) {
-          if (relations{i}{j})
-            hasPath{i}{j} = true
-          else
-            hasPath{i}{j} = false
+            hasPath{i}{j} = relations{i}{j}
         }
 
     // expand consideration to paths that have intermediate nodes from 1 to k
