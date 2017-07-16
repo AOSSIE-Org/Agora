@@ -12,7 +12,7 @@ class UnconveredSetTest extends Specification{
 
   "UnconveredSet Test " should {
 
-    "verify result" in { unconveredSetMethodVerification("21-example.e", "21-candidates.txt") shouldEqual expectedUncoveredSet }
+    "verify result" in { unconveredSetMethodVerification("29-example.e", "29-candidates.txt") shouldEqual expectedUncoveredSet }
   }
 
   def unconveredSetMethodVerification(electionFile: String, candidatesFile: String): Set[Candidate] = {

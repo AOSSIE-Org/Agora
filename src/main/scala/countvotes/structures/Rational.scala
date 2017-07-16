@@ -58,7 +58,7 @@ class Rational(n: BigInt, d: BigInt) {
 
   def toInt: Int = (numerator/denominator ).toInt
 
-  def toDouble: Double = (numerator/denominator ).toDouble
+  def toDouble: Double = (numerator.toDouble/denominator.toDouble )
 }
 
 object Rational{
