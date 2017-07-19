@@ -53,7 +53,7 @@ object UncoveredSetMethod extends VoteCountingMethod[WeightedBallot] with LazyLo
       })
     })
 
-    val uncoveredMatrix = addMatrix(addMatrix(square(ucMatrix, ccandidates.size), ucMatrix), identitiMatrix(ccandidates.size))
+    val uncoveredMatrix = addMatrix(addMatrix(square(ucMatrix, ccandidates.size), ucMatrix), identityMatrix(ccandidates.size))
 
     uncoveredMatrix.zipWithIndex.filter(row => !row._1.contains(Rational(0, 1)))
       .map(row => (ccandidates(row._2), Rational(0, 1))).toList
@@ -76,7 +76,7 @@ object UncoveredSetMethod extends VoteCountingMethod[WeightedBallot] with LazyLo
     squredMatrix
   }
 
-  def identitiMatrix(size: Int): Array[Array[Rational]] = BaseMatrix[Rational](size, size){(i: Int, j: Int) => {
+  def identityMatrix(size: Int): Array[Array[Rational]] = BaseMatrix[Rational](size, size){ (i: Int, j: Int) => {
     if (i == j) {
       Rational(1,1)
     } else {
