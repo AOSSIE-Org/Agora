@@ -13,7 +13,7 @@ class InstantRunoff2RoundTest extends Specification {
 
   "Runoff2Round Test " should {
 
-    "verify result" in { runoff2RoundMethodVerification("17-example.txt", "17-candidates.txt") shouldEqual expectedRunoff2RoundMethodWinnerList }
+    "verify result" in { runoff2RoundMethodVerification("17-example.e", "17-candidates.txt") shouldEqual expectedRunoff2RoundMethodWinnerList }
   }
 
   def runoff2RoundMethodVerification(electionFile: String, candidatesFile: String): List[Candidate] = {
