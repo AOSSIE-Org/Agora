@@ -213,6 +213,11 @@ object Main extends RegexParsers {
           println(" Scrutiny table for method Runoff2Round is not implemented yet.")
           r.writeWinners(winnersfile)
         }
+        case "Coomb" => {
+          var r = CoombRuleMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
+          println("Scrutinity table for method Coomb is not implemented yet")
+          r.writeWinners(winnersfile)
+        }
 
         case "Contingent" => {
           var r = ContingentMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)

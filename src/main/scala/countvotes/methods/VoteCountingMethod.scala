@@ -50,7 +50,7 @@ abstract class VoteCountingMethod[B <: Ballot with Weight] {
    set.toList
   }
 
- // just printing in terminal
+  // just printing in terminal
  def printElection(election: Election[B]): Unit = {
     print("\n")
     for (e <- election.sortBy(x => x.id)) {
