@@ -1,12 +1,10 @@
 package countvotes.analysers
 
 import countvotes.structures.{Candidate, Election, WeightedBallot}
-
-import scala.annotation.tailrec
 import scala.collection.mutable.ListBuffer
 
 /**
-  * TODO: find online references of the algorithm described in prof. felix class
+  * Please check the last page of the pdf https://drive.google.com/file/d/0B4uPp6wWiMpSZ2FaTFFneGtJSDg/view
   * when preferences are single peaked there is always a unique condorcet winner
   */
 object SinglePeakAnalyser extends PreferenceAnalysisMethod[WeightedBallot] {
@@ -27,7 +25,7 @@ object SinglePeakAnalyser extends PreferenceAnalysisMethod[WeightedBallot] {
         }
       }
       case None => {
-        println("\n\n Not Single Peaked!!!")
+        println("\n\nNot Single Peaked!\n\n")
         false
       }
     }
@@ -74,45 +72,32 @@ object SinglePeakAnalyser extends PreferenceAnalysisMethod[WeightedBallot] {
   def singlePeakAxisUtil(left: ListBuffer[Candidate], right: ListBuffer[Candidate], election: Election[WeightedBallot],
                          candidates: List[Candidate]): Option[List[Candidate]] = {
 
-    // if only one candidate needs to be placed
-    if (candidates.size == 1) {
-      left.insert(left.size, candidates.head)
-      Option((left ++ right).toList)
-    }
+    candidates.size match {
+      case 0 => {Option((left ++ right).toList)}
+      case 1 => {left.insert(left.size, candidates.head); Option((left ++ right).toList)}
+      case _ => {
+        val B = election.filter(b => b.preferences.nonEmpty && b.preferences.exists(c => !(left ++ right).contains(c)))
+          .flatMap(_.preferences.reverseIterator.filter(c => !(left ++ right).contains(c)).take(1)).toSet
 
-    val B = election.filter(b => b.preferences.nonEmpty && b.preferences.exists(c => !(left ++ right).contains(c)))
-      .flatMap(_.preferences.reverseIterator.filter(c => !(left ++ right).contains(c)).take(1))
-      .toSet
+        val L = B.filter(x => existNrxl(election, x, right.headOption, left.lastOption, candidates))
+        val R = B.filter(x => existNrxl(election, x, left.lastOption, right.headOption, candidates))
 
-    if (B.isEmpty) {
-      Option((left ++ right).toList)
-    } else {
+        if (B.size <= 2 && L.size <= 1 && R.size <= 1 && L.intersect(R).isEmpty) {
 
-      val l = if (left.nonEmpty) Option(left.last) else None
-      val r = if (right.nonEmpty) Option(right.head) else None
+          val leftPlaceCandidate = (B -- R).union(L).toList.headOption
+          val rightPlaceCandidate = (B -- Set(leftPlaceCandidate.get)).union(R).toList.headOption
 
-      val L = B.filter(x => getNrxl(election, x, r, l, candidates))
-      val R = B.filter(x => getNrxl(election, x, l, r, candidates))
+          // left place candidate will always exist after the above expression
+          left.insert(left.size, leftPlaceCandidate.get)
 
-      if (B.size <= 2 && L.size <= 1 && R.size <= 1 && L.intersect(R).isEmpty) {
+          if (rightPlaceCandidate.nonEmpty) {
+            right.insert(0, rightPlaceCandidate.get)
+          }
+          singlePeakAxisUtil(left, right, election, candidates.filter(!B.contains(_)))
 
-        val leftCandidate = if (L.nonEmpty) L.toList.headOption else (B -- R).toList.headOption
-        val rightCandidate = if (R.nonEmpty) R.toList.headOption else (B -- L).toList.lastOption
-
-        leftCandidate match {
-          case Some(candidate) => left.insert(left.size, candidate)
-          case None => {}
+        } else {
+          None
         }
-
-        rightCandidate match {
-          case Some(candidate) => right.insert(0, candidate)
-          case None => {}
-        }
-
-        singlePeakAxisUtil(left, right, election, candidates.filter(!B.contains(_)))
-
-      } else {
-        None
       }
     }
   }
@@ -126,24 +111,20 @@ object SinglePeakAnalyser extends PreferenceAnalysisMethod[WeightedBallot] {
     * @param candidates
     * @return
     */
-  def getNrxl(election: Election[WeightedBallot], x: Candidate, l: Option[Candidate], r: Option[Candidate],
-              candidates: List[Candidate]): Boolean = {
+  def existNrxl(election: Election[WeightedBallot], x: Candidate, l: Option[Candidate], r: Option[Candidate],
+                candidates: List[Candidate]): Boolean = {
 
-    val xLastRankedN = election.map(_.preferences)
+    val xLastRankedList = election.map(_.preferences)
       .filter(_.reverseIterator.filter(c => candidates.contains(c)).toList.headOption == Option(x))
 
-    (l, r) match {
-      case (left, right) if left.nonEmpty && right.nonEmpty => {
-            val res = xLastRankedN.exists(prefs => prefs.indexOf(left.get) < prefs.indexOf(x) && prefs.indexOf(x) < prefs.indexOf(right.get))
-        res
-      }
-      case (left, right) if left.isEmpty && right.nonEmpty => {
-        val y = xLastRankedN.exists(prefs => prefs.indexOf(x) < prefs.indexOf(right.get))
-        y
-      }
-      case (left, right) if left.nonEmpty && right.isEmpty => {
-        val z = xLastRankedN.exists(prefs => prefs.indexOf(left.get) < prefs.indexOf(x))
-        z
+    // only 3 possible conditions
+    if (l.nonEmpty && r.nonEmpty) {
+      xLastRankedList.exists(prefs => prefs.indexOf(l.get) < prefs.indexOf(x) && prefs.indexOf(x) < prefs.indexOf(l.get))
+    } else {
+      if(l.isEmpty && r.nonEmpty) {
+        xLastRankedList.exists(prefs => prefs.indexOf(x) < prefs.indexOf(r.get))
+      } else {
+        xLastRankedList.exists(prefs => prefs.indexOf(l.get) < prefs.indexOf(x))
       }
     }
   }
