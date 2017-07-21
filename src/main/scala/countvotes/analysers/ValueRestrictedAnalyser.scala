@@ -27,7 +27,7 @@ object ValueRestrictedAnalyser extends PreferenceAnalysisMethod[WeightedBallot] 
     val tripletlist = for (i <- ccandidates.indices;
                            j <- i + 1 until ccandidates.length;
                            k <- j + 1 until ccandidates.length)
-      yield List(ccandidates(i), ccandidates(j), ccandidates(k))
+      yield List(ccandidates(i), ccandidates(j), ccandidates(k)).view
 
 
     // try to find the failing triplet and print it out
