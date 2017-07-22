@@ -55,8 +55,9 @@ object UncoveredSetMethod extends VoteCountingMethod[WeightedBallot] with LazyLo
 
     val uncoveredMatrix = addMatrix(addMatrix(square(ucMatrix, ccandidates.size), ucMatrix), identityMatrix(ccandidates.size))
 
-    uncoveredMatrix.zipWithIndex.filter(row => !row._1.contains(Rational(0, 1)))
-      .map(row => (ccandidates(row._2), Rational(0, 1))).toList
+    uncoveredMatrix.zip(ccandidates).filter {case (row, candidate) => !row.contains(Rational(0, 1))}
+      .map {case (row, candidate) => (candidate, Rational(0, 1))}.toList
+
   }
 
   def addMatrix(m1: Array[Array[Rational]], m2: Array[Array[Rational]]): Array[Array[Rational]] ={
@@ -69,11 +70,11 @@ object UncoveredSetMethod extends VoteCountingMethod[WeightedBallot] with LazyLo
   }
 
   def square(m: Array[Array[Rational]], size: Int): Array[Array[Rational]] = {
-    val squredMatrix = for (m1 <- m) yield
+    val squaredMatrix = for (m1 <- m) yield
       for (m2 <- transpose(m, size)) yield
         dotProduct(m1, m2)
 
-    squredMatrix
+    squaredMatrix
   }
 
   def identityMatrix(size: Int): Array[Array[Rational]] = BaseMatrix[Rational](size, size){ (i: Int, j: Int) => {
@@ -85,7 +86,7 @@ object UncoveredSetMethod extends VoteCountingMethod[WeightedBallot] with LazyLo
   }}
 
   def dotProduct(row1: Array[Rational], row2: Array[Rational]): Rational = {
-    row1.zip(row2).map{t: (Rational, Rational) => t._1 * t._2}.reduceLeft(_+_)
+    row1.zip(row2).map{t: (Rational, Rational) => t._1 * t._2}.reduce(_+_)
   }
 
   def transpose(matrix: Array[Array[Rational]], size: Int): Array[Array[Rational]] = {

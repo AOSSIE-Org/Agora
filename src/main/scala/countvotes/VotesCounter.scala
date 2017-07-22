@@ -226,7 +226,7 @@ object Main extends RegexParsers {
           r.writeWinners(winnersfile)
         }
 
-        case "UncovertedSet" => {
+        case "UncoveredSet" => {
           var r = UncoveredSetMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
           println("Scrutinity table for method Uncovered set is not implemented yet")
           r.writeWinners(winnersfile)
