@@ -11,7 +11,7 @@ class ValueRestricedAnalyserTest extends Specification {
   "Value Restricted Analyser " should {
 
     "verify result" in { valueRestrictedAnalyserVerification("22-example.e", "13-candidates.txt") shouldEqual expectedAnalysis1 }
-    "verify result" in { valueRestrictedAnalyserVerification("23-example.e", "13-candidates.txt") shouldEqual expectedAnalysis2 }
+    "verify result" in { valueRestrictedAnalyserVerification("24-example.e", "13-candidates.txt") shouldEqual expectedAnalysis2 }
   }
 
   def valueRestrictedAnalyserVerification(electionFile: String, candidateFile: String): Boolean = {
