@@ -11,7 +11,6 @@ object DodgsonMethod extends VoteCountingMethod[WeightedBallot] {
 
   private val result: Result = new Result
   private val report: Report[WeightedBallot] = new Report[WeightedBallot]
-  private val cache = new MMap[Election[WeightedBallot], Election[WeightedBallot]]()
 
   def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int): Report[WeightedBallot] = {
 
@@ -94,6 +93,8 @@ object DodgsonMethod extends VoteCountingMethod[WeightedBallot] {
     }
   }
 
+  private val cache = new MMap[Election[WeightedBallot], Election[WeightedBallot]]()
+
   def dispersed(election: Election[WeightedBallot]): Election[WeightedBallot] = {
 
     def disperseUtil(election: Election[WeightedBallot]) = {
@@ -108,7 +109,10 @@ object DodgsonMethod extends VoteCountingMethod[WeightedBallot] {
 
   def isCondorcetWinner(candidate: Candidate, candidates: List[Candidate],
                         matrix: Array[Int], totalVoters: Int): Boolean =
-    matrix.zipWithIndex.forall(c => c._1 > Rational(1, 2) * totalVoters || (c._2 == candidates.indexOf(candidate)))
+    matrix.zip(candidates).forall {case (score, cand) => {score > Rational(1, 2) * totalVoters || (cand == candidate)}}
+
+
+
 
 
   def isFlippable(candidate: Candidate, rank: Int, ballot: List[Candidate]): Boolean = if (ballot.indexOf(candidate) - rank >= 0) true else false
