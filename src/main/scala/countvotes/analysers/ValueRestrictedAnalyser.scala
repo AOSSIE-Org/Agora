@@ -23,23 +23,29 @@ object ValueRestrictedAnalyser extends PreferenceAnalysisMethod[WeightedBallot] 
 
     require(election forall (b => b.preferences.length == ccandidates.length))
 
-    // generate all the triplet of candidates
-    val tripletlist = for (i <- ccandidates.indices;
+    // lazily generate triplet of candidates
+    val tripletList = (for (i <- ccandidates.indices;
                            j <- i + 1 until ccandidates.length;
                            k <- j + 1 until ccandidates.length)
-      yield List(ccandidates(i), ccandidates(j), ccandidates(k)).view
+      yield (i, j, k)).view.map {case (i,j,k) => List(ccandidates(i), ccandidates(j), ccandidates(k))}
 
 
     // try to find the failing triplet and print it out
-    val failingTriplet = tripletlist.find(triplet => !triplet.exists(cand => {
+    val failingTriplet = tripletList.find(triplet => !triplet.exists(cand => {
       !election.exists(b => b.preferences.filter(p => triplet.contains(p)).indexOf(cand) == 0) ||
         !election.exists(b => b.preferences.filter(p => triplet.contains(p)).indexOf(cand) == 1) ||
         !election.exists(b => b.preferences.filter(p => triplet.contains(p)).indexOf(cand) == 2)
     }))
 
     failingTriplet match {
-      case Some(list) => println("Preference profile is not value restricted for the triplet " + list.mkString(" , ")); false
-      case None => println("Preference profile is value restricted"); true
+      case Some(list) => {
+        println("Preference profile is not value restricted for the triplet " + list.mkString(" , "))
+        false
+      }
+      case None => {
+        println("Preference profile is value restricted")
+        true
+      }
     }
 
     // will compare the efficiency once a bigger preference profile is found
