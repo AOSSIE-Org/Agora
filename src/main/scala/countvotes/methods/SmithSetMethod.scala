@@ -30,7 +30,8 @@ object SmithSetMethod extends VoteCountingMethod[WeightedBallot] {
 
     val maximalSet = floydWarshallMaximal(relationMatrix, ccandidates)
 
-    maximalSet.filter(p => p).zipWithIndex.map(p => (ccandidates(p._2), Rational(0, 1))).toList
+    maximalSet.zip(ccandidates).filter {case (inMaximal, candidate) => inMaximal}
+      .map{case(inMaximal, candidate) => (candidate, Rational(0, 1))}.toList
 
   }
 
@@ -41,7 +42,7 @@ object SmithSetMethod extends VoteCountingMethod[WeightedBallot] {
     ccandidates.zipWithIndex.foreach(c1 => {
       ccandidates.zipWithIndex.foreach(c2 => {
         if (c1._2 != c2._2) {
-          relationMatrix{c1._2}{c2._2} = pairWiseComp{c1._2}{c2._2} >= pairWiseComp{c2._2}{c1._2}
+          relationMatrix(c1._2)(c2._2) = pairWiseComp(c1._2)(c2._2) >= pairWiseComp(c2._2)(c1._2)
         }
       })
     })
@@ -52,14 +53,14 @@ object SmithSetMethod extends VoteCountingMethod[WeightedBallot] {
 
     val isInMaximal = Array.ofDim[Boolean](ccandidates.size)
     for (i <- ccandidates.indices)
-      isInMaximal{i} = true
+      isInMaximal(i) = true
 
     // eventually, hasPath[i][j] == true iff there is a path from i to j
     val hasPath = Array.ofDim[Boolean](ccandidates.size, ccandidates.size)
     for (i <- ccandidates.indices)
       for (j <- ccandidates.indices)
         if (i != j) {
-            hasPath{i}{j} = relations{i}{j}
+            hasPath(i)(j) = relations(i)(j)
         }
 
     // expand consideration to paths that have intermediate nodes from 1 to k
@@ -68,8 +69,8 @@ object SmithSetMethod extends VoteCountingMethod[WeightedBallot] {
         if (k != i) {
           for (j <- ccandidates.indices)
             if (k != j && i != j) {
-              if (hasPath{i}{k} && hasPath{k}{j}) {
-                hasPath{i}{j} = true
+              if (hasPath(i)(k) && hasPath(k)(j)) {
+                hasPath(i)(j) = true
               }
             }
         }
@@ -80,8 +81,8 @@ object SmithSetMethod extends VoteCountingMethod[WeightedBallot] {
     for (i <- ccandidates.indices)
       for (j <- ccandidates.indices)
         if (i != j) {
-          if (hasPath{j}{i} && !hasPath{i}{j}) {
-            isInMaximal{i} = false
+          if (hasPath(j)(i) && !hasPath(i)(j)) {
+            isInMaximal(i) = false
           }
         }
 
