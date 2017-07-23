@@ -50,16 +50,12 @@ object BaldwinMethod extends VoteCountingMethod[WeightedBallot] with LazyLogging
 
     logger.info("Baldwin rule method called")
 
-    candidates.length match {
-
-      case 1 => bordaScores(election, candidates).toList
-
-      case len if (len > 1) => {
+    if (candidates.length == 1) {
+      bordaScores(election, candidates).toList
+    } else {
         // removing the lowest borda score candidate from the candidate list
         var lowestBordaCandidate = bordaScores(election, candidates).minBy(_._2)
         winners(election, candidates.filter(_ != lowestBordaCandidate._1), numVacancies)
       }
     }
   }
-
-}

@@ -34,15 +34,12 @@ object NansonMethod extends VoteCountingMethod[WeightedBallot] {
   def winners(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int):
   List[(Candidate, Rational)] = {
 
-    candidates.length match {
-
-      case 1 => bordaScores(election, candidates).toList
-
-      case len if (len > 1) => {
-        var cbs = bordaScores(election, candidates) //borda scores of candidates
-        val average = (Rational(0,1) /: candidates)(_ + cbs(_)) / Rational(candidates.length)
-        winners(election, candidates.filter(x => cbs(x) > average), numVacancies)
-      }
+    if (candidates.length == 1) {
+      bordaScores(election, candidates).toList
+    } else {
+      var cbs = bordaScores(election, candidates) //borda scores of candidates
+      val average = (Rational(0,1) /: candidates)(_ + cbs(_)) / Rational(candidates.length)
+      winners(election, candidates.filter(x => cbs(x) > average), numVacancies)
     }
   }
 }
