@@ -48,12 +48,12 @@ object InstantExhaustiveBallot extends VoteCountingMethod[WeightedBallot] {
   override def winners(election: Election[WeightedBallot], ccandidates: List[Candidate],  numVacancies: Int): List[(Candidate, Rational)] = {
 
     val ct = totals(election,ccandidates)
-    if( ct.size > 2 ){
-      val losingCand =  ct.toList.sortWith( _._2 < _._2 ).head
+    if (ct.size > 2){
+      val losingCand =  ct.toList.sortWith(_._2 < _._2).head
       val newElection = exclude(election, losingCand._1)
-      winners(newElection, ccandidates.filter( _ != losingCand._1), numVacancies)
+      winners(newElection, ccandidates.filter(_ != losingCand._1), numVacancies)
     } else {
-      ct.toList.sortWith( _._2 > _._2 ).head::List()
+      ct.toList.sortWith(_._2 > _._2).head::List()
     }
   }
 }
