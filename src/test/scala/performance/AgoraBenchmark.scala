@@ -9,9 +9,6 @@ import org.scalameter.persistence.GZIPJSONSerializationPersistor
 import scala.collection.immutable.ListSet
 import scala.util.Random
 
-/**
-  * Created by deepeshpandey on 13/05/17.
-  */
 class AgoraBenchmark extends Bench.OfflineRegressionReport {
 
   val preferenceSet: ListSet[Candidate] = ListSet(Candidate("A"), Candidate("B"), Candidate("C"), Candidate("D"), Candidate("E"))

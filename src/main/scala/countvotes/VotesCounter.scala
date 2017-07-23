@@ -213,6 +213,11 @@ object Main extends RegexParsers {
           println(" Scrutiny table for method Runoff2Round is not implemented yet.")
           r.writeWinners(winnersfile)
         }
+        case "Coomb" => {
+          var r = CoombRuleMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
+          println("Scrutinity table for method Coomb is not implemented yet")
+          r.writeWinners(winnersfile)
+        }
 
         case "InstantExhaustiveBallot" => {
           var r = InstantExhaustiveBallot.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
@@ -224,6 +229,18 @@ object Main extends RegexParsers {
           var r = ContingentMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Contingent is not implemented yet.")
           r.writeWinners(winnersfile)
+        }
+
+        case "RandomBallot" => {
+          var r = RandomBallotMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method Random Ballot is not implemented yet.")
+          r.writeWinners(winnersfile)
+        }
+        case "MinimaxCondorcet" => {
+          var r = MinimaxCondorcetMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method Random Ballot is not implemented yet.")
+          r.writeWinners(winnersfile)
+
         }
 
         case "Test" => {
