@@ -42,6 +42,8 @@ class RunAllMethods extends Specification {
     "execute Coomb" in { test("Coomb", "14-example.e", "14-candidates.txt") shouldEqual true }
     "execute Contingent" in { test("Contingent", "14-example.e", "14-candidates.txt") shouldEqual true }
     "execute RandomBallot" in { test("RandomBallot", "21-example.e", "21-candidates.txt") shouldEqual true }
+    "execute PreferentialBlockVoting" in { test("PreferentialBlockVoting", "24-example.e", "24-candidates.txt") shouldEqual true }
+    "execute HybridPluralityPreferentialBlockVoting" in { test("HybridPluralityPreferentialBlockVoting", "24-example.e", "24-candidates.txt") shouldEqual true }
   }
 }
 

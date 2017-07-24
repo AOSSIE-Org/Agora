@@ -1,9 +1,5 @@
 package countvotes.methods
 
-/**
-  * https://en.wikipedia.org/wiki/Preferential_block_voting
-  */
-
 import countvotes.structures._
 import countvotes.algorithms._
 
@@ -17,7 +13,11 @@ import java.io._
 
 import countvotes.methods.VoteCountingMethod
 
-object PreferentialBlockvoting extends VoteCountingMethod[WeightedBallot] {
+/**
+  * https://en.wikipedia.org/wiki/Preferential_block_voting
+  */
+
+object PreferentialBlockVoting extends VoteCountingMethod[WeightedBallot] {
 
   protected val result: Result = new Result
   protected val report: Report[WeightedBallot] = new Report[WeightedBallot]
