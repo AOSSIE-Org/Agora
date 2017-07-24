@@ -42,7 +42,7 @@ object SmithSetMethod extends VoteCountingMethod[WeightedBallot] {
     * @param pairWiseComp
     * @return
     */
-  def getRelationMatrix(election: Election[WeightedBallot], ccandidates: List[Candidate], pairWiseComp: MatrixD2): Array[Array[Boolean]] = {
+  def getRelationMatrix(election: Election[WeightedBallot], ccandidates: List[Candidate], pairWiseComp: Array[Array[Rational]]): Array[Array[Boolean]] = {
 
     val relationMatrix = BaseMatrix[Boolean](ccandidates.size, ccandidates.size){(i: Int, j: Int) => false}
 
