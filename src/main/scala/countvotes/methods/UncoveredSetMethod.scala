@@ -53,6 +53,7 @@ object UncoveredSetMethod extends VoteCountingMethod[WeightedBallot] with LazyLo
       })
     })
 
+    // matrix calculation step from algorithm
     val uncoveredMatrix = addMatrix(addMatrix(square(ucMatrix, ccandidates.size), ucMatrix), identityMatrix(ccandidates.size))
 
     uncoveredMatrix.zip(ccandidates).filter {case (row, candidate) => !row.contains(Rational(0, 1))}
