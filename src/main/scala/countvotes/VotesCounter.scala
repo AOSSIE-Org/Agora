@@ -88,7 +88,7 @@ object Main extends RegexParsers {
     note(
       """Possible values are as follows:""" + "\n" +
 
-        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Nanson, Kemeny-Young, Runoff2Round""" + "\n" +
+        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Nanson, Kemeny-Young, Contingent, Runoff2Round, Copeland""" + "\n" +
 
         """for -t:  Concise, ACT""" + "\n \n"
     )
@@ -213,8 +213,31 @@ object Main extends RegexParsers {
           println(" Scrutiny table for method Runoff2Round is not implemented yet.")
           r.writeWinners(winnersfile)
         }
+        case "Coomb" => {
+          var r = CoombRuleMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
+          println("Scrutinity table for method Coomb is not implemented yet")
+          r.writeWinners(winnersfile)
+        }
+
+        case "Contingent" => {
+          var r = ContingentMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method Contingent is not implemented yet.")
+          r.writeWinners(winnersfile)
+        }
+
+        case "RandomBallot" => {
+          var r = RandomBallotMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method Random Ballot is not implemented yet.")
+          r.writeWinners(winnersfile)
+        }
+        case "MinimaxCondorcet" => {
+          var r = MinimaxCondorcetMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method Random Ballot is not implemented yet.")
+          r.writeWinners(winnersfile)
+
+        }
         case "Copeland" => {
-          var r = CopelandMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          var r = CopelandMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Copeland is not implemented yet. ")
           r.writeWinners(winnersfile)
 

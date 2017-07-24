@@ -24,36 +24,42 @@ object CopelandMethod extends VoteCountingMethod[WeightedBallot] with LazyLoggin
     report
   }
 
-  def winners(e: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
+  def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 
     logger.info("Computing Copeland winner")
 
-    val electionResponse = getPairwiseComparison(e, ccandidates)
     val candidatesNetScores = new MMap[Candidate, Rational]
     val majorityRational = Rational(1, 2)
-    val totalVoters = Election.totalWeightedVoters(e)
+    val totalVoters = Election.totalWeightedVoters(election)
+
+    // calculate pariwise comparison according to the ranked voting methods
+    // non - ranked candidates are worse than ranked candidates
+
+    val pairwiseComp = Array.fill(ccandidates.size, ccandidates.size)(Rational(0, 1))
+
+    for (b <- election if b.preferences.nonEmpty) {
+      for (c1 <- b.preferences; c2 <- ccandidates) {
+        if (!b.preferences.contains(c2) || b.preferences.indexOf(c1) < b.preferences.indexOf(c2)) {
+          pairwiseComp(ccandidates.indexOf(c1))(ccandidates.indexOf(c2)) += b.weight
+        }
+      }
+    }
 
     // calculate the net victory for each candidate and find the copeland winner
+    for (c1 <- ccandidates.indices; c2 <- ccandidates.indices   if c1 < c2) {
 
-    ccandidates.foreach(c1 => {
-      ccandidates.foreach(c2 => {
-        if (ccandidates.indexOf(c2) > ccandidates.indexOf(c1)) {
-          val pairScore = electionResponse{ccandidates.indexOf(c1)}{ccandidates.indexOf(c2)}
-          if (pairScore > majorityRational * totalVoters) {
-            candidatesNetScores(c1) = candidatesNetScores.getOrElse(c1, Rational(0,1)) + 1
-            candidatesNetScores(c2) = candidatesNetScores.getOrElse(c2, Rational(0,1)) - 1
-          } else {
-            if (pairScore == majorityRational * totalVoters) {
-              candidatesNetScores(c1) = candidatesNetScores.getOrElse(c1, Rational(0,1)) + Rational(1, 2)
-              candidatesNetScores(c2) = candidatesNetScores.getOrElse(c2, Rational(0,1)) + Rational(1, 2)
-            } else {
-              candidatesNetScores(c2) = candidatesNetScores.getOrElse(c2, Rational(0,1)) + 1
-              candidatesNetScores(c1) = candidatesNetScores.getOrElse(c1, Rational(0,1)) - 1
-            }
-          }
-        }
-      })
-    })
+      if (pairwiseComp(c1)(c2) > majorityRational * totalVoters) {
+
+        candidatesNetScores(ccandidates(c1)) = candidatesNetScores.getOrElse(ccandidates(c1), Rational(0,1)) + 1
+        candidatesNetScores(ccandidates(c2)) = candidatesNetScores.getOrElse(ccandidates(c2), Rational(0,1)) - 1
+
+      } else if (pairwiseComp(c2)(c1) > majorityRational * totalVoters) {
+
+        candidatesNetScores(ccandidates(c2)) = candidatesNetScores.getOrElse(ccandidates(c2), Rational(0,1)) + 1
+        candidatesNetScores(ccandidates(c1)) = candidatesNetScores.getOrElse(ccandidates(c1), Rational(0,1)) - 1
+
+      }
+    }
     candidatesNetScores.toList.sortWith(_._2 > _._2).take(numVacancies)
   }
 }
