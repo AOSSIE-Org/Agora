@@ -1,1 +1,2 @@
 Nashville: 0
+Chattanooga: 0

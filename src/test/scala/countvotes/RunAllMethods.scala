@@ -28,17 +28,20 @@ class RunAllMethods extends Specification {
   }
 
   "Agora" should {
-    "execute EVACS" in { test("EVACS", "02-example.txt", "02-candidates.txt") shouldEqual true }
-    "execute EVACSnoLP" in { test("EVACSnoLP", "02-example.txt", "02-candidates.txt") shouldEqual true }
-    "execute EVACSDWD" in { test("EVACSDWD", "02-example.txt", "02-candidates.txt") shouldEqual true }
-    "execute Senate" in { test("Senate", "02-example.txt", "02-candidates.txt") shouldEqual true }
-    "execute Simple" in { test("Simple", "02-example.txt", "02-candidates.txt") shouldEqual true }
-    "execute Egalitarian" in { test("Egalitarian", "02-example.txt", "02-candidates.txt") shouldEqual true }
-    "execute Majority" in { test("Majority", "02-example.txt", "02-candidates.txt") shouldEqual true }
-    "execute Approval" in { test("Approval", "02-example.txt", "02-candidates.txt") shouldEqual true }
-    "execute Borda" in { test("Borda", "13-example.txt", "13-candidates.txt") shouldEqual true }
-    "execute Nanson" in { test("Nanson", "13-example.txt", "13-candidates.txt") shouldEqual true }
-    "execute Kemeny-Young" in { test("Kemeny-Young", "14-example.txt", "14-candidates.txt") shouldEqual true }
+    "execute EVACS" in { test("EVACS", "02-example.e", "02-candidates.txt") shouldEqual true }
+    "execute EVACSnoLP" in { test("EVACSnoLP", "02-example.e", "02-candidates.txt") shouldEqual true }
+    "execute EVACSDWD" in { test("EVACSDWD", "02-example.e", "02-candidates.txt") shouldEqual true }
+    "execute Senate" in { test("Senate", "02-example.e", "02-candidates.txt") shouldEqual true }
+    "execute Simple" in { test("Simple", "02-example.e", "02-candidates.txt") shouldEqual true }
+    "execute Egalitarian" in { test("Egalitarian", "02-example.e", "02-candidates.txt") shouldEqual true }
+    "execute Majority" in { test("Majority", "02-example.e", "02-candidates.txt") shouldEqual true }
+    "execute Approval" in { test("Approval", "02-example.e", "02-candidates.txt") shouldEqual true }
+    "execute Borda" in { test("Borda", "13-example.e", "13-candidates.txt") shouldEqual true }
+    "execute Nanson" in { test("Nanson", "13-example.e", "13-candidates.txt") shouldEqual true }
+    "execute Kemeny-Young" in { test("Kemeny-Young", "14-example.e", "14-candidates.txt") shouldEqual true }
+    "execute Coomb" in { test("Coomb", "14-example.e", "14-candidates.txt") shouldEqual true }
+    "execute Contingent" in { test("Contingent", "14-example.e", "14-candidates.txt") shouldEqual true }
+    "execute RandomBallot" in { test("RandomBallot", "21-example.e", "21-candidates.txt") shouldEqual true }
 
   }
 }
