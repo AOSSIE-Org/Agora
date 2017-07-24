@@ -227,7 +227,7 @@ object Main extends RegexParsers {
         }
 
         case "SmithSet" => {
-          var r = SmithSetMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          var r = SmithSetMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Runoff2Round is not implemented yet.")
           r.writeWinners(winnersfile)
         }

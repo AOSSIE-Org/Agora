@@ -4,7 +4,7 @@ import countvotes.methods.InstantRunoff2Round.{printElection, totals, winners}
 import countvotes.structures._
 
 /**
-  * Algorithm : Using Floyd Warshall Algorithm : http://wiki.electorama.com/wiki/Maximal_elements_algorithms
+  * Algorithm : http://wiki.electorama.com/wiki/Maximal_elements_algorithms#Floyd-Warshall_algorithm
   */
 object SmithSetMethod extends VoteCountingMethod[WeightedBallot] {
 
@@ -35,6 +35,13 @@ object SmithSetMethod extends VoteCountingMethod[WeightedBallot] {
 
   }
 
+  /**
+    * get the relation matrix for the algorithm as described in http://wiki.electorama.com/wiki/Maximal_elements_algorithms#Background
+    * @param election
+    * @param ccandidates
+    * @param pairWiseComp
+    * @return
+    */
   def getRelationMatrix(election: Election[WeightedBallot], ccandidates: List[Candidate], pairWiseComp: MatrixD2): Array[Array[Boolean]] = {
 
     val relationMatrix = BaseMatrix[Boolean](ccandidates.size, ccandidates.size){(i: Int, j: Int) => false}
