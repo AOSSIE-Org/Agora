@@ -15,7 +15,7 @@ object SinglePeakAnalyser extends PreferenceAnalysisMethod[WeightedBallot] {
 
     getSinglePeakAxis(election, candidates) match {
       case Some(axis) => {
-        if (checkSinglePeakAxis(axis, election)) {
+        if (isCompatibleAxis(axis, election)) {
           println("Single Peaked with respect to ", axis.mkString(" > "))
           true
         } else {
@@ -31,15 +31,16 @@ object SinglePeakAnalyser extends PreferenceAnalysisMethod[WeightedBallot] {
   }
 
   /**
-    * using the recursive util - singlePeakAxisUtil it returns the linear ordering if found or None if not
+    * returns a single peak linear ordering if it exists otherwise None
     * @param election
     * @param candidates
     * @return
     */
   def getSinglePeakAxis(election: Election[WeightedBallot], candidates: List[Candidate]): Option[List[Candidate]] = {
 
-    val B = election.map(_.preferences.last).toSet.toList
+    val B = election.map(_.preferences.last).distinct
 
+    // size of B cannot be zero as ensured by the required condition
     if (B.size > 2) {
       None
     } else {
@@ -54,7 +55,6 @@ object SinglePeakAnalyser extends PreferenceAnalysisMethod[WeightedBallot] {
       }
       singlePeakAxisAux(left, right, election, candidates.filter(!B.contains(_)))
     }
-
   }
 
 
@@ -80,12 +80,14 @@ object SinglePeakAnalyser extends PreferenceAnalysisMethod[WeightedBallot] {
       Option((left ++ right).toList)
 
     } else {
+      // process only when there are atleast 2 candidates that needs to be placed
       val B = election.filter(b => b.preferences.nonEmpty && b.preferences.exists(c => !(left ++ right).contains(c)))
         .flatMap(_.preferences.reverseIterator.filter(c => !(left ++ right).contains(c)).take(1)).toSet
 
       val L = B.filter(x => existNrxl(election, x, right.headOption, left.lastOption, candidates))
       val R = B.filter(x => existNrxl(election, x, left.lastOption, right.headOption, candidates))
 
+      // the algorithm condition
       if (B.size <= 2 && L.size <= 1 && R.size <= 1 && L.intersect(R).isEmpty) {
 
         val leftPlaceCandidate = (B -- R).union(L).toList.headOption
@@ -118,6 +120,7 @@ object SinglePeakAnalyser extends PreferenceAnalysisMethod[WeightedBallot] {
   def existNrxl(election: Election[WeightedBallot], x: Candidate, l: Option[Candidate], r: Option[Candidate],
                 candidates: List[Candidate]): Boolean = {
 
+    // get all the preferences where candidate x is last ranked
     val xLastRankedList = election.map(_.preferences)
       .filter(_.reverseIterator.filter(c => candidates.contains(c)).toList.headOption == Option(x))
 
@@ -139,7 +142,7 @@ object SinglePeakAnalyser extends PreferenceAnalysisMethod[WeightedBallot] {
     * @param election - election
     * @return
     */
-  def checkSinglePeakAxis(axis: List[Candidate], election : Election[WeightedBallot]): Boolean = {
+  def isCompatibleAxis(axis: List[Candidate], election : Election[WeightedBallot]): Boolean = {
 
     election.forall(b => {
 
