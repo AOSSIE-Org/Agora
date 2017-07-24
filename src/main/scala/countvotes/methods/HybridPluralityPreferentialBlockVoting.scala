@@ -12,7 +12,6 @@ import scala.util.Sorting
 import java.io._
 
 import countvotes.methods.VoteCountingMethod
-import countvotes.methods.PreferentialBlockVoting.totals1
 
 
 /**
@@ -23,7 +22,6 @@ object HybridPluralityPreferentialBlockVoting extends VoteCountingMethod[Weighte
 
   protected val result: Result = new Result
   protected val report: Report[WeightedBallot] = new Report[WeightedBallot]
-  protected var winnerlist: List[(Candidate, Rational)] = Nil
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -67,28 +65,28 @@ object HybridPluralityPreferentialBlockVoting extends VoteCountingMethod[Weighte
     }
     list
   }
+
+  def winnerList(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int, winnerlist: List[(Candidate, Rational)]): List[(Candidate, Rational)] ={
+    var winnerlist1: List[(Candidate, Rational)] = winnerlist
+    if(numVacancies > 0)
+    {
+      var tls = totals1(election, ccandidates, numVacancies)
+      if(tls.toList.sortWith(_._2 > _._2).head._2 > (election.size / 2)) {
+        winnerlist1 = tls.toList.sortWith(_._2>_._2).head :: winnerlist1
+        var newElection = exclude(election,tls.toList.sortWith(_._2>_._2).head._1)
+        winnerList(newElection, ccandidates.filter(_!=tls.toList.sortWith(_._2>_._2).head._1), numVacancies-1, winnerlist1)
+      } else {
+        var newElection = exclude(election,tls.filter(x => ccandidates.contains(x._1)).toList.sortWith(_._2<_._2).head._1)
+        winnerList(newElection, ccandidates.filter(_!=tls.toList.sortWith(_._2<_._2).head._1), numVacancies, winnerlist1)
+      }
+    } else {
+      winnerlist
+    }
+  }
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   override def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
-    var vacancies = numVacancies
-    var ccandidates1 = ccandidates
-    //total the candidates' votes for the first numVacancies choices
-    //if any greater than 1/2 election size, wins
-    //else eliminate the last candidate and his first pref becomes zero pref
-    if(numVacancies > 0)
-      {
-        var tls = totals1(election, ccandidates1, numVacancies)
-        if(tls.toList.sortWith(_._2 > _._2).head._2 > (election.size / 2)) {
-          winnerlist = tls.toList.sortWith(_._2>_._2).head :: winnerlist
-          var newElection = exclude(election,tls.toList.sortWith(_._2>_._2).head._1)
-          winners(newElection, ccandidates1.filter(_!=tls.toList.sortWith(_._2>_._2).head._1), numVacancies-1)
-        } else {
-          var newElection = exclude(election,tls.filter(x => ccandidates1.contains(x._1)).toList.sortWith(_._2<_._2).head._1)
-          winners(newElection, ccandidates1.filter(_!=tls.toList.sortWith(_._2<_._2).head._1), numVacancies)
-        }
-      } else {
-      winnerlist
-    }
+   winnerList(election, ccandidates, numVacancies, Nil)
   }
 }
 
