@@ -1,2 +1,4 @@
-1 1/1 x2>x3>x1>x4>x5>x6
-2 1/1 x4>x3>x2>x5>x6>x1
+1 42/1 Memphis>Nashville>Chattanooga>Knoxville
+43 26/1 Nashville>Chattanooga>Knoxville>Memphis
+69 15/1 Chattanooga>Knoxville>Nashville>Memphis
+84 17/1 Knoxville>Chattanooga>Nashville>Memphis
