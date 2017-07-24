@@ -112,9 +112,6 @@ object DodgsonMethod extends VoteCountingMethod[WeightedBallot] {
     matrix.zip(candidates).forall {case (score, cand) => {score > Rational(1, 2) * totalVoters || (cand == candidate)}}
 
 
-
-
-
   def isFlippable(candidate: Candidate, rank: Int, ballot: List[Candidate]): Boolean = if (ballot.indexOf(candidate) - rank >= 0) true else false
 
 }
