@@ -9,17 +9,17 @@ import org.scalameter.api._
   */
 object FullRegression extends Bench.Group {
 
-  //  perform regression for Nanson method
+  //  perform regression for Baldwin method
   performance of "memory" config(
-    reports.resultDir -> "target/benchmarks/nanson/memory"
+    reports.resultDir -> "target/benchmarks/baldwin/memory"
     ) in {
-    include(new NansonMemoryRegression {})
+    include(new BaldwinMemoryRegression {})
   }
 
   performance of "running time" config(
-    reports.resultDir -> "target/benchmarks/nanson/time"
+    reports.resultDir -> "target/benchmarks/baldwin/time"
     ) in {
-    include(new NansonRegression {})
+    include(new BaldwinRegression {})
   }
 
 
