@@ -1,6 +1,6 @@
 package performance
 
-import countvotes.methods.{BordaRuleMethod, NansonRuleMethod, RandomBallotMethod}
+import countvotes.methods.{BordaRuleMethod, RandomBallotMethod}
 import countvotes.structures.WeightedBallot
 import org.scalameter.api._
 import org.scalameter.persistence.GZIPJSONSerializationPersistor
