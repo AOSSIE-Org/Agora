@@ -1,9 +1,8 @@
-import countvotes.methods.{NansonRuleMethod, UncoveredSetMethod}
+import countvotes.methods.UncoveredSetMethod
 import countvotes.structures.WeightedBallot
 import org.scalameter.api.Bench
-import performance.NansonRegressionTest.include
 import org.scalameter.api._
-import performance.{MemoryRegression, NansonMemoryRegression, NansonRegression, RuntimeRegression}
+import performance.{MemoryRegression, RuntimeRegression}
 
 /**
   * Regression test for computing uncovered set
