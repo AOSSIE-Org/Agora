@@ -2,6 +2,7 @@ package countvotes.methods
 
 import countvotes.methods.InstantRunoff2Round.{printElection, totals, winners}
 import countvotes.structures._
+import scala.language.postfixOps
 
 /**
   * Algorithm : http://wiki.electorama.com/wiki/Maximal_elements_algorithms#Floyd-Warshall_algorithm
