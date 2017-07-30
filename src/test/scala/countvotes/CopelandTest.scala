@@ -14,7 +14,7 @@ class CopelandTest extends Specification {
   "Copeland Test " should {
 
     "verify result" in { copelandMethodVerification("14-example.e", "14-candidates.txt") shouldEqual expectedCopelandWinnerList }
-    "verify result" in { copelandMethodVerification("28-example.e", "28-candidates.txt") shouldEqual expectedCopelandWinnerList2 }
+    "verify result" in { copelandMethodVerification("29-example.e", "28-candidates.txt") shouldEqual expectedCopelandWinnerList2 }
   }
 
   def copelandMethodVerification(electionFile: String, candidatesFile: String): List[Candidate] = {

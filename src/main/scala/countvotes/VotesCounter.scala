@@ -88,7 +88,7 @@ object Main extends RegexParsers {
     note(
       """Possible values are as follows:""" + "\n" +
 
-        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Nanson, Kemeny-Young, Contingent, Runoff2Round, Copeland""" + "\n" +
+        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Baldwin, Nanson, Kemeny-Young, Contingent, Runoff2Round, Copeland""" + "\n" +
 
         """for -t:  Concise, ACT""" + "\n \n"
     )
@@ -202,8 +202,14 @@ object Main extends RegexParsers {
           r.writeWinners(winnersfile)
         }
 
+        case "Baldwin" => {
+          var r = BaldwinMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method Baldwin is not implemented yet.")
+          r.writeWinners(winnersfile)
+        }
+
         case "Nanson" => {
-          var r = NansonRuleMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          var r = NansonMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Nanson is not implemented yet.")
           r.writeWinners(winnersfile)
         }
