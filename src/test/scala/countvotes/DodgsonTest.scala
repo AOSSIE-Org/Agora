@@ -22,7 +22,7 @@ class DodgsonTest extends Specification {
     val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidateFile)
     val election =  PreferencesParser.read("../Agora/files/Examples/" + electionFile)
 
-    DodgsonMethod.winners(election, candidates, 1).map {_._1}
+    DodgsonMethod.winners(election, candidates, 1) map {_._1}
   }
 
 }

@@ -69,7 +69,7 @@ object DodgsonMethod extends VoteCountingMethod[WeightedBallot] {
 
     val candElectionResponse = Array.ofDim[Int](candidates.size)
 
-    val succesful = dispersedElection zip flipVector forall (ballotsWithFlip => {
+    val succesful = dispersedElection zip flipVector forall { case(ballotsWithFlip) => {
 
       if (isFlippable(candidate, ballotsWithFlip._2, ballotsWithFlip._1.preferences)) {
 
@@ -84,7 +84,7 @@ object DodgsonMethod extends VoteCountingMethod[WeightedBallot] {
       } else {
         false
       }
-    })
+    }}
 
     if (succesful) {
       Option(candElectionResponse)
@@ -109,7 +109,7 @@ object DodgsonMethod extends VoteCountingMethod[WeightedBallot] {
 
   def isCondorcetWinner(candidate: Candidate, candidates: List[Candidate],
                         matrix: Array[Int], totalVoters: Int): Boolean =
-    matrix.zip(candidates).forall {case (score, cand) => {score > Rational(1, 2) * totalVoters || (cand == candidate)}}
+    (matrix zip candidates) forall { case (score, cand) => {score > Rational(1, 2) * totalVoters || (cand == candidate)}}
 
 
   def isFlippable(candidate: Candidate, rank: Int, ballot: List[Candidate]): Boolean = if (ballot.indexOf(candidate) - rank >= 0) true else false
