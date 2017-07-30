@@ -28,10 +28,11 @@ object SmithSetMethod extends VoteCountingMethod[WeightedBallot] {
 
     val relationMatrix = getRelationMatrix(e, ccandidates, pairWiseComp)
 
-    val maximalSet = floydWarshallMaximal(relationMatrix, ccandidates)
+    val maximalArray = floydWarshallMaximal(relationMatrix, ccandidates)
 
-    maximalSet.zip(ccandidates).filter {case (inMaximal, candidate) => inMaximal}
-      .map{case(inMaximal, candidate) => (candidate, Rational(0, 1))}.toList
+    (maximalArray zip ccandidates) filter {
+      case (inMaximal, candidate) => inMaximal } map {
+      case(inMaximal, candidate) => (candidate, Rational(0, 1))} toList
 
   }
 
