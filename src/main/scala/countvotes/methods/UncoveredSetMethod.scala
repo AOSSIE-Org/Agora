@@ -2,6 +2,7 @@ package countvotes.methods
 
 import com.typesafe.scalalogging.LazyLogging
 import countvotes.structures._
+import countvotes.util.matrix._
 
 /**
   * Algorithm via multiplication
@@ -10,7 +11,7 @@ import countvotes.structures._
   * x covers y (x C y) if D(y) is a subset of D(x)
   * where D(x) = { y ⍷ A | x >(majority) y}
   */
-object UncoveredSetMethod extends VoteCountingMethod[WeightedBallot] with LazyLogging{
+object UncoveredSetMethod extends VoteCountingMethod[WeightedBallot] with LazyLogging {
 
   private val result: Result = new Result
   private val report: Report[WeightedBallot] = new Report[WeightedBallot]
@@ -56,51 +57,10 @@ object UncoveredSetMethod extends VoteCountingMethod[WeightedBallot] with LazyLo
     // matrix calculation step from algorithm
     val uncoveredMatrix = addMatrix(addMatrix(square(ucMatrix, ccandidates.size), ucMatrix), identityMatrix(ccandidates.size))
 
-    uncoveredMatrix.zip(ccandidates).filter {case (row, candidate) => !row.contains(Rational(0, 1))}
-      .map {case (row, candidate) => (candidate, Rational(0, 1))}.toList
+    (uncoveredMatrix zip ccandidates) filter {
+      case (row, candidate) => !row.contains(Rational(0, 1))} map {
+      case (row, candidate) => (candidate, Rational(0, 1))} toList
 
   }
-
-  def addMatrix(m1: Array[Array[Rational]], m2: Array[Array[Rational]]): Array[Array[Rational]] ={
-
-    m1.zip(m2).map{rows: (Array[Rational], Array[Rational]) => {
-      rows._1.zip( rows._2 ).map{ items:(Rational,Rational) =>
-        items._1 + items._2
-      }
-    }}
-  }
-
-  def square(m: Array[Array[Rational]], size: Int): Array[Array[Rational]] = {
-    val squaredMatrix = for (m1 <- m) yield
-      for (m2 <- transpose(m, size)) yield
-        dotProduct(m1, m2)
-
-    squaredMatrix
-  }
-
-  def identityMatrix(size: Int): Array[Array[Rational]] = BaseMatrix[Rational](size, size){ (i: Int, j: Int) => {
-    if (i == j) {
-      Rational(1,1)
-    } else {
-      Rational(0, 1)
-    }
-  }}
-
-  def dotProduct(row1: Array[Rational], row2: Array[Rational]): Rational = {
-    row1.zip(row2).map{t: (Rational, Rational) => t._1 * t._2}.reduce(_+_)
-  }
-
-  def transpose(matrix: Array[Array[Rational]], size: Int): Array[Array[Rational]] = {
-    for (i <- 0 until size)
-      for (j <- 0 until size)
-        if (i<j) {
-          val temp = matrix(i)(j)
-          matrix(i)(j) = matrix(j)(i)
-          matrix(i)(j) = temp
-        }
-    matrix
-  }
-
-
 
 }
