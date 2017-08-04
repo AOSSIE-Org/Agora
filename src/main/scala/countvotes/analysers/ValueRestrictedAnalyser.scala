@@ -24,10 +24,10 @@ object ValueRestrictedAnalyser extends PreferenceAnalysisMethod[WeightedBallot] 
     require(election forall (b => b.preferences.length == ccandidates.length))
 
     // lazily generate triplet of candidates
-    val tripletList = (for (i <- ccandidates.indices;
-                           j <- i + 1 until ccandidates.length;
-                           k <- j + 1 until ccandidates.length)
-      yield (i, j, k)).view.map {case (i,j,k) => List(ccandidates(i), ccandidates(j), ccandidates(k))}
+    val tripletList = for (i <- ccandidates.indices.view;
+                           j <- (i + 1 until ccandidates.length).view;
+                           k <- (j + 1 until ccandidates.length).view)
+      yield List(ccandidates(i), ccandidates(j), ccandidates(k))
 
 
     // try to find the failing triplet and print it out
@@ -39,11 +39,11 @@ object ValueRestrictedAnalyser extends PreferenceAnalysisMethod[WeightedBallot] 
 
     failingTriplet match {
       case Some(list) => {
-        println("Preference profile is not value restricted for the triplet " + list.mkString(" , "))
+        println("\n\nPreference profile is not value restricted for the triplet " + list.mkString(" , "))
         false
       }
       case None => {
-        println("Preference profile is value restricted")
+        println("\n\nPreference profile is value restricted.\n\n")
         true
       }
     }
