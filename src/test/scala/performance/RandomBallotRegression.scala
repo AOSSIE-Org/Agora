@@ -1,9 +1,8 @@
 package performance
 
-import countvotes.methods.{BordaRuleMethod, NansonRuleMethod, RandomBallotMethod}
+import countvotes.methods.RandomBallotMethod
 import countvotes.structures.WeightedBallot
 import org.scalameter.api._
-import org.scalameter.persistence.GZIPJSONSerializationPersistor
 
 
 trait RandomBallotRegression extends RuntimeRegression {
@@ -29,7 +28,7 @@ trait RandomBallotMemoryRegression extends MemoryRegression {
 
 // existing issue : not overriding reports
 object RandomBallotRegressionTest extends Bench.Group {
-  //  perform regression for borda method
+  //  perform regression for Random Ballot method
   performance of "memory" config(
     reports.resultDir -> "target/benchmarks/randomballot/memory"
     ) in {
