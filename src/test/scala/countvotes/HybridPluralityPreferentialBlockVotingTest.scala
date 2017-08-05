@@ -10,8 +10,8 @@ class HybridPluralityPreferentialBlockVotingTest extends Specification {
   val expectedHybridPluralityPreferentialBlockVotingWinnerList1 = List(Candidate("Bill"), Candidate("Bob"))
 
   "HybridPluralityPreferentialBlockVoting Test " should {
-    "verify result" in { HybridPluralityPreferentialBlockVotingVerification("24-example.e", "24-candidates.txt") shouldEqual expectedHybridPluralityPreferentialBlockVotingWinnerList }
-    "verify result" in { HybridPluralityPreferentialBlockVotingVerification1("24-example.e", "24-candidates.txt") shouldEqual expectedHybridPluralityPreferentialBlockVotingWinnerList1 }
+    "verify result" in { HybridPluralityPreferentialBlockVotingVerification("32-example.e", "32-candidates.txt") shouldEqual expectedHybridPluralityPreferentialBlockVotingWinnerList }
+    "verify result" in { HybridPluralityPreferentialBlockVotingVerification1("32-example.e", "32-candidates.txt") shouldEqual expectedHybridPluralityPreferentialBlockVotingWinnerList1 }
   }
 
   def HybridPluralityPreferentialBlockVotingVerification(electionFile: String, candidatesFile: String): List[Candidate] = {

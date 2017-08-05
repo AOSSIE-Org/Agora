@@ -10,7 +10,7 @@ class PreferentialBlockVotingTest extends Specification {
 
   "PreferentialBlockVoting Test " should {
 
-    "verify result" in { PreferentialBlockVotingVerification("24-example.e", "24-candidates.txt") shouldEqual expectedPreferentialBlockVotingWinnerList }
+    "verify result" in { PreferentialBlockVotingVerification("32-example.e", "32-candidates.txt") shouldEqual expectedPreferentialBlockVotingWinnerList }
   }
 
   def PreferentialBlockVotingVerification(electionFile: String, candidatesFile: String): List[Candidate] = {

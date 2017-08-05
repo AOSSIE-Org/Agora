@@ -1,5 +1,3 @@
-1 1/1 Bob>Bill>Sue
-2 1/1 Bob>Bill>Sue
-3 1/1 Sue>Bob>Bill
-4 1/1 Sue>Bob>Bill
-5 1/1 Bill>Sue>Bob
+1 1/1 x2>x3>x4>x1>x5>x6
+2 1/1 x4>x3>x2>x5>x6>x1
+3 1/1 x6>x5>x4>x3>x2>x1
