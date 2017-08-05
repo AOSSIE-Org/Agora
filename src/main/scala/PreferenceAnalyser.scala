@@ -4,9 +4,7 @@ import countvotes.parsers.{CandidatesParser, PreferencesParser}
 import countvotes.structures.{Candidate, WeightedBallot}
 import countvotes.{ACT, Concise, ScrutinyTableFormats}
 
-/**
-  * Main entry point for the preference analysis tasks
-  */
+
 object PreferenceAnalyser {
 
   case class PreferenceConfig(directory: String = "",
