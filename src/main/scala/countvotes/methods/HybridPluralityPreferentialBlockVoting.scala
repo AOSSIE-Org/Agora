@@ -47,9 +47,6 @@ object HybridPluralityPreferentialBlockVoting extends VoteCountingMethod[Weighte
 
   def totals1(election: Election[WeightedBallot],ccandidates: List[Candidate], numVacancies: Int): MMap[Candidate,Rational] = {
     var m = new MMap[Candidate, Rational]
-    for(c<-ccandidates){
-      m(c)=Rational(0,1)
-    }
     for(b<-election if !b.preferences.isEmpty){
       for(c<-b.preferences.take(numVacancies)){
         m(c) = m.getOrElse(c, Rational(0,1)) + b.weight
@@ -71,13 +68,14 @@ object HybridPluralityPreferentialBlockVoting extends VoteCountingMethod[Weighte
     if(numVacancies > 0)
     {
       var tls = totals1(election, ccandidates, numVacancies)
-      if(tls.toList.sortWith(_._2 > _._2).head._2 > (election.size / 2)) {
-        winnerlist1 = tls.toList.sortWith(_._2>_._2).head :: winnerlist1
-        var newElection = exclude(election,tls.toList.sortWith(_._2>_._2).head._1)
-        winnerList(newElection, ccandidates.filter(_!=tls.toList.sortWith(_._2>_._2).head._1), numVacancies-1, winnerlist1)
+      val sortedCandList = tls.toList.sortWith(_._2 > _._2)
+      if(sortedCandList.head._2 > (election.size / 2)) {
+        winnerlist1 = sortedCandList.head :: winnerlist1
+        val newElection = exclude(election,sortedCandList.head._1)
+        winnerList(newElection, ccandidates.filter(_!=sortedCandList.head._1), numVacancies-1, winnerlist1)
       } else {
-        var newElection = exclude(election,tls.filter(x => ccandidates.contains(x._1)).toList.sortWith(_._2<_._2).head._1)
-        winnerList(newElection, ccandidates.filter(_!=tls.toList.sortWith(_._2<_._2).head._1), numVacancies, winnerlist1)
+        val newElection = exclude(election,tls.filter(x => ccandidates.contains(x._1)).toList.sortWith(_._2<_._2).head._1)
+        winnerList(newElection, ccandidates.filter(_!=sortedCandList.last._1), numVacancies, winnerlist1)
       }
     } else {
       winnerlist
