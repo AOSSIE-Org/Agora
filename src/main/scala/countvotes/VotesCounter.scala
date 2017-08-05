@@ -87,8 +87,8 @@ object Main extends RegexParsers {
 
     note(
       """Possible values are as follows:""" + "\n" +
-
-        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Baldwin, Nanson, Kemeny-Young, Contingent, Runoff2Round, Copeland, UncoveredSet""" + "\n" +
+        
+        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Baldwin, Nanson, Kemeny-Young, Contingent, Runoff2Round, Copeland, UncoveredSet, InstantExhaustiveBallot""" + "\n" +
 
         """for -t:  Concise, ACT""" + "\n \n"
     )
@@ -222,6 +222,12 @@ object Main extends RegexParsers {
         case "Coomb" => {
           var r = CoombRuleMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
           println("Scrutinity table for method Coomb is not implemented yet")
+          r.writeWinners(winnersfile)
+        }
+
+        case "InstantExhaustiveBallot" => {
+          var r = InstantExhaustiveBallot.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method ExhaustiveBallot is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
