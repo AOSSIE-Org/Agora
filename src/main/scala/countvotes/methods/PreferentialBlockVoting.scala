@@ -12,6 +12,7 @@ import scala.util.Sorting
 import java.io._
 
 import countvotes.methods.VoteCountingMethod
+import countvotes.methods.HybridPluralityPreferentialBlockVoting.exclude
 
 /**
   * https://en.wikipedia.org/wiki/Preferential_block_voting
@@ -52,32 +53,24 @@ object PreferentialBlockVoting extends VoteCountingMethod[WeightedBallot] {
     var winnerlist: List[(Candidate, Rational)] = Nil
     var vacancies = numVacancies
     var ccandidates1 = ccandidates
+    var election1 = election
     while (vacancies != 0) {
-      val ct = totals1(election, ccandidates1).toList.sortWith(_._2 > _._2)
-      if (ct.head._2 > majorityThreshold * election.length && ccandidates1.length > vacancies) {
-        winnerlist = (ct.head._1, ct.head._2) :: winnerlist
+      val sortedCandList = totals(election1, ccandidates1).toList.sortWith(_._2 > _._2)
+      if (sortedCandList.head._2 > majorityThreshold * election1.length && ccandidates1.length > vacancies) {
+        winnerlist = sortedCandList.head :: winnerlist
         vacancies -= 1
-        ccandidates1 = ccandidates1.filter(_ != ct.head._1)
+        ccandidates1 = ccandidates1.filter(_ != sortedCandList.head._1)
+        election1 = exclude(election1, sortedCandList.head._1)
       } else if (ccandidates1.length == vacancies) {
-        winnerlist = ct ::: winnerlist
+        winnerlist = sortedCandList ::: winnerlist
         vacancies = 0
       } else {
-        ccandidates1 = ccandidates1.filter(_ != ct.reverse.head._1)
+        ccandidates1 = ccandidates1.filter(_ != sortedCandList.last._1)
+        election1 = exclude(election1, sortedCandList.last._1)
       }
     }
     winnerlist
   }
 
-  def totals1(election: Election[WeightedBallot], candidates: List[Candidate]): MMap[Candidate, Rational] = {
-    val mp = new MMap[Candidate, Rational]
-    for (b <- election if !b.preferences.isEmpty) {
-      val preferredCandidate = b.preferences.find(candidates.contains(_))
-      preferredCandidate match {
-        case Some(c) => mp(c) = b.weight + (mp.getOrElse(c, 0))
-        case _ =>
-      }
-    }
-    mp
-  }
 }
 
