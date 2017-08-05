@@ -63,28 +63,28 @@ object HybridPluralityPreferentialBlockVoting extends VoteCountingMethod[Weighte
     list
   }
 
-  def winnerList(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int, winnerlist: List[(Candidate, Rational)]): List[(Candidate, Rational)] ={
-    var winnerlist1: List[(Candidate, Rational)] = winnerlist
-    if(numVacancies > 0)
-    {
-      var tls = totals1(election, ccandidates, numVacancies)
-      val sortedCandList = tls.toList.sortWith(_._2 > _._2)
-      if(sortedCandList.head._2 > (election.size / 2)) {
-        winnerlist1 = sortedCandList.head :: winnerlist1
-        val newElection = exclude(election,sortedCandList.head._1)
-        winnerList(newElection, ccandidates.filter(_!=sortedCandList.head._1), numVacancies-1, winnerlist1)
-      } else {
-        val newElection = exclude(election,tls.filter(x => ccandidates.contains(x._1)).toList.sortWith(_._2<_._2).head._1)
-        winnerList(newElection, ccandidates.filter(_!=sortedCandList.last._1), numVacancies, winnerlist1)
-      }
-    } else {
-      winnerlist
-    }
-  }
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   override def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
-   winnerList(election, ccandidates, numVacancies, Nil)
+    var winnerlist: List[(Candidate, Rational)] = Nil
+    var electionList = election
+    var ccandList = ccandidates
+    var nVacancies = numVacancies
+    while(nVacancies > 0)
+    {
+      var tls = totals1(electionList, ccandList, nVacancies)
+      val sortedCandList = tls.toList.sortWith(_._2 > _._2)
+      if(sortedCandList.head._2 > (electionList.size / 2)) {
+        winnerlist = sortedCandList.head :: winnerlist
+        electionList = exclude(electionList,sortedCandList.head._1)
+        ccandList = ccandList.filter(_!=sortedCandList.head._1)
+        nVacancies = nVacancies - 1
+      } else {
+        electionList = exclude(electionList,tls.filter(x => ccandList.contains(x._1)).toList.sortWith(_._2<_._2).head._1)
+        ccandList = ccandList.filter(_!=sortedCandList.last._1)
+      }
+    }
+    winnerlist
   }
 }
 
