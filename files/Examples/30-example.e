@@ -1,5 +1,8 @@
-1 3/1 A>B>C>D
-2 1/1 D>B>A>C
-3 1/1 D>C>A>B
-4 1/1 B>D>C>A
+1 1/1 A>C>B>D
+2 1/1 B>D>A>C
+3 1/1 C>B>A>D
+4 1/1 A>D>C>B
 5 1/1 C>D>B>A
+6 1/1 B>A>C>D
+7 1/1 C>B>A>D
+8 1/1 A>D>C>B
