@@ -1,8 +1,9 @@
-import countvotes.Main.{Config, parser}
+package analyse
+
 import countvotes.analysers.SinglePeakAnalyser
 import countvotes.parsers.{CandidatesParser, PreferencesParser}
 import countvotes.structures.{Candidate, WeightedBallot}
-import countvotes.{ACT, Concise, ScrutinyTableFormats}
+import countvotes.{Concise, ScrutinyTableFormats}
 
 
 object PreferenceAnalyser {

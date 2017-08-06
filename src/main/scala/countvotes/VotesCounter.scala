@@ -29,6 +29,7 @@ object Main extends RegexParsers {
   case class Config(directory: String = "",
                     ballotsfile: Option[String] = None,
                     method: String = "",
+                    paramFile: Option[String] = None,
                     nvacancies: String = "",
                     //order: String = "",
                     nkandidates: Option[String] = None,
@@ -43,7 +44,7 @@ object Main extends RegexParsers {
 
     note(
       """The arguments are as follows:""" + "\n" +
-        """ -d [-b] -c -m -v [-k] [-t]""" + "\n \n"
+        """ -d [-b] -c -m [-p] -v [-k] [-t]""" + "\n \n"
     )
 
     opt[String]('d', "directory") required() unbounded() action { (v, c) =>
@@ -61,6 +62,10 @@ object Main extends RegexParsers {
     opt[String]('m', "method") required() action { (v, c) =>
       c.copy(method = v)
     } text ("use vote counting method  <met>\n") valueName ("<met>")
+
+    opt[String]('p', "paramFile") required() unbounded() action { (v, c) =>
+      c.copy(paramFile = Some(v))
+    } text ("set paramfile to <pfile>\n") valueName ("<pfile>")
 
     opt[String]('v', "nvacancies") required() action { (v, c) =>
       c.copy(nvacancies = v)
@@ -88,7 +93,9 @@ object Main extends RegexParsers {
     note(
       """Possible values are as follows:""" + "\n" +
         
-        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Baldwin, Nanson, Kemeny-Young, Contingent, Runoff2Round, Copeland, UncoveredSet, InstantExhaustiveBallot, PreferentialBlockVoting, HybridPluralityPreferentialBlockVoting""" + "\n" +
+
+      """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Baldwin, Nanson, Kemeny-Young, Contingent,
+        | Runoff2Round, Copeland, UncoveredSet, InstantExhaustiveBallot, PreferentialBlockVoting, HybridPluralityPreferentialBlockVoting""".stripMargin + "\n" +
 
         """for -t:  Concise, ACT""" + "\n \n"
     )
@@ -97,6 +104,8 @@ object Main extends RegexParsers {
   }
 
 
+  // scalastyle:off cyclomatic.complexity
+  // scalastyle:off method.length
   def main(args: Array[String]): Unit = {
 
     def fileFormatDenoter(c: Config, filename: String): List[WeightedBallot] = {
@@ -135,7 +144,8 @@ object Main extends RegexParsers {
       }
     }
 
-    def callMethod(c: Config, election: List[WeightedBallot], winnersfile: String, reportfile: String, candidates_in_order: List[Candidate]) = {
+    def callMethod(c: Config, election: List[WeightedBallot], winnersfile: String, reportfile: String,
+                   candidates_in_order: List[Candidate], methodParam: Option[MethodParam]) = {
       c.method match {
         case "EVACS" => {
           var r = (new EVACSMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
@@ -286,6 +296,15 @@ object Main extends RegexParsers {
       }
     }
 
+    def methodParam(c: Config): Option[MethodParam] = {
+      c.paramFile match {
+        case Some(fileName) => {
+          Option(MethodParamParser.parse(c.directory + fileName))
+        }
+        case None => None
+      }
+    }
+
     parser.parse(args, Config()) map { c =>
 
       c.ballotsfile match {
@@ -300,7 +319,7 @@ object Main extends RegexParsers {
           //println("Election: " + election)
           val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
           val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename
-          callMethod(c, election, winnersfile, reportfile, candidates)
+          callMethod(c, election, winnersfile, reportfile, candidates, methodParam(c))
         }
         case None => { // ALL FILES IN THE DIRECTORY ARE ANALYSED
           val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
@@ -314,7 +333,7 @@ object Main extends RegexParsers {
             //val election =  PreferencesParser.read(c.directory + filename)
             val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
             val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename
-            callMethod(c, election, winnersfile, reportfile, candidates)
+            callMethod(c, election, winnersfile, reportfile, candidates, methodParam(c))
           }
         }
       }
