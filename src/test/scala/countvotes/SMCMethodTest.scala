@@ -1,0 +1,31 @@
+package countvotes
+
+import countvotes.methods.SMCMethod
+import countvotes.parsers.{CandidatesParser, MethodParamParser, PreferencesParser}
+import countvotes.structures.Candidate
+import org.specs2.mutable.Specification
+
+/**
+  * Created by deepeshpandey on 06/08/17.
+  */
+class SMCMethodTest extends Specification{
+
+  val smcWinnerList = List(Candidate("C"))
+
+  "SMC Test " should {
+
+    "verify result" in { smcMethodVerification("34-example.e", "34-candidates.txt", "method-param.json") shouldEqual smcWinnerList }
+  }
+
+  def smcMethodVerification(electionFile: String, candidateFile: String, paramFile: String): List[Candidate] = {
+
+    val dir = "../Agora/files/Examples/"
+    val candidates = CandidatesParser.read(dir + candidateFile)
+    val election =  PreferencesParser.read(dir + electionFile)
+    val param = MethodParamParser.parse(dir + paramFile)
+
+    SMCMethod.smcWinner(election, candidates, param, 1).map {_._1}
+  }
+
+
+}

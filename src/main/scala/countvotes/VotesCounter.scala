@@ -288,6 +288,14 @@ object Main extends RegexParsers {
           println(" Scrutiny table for method Preferential block voting is not implemented yet.")
           r.writeWinners(winnersfile)
         }
+        case "SMC" => {
+          methodParam match {
+            case Some(param) => {
+
+            }
+            case None => println("\n\nPlease provide the comparison order to execute this voting methods\n\n")
+          }
+        }
 
         case "Test" => {
           Test.testSDResolution
