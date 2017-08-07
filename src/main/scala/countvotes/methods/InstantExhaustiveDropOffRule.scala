@@ -4,36 +4,14 @@ package countvotes.methods
 import countvotes.structures._
 import countvotes.algorithms._
 import countvotes.methods.VoteCountingMethod
+import countvotes.methods.InstantExhaustiveBallot.exclude
 
-object ExhaustiveDropOffRule extends VoteCountingMethod[WeightedBallot] {
+object InstantExhaustiveDropOffRule extends VoteCountingMethod[WeightedBallot] {
 
   protected val result: Result = new Result
   protected val report: Report[WeightedBallot] = new Report[WeightedBallot]
 
   var dropOffPercentage = Rational(0, 100)
-
-  def exclude(election: Election[WeightedBallot],
-              candidate: Candidate): (Election[WeightedBallot], Set[WeightedBallot]) = {
-    var list: Election[WeightedBallot] = Nil
-    var setExhausted: Set[WeightedBallot] = Set()
-    for (b <- election if !b.preferences.isEmpty) {
-      if (b.preferences.head == candidate) {
-        if (b.preferences.tail.nonEmpty) {
-          list = WeightedBallot(b.preferences.tail, b.id, b.weight) :: list
-        }
-        else {
-          setExhausted += b
-        }
-      }
-      else {
-        list = WeightedBallot(b.preferences.head :: b.preferences.tail filter {
-          _ != candidate
-        }, b.id, b.weight) :: list
-      }
-    }
-
-    (list, setExhausted)
-  }
 
   def loser(candidate: (Candidate,Rational), total: Int, dropOffPercentage: Rational): Option[(Candidate,Rational)] = {
     if (dropOffPercentage.numerator*(100/dropOffPercentage.denominator) > 25) {
@@ -72,21 +50,26 @@ object ExhaustiveDropOffRule extends VoteCountingMethod[WeightedBallot] {
 
   override def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 
-    val tls = totals(election, ccandidates)
+    val majorityRational = Rational(1, 2)
+    var tls = totals(election, ccandidates).toList.sortWith(_._2 > _._2)
     if (tls.size > 2) {
-      dropOffPercentage = Rational(dropOffPercentage.numerator*(100/dropOffPercentage.denominator) + 5 , 100)
-      val losingCand: Option[(Candidate,Rational)] = loser(tls.toList.sortWith(_._2 > _._2).reverse.head, election.size, dropOffPercentage)
-      losingCand match {
-        case Some(c) => {
-         val newElection = exclude(election, c._1)._1
-          winners(newElection, ccandidates.filterNot(x => x == c._1), numVacancies)
-        }
-        case None => {
-          winners(election, ccandidates, numVacancies)
+      if (tls.head._2 > majorityRational * election.size){
+        tls.head :: List()
+      } else {
+        dropOffPercentage = Rational(dropOffPercentage.numerator * (100 / dropOffPercentage.denominator) + 5, 100)
+        val losingCand: Option[(Candidate, Rational)] = loser(tls.last, election.size, dropOffPercentage)
+        losingCand match {
+          case Some(c) => {
+            val newElection = exclude(election, c._1)
+            winners(newElection, ccandidates.filterNot(x => x == c._1), numVacancies)
+          }
+          case None => {
+            winners(election, ccandidates, numVacancies)
+          }
         }
       }
     } else {
-      tls.toList.sortWith(_._2 > _._2).head :: List()
+      tls.head :: List()
     }
   }
 }
