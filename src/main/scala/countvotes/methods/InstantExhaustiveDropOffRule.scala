@@ -6,6 +6,10 @@ import countvotes.algorithms._
 import countvotes.methods.VoteCountingMethod
 import countvotes.methods.InstantExhaustiveBallot.exclude
 
+/**
+  * https://en.wikipedia.org/wiki/Exhaustive_ballot#Notes
+  */
+
 object InstantExhaustiveDropOffRule extends VoteCountingMethod[WeightedBallot] {
 
   protected val result: Result = new Result
