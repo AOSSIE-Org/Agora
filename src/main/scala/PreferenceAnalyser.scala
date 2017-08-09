@@ -1,5 +1,5 @@
 import countvotes.Main.{Config, parser}
-import countvotes.analysers.SinglePeakAnalyser
+import countvotes.analysers.{SinglePeakAnalyser, ValueRestrictedAnalyser}
 import countvotes.parsers.{CandidatesParser, PreferencesParser}
 import countvotes.structures.{Candidate, WeightedBallot}
 import countvotes.{ACT, Concise, ScrutinyTableFormats}
@@ -60,7 +60,7 @@ object PreferenceAnalyser {
 
         }
         case "value-restricted" => {
-          println("perform value restricted preference analysis")
+          ValueRestrictedAnalyser.analyse(election, candidates_in_order)
         }
       }
     }
