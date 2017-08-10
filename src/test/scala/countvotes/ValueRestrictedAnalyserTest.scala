@@ -3,7 +3,7 @@ import countvotes.parsers.{CandidatesParser, PreferencesParser}
 import org.specs2.mutable.Specification
 
 
-class ValueRestricedAnalyserTest extends Specification {
+class ValueRestrictedAnalyserTest extends Specification {
 
   val expectedAnalysis1 = true
   val expectedAnalysis2 = false
