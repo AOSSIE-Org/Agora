@@ -145,7 +145,7 @@ object Main extends RegexParsers {
     }
 
     def callMethod(c: Config, election: List[WeightedBallot], winnersfile: String, reportfile: String,
-                   candidates_in_order: List[Candidate], methodParam: Option[MethodParam]) = {
+                   candidates_in_order: List[Candidate], parameters: Option[Parameters]) = {
       c.method match {
         case "EVACS" => {
           var r = (new EVACSMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
@@ -289,7 +289,7 @@ object Main extends RegexParsers {
           r.writeWinners(winnersfile)
         }
         case "SMC" => {
-          methodParam match {
+          parameters match {
             case Some(param) => {
               var r = SMCMethod.runScrutiny(election, candidates_in_order, param, c.nvacancies.toInt)
               println("Scrutiny table for method SMC is not implemented yet.")
@@ -306,7 +306,7 @@ object Main extends RegexParsers {
       }
     }
 
-    def methodParam(c: Config): Option[MethodParam] = {
+    def methodParameters(c: Config): Option[Parameters] = {
       c.paramFile match {
         case Some(fileName) => {
           Option(MethodParamParser.parse(c.directory + fileName))
@@ -329,7 +329,7 @@ object Main extends RegexParsers {
           //println("Election: " + election)
           val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
           val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename
-          callMethod(c, election, winnersfile, reportfile, candidates, methodParam(c))
+          callMethod(c, election, winnersfile, reportfile, candidates, methodParameters(c))
         }
         case None => { // ALL FILES IN THE DIRECTORY ARE ANALYSED
           val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
@@ -343,7 +343,7 @@ object Main extends RegexParsers {
             //val election =  PreferencesParser.read(c.directory + filename)
             val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
             val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename
-            callMethod(c, election, winnersfile, reportfile, candidates, methodParam(c))
+            callMethod(c, election, winnersfile, reportfile, candidates, methodParameters(c))
           }
         }
       }

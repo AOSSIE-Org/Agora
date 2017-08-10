@@ -16,7 +16,7 @@ object SMCMethod extends VoteCountingMethod[WeightedBallot] with LazyLogging {
 
   private val report: Report[WeightedBallot] = new Report[WeightedBallot]
 
-  def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], param: MethodParam, numVacancies: Int): Report[WeightedBallot] = {
+  def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], param: Parameters, numVacancies: Int): Report[WeightedBallot] = {
 
     print("\n INPUT ELECTION: \n")
     printElection(election)
@@ -28,11 +28,11 @@ object SMCMethod extends VoteCountingMethod[WeightedBallot] with LazyLogging {
     report
   }
 
-  def smcWinner(election: Election[WeightedBallot], ccandidates: List[Candidate], param: MethodParam, numVacancies: Int):
+  def smcWinner(election: Election[WeightedBallot], ccandidates: List[Candidate], param: Parameters, numVacancies: Int):
   List[(Candidate, Rational)] = {
 
     // it may be possible that param candidates and actual candidates are inconsistent
-    require(param.comparisonOrder.forall(c => ccandidates.exists(cand => cand.name == c)))
+    require(param.comparisonOrder.isDefined && param.comparisonOrder.get.forall(c => ccandidates.exists(cand => cand.name == c)))
 
     val zeroRational = Rational(0, 1)
     val majorityRational = Rational(1, 2)
@@ -41,7 +41,7 @@ object SMCMethod extends VoteCountingMethod[WeightedBallot] with LazyLogging {
     val electionResponse = getPairwiseComparison(election, ccandidates)
 
     // generate the ordered list of candidates
-    val candOrderList = param.comparisonOrder.map(name => ccandidates.find(cand => cand.name == name).get)
+    val candOrderList = param.comparisonOrder.get.map(name => ccandidates.find(cand => cand.name == name).get)
 
     List((candOrderList.head /: candOrderList.tail)((cA, cB) => {
       if (electionResponse(ccandidates.indexOf(cA))(ccandidates.indexOf(cB)) > majorityRational * totalVoters) cA else cB

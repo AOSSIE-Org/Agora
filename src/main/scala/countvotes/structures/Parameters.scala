@@ -36,13 +36,13 @@ object ComparisonSets {
 
 }
 
-case class MethodParam(comparisonOrder: Array[String], allowedVote: Int, cutOffQuota: Double,
-                       proportionalRatio: Double, majorityBonus: MajorityBonus,
-                       probabilityDistribution: Array[Double], comparisonSets: ComparisonSets)
+case class Parameters(comparisonOrder: Option[Array[String]], allowedVote: Option[Int], cutOffQuota: Option[Double],
+                      proportionalRatio: Option[Double], majorityBonus: Option[MajorityBonus],
+                      probabilityDistribution: Option[Array[Double]], comparisonSets: Option[ComparisonSets])
 
-object MethodParam {
+object Parameters {
 
-  implicit val methodParamWriter: Writes[MethodParam] = (
+  /*implicit val methodParamWriter: Writes[Parameters] = (
     (__ \ "comparison_order").write[Array[String]] and
       (__ \ "allowed_vote").write[Int] and
       (__ \ "cut_off_quota").write[Double] and
@@ -50,18 +50,20 @@ object MethodParam {
       (__ \ "majority_bonus").write[MajorityBonus] and
       (__ \ "probability_distribution").write[Array[Double]] and
       (__ \ "comparison_sets").write[ComparisonSets]
-    ) (unlift(MethodParam.unapply))
+    ) (unlift(Parameters.unapply))*/
 
-  implicit val methodParamReader: Reads[MethodParam] = (
-    (__ \ "comparison_order").read[Array[String]] and
-      (__ \ "allowed_vote").read[Int] and
-      (__ \ "cut_off_quota").read[Double] and
-      (__ \ "proportional_ratio").read[Double] and
-      (__ \ "majority_bonus").read[MajorityBonus] and
-      (__ \ "probability_distribution").read[Array[Double]] and
-      (__ \ "comparison_sets").read[ComparisonSets]
-    ) (MethodParam.apply _)
+  implicit val methodParamReader: Reads[Parameters] = (
+    (__ \ "comparison_order").readNullable[Array[String]] and
+      (__ \ "allowed_vote").readNullable[Int] and
+      (__ \ "cut_off_quota").readNullable[Double] and
+      (__ \ "proportional_ratio").readNullable[Double] and
+      (__ \ "majority_bonus").readNullable[MajorityBonus] and
+      (__ \ "probability_distribution").readNullable[Array[Double]] and
+      (__ \ "comparison_sets").readNullable[ComparisonSets]
+    ) (Parameters.apply _)
+
 }
+
 
 
 

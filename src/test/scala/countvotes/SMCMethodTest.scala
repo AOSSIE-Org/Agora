@@ -14,6 +14,7 @@ class SMCMethodTest extends Specification{
 
   "SMC Test " should {
 
+    "verify result" in { smcMethodVerification("34-example.e", "34-candidates.txt", "method-param1.json") shouldEqual smcWinnerList }
     "verify result" in { smcMethodVerification("34-example.e", "34-candidates.txt", "method-param.json") shouldEqual smcWinnerList }
   }
 

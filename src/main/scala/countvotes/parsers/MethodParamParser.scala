@@ -1,6 +1,6 @@
 package countvotes.parsers
 
-import countvotes.structures.MethodParam
+import countvotes.structures.Parameters
 import play.api.libs.json.Json
 
 import scala.io.Source
@@ -10,10 +10,10 @@ import scala.io.Source
   */
 object MethodParamParser {
 
-  def parse(fileName: String): MethodParam = {
+  def parse(fileName: String): Parameters = {
 
     val src = Source.fromFile(fileName).getLines.mkString
-    Json.parse(src).as[MethodParam](MethodParam.methodParamReader)
+    Json.parse(src).as[Parameters](Parameters.methodParamReader)
   }
 
 }
