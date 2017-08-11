@@ -56,4 +56,16 @@ object ScoredWeightedBallot {
   def apply(p: List[Candidate], id: Int, w: Rational, s: List[Int]): ScoredWeightedBallot  = new ScoredWeightedBallot(p, id, w, s)
 }
 
+class WeightedScoreRankBallot(p: List[(Candidate, Option[Int], Option[Int])], id: Int, w: Rational)
+  extends Ballot(p map {_._1}, id) with Weight {
+  val weight = w
+  val scoreRankPreferences = p
+  override def toString: String = "[" + id + ", " + p + ", " + w + "]"
+}
+
+object WeightedScoreRankBallot {
+  def apply(p: List[(Candidate, Option[Int], Option[Int])], id: Int, w: Rational): WeightedScoreRankBallot = new WeightedScoreRankBallot(p, id, w)
+}
+
+
 
