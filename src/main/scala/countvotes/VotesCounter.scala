@@ -299,6 +299,17 @@ object Main extends RegexParsers {
           }
         }
 
+        case "KellysExtension" => {
+          parameters match {
+            case Some(param) => {
+              var r = KellysExtensionMethod.runScrutiny(election, candidates_in_order, param, c.nvacancies.toInt)
+              println("Scrutiny table for method SMC is not implemented yet.")
+              r.writeWinners(winnersfile)
+            }
+            case None => println("\n\nPlease provide the comparison sets to calculate Kelly preferred set!\n\n")
+          }
+        }
+
         case "Test" => {
           Test.testSDResolution
         }
