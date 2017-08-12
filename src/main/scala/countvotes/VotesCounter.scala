@@ -87,8 +87,8 @@ object Main extends RegexParsers {
 
     note(
       """Possible values are as follows:""" + "\n" +
-        
-        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Baldwin, Nanson, Kemeny-Young, Contingent, Runoff2Round, Copeland, UncoveredSet, InstantExhaustiveBallot, InstantExhaustiveDropOff""" + "\n" +
+
+        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Baldwin, Nanson, Kemeny-Young, Contingent, Runoff2Round, Copeland, UncoveredSet, InstantExhaustiveBallot, PreferentialBlockVoting, HybridPluralityPreferentialBlockVoting, InstantExhaustiveDropOff""" + "\n" +
 
         """for -t:  Concise, ACT""" + "\n \n"
     )
@@ -270,6 +270,18 @@ object Main extends RegexParsers {
         case "InstantExhaustiveDropOff" => {
           var r = InstantExhaustiveDropOffRule.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Exhaustive Ballot with Drop off is not implemented yet.")
+          r.writeWinners(winnersfile)
+        }
+
+        case "PreferentialBlockVoting" => {
+          var r = PreferentialBlockVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method Preferential block voting is not implemented yet.")
+          r.writeWinners(winnersfile)
+        }
+
+        case "HybridPluralityPreferentialBlockVoting" => {
+          var r = HybridPluralityPreferentialBlockVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method Preferential block voting is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
