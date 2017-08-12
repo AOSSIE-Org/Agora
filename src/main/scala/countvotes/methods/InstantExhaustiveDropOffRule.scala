@@ -4,13 +4,13 @@ package countvotes.methods
 import countvotes.structures._
 import countvotes.algorithms._
 import countvotes.methods.VoteCountingMethod
-import countvotes.methods.InstantExhaustiveBallot.exclude
 
 /**
   * https://en.wikipedia.org/wiki/Exhaustive_ballot#Notes
   */
 
-object InstantExhaustiveDropOffRule extends VoteCountingMethod[WeightedBallot] {
+object InstantExhaustiveDropOffRule extends VoteCountingMethod[WeightedBallot]
+  with SimpleExclusionWithFixedElectionSize{
 
   protected val result: Result = new Result
   protected val report: Report[WeightedBallot] = new Report[WeightedBallot]

@@ -10,17 +10,12 @@ import countvotes.methods.VoteCountingMethod
   * https://en.wikipedia.org/wiki/Exhaustive_ballot
   */
 
-object InstantExhaustiveBallot extends VoteCountingMethod[WeightedBallot] {
+object InstantExhaustiveBallot extends VoteCountingMethod[WeightedBallot]
+  with SimpleExclusionWithFixedElectionSize {
 
   protected val result: Result = new Result
   protected val report: Report[WeightedBallot] = new Report[WeightedBallot]
 
-  def exclude(election: Election[WeightedBallot], candidate: Candidate): Election[WeightedBallot] = {
-    election map { b =>
-      val newPrefs = b.preferences filter { _ != candidate }
-      WeightedBallot(newPrefs, b.id, b.weight)
-    }
-  }
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int):   Report[WeightedBallot]  = {
