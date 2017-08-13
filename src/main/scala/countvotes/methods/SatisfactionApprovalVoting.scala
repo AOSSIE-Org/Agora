@@ -33,10 +33,10 @@ object SatisfactionApprovalVoting extends VoteCountingMethod[WeightedBallot] {
     report
   }
 
-  def totals1(election: Election[WeightedBallot], candidates: List[Candidate], ccandMap: IMap[Int, List[Candidate]]): List[(Candidate, Rational)] = {
-    // takes the integer mapping of candidate subsets and calculates totals
-    // if all the candidates chosen by a voter is a subset of the candidate subsets in IMap
-    // then score is 1, else score decreases by 1/n for each candidate which is not included in the candidate subsets of IMap
+  // follwoing function takes the integer mapping of candidate subsets and calculates totals
+  // if all the candidates chosen by a voter is a subset of the candidate subsets in IMap
+  // then score is 1, else score decreases by 1/n for each candidate which is not included in the candidate subsets of IMap
+  def totalsForSubsets(election: Election[WeightedBallot], candidates: List[Candidate], ccandMap: IMap[Int, List[Candidate]]): List[(Candidate, Rational)] = {
     var scoredSubsetMap = new MMap[Int, Rational]
     for (a <- ccandMap) {
       for (b <- election if !b.preferences.isEmpty) {
@@ -53,16 +53,24 @@ object SatisfactionApprovalVoting extends VoteCountingMethod[WeightedBallot] {
     finalList
   }
 
+  // following function returns immutable map that maps candidate subsets to integers, which are then referred to for calculating totals
+  // each candidate subset has length equal to numVacancies
   def candidateMap(candidates: List[Candidate], numVacancies: Int): IMap[Int, List[Candidate]] = {
-    // immutable map that maps candidate subsets to integers, which are then referred to for calculating totals
-    // each candidate subset has length equal to numVacancies
     val ccandMap: IMap[Int, List[Candidate]] = candidates.toSet[Candidate].subsets.map(_.toList).toList.filter(x => x.length == numVacancies).zipWithIndex.map{ case(a,b) => b -> a}.toMap
     ccandMap
   }
 
   def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int ):
   List[(Candidate,Rational)] = {
-    val ccandMap = candidateMap(ccandidates, numVacancies)
-    totals1(election, ccandidates,ccandMap)
+    // following code makes use of additive satisfcation property of Satisfaction Approval Voting
+    val candidateScoreMap = new MMap[Candidate, Rational]
+    for(b<-election if !b.preferences.isEmpty){
+      for(c<-b.preferences){
+        candidateScoreMap(c) = Rational(1, b.preferences.size) + candidateScoreMap.getOrElse(c, 0)
+      }
+    }
+    candidateScoreMap.toList.sortWith(_._2>_._2).take(numVacancies)
+    //val ccandMap = candidateMap(ccandidates, numVacancies)
+    //totalsForSubsets(election, ccandidates,ccandMap)
   }
 }
