@@ -14,7 +14,7 @@ class DodgsonTest extends Specification {
 
   "Dodgson Rule Test " should {
 
-    "verify result" in { dodgsonMethodVerification("32-example.e", "30-candidates.txt") shouldEqual expectedDodgsonWinnerList }
+    "verify result" in { dodgsonMethodVerification("39-example.e", "30-candidates.txt") shouldEqual expectedDodgsonWinnerList }
   }
 
   def dodgsonMethodVerification(electionFile: String, candidateFile: String): List[Candidate] = {

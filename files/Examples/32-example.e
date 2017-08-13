@@ -1,5 +1,5 @@
-1 3/1 A>B>C>D
-2 1/1 D>B>A>C
-3 1/1 D>C>A>B
-4 1/1 B>D>C>A
-5 1/1 C>D>B>A
+1 1/1 Bob>Bill>Sue
+2 1/1 Bob>Bill>Sue
+3 1/1 Sue>Bob>Bill
+4 1/1 Sue>Bob>Bill
+5 1/1 Bill>Sue>Bob

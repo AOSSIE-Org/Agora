@@ -88,7 +88,7 @@ object Main extends RegexParsers {
     note(
       """Possible values are as follows:""" + "\n" +
 
-        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Baldwin, Nanson, Kemeny-Young, Contingent, Runoff2Round, Copeland, UncoveredSet""" + "\n" +
+        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Baldwin, Nanson, Kemeny-Young, Contingent, Runoff2Round, Copeland, UncoveredSet, InstantExhaustiveBallot, PreferentialBlockVoting, HybridPluralityPreferentialBlockVoting, InstantExhaustiveDropOff""" + "\n" +
 
         """for -t:  Concise, ACT""" + "\n \n"
     )
@@ -225,6 +225,12 @@ object Main extends RegexParsers {
           r.writeWinners(winnersfile)
         }
 
+        case "InstantExhaustiveBallot" => {
+          var r = InstantExhaustiveBallot.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method ExhaustiveBallot is not implemented yet.")
+          r.writeWinners(winnersfile)
+        }
+
         case "Contingent" => {
           var r = ContingentMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Contingent is not implemented yet.")
@@ -257,6 +263,30 @@ object Main extends RegexParsers {
         case "UncoveredSet" => {
           var r = UncoveredSetMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
           println("Scrutinity table for method Uncovered set is not implemented yet")
+          r.writeWinners(winnersfile)
+        }
+
+        case "SmithSet" => {
+          var r = SmithSetMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method Runoff2Round is not implemented yet.")
+          r.writeWinners(winnersfile)
+        }
+
+        case "InstantExhaustiveDropOff" => {
+          var r = InstantExhaustiveDropOffRule.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method Exhaustive Ballot with Drop off is not implemented yet.")
+          r.writeWinners(winnersfile)
+        }
+
+        case "PreferentialBlockVoting" => {
+          var r = PreferentialBlockVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method Preferential block voting is not implemented yet.")
+          r.writeWinners(winnersfile)
+        }
+
+        case "HybridPluralityPreferentialBlockVoting" => {
+          var r = HybridPluralityPreferentialBlockVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method Preferential block voting is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
