@@ -16,8 +16,8 @@ class MajorityRuleTest extends Specification{
 
   "MajorityRule Test " should {
 
-    "verify result" in { majorityRuleMethodVerification("01-example.txt", "01-candidates.txt") shouldEqual expectedMajorityRuleWinnerList1 }
-    "verify result" in { majorityRuleMethodVerification("02-example.txt", "02-candidates.txt") shouldEqual expectedMajorityRuleWinnerList2 }
+    "verify result" in { majorityRuleMethodVerification("01-example.e", "01-candidates.txt") shouldEqual expectedMajorityRuleWinnerList1 }
+    "verify result" in { majorityRuleMethodVerification("02-example.e", "02-candidates.txt") shouldEqual expectedMajorityRuleWinnerList2 }
 
   }
 

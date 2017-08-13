@@ -15,19 +15,13 @@ abstract class ElectionParser[T] extends RegexParsers {
 
     val bufferedSource = io.Source.fromFile(filename)
     val lines = bufferedSource.getLines.toList
-    //val lineswithoutheading = lines.tail
     var output = for (l <- lines) yield {
-      //println(l)
-      //println(parse(line, l))
       parse(line, l) match {
         case Success(sucLine,_) => sucLine
-        case _ => throw new Exception("Should never happen")
+        case _ => throw new Exception("Parsing Error")
       }
     }
     bufferedSource.close()
     output
   }
-
-
-
 }
