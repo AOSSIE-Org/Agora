@@ -34,14 +34,18 @@ object SatisfactionApprovalVoting extends VoteCountingMethod[WeightedBallot] {
   }
 
   def totals1(election: Election[WeightedBallot], candidates: List[Candidate], ccandMap: IMap[Int, List[Candidate]]): List[(Candidate, Rational)] = {
-    var m = new MMap[Int, Rational]
+    // takes the integer mapping of candidate subsets and calculates totals
+    // if all the candidates chosen by a voter is a subset of the candidate subsets in IMap
+    // then score is 1, else score decreases by 1/n for each candidate which is not included in the candidate subsets of IMap
+    var scoredSubsetMap = new MMap[Int, Rational]
     for (a <- ccandMap) {
       for (b <- election if !b.preferences.isEmpty) {
-        m(a._1) = m.getOrElse(a._1,Rational(0,1)) + Rational(b.preferences.length - b.preferences.toSet[Candidate].diff(a._2.toSet[Candidate]).size, b.preferences.length)
+        scoredSubsetMap(a._1) = scoredSubsetMap.getOrElse(a._1,Rational(0,1)) + Rational(b.preferences.length - b.preferences.toSet[Candidate].diff(a._2.toSet[Candidate]).size, b.preferences.length)
       }
     }
-    val winnerList = ccandMap(m.toList.sortWith(_._2>_._2).head._1)
-    val winnerScore = m.toList.sortWith(_._2>_._2).head._2
+    val sortedScoredSubsetMap = scoredSubsetMap.toList.sortWith(_._2>_._2)
+    val winnerList = ccandMap(sortedScoredSubsetMap.head._1)
+    val winnerScore = sortedScoredSubsetMap.head._2
     var finalList: List[(Candidate,Rational)] = Nil
     for(w<-winnerList){
       finalList = (w,winnerScore) :: finalList
@@ -50,6 +54,8 @@ object SatisfactionApprovalVoting extends VoteCountingMethod[WeightedBallot] {
   }
 
   def candidateMap(candidates: List[Candidate], numVacancies: Int): IMap[Int, List[Candidate]] = {
+    // immutable map that maps candidate subsets to integers, which are then referred to for calculating totals
+    // each candidate subset has length equal to numVacancies
     val ccandMap: IMap[Int, List[Candidate]] = candidates.toSet[Candidate].subsets.map(_.toList).toList.filter(x => x.length == numVacancies).zipWithIndex.map{ case(a,b) => b -> a}.toMap
     ccandMap
   }
