@@ -299,6 +299,17 @@ object Main extends RegexParsers {
           }
         }
 
+        case "BipartisanSet" => {
+          parameters match {
+            case Some(param) => {
+              var r = BipartisanSet.runScrutiny(election, candidates_in_order, param)
+              println("Scrutiny table for Bipartisan Set is not implemented yet.")
+              r.writeWinners(winnersfile)
+            }
+            case None => println("Please provide probability distribution to compute bipartisan set")
+          }
+        }
+
         case "Test" => {
           Test.testSDResolution
         }
