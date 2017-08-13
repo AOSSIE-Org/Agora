@@ -29,17 +29,19 @@ object DodgsonMethod extends VoteCountingMethod[WeightedBallot] {
   override def winners(e: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 
     // find flip vector from min sum to max sum which satisfies condorcet condition
-    val minDodgsonFlip = List.fill(Election.totalWeightedVoters(e).toInt)(0 to ccandidates.length)
-      .flatten
+    val minDodgsonFlipList = List.fill(Election.totalWeightedVoters(e).toInt)(0 to ccandidates.length)
+      .flatten.view
       .combinations(Election.totalWeightedVoters(e).toInt)
       .flatMap(_.permutations)
       .toList
       .sortBy(_.sum)
-      .find(list => getCondorcetWinnerIfExist(list, ccandidates, e).nonEmpty)
+      .view
+
+    val minDodgsonFlip = minDodgsonFlipList.find(list => getCondorcetWinnerIfExist(list.force, ccandidates, e).nonEmpty)
 
     // find the dodgson winner based on this flip vector
     minDodgsonFlip match {
-      case Some(list) => getCondorcetWinnerIfExist(list, ccandidates, e) match {
+      case Some(list) => getCondorcetWinnerIfExist(list.force, ccandidates, e) match {
         case Some(candidate) => List((candidate, Rational(list.sum, 1)))
         case None => List()
       }
