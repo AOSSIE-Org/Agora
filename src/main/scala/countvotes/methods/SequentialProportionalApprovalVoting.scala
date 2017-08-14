@@ -36,11 +36,11 @@ object SequentialProportionalApprovalVoting extends VoteCountingMethod[WeightedB
 
   def excludeWinner(election: Election[WeightedBallot], winner: List[(Candidate, Rational)]): Election[WeightedBallot] = {
     var list: Election[WeightedBallot]  = Nil
-    for(b<-election if !b.preferences.isEmpty){
-      if(b.preferences.contains(winner.head._1)){
-        list = WeightedBallot(b.preferences.filter(_ !=winner.head._1),b.id,Rational(b.weight.numerator,b.weight.denominator+1)) :: list
+    for(b<-election if !b.preferences.isEmpty) {
+      if(b.preferences.contains(winner.head._1)) {
+        list = WeightedBallot(b.preferences.filter(_ != winner.head._1), b.id, Rational(b.weight.numerator, b.weight.denominator + 1)) :: list
       } else {
-        list = WeightedBallot(b.preferences,b.id, b.weight) :: list
+        list = WeightedBallot(b.preferences, b.id, b.weight) :: list
       }
     }
     list
@@ -48,19 +48,17 @@ object SequentialProportionalApprovalVoting extends VoteCountingMethod[WeightedB
 
   def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int ):
   List[(Candidate,Rational)] = {
-    val tls = countApprovals(election, ccandidates)
-    val winner = tls.toList.sortWith(_._2 > _._2).take(1).toList
-    result.addPendingWinners(winner, None)
-    if(numVacancies>1) {
-      val newElection = excludeWinner(election, winner)
-      winners(newElection, ccandidates.filter(_ != winner.head._1), numVacancies-1)
-    } else {
-      val results = result.getPendingWinners
-      var resultList: List[(Candidate, Rational)] = Nil
-      for(b<-results){
-        resultList = (b._1,b._2) :: resultList
-      }
-      resultList
+    var winnerList: List[(Candidate, Rational)] = Nil
+    var election1 = election
+    var ccandidates1 = ccandidates
+    var vacancies = numVacancies
+    while(vacancies != 0) {
+      val winner = countApprovals(election1, ccandidates1).toList.sortWith(_._2 > _._2).take(1)
+      winnerList = winner ::: winnerList
+      election1= excludeWinner(election1, winner)
+      ccandidates1 = ccandidates1.filter(_ != winner.head._1)
+      vacancies = vacancies - 1
     }
+    winnerList
   }
 }

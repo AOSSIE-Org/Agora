@@ -10,7 +10,7 @@ class SequentialProportionalApprovalVotingTest extends Specification {
 
   "SequentialProportionalApprovalVoting Test " should {
 
-    "verify result" in { SequentialProportionalApprovalVotingVerification("36-example.txt", "36-candidates.txt") shouldEqual expectedSequentialProportionalApprovalWinnerList}
+    "verify result" in { SequentialProportionalApprovalVotingVerification("36-example.e", "36-candidates.txt") shouldEqual expectedSequentialProportionalApprovalWinnerList}
   }
 
   def SequentialProportionalApprovalVotingVerification(electionFile: String, candidatesFile: String): List[(Candidate,Rational)] = {
