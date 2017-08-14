@@ -54,7 +54,7 @@ object BordaRuleMethod extends VoteCountingMethod[WeightedBallot] with LazyLoggi
 
     val tls = totals(election, ccandidates)
 
-    tls.toList.sortWith(_._2 > _._2)
+    tls.toList.sortWith(_._2 > _._2).take(numVacancies)
 
   }
 

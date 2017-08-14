@@ -10,7 +10,7 @@ class ProportionalApprovalVotingTest extends Specification {
 
   "ProportionalApprovalVoting Test " should {
 
-    "verify result" in { ProportionalApprovalVotingVerification("19-example.txt", "19-candidates.txt") shouldEqual expectedProportionalApprovalWinnerList}
+    "verify result" in { ProportionalApprovalVotingVerification("35-example.e", "35-candidates.txt") shouldEqual expectedProportionalApprovalWinnerList}
   }
 
   def ProportionalApprovalVotingVerification(electionFile: String, candidatesFile: String): List[(Candidate,Rational)] = {
