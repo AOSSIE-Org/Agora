@@ -34,16 +34,18 @@ object SequentialProportionalApprovalVoting extends VoteCountingMethod[WeightedB
     report
   }
 
+  // following function removes winner and reduces weight on ballot to 1/(N+1)
+  // where N is the number of winners in one single ballot choice list
   def excludeWinner(election: Election[WeightedBallot], winner: List[(Candidate, Rational)]): Election[WeightedBallot] = {
-    var list: Election[WeightedBallot]  = Nil
+    var newElection: Election[WeightedBallot]  = Nil
     for(b<-election if !b.preferences.isEmpty) {
       if(b.preferences.contains(winner.head._1)) {
-        list = WeightedBallot(b.preferences.filter(_ != winner.head._1), b.id, Rational(b.weight.numerator, b.weight.denominator + 1)) :: list
+        newElection = WeightedBallot(b.preferences.filter(_ != winner.head._1), b.id, Rational(b.weight.numerator, b.weight.denominator + 1)) :: newElection
       } else {
-        list = WeightedBallot(b.preferences, b.id, b.weight) :: list
+        newElection = WeightedBallot(b.preferences, b.id, b.weight) :: newElection
       }
     }
-    list
+    newElection
   }
 
   def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int ):
