@@ -2,7 +2,8 @@ package countvotes.methods
 
 import countvotes.structures.{Candidate, Input, Rational, Report, _}
 import countvotes.structures.{Candidate, Rational, _}
-import countvotes.methods.ApprovalRule.countApprovals
+import countvotes.methods._
+import countvotes.algorithms._
 
 import collection.mutable.{HashMap => MMap}
 import collection.immutable.{Map => IMap}
@@ -12,7 +13,8 @@ import collection.immutable.{Map => IMap}
   */
 
 
-object SequentialProportionalApprovalVoting extends VoteCountingMethod[WeightedBallot] {
+object SequentialProportionalApprovalVoting extends VoteCountingMethod[WeightedBallot]
+  with SimpleApproval {
 
   private val result: Result = new Result
   private val report: Report[WeightedBallot] = new Report[WeightedBallot]
