@@ -17,6 +17,8 @@ import countvotes.methods.VoteCountingMethod
 
 /***
   * https://en.wikipedia.org/wiki/Oklahoma_primary_electoral_system
+  * we are not enforcing a strict number of preferences per ballot, unlike in the original Oklahoma method
+  * so ballots with fewer prefererences are not voided
   */
 
 object OklahomaMethod extends VoteCountingMethod[WeightedBallot] {
@@ -58,12 +60,13 @@ object OklahomaMethod extends VoteCountingMethod[WeightedBallot] {
     for (c<-ccandidates) {
       candidateScoreMap(c) = candidateScoreMap.getOrElse(c, Rational(0, 1)) + candidateTotalScores.getOrElse(c, Rational(0, 1)) * multiplier
     }
-    if (candidateScoreMap.toList.sortWith(_._2 > _._2).head._2 > (election.length / 2)) {
-      candidateScoreMap.toList.sortWith(_._2 > _._2).head :: List()
+    val sortedCandidateScoreMap = candidateScoreMap.toList.sortWith(_._2 > _._2)
+    if (sortedCandidateScoreMap.head._2 > (Rational(election.length, 2))) {
+      sortedCandidateScoreMap.head :: List()
     } else {
       var newElection: Election[WeightedBallot] = Nil
       for (b<-election) {
-        newElection = WeightedBallot(b.preferences.tail, b.id, b.weight) :: newElection
+        newElection = WeightedBallot(if (b.preferences != Nil) b.preferences.tail else Nil, b.id, b.weight) :: newElection
       }
       oklahomaTotals(newElection, ccandidates, candidateScoreMap, Rational(multiplier.numerator, multiplier.denominator + 1))
     }
