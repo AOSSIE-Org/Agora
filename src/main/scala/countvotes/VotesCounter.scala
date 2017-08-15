@@ -88,7 +88,7 @@ object Main extends RegexParsers {
     note(
       """Possible values are as follows:""" + "\n" +
 
-        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Baldwin, Nanson, Kemeny-Young, Contingent, Runoff2Round, Copeland, UncoveredSet, InstantExhaustiveBallot, PreferentialBlockVoting, HybridPluralityPreferentialBlockVoting, InstantExhaustiveDropOff""" + "\n" +
+        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Baldwin, Nanson, Kemeny-Young, Contingent, Runoff2Round, Copeland, UncoveredSet, InstantExhaustiveBallot, PreferentialBlockVoting, HybridPluralityPreferentialBlockVoting, InstantExhaustiveDropOff, SAV""" + "\n" +
 
         """for -t:  Concise, ACT""" + "\n \n"
     )
@@ -284,6 +284,12 @@ object Main extends RegexParsers {
           println(" Scrutiny table for method Preferential block voting is not implemented yet.")
           r.writeWinners(winnersfile)
         }
+
+      case "SAV" => {
+        var r = SatisfactionApprovalVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+        println(" Scrutiny table for method SAV is not implemented yet.")
+        r.writeWinners(winnersfile)
+      }
 
         case "Test" => {
           Test.testSDResolution
