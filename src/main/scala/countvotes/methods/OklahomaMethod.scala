@@ -53,7 +53,7 @@ object OklahomaMethod extends VoteCountingMethod[WeightedBallot] {
   // where N denotes Nth preference on the ballot
   // that is, 1st preference has weight 1, 2nd preference has weight 1/2. 3rd preference has weight 1/3 and so on
   def oklahomaTotals(election: Election[WeightedBallot], ccandidates: List[Candidate], ccandScoreMap: MMap[Candidate, Rational], multiplier: Rational): List[(Candidate, Rational)] = {
-    var candidateScoreMap = ccandScoreMap
+    val candidateScoreMap = ccandScoreMap
     val candidateTotalScores = totals(election, ccandidates)
     for (c<-ccandidates) {
       candidateScoreMap(c) = candidateScoreMap.getOrElse(c, Rational(0, 1)) + candidateTotalScores.getOrElse(c, Rational(0, 1)) * multiplier
