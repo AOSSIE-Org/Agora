@@ -38,11 +38,11 @@ object SequentialProportionalApprovalVoting extends VoteCountingMethod[WeightedB
 
   // following function removes winner and reduces weight on ballot to 1/(N+1)
   // where N is the number of winners in one single ballot choice list
-  def excludeWinner(election: Election[WeightedBallot], winner: List[(Candidate, Rational)]): Election[WeightedBallot] = {
+  def excludeWinner(election: Election[WeightedBallot], winner: (Candidate, Rational)): Election[WeightedBallot] = {
     var newElection: Election[WeightedBallot]  = Nil
-    for(b<-election if !b.preferences.isEmpty) {
-      if(b.preferences.contains(winner.head._1)) {
-        newElection = WeightedBallot(b.preferences.filter(_ != winner.head._1), b.id, Rational(b.weight.numerator, b.weight.denominator + 1)) :: newElection
+    for(b<-election) {
+      if(b.preferences.contains(winner._1)) {
+        newElection = WeightedBallot(b.preferences.filter(_ != winner._1), b.id, Rational(b.weight.numerator, b.weight.denominator + 1)) :: newElection
       } else {
         newElection = WeightedBallot(b.preferences, b.id, b.weight) :: newElection
       }
@@ -57,10 +57,10 @@ object SequentialProportionalApprovalVoting extends VoteCountingMethod[WeightedB
     var ccandidates1 = ccandidates
     var vacancies = numVacancies
     while(vacancies != 0) {
-      val winner = countApprovals(election1, ccandidates1).toList.sortWith(_._2 > _._2).take(1)
-      winnerList = winner ::: winnerList
-      election1= excludeWinner(election1, winner)
-      ccandidates1 = ccandidates1.filter(_ != winner.head._1)
+      val winner = countApprovals(election1, ccandidates1).toList.sortWith(_._2 > _._2).head
+      winnerList = winner :: winnerList
+      election1 = excludeWinner(election1, winner)
+      ccandidates1 = ccandidates1.filter(_ != winner._1)
       vacancies = vacancies - 1
     }
     winnerList
