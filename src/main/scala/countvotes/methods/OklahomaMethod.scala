@@ -48,30 +48,30 @@ object OklahomaMethod extends VoteCountingMethod[WeightedBallot] {
   }
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  def oklahomaTotals(election: Election[WeightedBallot], ccandidates: List[Candidate], m: MMap[Candidate, Rational], multiplier: Rational): List[(Candidate, Rational)] ={
-   var map = m
-    val tls1 = totals(election, ccandidates)
-    for(c<-ccandidates){
-      map(c) = map.getOrElse(c,Rational(0,1)) + tls1.getOrElse(c,Rational(0,1))*multiplier
+  // following recursive function calculates totals and if total of any candidate exceeds half of election length
+  // candidate wins, else next preferences are added, reducing their weights by 1/N,
+  // where N denotes Nth preference on the ballot
+  // that is, 1st preference has weight 1, 2nd preference has weight 1/2. 3rd preference has weight 1/3 and so on
+  def oklahomaTotals(election: Election[WeightedBallot], ccandidates: List[Candidate], ccandScoreMap: MMap[Candidate, Rational], multiplier: Rational): List[(Candidate, Rational)] = {
+    var candidateScoreMap = ccandScoreMap
+    val candidateTotalScores = totals(election, ccandidates)
+    for (c<-ccandidates) {
+      candidateScoreMap(c) = candidateScoreMap.getOrElse(c, Rational(0, 1)) + candidateTotalScores.getOrElse(c, Rational(0, 1)) * multiplier
     }
-    if(map.toList.sortWith(_._2>_._2).head._2 > (election.length/2)){
-      map.toList.sortWith(_._2>_._2).head :: List()
+    if (candidateScoreMap.toList.sortWith(_._2 > _._2).head._2 > (election.length / 2)) {
+      candidateScoreMap.toList.sortWith(_._2 > _._2).head :: List()
     } else {
       var newElection: Election[WeightedBallot] = Nil
-      for(b<-election if !b.preferences.isEmpty){
-        newElection = WeightedBallot(b.preferences.tail, b.id,b.weight) :: newElection
+      for (b<-election) {
+        newElection = WeightedBallot(b.preferences.tail, b.id, b.weight) :: newElection
       }
-      oklahomaTotals(newElection,ccandidates, map, Rational(multiplier.numerator, multiplier.denominator+1))
+      oklahomaTotals(newElection, ccandidates, candidateScoreMap, Rational(multiplier.numerator, multiplier.denominator + 1))
     }
-    }
+  }
 
-  override def winners(election: Election[WeightedBallot], ccandidates: List[Candidate],  numVacancies: Int): List[(Candidate, Rational)] = {
-    var m = new MMap[Candidate, Rational]
-    var multiplier = Rational(1,1)
-    for(c<- ccandidates){
-    m(c) = Rational(0,1)
-    }
-    var tls = oklahomaTotals(election, ccandidates, m, multiplier)
-    tls
+  override def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
+    var ccandidateScoreMap = new MMap[Candidate, Rational]
+    var winner = oklahomaTotals(election, ccandidates, ccandidateScoreMap, Rational(1,1))
+    winner
   }
 }

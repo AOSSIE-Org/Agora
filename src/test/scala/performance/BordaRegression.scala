@@ -1,13 +1,11 @@
 package performance
 
-import countvotes.methods.{BordaRuleMethod, NansonRuleMethod}
+import countvotes.methods.{BordaRuleMethod, BaldwinMethod}
 import countvotes.structures.WeightedBallot
 import org.scalameter.api._
 import org.scalameter.persistence.GZIPJSONSerializationPersistor
 
-/**
-  * Created by deepeshpandey on 13/05/17.
-  */
+
 trait BordaRegression extends RuntimeRegression {
 
   override  def votingMethodName(): String = "Borda"

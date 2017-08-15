@@ -11,7 +11,7 @@ class OklahomaMethodTest extends Specification {
 
   "OklahomaMethod Test " should {
 
-    "verify result" in { OklahomaMethodVerification("14-example.txt", "14-candidates.txt") shouldEqual expectedOklahomaMethodWinnerList }
+    "verify result" in { OklahomaMethodVerification("14-example.e", "14-candidates.txt") shouldEqual expectedOklahomaMethodWinnerList }
   }
 
   def OklahomaMethodVerification(electionFile: String, candidatesFile: String): List[(Candidate,Rational)] = {
