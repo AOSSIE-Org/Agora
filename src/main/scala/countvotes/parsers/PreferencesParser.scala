@@ -54,6 +54,11 @@ object PreferencesParserWithIndifference extends ElectionParser[RankedWeightedBa
         (cand, Some(rank))
       }
     })) ^^ {case ~(list1, list2) => list1 ++ list2}
+  } ^^ {
+    case prefs => prefs sortWith {
+      case ((_, Some(r1)), (_, Some(r2))) => r1 < r2
+      case (_,_) => true
+    }
   }
 
   def line: Parser[RankedWeightedBallot] = id ~ weight ~ preferences ^^ {
@@ -70,7 +75,12 @@ object PreferencesParserWithScore extends ElectionParser[ScoredWeightedBallot] w
         }
       }
   
-  def preferences: Parser[List[(Candidate, Option[Rational])]] = repsep(candidateWithRankAndScore, ")(")
+  def preferences: Parser[List[(Candidate, Option[Rational])]] = repsep(candidateWithRankAndScore, ")(") ^^ {
+    case prefs => prefs sortWith {
+      case ((_, Some(s1)), (_, Some(s2))) => s1 > s2
+      case (_,_) => true
+    }
+  }
 
   def line: Parser[ScoredWeightedBallot] = id ~ weight ~ opt("(") ~ preferences ~ opt(")") ^^ {
     case ~(~(~(~(i, w), _), prefs), _) => { ScoredWeightedBallot(prefs, i, w) }
@@ -85,7 +95,11 @@ object PreferencesParserWithRank extends ElectionParser[RankedWeightedBallot] wi
     }
   }
 
-  def preferences: Parser[List[(Candidate, Option[Int])]] = repsep(candidateWithRankAndScore, ")(")
+  def preferences: Parser[List[(Candidate, Option[Int])]] = repsep(candidateWithRankAndScore, ")(") ^^ {
+    case prefs => prefs sortWith {
+      case ((_, Some(r1)), (_, Some(r2))) => r1 < r2
+      case (_,_) => true
+    }}
 
   def line: Parser[RankedWeightedBallot] = id ~ weight ~ opt("(") ~ preferences ~ opt(")") ^^ {
     case ~(~(~(~(i, w), _), prefs), _) => { RankedWeightedBallot(prefs, i, w) }
