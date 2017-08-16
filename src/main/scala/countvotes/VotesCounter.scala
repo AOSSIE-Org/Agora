@@ -275,12 +275,14 @@ object Main extends RegexParsers {
         }
 
         case "Oklahoma" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = OklahomaMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Oklahoma is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "SPAV" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = SequentialProportionalApprovalVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method SPAV is not implemented yet.")
 
@@ -288,6 +290,7 @@ object Main extends RegexParsers {
         }
 
       case "SAV" => {
+        val election = PreferencesParser.read(c.directory + electionFile)
         var r = SatisfactionApprovalVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
         println(" Scrutiny table for method SAV is not implemented yet.")
         r.writeWinners(winnersfile)
