@@ -97,7 +97,7 @@ object Rational{
   // have trailing zeroes, always has one decimal point, etc.
   // This works because of a property of the IEEE 754 standard that requires that
   // one can recover the exact string by going to double and back.
-  private def realToRational(value: String): (BigInt, BigInt) = {
+  def realToRational(value: String): (BigInt, BigInt) = {
 
     // scientific notation
     if (value.contains("e") || value.contains("E")) {

@@ -16,10 +16,6 @@ trait Marking extends Ballot {
   val marking: Boolean
 }
 
-trait Score extends Ballot {
-  val scores : List[Int]
-}
-
 class WeightedBallot(p: List[Candidate], id: Int, w: Rational)
   extends Ballot(p, id) with Weight {
   val weight = w
@@ -46,26 +42,23 @@ object MarkedWeightedBallot{
   // }
 }
 
-class ScoredWeightedBallot(p: List[Candidate], id: Int, w: Rational, s: List[Int])
-  extends WeightedBallot(p, id, w) with Score {
-  val scores = s
-  override def toString: String = "[" + id + ", " + s + ", " + p + ", " + w + "]"
-}
-
-object ScoredWeightedBallot {
-  def apply(p: List[Candidate], id: Int, w: Rational, s: List[Int]): ScoredWeightedBallot  = new ScoredWeightedBallot(p, id, w, s)
-}
-
-class WeightedScoreRankBallot(p: List[(Candidate, Option[Int], Option[Int])], id: Int, w: Rational)
-  extends Ballot(p map {_._1}, id) with Weight {
+class ScoredWeightedBallot(p: List[(Candidate, Option[Rational])], id: Int, w: Rational) extends Ballot(p map {_._1}, id) with Weight {
   val weight = w
-  val scoreRankPreferences = p
+  val scorePreferences = p
   override def toString: String = "[" + id + ", " + p + ", " + w + "]"
 }
 
-object WeightedScoreRankBallot {
-  def apply(p: List[(Candidate, Option[Int], Option[Int])], id: Int, w: Rational): WeightedScoreRankBallot = new WeightedScoreRankBallot(p, id, w)
+object ScoredWeightedBallot {
+  def apply(p: List[(Candidate, Option[Rational])], id: Int, w: Rational): ScoredWeightedBallot = new ScoredWeightedBallot(p, id, w)
 }
 
+class RankedWeightedBallot(p: List[(Candidate, Option[Int])], id: Int, w: Rational) extends Ballot(p map {_._1}, id) with Weight {
+  val weight = w
+  val rankPreferences = p
+  override def toString: String = "[" + id + ", " + p + ", " + w + "]"
+}
 
+object RankedWeightedBallot {
+  def apply(p: List[(Candidate, Option[Int])], id: Int, w: Rational): RankedWeightedBallot = new RankedWeightedBallot(p, id, w)
+}
 
