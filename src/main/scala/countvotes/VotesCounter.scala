@@ -29,7 +29,7 @@ object Main extends RegexParsers {
   case class Config(directory: String = "",
                     ballotsfile: Option[String] = None,
                     method: String = "",
-                    paramFile: Option[String] = None,
+                    parameterFile: Option[String] = None,
                     nvacancies: String = "",
                     //order: String = "",
                     nkandidates: Option[String] = None,
@@ -63,8 +63,8 @@ object Main extends RegexParsers {
       c.copy(method = v)
     } text ("use vote counting method  <met>\n") valueName ("<met>")
 
-    opt[String]('p', "paramFile") required() unbounded() action { (v, c) =>
-      c.copy(paramFile = Some(v))
+    opt[String]('p', "parameterFile") required() unbounded() action { (v, c) =>
+      c.copy(parameterFile = Some(v))
     } text ("set paramfile to <pfile>\n") valueName ("<pfile>")
 
     opt[String]('v', "nvacancies") required() action { (v, c) =>
@@ -92,7 +92,7 @@ object Main extends RegexParsers {
 
     note(
       """Possible values are as follows:""" + "\n" +
-        
+
         """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Baldwin, Nanson, Kemeny-Young, Contingent,| Runoff2Round, Copeland, UncoveredSet, InstantExhaustiveBallot, PreferentialBlockVoting, HybridPluralityPreferentialBlockVoting, InstantExhaustiveDropOff""".stripMargin + "\n" +
 
         """for -t:  Concise, ACT""" + "\n \n"
@@ -299,7 +299,7 @@ object Main extends RegexParsers {
               println("Scrutiny table for method SMC is not implemented yet.")
               r.writeWinners(winnersfile)
             }
-            case None => println("\n\nPlease provide the comparison order to execute this voting methods\n\n")
+            case None => println("\n\nPlease provide the comparison order to execute this voting method\n\n")
           }
         }
 
@@ -311,9 +311,9 @@ object Main extends RegexParsers {
     }
 
     def methodParameters(c: Config): Option[Parameters] = {
-      c.paramFile match {
+      c.parameterFile match {
         case Some(fileName) => {
-          Option(MethodParamParser.parse(c.directory + fileName))
+          Option(ParameterParser.parse(c.directory + fileName))
         }
         case None => None
       }

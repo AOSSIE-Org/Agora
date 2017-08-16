@@ -1,7 +1,7 @@
 package countvotes
 
 import countvotes.methods.SMCMethod
-import countvotes.parsers.{CandidatesParser, MethodParamParser, PreferencesParser}
+import countvotes.parsers.{CandidatesParser, ParameterParser, PreferencesParser}
 import countvotes.structures.Candidate
 import org.specs2.mutable.Specification
 
@@ -23,7 +23,7 @@ class SMCMethodTest extends Specification{
     val dir = "../Agora/files/Examples/"
     val candidates = CandidatesParser.read(dir + candidateFile)
     val election =  PreferencesParser.read(dir + electionFile)
-    val param = MethodParamParser.parse(dir + paramFile)
+    val param = ParameterParser.parse(dir + paramFile)
 
     SMCMethod.smcWinner(election, candidates, param, 1).map {_._1}
   }
