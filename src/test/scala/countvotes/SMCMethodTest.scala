@@ -14,8 +14,8 @@ class SMCMethodTest extends Specification{
 
   "SMC Test " should {
 
-    "verify result" in { smcMethodVerification("34-example.e", "34-candidates.txt", "method-param1.json") shouldEqual smcWinnerList }
-    "verify result" in { smcMethodVerification("34-example.e", "34-candidates.txt", "method-param.json") shouldEqual smcWinnerList }
+    "verify result" in { smcMethodVerification("37-example.e", "37-candidates.txt", "method-param1.json") shouldEqual smcWinnerList }
+    "verify result" in { smcMethodVerification("37-example.e", "37-candidates.txt", "method-param.json") shouldEqual smcWinnerList }
   }
 
   def smcMethodVerification(electionFile: String, candidateFile: String, paramFile: String): List[Candidate] = {
