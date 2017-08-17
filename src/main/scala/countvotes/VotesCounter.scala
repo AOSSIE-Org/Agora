@@ -306,11 +306,12 @@ object Main extends RegexParsers {
           r.writeWinners(winnersfile)
         }
 
-      case "SAV" => {
-        var r = SatisfactionApprovalVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
-        println(" Scrutiny table for method SAV is not implemented yet.")
-        r.writeWinners(winnersfile)
-      }
+        case "SAV" => {
+          var r = SatisfactionApprovalVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method SAV is not implemented yet.")
+          r.writeWinners(winnersfile)
+        }
+
         case "SMC" => {
           parameters match {
             case Some(param) => {
