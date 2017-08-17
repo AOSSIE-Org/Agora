@@ -303,6 +303,7 @@ object Main extends RegexParsers {
         r.writeWinners(winnersfile)
       }
         case "SMC" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           parameters match {
             case Some(param) => {
               var r = SMCMethod.runScrutiny(election, candidates_in_order, param, c.nvacancies.toInt)
