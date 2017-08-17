@@ -52,7 +52,7 @@ object Parameters {
       (__ \ "comparison_sets").write[ComparisonSets]
     ) (unlift(Parameters.unapply))*/
 
-  implicit val methodParamReader: Reads[Parameters] = (
+  implicit val methodParameterReader: Reads[Parameters] = (
     (__ \ "comparison_order").readNullable[Array[String]] and
       (__ \ "allowed_vote").readNullable[Int] and
       (__ \ "cut_off_quota").readNullable[Double] and
