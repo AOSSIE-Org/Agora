@@ -1,5 +1,5 @@
 import countvotes.methods.{KellysExtensionMethod, UncoveredSetMethod}
-import countvotes.parsers.{CandidatesParser, MethodParamParser, PreferencesParser}
+import countvotes.parsers.{CandidatesParser, ParameterParser, PreferencesParser}
 import countvotes.structures.Candidate
 import org.specs2.mutable.Specification
 
@@ -24,7 +24,7 @@ class KellysExtensionTest extends Specification {
 
     val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
     val election =  PreferencesParser.read("../Agora/files/Examples/" + electionFile)
-    val parameters = MethodParamParser.parse("../Agora/files/Examples/" + parameterFile)
+    val parameters = ParameterParser.parse("../Agora/files/Examples/" + parameterFile)
 
     KellysExtensionMethod.kellyPreferredSet(election, candidates, parameters, candidates.length).map {_._1}.toSet
   }
