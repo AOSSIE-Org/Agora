@@ -137,3 +137,14 @@ trait SimpleExclusion extends STV[WeightedBallot] {
   (list, setExhausted)
  }
 }
+
+trait SimpleExclusionWithFixedElectionSize  {
+  // Removes the candidate from the ballot but does not reduce the election size by removing empty ballots
+  def exclude(election: Election[WeightedBallot],
+              candidate: Candidate): Election[WeightedBallot] = {
+    election map { b =>
+      val newPrefs = b.preferences filter { _ != candidate }
+      WeightedBallot(newPrefs, b.id, b.weight)
+    }
+  }
+}

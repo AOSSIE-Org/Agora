@@ -29,7 +29,7 @@ object Main extends RegexParsers {
   case class Config(directory: String = "",
                     ballotsfile: Option[String] = None,
                     method: String = "",
-                    paramFile: Option[String] = None,
+                    parameterFile: Option[String] = None,
                     nvacancies: String = "",
                     //order: String = "",
                     nkandidates: Option[String] = None,
@@ -63,8 +63,8 @@ object Main extends RegexParsers {
       c.copy(method = v)
     } text ("use vote counting method  <met>\n") valueName ("<met>")
 
-    opt[String]('p', "paramFile") required() unbounded() action { (v, c) =>
-      c.copy(paramFile = Some(v))
+    opt[String]('p', "parameterFile") required() unbounded() action { (v, c) =>
+      c.copy(parameterFile = Some(v))
     } text ("set paramfile to <pfile>\n") valueName ("<pfile>")
 
     opt[String]('v', "nvacancies") required() action { (v, c) =>
@@ -92,10 +92,8 @@ object Main extends RegexParsers {
 
     note(
       """Possible values are as follows:""" + "\n" +
-        
 
-      """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Baldwin, Nanson, Kemeny-Young, Contingent,
-        | Runoff2Round, Copeland, UncoveredSet, InstantExhaustiveBallot, PreferentialBlockVoting, HybridPluralityPreferentialBlockVoting""".stripMargin + "\n" +
+        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Baldwin, Nanson, Kemeny-Young, Contingent,| Runoff2Round, Copeland, UncoveredSet, InstantExhaustiveBallot, PreferentialBlockVoting, HybridPluralityPreferentialBlockVoting, InstantExhaustiveDropOff, SAV, SPAV, Oklahoma""".stripMargin + "\n" +
 
         """for -t:  Concise, ACT""" + "\n \n"
     )
@@ -252,17 +250,17 @@ object Main extends RegexParsers {
           println(" Scrutiny table for method Random Ballot is not implemented yet.")
           r.writeWinners(winnersfile)
         }
+
         case "MinimaxCondorcet" => {
           var r = MinimaxCondorcetMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Random Ballot is not implemented yet.")
           r.writeWinners(winnersfile)
-
         }
+
         case "Copeland" => {
           var r = CopelandMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Copeland is not implemented yet. ")
           r.writeWinners(winnersfile)
-
         }
 
         case "UncoveredSet" => {
@@ -277,6 +275,12 @@ object Main extends RegexParsers {
           r.writeWinners(winnersfile)
         }
 
+        case "InstantExhaustiveDropOff" => {
+          var r = InstantExhaustiveDropOffRule.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method Exhaustive Ballot with Drop off is not implemented yet.")
+          r.writeWinners(winnersfile)
+        }
+
         case "PreferentialBlockVoting" => {
           var r = PreferentialBlockVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Preferential block voting is not implemented yet.")
@@ -288,6 +292,25 @@ object Main extends RegexParsers {
           println(" Scrutiny table for method Preferential block voting is not implemented yet.")
           r.writeWinners(winnersfile)
         }
+
+        case "Oklahoma" => {
+          var r = OklahomaMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method Oklahoma is not implemented yet.")
+          r.writeWinners(winnersfile)
+        }
+
+        case "SPAV" => {
+          var r = SequentialProportionalApprovalVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method SPAV is not implemented yet.")
+
+          r.writeWinners(winnersfile)
+        }
+
+      case "SAV" => {
+        var r = SatisfactionApprovalVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+        println(" Scrutiny table for method SAV is not implemented yet.")
+        r.writeWinners(winnersfile)
+      }
         case "SMC" => {
           parameters match {
             case Some(param) => {
@@ -295,7 +318,7 @@ object Main extends RegexParsers {
               println("Scrutiny table for method SMC is not implemented yet.")
               r.writeWinners(winnersfile)
             }
-            case None => println("\n\nPlease provide the comparison order to execute this voting methods\n\n")
+            case None => println("\n\nPlease provide the comparison order to execute this voting method\n\n")
           }
         }
 
@@ -318,9 +341,9 @@ object Main extends RegexParsers {
     }
 
     def methodParameters(c: Config): Option[Parameters] = {
-      c.paramFile match {
+      c.parameterFile match {
         case Some(fileName) => {
-          Option(MethodParamParser.parse(c.directory + fileName))
+          Option(ParameterParser.parse(c.directory + fileName))
         }
         case None => None
       }
