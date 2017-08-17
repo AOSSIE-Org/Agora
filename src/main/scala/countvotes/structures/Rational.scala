@@ -122,8 +122,13 @@ object Rational{
       val nom = new BigInt(new BigInteger(value.replace(".", "")))
       val parts = value.split('.')
       // can this overflow?
-      val den = new BigInt(new BigInteger(math.pow(10, parts(1).length).toLong.toString))
-      (nom, den)
+      if (parts.length > 1) {
+        val den = new BigInt(new BigInteger(math.pow(10, parts(1).length).toLong.toString))
+        (nom, den)
+      } else {
+        (nom, BigInteger.ONE)
+      }
+
     }
 
   }
