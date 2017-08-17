@@ -20,7 +20,8 @@ libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.1.7",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
   "com.storm-enroute" %% "scalameter" % "0.8.2",
-  "com.storm-enroute" %% "scalameter-core" % "0.8.2"
+  "com.storm-enroute" %% "scalameter-core" % "0.8.2",
+  "com.typesafe.play" %% "play-json" % "2.6.0"
 )
 
 testFrameworks += new TestFramework("org.scalameter.ScalaMeterFramework")

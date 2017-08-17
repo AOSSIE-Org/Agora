@@ -29,6 +29,7 @@ object Main extends RegexParsers {
   case class Config(directory: String = "",
                     ballotsfile: Option[String] = None,
                     method: String = "",
+                    parameterFile: Option[String] = None,
                     nvacancies: String = "",
                     //order: String = "",
                     nkandidates: Option[String] = None,
@@ -43,7 +44,7 @@ object Main extends RegexParsers {
 
     note(
       """The arguments are as follows:""" + "\n" +
-        """ -d [-b] -c -m -v [-k] [-t]""" + "\n \n"
+        """ -d [-b] -c -m [-p] -v [-k] [-t]""" + "\n \n"
     )
 
     opt[String]('d', "directory") required() unbounded() action { (v, c) =>
@@ -61,6 +62,10 @@ object Main extends RegexParsers {
     opt[String]('m', "method") required() action { (v, c) =>
       c.copy(method = v)
     } text ("use vote counting method  <met>\n") valueName ("<met>")
+
+    opt[String]('p', "parameterFile") required() unbounded() action { (v, c) =>
+      c.copy(parameterFile = Some(v))
+    } text ("set paramfile to <pfile>\n") valueName ("<pfile>")
 
     opt[String]('v', "nvacancies") required() action { (v, c) =>
       c.copy(nvacancies = v)
@@ -88,7 +93,7 @@ object Main extends RegexParsers {
     note(
       """Possible values are as follows:""" + "\n" +
 
-        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Baldwin, Nanson, Kemeny-Young, Contingent, Runoff2Round, Copeland, UncoveredSet, InstantExhaustiveBallot, PreferentialBlockVoting, HybridPluralityPreferentialBlockVoting, InstantExhaustiveDropOff, SAV, SPAV, Oklahoma""" + "\n" +
+        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Baldwin, Nanson, Kemeny-Young, Contingent,| Runoff2Round, Copeland, UncoveredSet, InstantExhaustiveBallot, PreferentialBlockVoting, HybridPluralityPreferentialBlockVoting, InstantExhaustiveDropOff, SAV, SPAV, Oklahoma""".stripMargin + "\n" +
 
         """for -t:  Concise, ACT""" + "\n \n"
     )
@@ -97,6 +102,8 @@ object Main extends RegexParsers {
   }
 
 
+  // scalastyle:off cyclomatic.complexity
+  // scalastyle:off method.length
   def main(args: Array[String]): Unit = {
 
     def fileFormatDenoter(c: Config, filename: String): List[WeightedBallot] = {
@@ -135,7 +142,8 @@ object Main extends RegexParsers {
       }
     }
 
-    def callMethod(c: Config, election: List[WeightedBallot], winnersfile: String, reportfile: String, candidates_in_order: List[Candidate]) = {
+    def callMethod(c: Config, election: List[WeightedBallot], winnersfile: String, reportfile: String,
+                   candidates_in_order: List[Candidate], parameters: Option[Parameters]) = {
       c.method match {
         case "EVACS" => {
           var r = (new EVACSMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
@@ -303,11 +311,30 @@ object Main extends RegexParsers {
         println(" Scrutiny table for method SAV is not implemented yet.")
         r.writeWinners(winnersfile)
       }
+        case "SMC" => {
+          parameters match {
+            case Some(param) => {
+              var r = SMCMethod.runScrutiny(election, candidates_in_order, param, c.nvacancies.toInt)
+              println("Scrutiny table for method SMC is not implemented yet.")
+              r.writeWinners(winnersfile)
+            }
+            case None => println("\n\nPlease provide the comparison order to execute this voting method\n\n")
+          }
+        }
 
         case "Test" => {
           Test.testSDResolution
         }
         case "" => println("Please, specify which algorithm should be used. Only option -m EVACS is currently stable.")
+      }
+    }
+
+    def methodParameters(c: Config): Option[Parameters] = {
+      c.parameterFile match {
+        case Some(fileName) => {
+          Option(ParameterParser.parse(c.directory + fileName))
+        }
+        case None => None
       }
     }
 
@@ -325,7 +352,7 @@ object Main extends RegexParsers {
           //println("Election: " + election)
           val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
           val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename
-          callMethod(c, election, winnersfile, reportfile, candidates)
+          callMethod(c, election, winnersfile, reportfile, candidates, methodParameters(c))
         }
         case None => { // ALL FILES IN THE DIRECTORY ARE ANALYSED
           val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
@@ -339,7 +366,7 @@ object Main extends RegexParsers {
             //val election =  PreferencesParser.read(c.directory + filename)
             val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
             val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename
-            callMethod(c, election, winnersfile, reportfile, candidates)
+            callMethod(c, election, winnersfile, reportfile, candidates, methodParameters(c))
           }
         }
       }
