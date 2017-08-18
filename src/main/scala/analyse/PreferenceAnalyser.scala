@@ -1,5 +1,4 @@
-import countvotes.Main.{Config, parser}
-import countvotes.analysers.{SinglePeakAnalyser, ValueRestrictedAnalyser}
+import analyse.methods.{SinglePeakAnalyser, ValueRestrictedAnalyser}
 import countvotes.parsers.{CandidatesParser, PreferencesParser}
 import countvotes.structures.{Candidate, WeightedBallot}
 import countvotes.{Concise, ScrutinyTableFormats}

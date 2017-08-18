@@ -1,6 +1,6 @@
 package countvotes
 
-import countvotes.analysers.SinglePeakAnalyser
+import analyse.methods.SinglePeakAnalyser
 import countvotes.parsers.{CandidatesParser, PreferencesParser}
 import org.specs2.mutable.Specification
 

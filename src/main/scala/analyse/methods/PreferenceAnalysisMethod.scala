@@ -1,4 +1,4 @@
-package countvotes.analysers
+package analyse.methods
 
 import countvotes.structures.{Ballot, Candidate, Election, Weight}
 
