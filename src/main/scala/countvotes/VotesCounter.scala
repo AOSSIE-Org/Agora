@@ -1,23 +1,12 @@
 package countvotes
 
-import countvotes.parsers._
-import countvotes.structures._
-import countvotes.algorithms._
 import countvotes.methods._
+import countvotes.parsers._
+import countvotes.structures.{Election, _}
 
-import scala.collection.immutable.ListMap
-import collection.mutable.{HashMap => Map}
-import collection.mutable.HashSet
-import java.io._
-
+import scala.collection.mutable.{HashMap => Map}
 import scala.languageFeature.implicitConversions
-
-import countvotes.structures.ACTBallot
-import countvotes.structures.Election
-
 import scala.util.parsing.combinator._
-import scala.util.matching.Regex
-import scala.io.Source
 
 abstract sealed class ScrutinyTableFormats
   case object ACT extends ScrutinyTableFormats
@@ -292,16 +281,15 @@ object Main extends RegexParsers {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = SequentialProportionalApprovalVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method SPAV is not implemented yet.")
-
           r.writeWinners(winnersfile)
         }
 
-      case "SAV" => {
-        val election = PreferencesParser.read(c.directory + electionFile)
-        var r = SatisfactionApprovalVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
-        println(" Scrutiny table for method SAV is not implemented yet.")
-        r.writeWinners(winnersfile)
-      }
+        case "SAV" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
+          var r = SatisfactionApprovalVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method SAV is not implemented yet.")
+          r.writeWinners(winnersfile)
+        }
         case "SMC" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           parameters match {
@@ -318,6 +306,13 @@ object Main extends RegexParsers {
           val election = PreferencesParserWithIndifference.read(c.directory + electionFile)
           var r = RankedPairsMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Ranked Pairs is not implemented yet.")
+          r.writeWinners(winnersfile)
+        }
+
+        case "RangeVoting" => {
+          val election = PreferencesParserWithScore.read(c.directory + electionFile)
+          var r = RangeVoting.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method Ranged voting is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
