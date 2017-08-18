@@ -1,5 +1,7 @@
 package analyse
 
+import analyse.methods.BordaStability
+
 object StabilityAnalyser {
 
   case class AnalysisConfig(method: String = "")
@@ -31,7 +33,7 @@ object StabilityAnalyser {
 
       c.method match {
         case "Borda" => {
-          ???
+          BordaStability.analyse()
 
         }
         case "None" => {
