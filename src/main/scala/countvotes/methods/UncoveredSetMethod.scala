@@ -35,7 +35,7 @@ object UncoveredSetMethod extends VoteCountingMethod[WeightedBallot] with LazyLo
     logger.info("Computing Uncovered Set")
     val zeroRational = Rational(0, 1)
     val majorityRational = Rational(1, 2)
-    val electionResponse = getPairwiseComparison(e, ccandidates)
+    val electionResponse = getPairwiseComparisonForWeightedElection(e, ccandidates)
     val ucMatrix = BaseMatrix[Rational](ccandidates.size, ccandidates.size){ (i: Int, j: Int) => {
       zeroRational
     }

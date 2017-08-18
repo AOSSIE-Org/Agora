@@ -71,7 +71,7 @@ abstract class VoteCountingMethod[B <: Ballot with Weight] {
  }
 
   // utility method for matrix where a[i][j] = x means candidate i has got #x votes against candidate j
-  def getPairwiseComparison(election: Election[WeightedBallot], candidates: List[Candidate]): Array[Array[Rational]] = {
+  def getPairwiseComparisonForWeightedElection(election: Election[WeightedBallot], candidates: List[Candidate]): Array[Array[Rational]] = {
 
     val zeroRational = Rational(0, 1)
     val responseMatrix = Array.fill(candidates.size, candidates.size)(Rational(0, 1))
@@ -79,6 +79,20 @@ abstract class VoteCountingMethod[B <: Ballot with Weight] {
     for (b <- election if !b.preferences.isEmpty) {
       b.preferences.zipWithIndex.foreach(c1 => {
         b.preferences.zipWithIndex.foreach(c2 => {
+          if (c1._2 < c2._2) {
+            responseMatrix(candidates.indexOf(c1._1))(candidates.indexOf(c2._1)) += b.weight
+          }})})}
+    responseMatrix
+  }
+
+  def getPairwiseComaprisonForRankedElection(election: Election[RankedWeightedBallot], candidates: List[Candidate]): Array[Array[Rational]] = {
+
+    val zeroRational = Rational(0, 1)
+    val responseMatrix = Array.fill(candidates.size, candidates.size)(Rational(0, 1))
+
+    for (b <- election if !b.rankPreferences.isEmpty) {
+      b.rankPreferences.foreach(c1 => {
+        b.rankPreferences.foreach(c2 => {
           if (c1._2 < c2._2) {
             responseMatrix(candidates.indexOf(c1._1))(candidates.indexOf(c2._1)) += b.weight
           }})})}
