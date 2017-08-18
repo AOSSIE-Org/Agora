@@ -7,7 +7,7 @@ object StabilityAnalyser {
   case class AnalysisConfig(method: String = "")
 
   val parser = new scopt.OptionParser[AnalysisConfig]("compress") {
-    head("\nCommand Line Interface for Electronic Votes preference analysis\n\n  ")
+    head("\nCommand Line Interface for voting algorithms stability analysis\n\n  ")
 
     note(
       """The arguments are as follows:""" + "\n" +
