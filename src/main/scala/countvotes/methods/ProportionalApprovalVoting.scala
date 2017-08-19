@@ -47,18 +47,15 @@ object ProportionalApprovalVoting extends VoteCountingMethod[WeightedBallot] {
   // then score for that subset is summation 1 to 1/N
   def candidateSubsetTotals(election: Election[WeightedBallot], candidates: List[Candidate], ccandSubsetList: List[List[Candidate]]): List[(Candidate, Rational)] = {
     var scoredCandidateSubsetMap = new MMap[List[Candidate], Rational]
-    for (a <- ccandSubsetList) {
-      for (b <- election if !b.preferences.isEmpty) {
-        scoredCandidateSubsetMap(a) = scoredCandidateSubsetMap.getOrElse(a,Rational(0,1)) + proportionalApprovalScore(b.preferences.length - b.preferences.toSet[Candidate].diff(a.toSet[Candidate]).size)
+    for (a<-ccandSubsetList) {
+      for (b<-election) {
+        scoredCandidateSubsetMap(a) = scoredCandidateSubsetMap.getOrElse(a, Rational(0,1)) + proportionalApprovalScore(b.preferences.length - b.preferences.toSet[Candidate].diff(a.toSet[Candidate]).size)
       }
     }
-    val sortedCandidateSubsetList = scoredCandidateSubsetMap.toList.sortWith(_._2>_._2)
+    val sortedCandidateSubsetList = scoredCandidateSubsetMap.toList.sortWith(_._2 > _._2)
     val winnerList = sortedCandidateSubsetList.head._1
     val winnerScore = sortedCandidateSubsetList.head._2
-    var finalList: List[(Candidate,Rational)] = Nil
-    for(w<-winnerList){
-      finalList = (w,winnerScore) :: finalList
-    }
+    val finalList = winnerList map { (_, winnerScore) }
     finalList
   }
 
