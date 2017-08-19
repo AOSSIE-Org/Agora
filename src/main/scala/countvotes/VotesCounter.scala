@@ -52,7 +52,7 @@ object Main extends RegexParsers {
       c.copy(method = v)
     } text ("use vote counting method  <met>\n") valueName ("<met>")
 
-    opt[String]('p', "parameterFile") action { (v, c) =>
+    opt[String]('p', "parameterFile") required() unbounded() action { (v, c) =>
       c.copy(parameterFile = Some(v))
     } text ("set paramfile to <pfile>\n") valueName ("<pfile>")
 
