@@ -309,7 +309,7 @@ object Main extends RegexParsers {
         println(" Scrutiny table for method SAV is not implemented yet.")
         r.writeWinners(winnersfile)
       }
-          
+
         case "Test" => {
           Test.testSDResolution
         }

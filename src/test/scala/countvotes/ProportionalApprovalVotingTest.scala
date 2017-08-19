@@ -10,10 +10,10 @@ class ProportionalApprovalVotingTest extends Specification {
 
   "ProportionalApprovalVoting Test " should {
 
-    "verify result" in { ProportionalApprovalVotingVerification("35-example.e", "35-candidates.txt") shouldEqual expectedProportionalApprovalWinnerList}
+    "verify result" in { proportionalApprovalVotingVerification("35-example.e", "35-candidates.txt") shouldEqual expectedProportionalApprovalWinnerList}
   }
 
-  def ProportionalApprovalVotingVerification(electionFile: String, candidatesFile: String): List[(Candidate,Rational)] = {
+  def proportionalApprovalVotingVerification(electionFile: String, candidatesFile: String): List[(Candidate,Rational)] = {
 
     val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
     val election =  PreferencesParser.read("../Agora/files/Examples/" + electionFile)
