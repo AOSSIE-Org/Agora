@@ -6,7 +6,7 @@ import org.specs2.mutable.Specification
 
 class ProportionalApprovalVotingTest extends Specification {
 
-  val expectedProportionalApprovalWinnerList = List((Candidate("C"), Rational(61,2)), (Candidate("A"), Rational(61,2)))
+  val expectedProportionalApprovalWinnerList = List((Candidate("A"), Rational(61,2)), (Candidate("C"), Rational(61,2)))
 
   "ProportionalApprovalVoting Test " should {
 
