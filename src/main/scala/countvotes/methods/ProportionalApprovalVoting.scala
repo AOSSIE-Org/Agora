@@ -46,7 +46,7 @@ object ProportionalApprovalVoting extends VoteCountingMethod[WeightedBallot] {
   // if N of the candidate preferences matches with any one candidate subset,
   // then score for that subset is summation 1 to 1/N
   def candidateSubsetTotals(election: Election[WeightedBallot], candidates: List[Candidate], ccandSubsetList: List[List[Candidate]]): List[(Candidate, Rational)] = {
-    var scoredCandidateSubsetMap = new MMap[List[Candidate], Rational]
+    val scoredCandidateSubsetMap = new MMap[List[Candidate], Rational]
     for (a<-ccandSubsetList) {
       for (b<-election) {
         scoredCandidateSubsetMap(a) = scoredCandidateSubsetMap.getOrElse(a, Rational(0,1)) + proportionalApprovalScore(b.preferences.length - b.preferences.toSet[Candidate].diff(a.toSet[Candidate]).size)
