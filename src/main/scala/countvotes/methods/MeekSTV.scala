@@ -85,7 +85,7 @@ object MeekSTV extends STV[WeightedBallot]
 
     val flag = result.getKF
     val tls = totalsMeek(election, ccandidates, flag)
-
+    println(tls)
     if (ccandidates.length <= numVacancies) {
       for (c <- ccandidates) yield (c, tls(c))
     }
@@ -100,7 +100,7 @@ object MeekSTV extends STV[WeightedBallot]
         val sortedScoreList = tls.toList.filter(x => ccandidates.contains(x._1)).sortWith(_._2 < _._2)
         if (sortedScoreList.head._2 + surplusAmount < tls.toList.filter(x => ccandidates.contains(x._1)).sortWith(_._2 < _._2).tail.head._2) {
           flag(sortedScoreList.head._1) = Rational(0, 1)
-          winners(election, ccandidates.filterNot(_ == sortedScoreList.head._1), numVacancies)
+          winners(exclude(election, sortedScoreList.head._1, None, None)._1, ccandidates.filterNot(_ == sortedScoreList.head._1), numVacancies)
         } else {
           val winnerList = tls.filter(x => ccandidates.contains(x._1)).filter(_._2 > result.getQuota)
           for (w <- winnerList) {
