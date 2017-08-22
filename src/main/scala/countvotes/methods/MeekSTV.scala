@@ -55,10 +55,6 @@ object MeekSTV extends STV[WeightedBallot]
   def totalsMeek(election: Election[WeightedBallot], ccandidates: List[Candidate], flags: MMap[Candidate, Rational]): MMap[Candidate, Rational] ={
     val scoreMap = new MMap[Candidate, Rational]
 
-    for(c <- ccandidates) {
-      scoreMap(c) = Rational(0,1)
-    }
-
     for(b<-election if !b.preferences.isEmpty) {
       var multiplier = Rational(1,1)
       for(c<-b.preferences) {
