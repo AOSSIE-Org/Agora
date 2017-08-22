@@ -133,8 +133,8 @@ import collection.mutable.{HashMap => Map}
      var sw = ""
      println("\n WINNERS \n")
      for ( w <- winners){
-       println(w._1 + ": " + w._2.numerator/w._2.denominator + "\n")
-         sw = sw + w._1 + ": " + w._2.numerator/w._2.denominator + "\n"
+       println(w._1 + ": " + w._2.numerator.toFloat/w._2.denominator.toFloat+ "\n")
+         sw = sw + w._1 + ": " + w._2.numerator.toFloat/w._2.denominator.toFloat + "\n"
      }
      writer.write(sw)
      writer.close()

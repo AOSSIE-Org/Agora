@@ -52,7 +52,7 @@ object Main extends RegexParsers {
       c.copy(method = v)
     } text ("use vote counting method  <met>\n") valueName ("<met>")
 
-    opt[String]('p', "parameterFile") required() unbounded() action { (v, c) =>
+    opt[String]('p', "parameterFile") action { (v, c) =>
       c.copy(parameterFile = Some(v))
     } text ("set paramfile to <pfile>\n") valueName ("<pfile>")
 
@@ -82,7 +82,7 @@ object Main extends RegexParsers {
     note(
       """Possible values are as follows:""" + "\n" +
 
-        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Baldwin, Nanson, Kemeny-Young, Contingent,| Runoff2Round, Copeland, UncoveredSet, InstantExhaustiveBallot, PreferentialBlockVoting, HybridPluralityPreferentialBlockVoting, InstantExhaustiveDropOff, SAV, SPAV, Oklahoma""".stripMargin + "\n" +
+        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Baldwin, Nanson, Kemeny-Young, Contingent,| Runoff2Round, Copeland, UncoveredSet, InstantExhaustiveBallot, PreferentialBlockVoting, HybridPluralityPreferentialBlockVoting, InstantExhaustiveDropOff, SAV, PAV, SPAV, Oklahoma""".stripMargin + "\n" +
 
         """for -t:  Concise, ACT""" + "\n \n"
     )
@@ -282,6 +282,13 @@ object Main extends RegexParsers {
           var r = SequentialProportionalApprovalVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method SPAV is not implemented yet.")
 
+          r.writeWinners(winnersfile)
+        }
+
+        case "PAV" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
+          var r = ProportionalApprovalVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method PAV is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
