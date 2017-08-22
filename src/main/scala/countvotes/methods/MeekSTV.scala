@@ -24,17 +24,6 @@ object MeekSTV extends STV[WeightedBallot]
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int): Report[WeightedBallot] = {
-    val quota = cutQuotaFraction(computeQuota(election.length, numVacancies))
-    println("Quota = " + quota)
-    result.setQuota(quota)
-
-    val keepFactor = new MMap[Candidate, Rational]
-    for (c <- candidates) {
-      keepFactor(c) = Rational(1, 1)
-    }
-
-    result.setKF(keepFactor)
-
 
     print("\n INPUT ELECTION: \n")
     printElection(election)
@@ -77,14 +66,12 @@ object MeekSTV extends STV[WeightedBallot]
     surplusAmount
   }
 
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  override def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
+  def winnersList(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 
     println(" \n NEW RECURSIVE CALL \n")
 
-    val flag = result.getKF
-    val tls = totalsMeek(election, ccandidates, flag)
+    val keepFactor = result.getKF
+    val tls = totalsMeek(election, ccandidates, keepFactor)
     println(tls)
     if (ccandidates.length <= numVacancies) {
       for (c <- ccandidates) yield (c, tls(c))
@@ -99,16 +86,34 @@ object MeekSTV extends STV[WeightedBallot]
         val surplusAmount = surplusQuantity(tls, result.getQuota)
         val sortedScoreList = tls.toList.filter(x => ccandidates.contains(x._1)).sortWith(_._2 < _._2)
         if (sortedScoreList.head._2 + surplusAmount < tls.toList.filter(x => ccandidates.contains(x._1)).sortWith(_._2 < _._2).tail.head._2) {
-          flag(sortedScoreList.head._1) = Rational(0, 1)
-          winners(exclude(election, sortedScoreList.head._1, None, None)._1, ccandidates.filterNot(_ == sortedScoreList.head._1), numVacancies)
+          keepFactor(sortedScoreList.head._1) = Rational(0, 1)
+          winnersList(exclude(election, sortedScoreList.head._1, None, None)._1, ccandidates.filterNot(_ == sortedScoreList.head._1), numVacancies)
         } else {
           val winnerList = tls.filter(x => ccandidates.contains(x._1)).filter(_._2 > result.getQuota)
           for (w <- winnerList) {
-            flag(w._1) = flag(w._1) * Rational(w._2.denominator.toInt * result.getQuota.numerator.toInt, w._2.numerator.toInt)
+            keepFactor(w._1) = keepFactor(w._1) * Rational(w._2.denominator.toInt * result.getQuota.numerator.toInt, w._2.numerator.toInt)
           }
-          winners(election, ccandidates, numVacancies)
+          winnersList(election, ccandidates, numVacancies)
         }
       }
     }
+  }
+
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  override def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
+    val quota = cutQuotaFraction(computeQuota(election.length, numVacancies))
+    //println("Quota = " + quota)
+    result.setQuota(quota)
+
+    val keepFactor = new MMap[Candidate, Rational]
+    for (c <- ccandidates) {
+      keepFactor(c) = Rational(1, 1)
+    }
+
+    result.setKF(keepFactor)
+
+    winnersList(election, ccandidates, numVacancies)
   }
 }
