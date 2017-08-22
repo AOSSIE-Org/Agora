@@ -55,18 +55,22 @@ object MeekSTV extends STV[WeightedBallot]
   def totalsMeek(election: Election[WeightedBallot], ccandidates: List[Candidate], flags: MMap[Candidate, Rational]): MMap[Candidate, Rational] ={
     val scoreMap = new MMap[Candidate, Rational]
 
-    for(b<-election if !b.preferences.isEmpty){
+    for(c <- ccandidates) {
+      scoreMap(c) = Rational(0,1)
+    }
+
+    for(b<-election if !b.preferences.isEmpty) {
       var multiplier = Rational(1,1)
-      for(c<-b.preferences){
-        scoreMap(c) = scoreMap.getOrElse(c, Rational(0,1)) + b.weight*multiplier*flags(c)
-        multiplier = multiplier * (Rational(1,1)- flags(c))
+      for(c<-b.preferences) {
+        scoreMap(c) = scoreMap.getOrElse(c, Rational(0,1)) + b.weight * multiplier * flags(c)
+        multiplier = multiplier * (Rational(1,1) - flags(c))
       }
     }
     scoreMap
   }
 
   def surplusCandidates(totals: MMap[Candidate, Rational], quota: Rational): Int = {
-    var surplusCandidatesNumber = totals.filter(x => x._2 >= quota).size
+    val surplusCandidatesNumber = totals.filter(x => x._2 >= quota).size
     surplusCandidatesNumber
   }
 
@@ -83,27 +87,26 @@ object MeekSTV extends STV[WeightedBallot]
 
     println(" \n NEW RECURSIVE CALL \n")
 
-    var ccands = ccandidates
-    var flag = result.getKF
+    val flag = result.getKF
     val tls = totalsMeek(election, ccandidates, flag)
 
-    if (ccands.length <= numVacancies) {
-      for (c <- ccands) yield (c, tls(c))
+    if (ccandidates.length <= numVacancies) {
+      for (c <- ccandidates) yield (c, tls(c))
     }
     else {
       if (surplusCandidates(tls, result.getQuota) >= numVacancies) {
-        tls.toList.sortWith(_._2>_._2).take(numVacancies)
+        tls.toList.sortWith(_._2 > _._2).take(numVacancies)
       } else {
         //Find surplus and check if surplus + last candidate's number of votes < quota
         //If so, then KV = 0 for them
         //Else find surplus ones and reduce their KV
-        var surplusAmount = surplusQuantity(tls, result.getQuota)
+        val surplusAmount = surplusQuantity(tls, result.getQuota)
         val sortedScoreList = tls.toList.filter(x => ccandidates.contains(x._1)).sortWith(_._2 < _._2)
         if (sortedScoreList.head._2 + surplusAmount < tls.toList.filter(x => ccandidates.contains(x._1)).sortWith(_._2 < _._2).tail.head._2) {
           flag(sortedScoreList.head._1) = Rational(0, 1)
           winners(election, ccandidates.filterNot(_ == sortedScoreList.head._1), numVacancies)
         } else {
-          var winnerList = tls.filter(x => ccandidates.contains(x._1)).filter(_._2 > result.getQuota)
+          val winnerList = tls.filter(x => ccandidates.contains(x._1)).filter(_._2 > result.getQuota)
           for (w <- winnerList) {
             flag(w._1) = flag(w._1) * Rational(w._2.denominator.toInt * result.getQuota.numerator.toInt, w._2.numerator.toInt)
           }
