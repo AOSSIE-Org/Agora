@@ -27,9 +27,9 @@ object Schulze extends VoteCountingMethod[RankedWeightedBallot] {
 
   override def winners(election: Election[RankedWeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 
-    val electionResponse = getPairwiseComaprisonForRankedElection(election, ccandidates)
+    val electionResponse = getPairwiseComparisonForWeightedElection(Election.rankedElectionToWeightedElection(election), ccandidates)
 
-    calculateSchulzeRankings(getSchulzeStrongestPathMatrix(electionResponse, ccandidates), ccandidates).take(numVacancies)
+    schulzeWinnerRanking(getSchulzeStrongestPathMatrix(electionResponse, ccandidates), ccandidates).take(numVacancies)
 
   }
 
@@ -65,31 +65,13 @@ object Schulze extends VoteCountingMethod[RankedWeightedBallot] {
     schulzeMatrix
   }
 
-  // evaluating the schulze rankings from the schulze response matrix
-  def calculateSchulzeRankings(schulzeResponseMatrix: Array[Array[Rational]],
-                               ccandidates: List[Candidate]): List[(Candidate, Rational)] = {
 
-    val schulzeRanking = new ListBuffer[(Candidate, Rational)]()
-    val zeroRational = Rational(0,1)
+  def schulzeWinnerRanking(schulzeMatrix: Array[Array[Rational]], candidates: List[Candidate]): List[(Candidate, Rational)] = {
 
-    ccandidates.zipWithIndex.foreach(candidate => {
-      schulzeRanking.size match {
-        case 0 => schulzeRanking.insert(0, (candidate._1, zeroRational))
-        case _ => {
-          schulzeRanking.zipWithIndex.takeWhile(schulzeRanker => {
-            if (schulzeResponseMatrix(candidate._2)(ccandidates.indexOf(schulzeRanker._1._1)) <
-              schulzeResponseMatrix(ccandidates.indexOf(schulzeRanker._1._1))(candidate._2)) {
-              schulzeRanking.insert(schulzeRanker._2, (candidate._1, zeroRational))
-              false
-            } else if (schulzeRanker._2 == schulzeRanking.length - 1) {
-              schulzeRanking.insert(schulzeRanker._2 + 1, (candidate._1, zeroRational))
-              false
-            } else true
-          })
-        }
-      }
-    })
-    schulzeRanking.toList.reverse
+    def better(candA: Candidate, candB: Candidate) = schulzeMatrix(candidates.indexOf(candA))(candidates.indexOf(candB)) > schulzeMatrix(candidates.indexOf(candB))(candidates.indexOf(candA))
+
+    candidates sortWith {case (c1, c2) => better(c1, c2)} map (cand => (cand, Rational(0, 1)))
+
   }
 
 
