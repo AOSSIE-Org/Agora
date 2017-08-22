@@ -13,23 +13,11 @@ import scala.util.Random
 import scala.util.Sorting
 import java.io._
 
-object ApprovalRule extends VoteCountingMethod[WeightedBallot] {
+object ApprovalRule extends VoteCountingMethod[WeightedBallot]
+  with SimpleApproval {
 
   protected val result: Result = new Result
   protected val report: Report[WeightedBallot] = new Report[WeightedBallot]
-
-  def countApprovals(election: Election[WeightedBallot], candidates: List[Candidate]): MMap[Candidate, Rational] = {
-    val m = new MMap[Candidate, Rational]
-
-
-
-    for (b <- election if !b.preferences.isEmpty) {
-      for(d <- b.preferences) {
-        m(d) = b.weight + (m.getOrElse(d, 0))
-      }
-    }
-    m
-  }
 
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

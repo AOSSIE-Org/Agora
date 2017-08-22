@@ -1,0 +1,38 @@
+{
+  "comparison_order": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E"
+  ],
+  "allowed_vote": 2,
+  "cut_off_quota": 0.66666666666,
+  "proportional_ratio": 0.333333333,
+  "majority_bonus": {
+    "jackpot": 0.33333333,
+    "bonus": 30
+  },
+  "probability_distribution": [
+    0.1,
+    0.15,
+    0.45,
+    0.4
+  ],
+  "comparison_sets": {
+    "set1": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "set2": [
+      "F",
+      "G",
+      "H",
+      "I",
+      "J"
+    ]
+  }
+}

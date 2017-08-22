@@ -28,7 +28,7 @@ object MeekSTV extends STV[WeightedBallot]
     println("Quota = " + quota)
     result.setQuota(quota)
 
-    var keepFactor = new MMap[Candidate, Rational]
+    val keepFactor = new MMap[Candidate, Rational]
     for (c <- candidates) {
       keepFactor(c) = Rational(1, 1)
     }
@@ -53,18 +53,16 @@ object MeekSTV extends STV[WeightedBallot]
   }
 
   def totalsMeek(election: Election[WeightedBallot], ccandidates: List[Candidate], flags: MMap[Candidate, Rational]): MMap[Candidate, Rational] ={
-    var m = new MMap[Candidate, Rational]
-    for(c<-ccandidates){
-      m(c) = Rational(0,1)
-    }
+    val scoreMap = new MMap[Candidate, Rational]
+
     for(b<-election if !b.preferences.isEmpty){
       var multiplier = Rational(1,1)
       for(c<-b.preferences){
-        m(c) = m.getOrElse(c, Rational(0,1)) + b.weight*multiplier*flags(c)
+        scoreMap(c) = scoreMap.getOrElse(c, Rational(0,1)) + b.weight*multiplier*flags(c)
         multiplier = multiplier * (Rational(1,1)- flags(c))
       }
     }
-    m
+    scoreMap
   }
 
   def surplusCandidates(totals: MMap[Candidate, Rational], quota: Rational): Int = {
@@ -100,9 +98,10 @@ object MeekSTV extends STV[WeightedBallot]
         //If so, then KV = 0 for them
         //Else find surplus ones and reduce their KV
         var surplusAmount = surplusQuantity(tls, result.getQuota)
-        if (tls.toList.filter(x => ccandidates.contains(x._1)).sortWith(_._2 < _._2).head._2 + surplusAmount < tls.toList.filter(x => ccandidates.contains(x._1)).sortWith(_._2 < _._2).tail.head._2) {
-          flag(tls.toList.filter(x => ccandidates.contains(x._1)).sortWith(_._2 < _._2).head._1) = Rational(0, 1)
-          winners(election, ccandidates.filterNot(_ == tls.toList.filter(x => ccandidates.contains(x._1)).sortWith(_._2 < _._2).head._1), numVacancies)
+        val sortedScoreList = tls.toList.filter(x => ccandidates.contains(x._1)).sortWith(_._2 < _._2)
+        if (sortedScoreList.head._2 + surplusAmount < tls.toList.filter(x => ccandidates.contains(x._1)).sortWith(_._2 < _._2).tail.head._2) {
+          flag(sortedScoreList.head._1) = Rational(0, 1)
+          winners(election, ccandidates.filterNot(_ == sortedScoreList.head._1), numVacancies)
         } else {
           var winnerList = tls.filter(x => ccandidates.contains(x._1)).filter(_._2 > result.getQuota)
           for (w <- winnerList) {
