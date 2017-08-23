@@ -1,7 +1,8 @@
 package countvotes.structures
 
 import java.io._
-import collection.mutable.{HashMap => Map}
+
+import scala.collection.mutable.{HashMap => Map}
 
   class Report[B <: Ballot with Weight] {
 

@@ -1,13 +1,10 @@
 package countvotes.parsers
 
 
-import countvotes._
-import countvotes.parsers.PreferencesParser.{candidate, id, repsep}
 import countvotes.structures.Rational.realToRational
 import countvotes.structures._
 
 import scala.util.parsing.combinator._
-import scala.util.matching.Regex
 
 trait ElectionParsers extends RegexParsers {
 

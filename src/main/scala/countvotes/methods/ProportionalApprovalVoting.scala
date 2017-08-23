@@ -1,10 +1,9 @@
 package countvotes.methods
 
 import countvotes.structures.{Candidate, Input, Rational, Report, _}
-import countvotes.structures.{Candidate, Rational, _}
 
-import collection.mutable.{HashMap => MMap}
-import collection.immutable.{Map => IMap}
+import scala.collection.immutable.{Map => IMap}
+import scala.collection.mutable.{HashMap => MMap}
 
 /***
   * https://en.wikipedia.org/wiki/Proportional_approval_voting

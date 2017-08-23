@@ -1,6 +1,6 @@
 import countvotes.methods.ProportionalApprovalVoting
 import countvotes.parsers.{CandidatesParser, PreferencesParser}
-import countvotes.structures.{Candidate,Rational}
+import countvotes.structures.{Candidate, Rational}
 import org.specs2.mutable.Specification
 
 
