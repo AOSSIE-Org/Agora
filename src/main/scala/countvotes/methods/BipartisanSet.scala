@@ -25,18 +25,26 @@ object BipartisanSet extends VoteCountingMethod[WeightedBallot] {
     report
   }
 
-
+  // scalastyle:off method.length
   def bipartisanSet(election: Election[WeightedBallot], candidates: List[Candidate], parameters: Parameters): List[(Candidate, Rational)] = {
 
     // check if the probability distribution is given for each candidate
     require(parameters.probabilityDistribution.isDefined && parameters.probabilityDistribution.get.length == candidates.length,
       "inconsistency in candidates and probability distribution")
 
+    val distribution = parameters.probabilityDistribution.get.reduce(_ ++ _)
+
+    // check if the name given in the distribution is consistent with the candidates names
+    require(distribution forall {case (cand, prob) => {candidates.exists(candidate => candidate.name == cand)}},
+    "inconsistencies in candidates names")
+
+    val candidatesProbabilities = candidates map(cand => (cand, distribution(cand.name)))
+
     val majorityMatrix = getPairwiseComparison(election, candidates)
 
     //Dominion of a candidate a is D(a) = { b ∈ A : a >M b }
     def dominions(candidate: Candidate): List[(Candidate, Double)] = {
-      candidates zip parameters.probabilityDistribution.get filter {case (cand, prob) => {
+      candidatesProbabilities filter{case(cand, prob) => {
         cand != candidate &&
         majorityMatrix(candidates.indexOf(candidate))(candidates.indexOf(cand)) > majorityMatrix(candidates.indexOf(cand))(candidates.indexOf(candidate))
       }}
@@ -44,7 +52,7 @@ object BipartisanSet extends VoteCountingMethod[WeightedBallot] {
 
     // Dominators of candidate a is D'(a) = { b ∈ A : b >M a }
     def dominators(candidate: Candidate): List[(Candidate, Double)] = {
-      candidates zip parameters.probabilityDistribution.get filter {case (cand, prob) => {
+      candidatesProbabilities filter {case (cand, prob) => {
         cand != candidate &&
           majorityMatrix(candidates.indexOf(cand))(candidates.indexOf(candidate)) > majorityMatrix(candidates.indexOf(candidate))(candidates.indexOf(cand))
       }}
@@ -56,7 +64,7 @@ object BipartisanSet extends VoteCountingMethod[WeightedBallot] {
 
     // p is balanced if (p(x)>0 ⇔ mp(x)=0) and (p(x)=0 ⇔ mp(x)<0)
     def balancedProbabilityDistribution(): Boolean = {
-      candidates zip parameters.probabilityDistribution.get forall {case (cand, prob) => {
+      candidatesProbabilities forall {case (cand, prob) => {
         if (prob > 0) {
           probabilityMargin(dominions(cand), dominators(cand)) == 0
         } else if (prob == 0) {
@@ -71,9 +79,8 @@ object BipartisanSet extends VoteCountingMethod[WeightedBallot] {
     require(balancedProbabilityDistribution, "probability distribution is not balanced!")
 
     // BP(A,PM) = {x∈A : p(x)>0, p balanced for (A,PM)} where PM is majority graph
-    candidates zip parameters.probabilityDistribution.get filter {case (cand, prob) => prob > 0 &&
+    candidatesProbabilities filter {case (cand, prob) => prob > 0 &&
       probabilityMargin(dominions(cand), dominators(cand)) == 0} map {case (cand, prob) => (cand, Rational.doubleToRational(prob))}
-
   }
 
 
