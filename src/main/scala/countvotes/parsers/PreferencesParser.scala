@@ -2,6 +2,8 @@ package countvotes.parsers
 
 
 import countvotes._
+import countvotes.parsers.PreferencesParser.{candidate, id, repsep}
+import countvotes.structures.Rational.realToRational
 import countvotes.structures._
 
 import scala.util.parsing.combinator._
@@ -18,6 +20,13 @@ trait ElectionParsers extends RegexParsers {
   def weight: Parser[Rational] = numerator ~ "/" ~ denominator ^^ { case ~(~(n,_), d) => Rational(n, d) }
 
   def id: Parser[Int] = """[0-9]+""".r ^^ { _.toInt }
+
+  def rank: Parser[Int] = """[0-9]+""".r ^^ { _.toInt }
+
+  def score: Parser[Rational] = """[0-9\.]+""".r ^^ { case (value) => {
+    val (n, d) = realToRational(value)
+    Rational(n.toInt, d.toInt)}
+  }
 }
 
 
@@ -30,28 +39,70 @@ object PreferencesParser extends ElectionParser[WeightedBallot] with RegexParser
   }
 }
 
-object PreferencesParserWithRankAndScore extends ElectionParser[WeightedBallot] with RegexParsers with ElectionParsers {
-  
-  def rank: Parser[Int] = """[0-9]+""".r ^^ { _.toInt }
+object PreferencesParserWithIndifference extends ElectionParser[RankedWeightedBallot] with RegexParsers with ElectionParsers {
 
-  def score: Parser[Int] = """[0-9]+""".r ^^ { _.toInt }
+  def preferences: Parser[List[(Candidate, Int)]] = {
 
-  def candidateWithRankAndScore: Parser[(Candidate, Option[Int], Option[Int])] = candidate ~ ";" ~ opt(rank) ~ ";" ~ opt(score) ^^ {
-        case ~(~(~(~(candidate, ";"), rank), ";"), score) => {
-          (candidate, rank, score)
-        }
+    var rank = 1
+    ((candidate ^^ { case (cand) => List((cand, rank))}) ~ rep((">" ~ candidate) ^^ {
+      case ~(">", cand) => {
+        rank = rank + 1
+        (cand, rank)
       }
-  
-  def preferences: Parser[List[(Candidate, Option[Int], Option[Int])]] = repsep(candidateWithRankAndScore, ")(") ^^ {
-    case prefs => prefs sortWith { 
-        case ((_, Some(r1), _), (_, Some(r2), _)) => r1 < r2        // Sorting by rank, if rank is available
-        case ((_, None, Some(s1)), (_, None, Some(s2))) => s1 > s2  // Sorting by score, if rank is not available and score is
-        case (_, _) => true                                         // Leaving the list unsorted, if neither rank nor score is available
+    } | ("=" ~ candidate) ^^ {
+      case ~("=", cand) => {
+        (cand, rank)
+      }
+    })) ^^ {case ~(list1, list2) => list1 ++ list2}
+  } ^^ {
+    case prefs => prefs sortWith {
+      case ((_, r1), (_, r2)) => r1 < r2
+      case (_,_) => true
     }
   }
-  
-  def line: Parser[WeightedBallot] = id ~ weight ~ opt("(") ~ preferences ~ opt(")") ^^ {
-    case ~(~(~(~(i, w), _), prefs), _) => { WeightedBallot(prefs map {_._1}, i, w) }
+
+  def line: Parser[RankedWeightedBallot] = id ~ weight ~ preferences ^^ {
+    case ~(~(i, w), prefs) => { RankedWeightedBallot(prefs, i, w) }
+  }
+
+}
+
+object PreferencesParserWithScore extends ElectionParser[ScoredWeightedBallot] with RegexParsers with ElectionParsers {
+
+  def candidateWithScore: Parser[(Candidate, Rational)] = candidate ~ ";" ~ score ^^ {
+        case ~(~(candidate, ";"), score) => {
+          (candidate, score)
+        }
+      }
+
+  def preferences: Parser[List[(Candidate, Rational)]] = repsep(candidateWithScore, ")(") ^^ {
+    case prefs => prefs sortWith {
+      case ((_, s1), (_, s2)) => s1 > s2
+      case (_,_) => true
+    }
+  }
+
+  def line: Parser[ScoredWeightedBallot] = id ~ weight ~ opt("(") ~ preferences ~ opt(")") ^^ {
+    case ~(~(~(~(i, w), _), prefs), _) => { ScoredWeightedBallot(prefs, i, w) }
+  }
+}
+
+object PreferencesParserWithRank extends ElectionParser[RankedWeightedBallot] with RegexParsers with ElectionParsers {
+
+  def candidateWithRank: Parser[(Candidate, Int)] = candidate ~ ";" ~ rank ^^ {
+    case (~(~(candidate, ";"), rank)) => {
+      (candidate, rank)
+    }
+  }
+
+  def preferences: Parser[List[(Candidate, Int)]] = repsep(candidateWithRank, ")(") ^^ {
+    case prefs => prefs sortWith {
+      case ((_, r1), (_, r2)) => r1 < r2
+      case (_,_) => true
+    }}
+
+  def line: Parser[RankedWeightedBallot] = id ~ weight ~ opt("(") ~ preferences ~ opt(")") ^^ {
+    case ~(~(~(~(i, w), _), prefs), _) => { RankedWeightedBallot(prefs, i, w) }
   }
 }
 
