@@ -13,11 +13,11 @@ class KellysExtensionTest extends Specification {
 
   "UnconveredSet Test " should {
 
-    "verify result" in { kellysExtensionVerification("35-example.e", "35-candidates.txt", "kellys-sets.json") shouldEqual expectedKellySet1 }
-    "verify result" in { kellysExtensionVerification("35-example.e", "35-candidates.txt", "kellys-sets1.json") shouldEqual expectedKellySet2 }
-    "verify result" in { kellysExtensionVerification("35-example.e", "35-candidates.txt", "kellys-sets2.json") shouldEqual expectedKellySet3 }
-    "verify result" in { kellysExtensionVerification("35-example.e", "35-candidates.txt", "kellys-sets3.json") shouldEqual expectedKellySet4 }
-    "verify result" in { kellysExtensionVerification("35-example.e", "35-candidates.txt", "kellys-sets4.json") shouldEqual expectedKellySet2 }
+    "verify result" in { kellysExtensionVerification("45-example.e", "45-candidates.txt", "kellys-sets.json") shouldEqual expectedKellySet1 }
+    "verify result" in { kellysExtensionVerification("45-example.e", "45-candidates.txt", "kellys-sets1.json") shouldEqual expectedKellySet2 }
+    "verify result" in { kellysExtensionVerification("45-example.e", "45-candidates.txt", "kellys-sets2.json") shouldEqual expectedKellySet3 }
+    "verify result" in { kellysExtensionVerification("45-example.e", "45-candidates.txt", "kellys-sets3.json") shouldEqual expectedKellySet4 }
+    "verify result" in { kellysExtensionVerification("45-example.e", "45-candidates.txt", "kellys-sets4.json") shouldEqual expectedKellySet2 }
   }
 
   def kellysExtensionVerification(electionFile: String, candidatesFile: String, parameterFile: String): Set[Candidate] = {

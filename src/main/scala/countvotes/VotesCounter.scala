@@ -329,6 +329,7 @@ object Main extends RegexParsers {
         }
 
         case "KellysExtension" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           parameters match {
             case Some(param) => {
               var r = KellysExtensionMethod.runScrutiny(election, candidates_in_order, param, c.nvacancies.toInt)
