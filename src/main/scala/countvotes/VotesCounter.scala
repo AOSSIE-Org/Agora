@@ -318,6 +318,7 @@ object Main extends RegexParsers {
         }
 
         case "BipartisanSet" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           parameters match {
             case Some(param) => {
               var r = BipartisanSet.runScrutiny(election, candidates_in_order, param)
