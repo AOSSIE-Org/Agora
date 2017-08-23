@@ -63,7 +63,7 @@ object Main extends RegexParsers {
       c.copy(method = v)
     } text ("use vote counting method  <met>\n") valueName ("<met>")
 
-    opt[String]('p', "parameterFile") required() unbounded() action { (v, c) =>
+    opt[String]('p', "parameterFile") action { (v, c) =>
       c.copy(parameterFile = Some(v))
     } text ("set paramfile to <pfile>\n") valueName ("<pfile>")
 
@@ -93,7 +93,7 @@ object Main extends RegexParsers {
     note(
       """Possible values are as follows:""" + "\n" +
 
-        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Baldwin, Nanson, Kemeny-Young, Contingent,| Runoff2Round, Copeland, UncoveredSet, InstantExhaustiveBallot, PreferentialBlockVoting, HybridPluralityPreferentialBlockVoting, InstantExhaustiveDropOff, SAV, SPAV, Oklahoma""".stripMargin + "\n" +
+        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Baldwin, Nanson, Kemeny-Young, Contingent,| Runoff2Round, Copeland, UncoveredSet, InstantExhaustiveBallot, PreferentialBlockVoting, HybridPluralityPreferentialBlockVoting, InstantExhaustiveDropOff, SAV, PAV, SPAV, Oklahoma""".stripMargin + "\n" +
 
         """for -t:  Concise, ACT""" + "\n \n"
     )
@@ -106,46 +106,11 @@ object Main extends RegexParsers {
   // scalastyle:off method.length
   def main(args: Array[String]): Unit = {
 
-    def fileFormatDenoter(c: Config, filename: String): List[WeightedBallot] = {
-      def name: Parser[String] =
-        """[0-9A-Za-z\-\_]*""".r ^^ {
-          _.toString
-        }
-
-      def extension: Parser[String] =
-        """[a-z]*""".r ^^ {
-          _.toString
-        }
-
-      def filenameParser: Parser[List[WeightedBallot]] = name ~ "." ~ extension ^^ {
-        case ~(~(name, "."), extension) => {
-          extension match {
-            case "e" => {
-              PreferencesParser.read(c.directory + filename)
-            }
-            case "es" => {
-              PreferencesParserWithRankAndScore.read(c.directory + filename)
-            }
-            case "er" => {
-              PreferencesParserWithRankAndScore.read(c.directory + filename)
-            }
-            case "esr" => {
-              PreferencesParserWithRankAndScore.read(c.directory + filename)
-            }
-          }
-        }
-      }
-
-      parse(filenameParser, filename) match {
-        case Success(sucLine, _) => sucLine
-        case _ => throw new Exception("Should never happen")
-      }
-    }
-
-    def callMethod(c: Config, election: List[WeightedBallot], winnersfile: String, reportfile: String,
+    def callMethod(c: Config, electionFile: String, winnersfile: String, reportfile: String,
                    candidates_in_order: List[Candidate], parameters: Option[Parameters]) = {
       c.method match {
         case "EVACS" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = (new EVACSMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           c.table match {
             case ACT => r.writeDistributionOfPreferencesACT(reportfile, Some(candidates_in_order))
@@ -156,16 +121,19 @@ object Main extends RegexParsers {
           println("The winners were recorded to " + winnersfile)
         }
         case "EVACSnoLP" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = (new EVACSnoLPMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           r.writeDistributionOfPreferences(reportfile, Some(candidates_in_order))
           r.writeWinners(winnersfile)
         }
         case "EVACSDWD" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = (new EVACSDelayedWDMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           r.writeDistributionOfPreferences(reportfile, Some(candidates_in_order))
           r.writeWinners(winnersfile)
         }
         case "Senate" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           val electionwithIds = for (b <- election) yield WeightedBallot(b.preferences, election.indexOf(b) + 1, Rational(1, 1))
           var r = (new SenateMethod).runScrutiny(Election.weightedElectionToACTElection(electionwithIds), candidates_in_order, c.nvacancies.toInt)
           c.table match {
@@ -177,135 +145,170 @@ object Main extends RegexParsers {
           println("The winners were recorded to " + winnersfile)
         }
         case "Simple" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = (new SimpleSTVMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Simple is not implemented yet.")
           r.writeWinners(winnersfile)
         }
         case "Egalitarian" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = EgalitarianMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Egalitarian is not implemented yet.")
           r.writeWinners(winnersfile)
         }
         case "Majority" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = MajorityRuleMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Majority is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "Approval" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = ApprovalRule.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Approval is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "Borda" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = BordaRuleMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Borda is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "Kemeny-Young" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = KemenyYoungMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Kemeny-Young is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "Baldwin" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = BaldwinMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Baldwin is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "Nanson" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = NansonMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Nanson is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "InstantRunoff2Round" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = InstantRunoff2Round.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Runoff2Round is not implemented yet.")
           r.writeWinners(winnersfile)
         }
         case "Coomb" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = CoombRuleMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
           println("Scrutinity table for method Coomb is not implemented yet")
           r.writeWinners(winnersfile)
         }
 
         case "InstantExhaustiveBallot" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = InstantExhaustiveBallot.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method ExhaustiveBallot is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "Contingent" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = ContingentMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Contingent is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "RandomBallot" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = RandomBallotMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Random Ballot is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "MinimaxCondorcet" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = MinimaxCondorcetMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Random Ballot is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "Copeland" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = CopelandMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Copeland is not implemented yet. ")
           r.writeWinners(winnersfile)
         }
 
         case "UncoveredSet" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = UncoveredSetMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
           println("Scrutinity table for method Uncovered set is not implemented yet")
           r.writeWinners(winnersfile)
         }
 
         case "SmithSet" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = SmithSetMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Runoff2Round is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "InstantExhaustiveDropOff" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = InstantExhaustiveDropOffRule.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Exhaustive Ballot with Drop off is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "PreferentialBlockVoting" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = PreferentialBlockVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Preferential block voting is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "HybridPluralityPreferentialBlockVoting" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = HybridPluralityPreferentialBlockVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Preferential block voting is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "Oklahoma" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = OklahomaMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Oklahoma is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "SPAV" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = SequentialProportionalApprovalVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method SPAV is not implemented yet.")
 
           r.writeWinners(winnersfile)
         }
 
+        case "PAV" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
+          var r = ProportionalApprovalVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method PAV is not implemented yet.")
+          r.writeWinners(winnersfile)
+        }
+
+      case "SAV" => {
+        val election = PreferencesParser.read(c.directory + electionFile)
+        var r = SatisfactionApprovalVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+        println(" Scrutiny table for method SAV is not implemented yet.")
+        r.writeWinners(winnersfile)
+      }
         case "SAV" => {
           var r = SatisfactionApprovalVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method SAV is not implemented yet.")
@@ -313,6 +316,7 @@ object Main extends RegexParsers {
         }
 
         case "SMC" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           parameters match {
             case Some(param) => {
               var r = SMCMethod.runScrutiny(election, candidates_in_order, param, c.nvacancies.toInt)
@@ -321,6 +325,13 @@ object Main extends RegexParsers {
             }
             case None => println("\n\nPlease provide the comparison order to execute this voting method\n\n")
           }
+        }
+
+        case "RankedPairs" => {
+          val election = PreferencesParserWithIndifference.read(c.directory + electionFile)
+          var r = RankedPairsMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method Ranked Pairs is not implemented yet.")
+          r.writeWinners(winnersfile)
         }
 
         case "FishburnsExtension" => {
@@ -357,15 +368,9 @@ object Main extends RegexParsers {
         case Some(filename) => { // ONLY ONE FILE IS ANALYSED
           val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
           println("Candidates: " + candidates)
-          val election = fileFormatDenoter(c, filename)
-          //val election =  PreferencesParser.read(c.directory + filename)
-          //val election = PreferencesParserWithoutRankWithScore.read(c.directory + filename)
-          //val election =  PreferencesParserWithRankWithoutScore.read(c.directory + filename)
-          //val election =  PreferencesParserWithRankAndScore.read(c.directory + filename)
-          //println("Election: " + election)
           val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
           val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename
-          callMethod(c, election, winnersfile, reportfile, candidates, methodParameters(c))
+          callMethod(c, filename, winnersfile, reportfile, candidates, methodParameters(c))
         }
         case None => { // ALL FILES IN THE DIRECTORY ARE ANALYSED
           val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
@@ -375,11 +380,10 @@ object Main extends RegexParsers {
             println("------------------------------------------------")
             println("\n" + "    NEW ELECTION: " + file.getName + "\n")
             println("------------------------------------------------")
-            val election = fileFormatDenoter(c, filename)
             //val election =  PreferencesParser.read(c.directory + filename)
             val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
             val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename
-            callMethod(c, election, winnersfile, reportfile, candidates, methodParameters(c))
+            callMethod(c, filename, winnersfile, reportfile, candidates, methodParameters(c))
           }
         }
       }
