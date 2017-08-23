@@ -1,23 +1,12 @@
 package countvotes
 
-import countvotes.parsers._
-import countvotes.structures._
-import countvotes.algorithms._
 import countvotes.methods._
+import countvotes.parsers._
+import countvotes.structures.{Election, _}
 
-import scala.collection.immutable.ListMap
-import collection.mutable.{HashMap => Map}
-import collection.mutable.HashSet
-import java.io._
-
+import scala.collection.mutable.{HashMap => Map}
 import scala.languageFeature.implicitConversions
-
-import countvotes.structures.ACTBallot
-import countvotes.structures.Election
-
 import scala.util.parsing.combinator._
-import scala.util.matching.Regex
-import scala.io.Source
 
 abstract sealed class ScrutinyTableFormats
   case object ACT extends ScrutinyTableFormats
