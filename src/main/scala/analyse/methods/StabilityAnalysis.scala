@@ -1,37 +1,52 @@
 package analyse.methods
 
-import countvotes.structures.Candidate
+import countvotes.structures.{Candidate, Election, Rational, WeightedBallot}
+
+import scala.util.Random
 
 abstract class StabilityAnalysis {
 
-  // generate election profiles for 3 candidates and 3 voters to check the stability of algorithms
-  def preferenceProfiles(nCandidate: Int, nVoters: Int): List[List[List[Candidate]]] = {
+  // generate n random election of m voters and c candidates
+  def generateElections(n: Int, m: Int, c: Int): List[Election[WeightedBallot]] = {
 
-    val candidatePermutations = ('A' to 'Z').toList.take(nCandidate).map(c => Candidate(c.toString)).permutations.toList
+    require(c < 26)
 
-    val voterProfiles = List.fill(nVoters)(0 until nCandidate).flatten.combinations(nVoters)
+    val candidates = ('A' to 'Z') map (name => new Candidate(name.toString)) take c toList
 
-    voterProfiles.map(combination => {
-      combination.map(num => candidatePermutations(num))
-    }).toList
+    val election = for {
+      i <- List.range(1, n)
+    } yield {
+      for {
+        j <- List.range(1, m)
+      } yield WeightedBallot(Random.shuffle(candidates), i, 1)
+    }
+
+    election
   }
 
   // calculate the kendall tau distance between two profiles
-  def kendallTauDistance(profile: List[List[List[Candidate]]]): Int = {
+  def kendallTauDistance(profile: List[Election[WeightedBallot]]): Int = {
 
     var kTDistance = 0
 
-    profile(0) zip profile(1) foreach(pair => {
-
-      // calculate the kendall tau distance between pair._1 and pair._
-      pair._1.foreach(c1 => {
-        pair._1.foreach(c2 => {
-          if ((pair._1.indexOf(c1) < pair._1.indexOf(c2)) && (pair._2.indexOf(c1) > pair._2.indexOf(c2))) {
+    profile(0) zip profile(1) foreach {case (we1, we2) => {
+      we1.preferences.foreach(c1 => {
+        we1.preferences.foreach(c2 => {
+          if ((we1.preferences.indexOf(c1) < we1.preferences.indexOf(c2)) && (we2.preferences.indexOf(c1) > we2.preferences.indexOf(c2))) {
             kTDistance += 1
           }
-        })})})
+        })
+      })
+    }}
 
     kTDistance
+  }
+
+  // http://www.nature.com/nature/journal/v234/n5323/abs/234034a0.html?foxtrotcallback=true
+  def winnerSetComparison(winnerEA: List[Candidate], winnerEB: List[Candidate]): Rational = {
+
+    ((winnerEA intersect winnerEB).distinct length) / (winnerEA union winnerEB).distinct.length
+
   }
 
   def analyse(): Unit

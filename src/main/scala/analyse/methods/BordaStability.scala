@@ -1,44 +1,45 @@
 package analyse.methods
 
 import countvotes.methods.BordaRuleMethod
-import countvotes.structures.{Candidate, WeightedBallot}
+import countvotes.structures.{Candidate, Election, Rational, WeightedBallot}
 
 object BordaStability extends StabilityAnalysis {
 
 
-  // try to find the minimum Kendall tau distance for which the method outputs two different winners
-  override def analyse(): Unit = {
+  def analyse(): Unit = {
 
-    val candidates = ('A' to 'Z').toList.take(3).map(c => Candidate(c.toString))
+    val candidates = ('A' to 'Z') map (name => new Candidate(name.toString)) take 5 toList
 
-    val minKendallTauDistances = preferenceProfiles(3, 3)
-      .combinations(2)
-      .filter(profile => haveDifferentWinnter(profile(0), profile(1), candidates))
-      .map(profile => (kendallTauDistance(profile), profile(0), profile(1)))
-      .toList
+    val elections = generateElections(20, 100, 5)
 
-    if (minKendallTauDistances.isEmpty) {
-      // this should happen only for trivial, random and bizarre voting rules
-      println("\n\n\n\nBorda voting rule is fully stable for all 3 candidates and 3 voters profiles\n\n\n\n")
-    } else {
+    val electionsData = elections.combinations(2).map(stability(_, candidates)).toList
 
-      val minKendallTauProfiles = minKendallTauDistances.minBy(_._1)
-      println(s"\n\n\n\n Borda is unstable for a Kendall Tau distance of ${minKendallTauProfiles._1} for a 3 candidates and 3 voters.\n\n\n\n")
-      println("Preference profiles for this kendall tau distances are: \n\n")
-      println(minKendallTauProfiles._2.mkString("\n"))
-      println("\n\n")
-      println(minKendallTauProfiles._3.mkString("\n"))
+    val ratioAverage = electionsData.sum / electionsData.length
 
-    }
+    val varianceRatio = electionsData.map(c => Math.pow((c - ratioAverage), 2)).sum / electionsData.length
+
+    println("\n\nResults of Borda Stability analysis\n\n")
+
+    println("For 20 random elections from 100 voters for 5 candidates")
+
+    println("Stability Average  = " + ratioAverage)
+
+    println("Stability Variance  = " + varianceRatio)
+
   }
 
-  def haveDifferentWinnter(profile1: List[List[Candidate]], profile2: List[List[Candidate]], candidates: List[Candidate]): Boolean = {
+  def stability(elections: List[Election[WeightedBallot]], candidates: List[Candidate]): Double = {
 
-    val preferenceProfile1 = profile1.map(profile => WeightedBallot(profile, 1, 1))
-    val preferenceProfile2 = profile2.map(profile => WeightedBallot(profile, 1, 1))
+    val winnerEA = BordaRuleMethod.winners(elections(0), candidates, 1)
+    val winnerEB = BordaRuleMethod.winners(elections(1), candidates, 1)
+    val winnersDistance = winnerSetComparison(winnerEA map{_._1}, winnerEB map{_._1})
+    val ktDistance = kendallTauDistance(elections)
 
-    BordaRuleMethod.winners(preferenceProfile1, candidates, 1) != BordaRuleMethod.winners(preferenceProfile2, candidates, 1)
+    if (ktDistance == 0) 0.0 else (winnersDistance/ktDistance).toDouble
+
+
   }
+
 
 
 }
