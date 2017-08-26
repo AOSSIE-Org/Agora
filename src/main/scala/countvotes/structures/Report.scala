@@ -15,6 +15,8 @@ import scala.collection.mutable.{HashMap => Map}
 
     private var winners: List[(Candidate,Rational)] = Nil
 
+    private var stabilityAnalysis: List[(String, Double, Double)] = Nil
+
     def clear: Unit = {
       countHistory = Nil
       candidates = Nil
@@ -140,6 +142,26 @@ import scala.collection.mutable.{HashMap => Map}
      writer.write(sw)
      writer.close()
   }
+
+    def setStabilityAnalysis(sa: List[(String, Double, Double)]): Unit = {
+      stabilityAnalysis = sa
+    }
+
+    def getStabilityAnalysis(sa: List[(String, Double, Double)]): Unit = {
+      stabilityAnalysis
+    }
+
+    def writeStabilityAnalysis(file: String): Unit = {
+      val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)))
+      //writer.write(result.getWinners.toString())
+      var sw = ""
+      for ( analysis <- stabilityAnalysis){
+        sw = sw + analysis._1 + "\n" + "Average Ratio: " + analysis._2 + "\n" + "Variance Ratio: " + analysis._3 + "\n\n\n";
+      }
+      writer.write(sw)
+      writer.close()
+    }
+
 
    def writeDistributionOfPreferencesACT(file: String, order: Option[List[Candidate]]): Unit = {
     val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)))

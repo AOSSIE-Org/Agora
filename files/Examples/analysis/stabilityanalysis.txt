@@ -1,0 +1,90 @@
+BordaRuleMethod$
+Average Ratio: 4.0775544378150833E-4
+Variance Ratio: 6.708077754691379E-7
+
+
+ApprovalRule$
+Average Ratio: 0.0020200904963981344
+Variance Ratio: 7.09386865661103E-9
+
+
+KemenyYoungMethod$
+Average Ratio: 3.9232937728150613E-4
+Variance Ratio: 6.446279882952569E-7
+
+
+BaldwinMethod$
+Average Ratio: 3.689829547255977E-4
+Variance Ratio: 6.157988495138689E-7
+
+
+NansonMethod$
+Average Ratio: 4.1340487272846017E-4
+Variance Ratio: 6.653825178062164E-7
+
+
+InstantRunoff2Round$
+Average Ratio: 4.1168004445141595E-4
+Variance Ratio: 6.600946623317893E-7
+
+
+CoombRuleMethod$
+Average Ratio: 4.0444949061197604E-4
+Variance Ratio: 6.598400710836684E-7
+
+
+InstantExhaustiveBallot$
+Average Ratio: 4.2720803731569366E-4
+Variance Ratio: 6.858947578882616E-7
+
+
+ContingentMethod$
+Average Ratio: 4.1168004445141595E-4
+Variance Ratio: 6.600946623317893E-7
+
+
+MinimaxCondorcetMethod$
+Average Ratio: 4.1340487272846017E-4
+Variance Ratio: 6.653825178062164E-7
+
+
+CopelandMethod$
+Average Ratio: 4.490492440216007E-4
+Variance Ratio: 7.070366943280636E-7
+
+
+SmithSetMethod$
+Average Ratio: 2.959881652725535E-4
+Variance Ratio: 5.124383640989217E-7
+
+
+InstantExhaustiveDropOffRule$
+Average Ratio: 4.2720803731569366E-4
+Variance Ratio: 6.858947578882616E-7
+
+
+PreferentialBlockVoting$
+Average Ratio: 4.2720803731569366E-4
+Variance Ratio: 6.858947578882616E-7
+
+
+HybridPluralityPreferentialBlockVoting$
+Average Ratio: 3.6313000961371117E-4
+Variance Ratio: 5.968073472620795E-7
+
+
+SequentialProportionalApprovalVoting$
+Average Ratio: 0.0020200904963981344
+Variance Ratio: 7.09386865661103E-9
+
+
+ProportionalApprovalVoting$
+Average Ratio: 0.0020200904963981344
+Variance Ratio: 7.09386865661103E-9
+
+
+SatisfactionApprovalVoting$
+Average Ratio: 0.0020200904963981344
+Variance Ratio: 7.09386865661103E-9
+
+
