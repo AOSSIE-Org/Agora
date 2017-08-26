@@ -1,7 +1,6 @@
 package countvotes.structures
 
 import scala.language.implicitConversions
-import scala.languageFeature.implicitConversions
 
 class Ballot(val preferences: List[Candidate], val id: Int)
 

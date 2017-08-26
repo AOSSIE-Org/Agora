@@ -1,4 +1,6 @@
-import countvotes.methods.{KellysExtensionMethod, UncoveredSetMethod}
+package comparisons
+
+import compare.extensions.KellyExtension
 import countvotes.parsers.{CandidatesParser, ParameterParser, PreferencesParser}
 import countvotes.structures.Candidate
 import org.specs2.mutable.Specification
@@ -26,7 +28,7 @@ class KellysExtensionTest extends Specification {
     val election =  PreferencesParser.read("../Agora/files/Examples/" + electionFile)
     val parameters = ParameterParser.parse("../Agora/files/Examples/" + parameterFile)
 
-    KellysExtensionMethod.kellyPreferredSet(election, candidates, parameters, candidates.length).map {_._1}.toSet
+    KellyExtension.compare(election, candidates, parameters)
   }
 
 }
