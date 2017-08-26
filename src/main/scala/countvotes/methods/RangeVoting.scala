@@ -32,9 +32,9 @@ object RangeVoting extends VoteCountingMethod[ScoredWeightedBallot] {
     val candidateScores = new MMap[Candidate, Rational]
 
     for (b <- election if b.preferences.nonEmpty) {
-      b.scorePreferences.foreach(cscore => {
-        candidateScores(cscore._1) = candidateScores.getOrElse(cscore._1, Rational(0, 1)) + cscore._2 * b.weight
-      })
+      b.scorePreferences.foreach { case(candidate, score) => {
+        candidateScores(candidate) = candidateScores.getOrElse(candidate, Rational(0, 1)) + score * b.weight
+      }}
     }
     // because range voting is a single seat election - numVacancies are always 1
     List(candidateScores.toList.maxBy(_._2))
