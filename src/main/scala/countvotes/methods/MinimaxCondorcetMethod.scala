@@ -33,7 +33,7 @@ object MinimaxCondorcetMethod extends VoteCountingMethod[WeightedBallot] with La
 
     logger.info("Computing minimax Condorcet Winner")
 
-    val pairwiseComparisons = getPairwiseComparison(election, ccandidates)
+    val pairwiseComparisons = getPairwiseComparisonForWeightedElection(election, ccandidates)
     val mcScores = getMinimaxCondorcetScores(pairwiseComparisons, ccandidates)
 
     List(ccandidates.map(c => (c, mcScores.map {_(ccandidates.indexOf(c))}.max)).minBy(_._2))
