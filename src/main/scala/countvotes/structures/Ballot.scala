@@ -43,9 +43,12 @@ object MarkedWeightedBallot{
   // }
 }
 
-class ScoredWeightedBallot(p: List[(Candidate, Rational)], id: Int, w: Rational) extends Ballot(p map {_._1}, id) with Weight {
+class ScoredWeightedBallot(p: List[(Candidate, Rational)], id: Int, w: Rational) extends Ballot(p map {
+  _._1
+}, id) with Weight {
   val weight = w
   val scorePreferences = p
+
   override def toString: String = "[" + id + ", " + p + ", " + w + "]"
 }
 
@@ -56,9 +59,12 @@ object ScoredWeightedBallot {
   }
 }
 
-class RankedWeightedBallot(p: List[(Candidate, Int)], id: Int, w: Rational) extends Ballot(p map {_._1}, id) with Weight {
+class RankedWeightedBallot(p: List[(Candidate, Int)], id: Int, w: Rational) extends Ballot(p map {
+  _._1
+}, id) with Weight {
   val weight = w
   val rankPreferences = p
+
   override def toString: String = "[" + id + ", " + p + ", " + w + "]"
 }
 

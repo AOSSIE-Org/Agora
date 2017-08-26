@@ -324,6 +324,25 @@ object Main extends RegexParsers {
           r.writeWinners(winnersfile)
         }
 
+        case "RangeVoting" => {
+          val election = PreferencesParserWithScore.read(c.directory + electionFile)
+          var r = RangeVoting.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method Ranged voting is not implemented yet.")
+          r.writeWinners(winnersfile)
+        }
+
+        case "BipartisanSet" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
+          parameters match {
+            case Some(param) => {
+              var r = BipartisanSet.runScrutiny(election, candidates_in_order, param)
+              println("Scrutiny table for Bipartisan Set is not implemented yet.")
+              r.writeWinners(winnersfile)
+            }
+            case None => println("Please provide probability distribution to compute bipartisan set")
+          }
+        }
+
         case "Test" => {
           Test.testSDResolution
         }
