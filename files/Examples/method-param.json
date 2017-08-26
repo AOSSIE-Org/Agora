@@ -14,10 +14,10 @@
     "bonus": 30
   },
   "probability_distribution": [
-    0.1,
-    0.15,
-    0.45,
-    0.4
+    {"A": 0.1},
+    {"B": 0.15},
+    {"C": 0.21},
+    {"D": 0.45}
   ],
   "comparison_sets": {
     "set1": [
