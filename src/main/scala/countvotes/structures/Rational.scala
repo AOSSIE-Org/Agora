@@ -1,6 +1,6 @@
 package countvotes.structures
 
-import java.math.{BigInteger}
+import java.math.BigInteger
 
 import scala.language.implicitConversions
 

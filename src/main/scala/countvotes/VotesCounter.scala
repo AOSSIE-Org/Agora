@@ -1,23 +1,12 @@
 package countvotes
 
-import countvotes.parsers._
-import countvotes.structures._
-import countvotes.algorithms._
 import countvotes.methods._
+import countvotes.parsers._
+import countvotes.structures.{Election, _}
 
-import scala.collection.immutable.ListMap
-import collection.mutable.{HashMap => Map}
-import collection.mutable.HashSet
-import java.io._
-
+import scala.collection.mutable.{HashMap => Map}
 import scala.languageFeature.implicitConversions
-
-import countvotes.structures.ACTBallot
-import countvotes.structures.Election
-
 import scala.util.parsing.combinator._
-import scala.util.matching.Regex
-import scala.io.Source
 
 abstract sealed class ScrutinyTableFormats
   case object ACT extends ScrutinyTableFormats
@@ -326,6 +315,18 @@ object Main extends RegexParsers {
           var r = RankedPairsMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Ranked Pairs is not implemented yet.")
           r.writeWinners(winnersfile)
+        }
+
+        case "BipartisanSet" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
+          parameters match {
+            case Some(param) => {
+              var r = BipartisanSet.runScrutiny(election, candidates_in_order, param)
+              println("Scrutiny table for Bipartisan Set is not implemented yet.")
+              r.writeWinners(winnersfile)
+            }
+            case None => println("Please provide probability distribution to compute bipartisan set")
+          }
         }
 
         case "Test" => {
