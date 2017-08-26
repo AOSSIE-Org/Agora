@@ -317,6 +317,13 @@ object Main extends RegexParsers {
           r.writeWinners(winnersfile)
         }
 
+        case "Schulze" => {
+          val election = PreferencesParserWithRank.read(c.directory + electionFile)
+          var r = Schulze.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method Schulze is not implemented yet.")
+          r.writeWinners(winnersfile)
+        }
+
         case "RangeVoting" => {
           val election = PreferencesParserWithScore.read(c.directory + electionFile)
           var r = RangeVoting.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
