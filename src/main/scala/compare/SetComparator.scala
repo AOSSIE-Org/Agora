@@ -62,7 +62,7 @@ object SetComparator {
 
         }
         case "Fishburns" => {
-          println("perform single-caved preference analysis")
+          println("Perform Fishburn's comparison here")
 
         }
       }
@@ -83,7 +83,7 @@ object SetComparator {
           for (file <- files) {
             val filename = file.getName
             println("------------------------------------------------")
-            println("\n" + "    NEW ELECTION: " + file.getName + "\n")
+            println("\n" + "    NEW COMPARISON: " + file.getName + "\n")
             println("------------------------------------------------")
             val election = PreferencesParser.read(c.directory + filename)
             callMethod(c, election, candidates)
