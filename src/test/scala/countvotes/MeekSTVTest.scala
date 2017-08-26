@@ -10,7 +10,7 @@ class MeekSTVTest extends Specification {
 
   "MeekSTV Test " should {
 
-    "verify result" in { meekSTVVerification("41-example.e", "41-candidates.txt") shouldEqual expectedMeekSTVWinnerList}
+    "verify result" in { meekSTVVerification("43-example.e", "43-candidates.txt") shouldEqual expectedMeekSTVWinnerList}
   }
 
   def meekSTVVerification(electionFile: String, candidatesFile: String): List[Candidate] = {
