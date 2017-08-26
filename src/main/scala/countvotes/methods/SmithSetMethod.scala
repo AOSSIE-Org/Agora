@@ -1,7 +1,7 @@
 package countvotes.methods
 
-import countvotes.methods.InstantRunoff2Round.{printElection, totals, winners}
 import countvotes.structures._
+
 import scala.language.postfixOps
 
 /**
@@ -25,7 +25,7 @@ object SmithSetMethod extends VoteCountingMethod[WeightedBallot] {
   }
   override def winners(e: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 
-    val pairWiseComp = getPairwiseComparison(e, ccandidates)
+    val pairWiseComp = getPairwiseComparisonForWeightedElection(e, ccandidates)
 
     val relationMatrix = getRelationMatrix(e, ccandidates, pairWiseComp)
 

@@ -1,10 +1,6 @@
 package countvotes
 
-import scala.collection.immutable.ListMap
-import collection.mutable.{HashMap => Map}
-import collection.mutable.HashSet
-import scala.util.Sorting
-
+import scala.collection.mutable.{HashMap => Map}
 import scala.language.implicitConversions
 
 package object structures {
@@ -19,6 +15,14 @@ package object structures {
 
     implicit def weightedElectionToACTElection(we: Election[WeightedBallot]): Election[ACTBallot] = {
       for (b <- we) yield ACTBallot.fromWeightedBallot(b) // b // ACTBallot.fromWeightedBallot(b)
+    }
+
+    implicit def rankedElectionToWeightedElection(re: Election[RankedWeightedBallot]): Election[WeightedBallot] = {
+      for (b <- re) yield RankedWeightedBallot.toWeightedBallot(b)
+    }
+
+    implicit def scoredElectionToWeightedElection(re: Election[ScoredWeightedBallot]): Election[WeightedBallot] = {
+      for (b <- re) yield ScoredWeightedBallot.toWeightedBallot(b)
     }
   }
 

@@ -3,7 +3,7 @@ package countvotes.methods
 import com.typesafe.scalalogging.LazyLogging
 import countvotes.structures._
 
-import collection.mutable.{ListBuffer, HashMap => MMap}
+import scala.collection.mutable.{HashMap => MMap}
 
 /**
   * Algorithm : https://en.wikipedia.org/wiki/Minimax_Condorcet
@@ -33,7 +33,7 @@ object MinimaxCondorcetMethod extends VoteCountingMethod[WeightedBallot] with La
 
     logger.info("Computing minimax Condorcet Winner")
 
-    val pairwiseComparisons = getPairwiseComparison(election, ccandidates)
+    val pairwiseComparisons = getPairwiseComparisonForWeightedElection(election, ccandidates)
     val mcScores = getMinimaxCondorcetScores(pairwiseComparisons, ccandidates)
 
     List(ccandidates.map(c => (c, mcScores.map {_(ccandidates.indexOf(c))}.max)).minBy(_._2))

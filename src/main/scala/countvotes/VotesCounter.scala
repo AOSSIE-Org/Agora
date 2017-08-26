@@ -292,13 +292,12 @@ object Main extends RegexParsers {
           r.writeWinners(winnersfile)
         }
 
-        case "SAV" => {
-          val election = PreferencesParser.read(c.directory + electionFile)
-          var r = SatisfactionApprovalVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method SAV is not implemented yet.")
-          r.writeWinners(winnersfile)
-        }
-
+      case "SAV" => {
+        val election = PreferencesParser.read(c.directory + electionFile)
+        var r = SatisfactionApprovalVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+        println(" Scrutiny table for method SAV is not implemented yet.")
+        r.writeWinners(winnersfile)
+      }
         case "SMC" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           parameters match {
@@ -318,16 +317,29 @@ object Main extends RegexParsers {
           r.writeWinners(winnersfile)
         }
 
-        case "FishburnsExtension" => {
+        case "Schulze" => {
+          val election = PreferencesParserWithRank.read(c.directory + electionFile)
+          var r = Schulze.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method Schulze is not implemented yet.")
+          r.writeWinners(winnersfile)
+        }
+
+        case "RangeVoting" => {
+          val election = PreferencesParserWithScore.read(c.directory + electionFile)
+          var r = RangeVoting.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method Ranged voting is not implemented yet.")
+          r.writeWinners(winnersfile)
+        }
+
+        case "BipartisanSet" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           parameters match {
             case Some(param) => {
-              var r = FishburnsExtensionMethod.runScrutiny(election, candidates_in_order, param, c.nvacancies.toInt)
-              println("Scrutiny table for method Fishburn's set extension is not implemented yet.")
+              var r = BipartisanSet.runScrutiny(election, candidates_in_order, param)
+              println("Scrutiny table for Bipartisan Set is not implemented yet.")
               r.writeWinners(winnersfile)
-
             }
-            case None => println("\n\nPlease provide the comparison order to execute this set extension.\n\n")
+            case None => println("Please provide probability distribution to compute bipartisan set")
           }
         }
 

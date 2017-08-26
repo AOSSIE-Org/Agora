@@ -1,3 +1,5 @@
+package analysers
+
 import countvotes.analysers.ValueRestrictedAnalyser
 import countvotes.parsers.{CandidatesParser, PreferencesParser}
 import org.specs2.mutable.Specification

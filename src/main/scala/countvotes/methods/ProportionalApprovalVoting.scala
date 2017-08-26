@@ -5,7 +5,7 @@ import countvotes.structures.{Candidate, Input, Rational, Report, _}
 import scala.collection.immutable.{Map => IMap}
 import scala.collection.mutable.{HashMap => MMap}
 
-/***
+/** *
   * https://en.wikipedia.org/wiki/Proportional_approval_voting
   */
 
@@ -15,7 +15,7 @@ object ProportionalApprovalVoting extends VoteCountingMethod[WeightedBallot] {
   private val result: Result = new Result
   private val report: Report[WeightedBallot] = new Report[WeightedBallot]
 
-  def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int):   Report[WeightedBallot]  = {
+  def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int): Report[WeightedBallot] = {
 
     print("\n INPUT ELECTION: \n")
     printElection(election)
@@ -34,9 +34,9 @@ object ProportionalApprovalVoting extends VoteCountingMethod[WeightedBallot] {
 
   // following function calculates score, i.e., given N, it calculates summation 1 to 1/N
   def proportionalApprovalScore(nmatches: Int): Rational = {
-    var score = Rational(0,1)
-    for(i <- 1 to nmatches){
-      score = score + Rational(1,i)
+    var score = Rational(0, 1)
+    for (i <- 1 to nmatches) {
+      score = score + Rational(1, i)
     }
     score
   }
@@ -46,20 +46,22 @@ object ProportionalApprovalVoting extends VoteCountingMethod[WeightedBallot] {
   // then score for that subset is summation 1 to 1/N
   def candidateSubsetTotals(election: Election[WeightedBallot], candidates: List[Candidate], ccandSubsetList: List[List[Candidate]]): List[(Candidate, Rational)] = {
     val scoredCandidateSubsetMap = new MMap[List[Candidate], Rational]
-    for (a<-ccandSubsetList) {
-      for (b<-election) {
-        scoredCandidateSubsetMap(a) = scoredCandidateSubsetMap.getOrElse(a, Rational(0,1)) + proportionalApprovalScore(b.preferences.length - b.preferences.toSet[Candidate].diff(a.toSet[Candidate]).size)
+    for (a <- ccandSubsetList) {
+      for (b <- election) {
+        scoredCandidateSubsetMap(a) = scoredCandidateSubsetMap.getOrElse(a, Rational(0, 1)) + proportionalApprovalScore(b.preferences.length - b.preferences.toSet[Candidate].diff(a.toSet[Candidate]).size)
       }
     }
     val sortedCandidateSubsetList = scoredCandidateSubsetMap.toList.sortWith(_._2 > _._2)
     val winnerList = sortedCandidateSubsetList.head._1
     val winnerScore = sortedCandidateSubsetList.head._2
-    val finalList = winnerList map { (_, winnerScore) }
+    val finalList = winnerList map {
+      (_, winnerScore)
+    }
     finalList
   }
 
   // generates subsets of length k of list of candidates in recursive manner
-  def candidateSubsetListGenerator(k: Int, candidates: List[Candidate]) : List[List[Candidate]] = {
+  def candidateSubsetListGenerator(k: Int, candidates: List[Candidate]): List[List[Candidate]] = {
     candidates match {
       case Nil => Nil
       case head :: tail =>
@@ -73,9 +75,9 @@ object ProportionalApprovalVoting extends VoteCountingMethod[WeightedBallot] {
     }
   }
 
-  def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int ):
-  List[(Candidate,Rational)] = {
+  def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int):
+  List[(Candidate, Rational)] = {
     val ccandSubsetList = candidateSubsetListGenerator(numVacancies, ccandidates)
-    candidateSubsetTotals(election, ccandidates,ccandSubsetList)
+    candidateSubsetTotals(election, ccandidates, ccandSubsetList)
   }
 }

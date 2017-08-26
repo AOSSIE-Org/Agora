@@ -3,6 +3,7 @@ package countvotes.methods
 import com.typesafe.scalalogging.LazyLogging
 import countvotes.structures._
 import countvotes.util.matrix._
+
 import scala.language.postfixOps
 
 
@@ -35,7 +36,7 @@ object UncoveredSetMethod extends VoteCountingMethod[WeightedBallot] with LazyLo
     logger.info("Computing Uncovered Set")
     val zeroRational = Rational(0, 1)
     val majorityRational = Rational(1, 2)
-    val electionResponse = getPairwiseComparison(e, ccandidates)
+    val electionResponse = getPairwiseComparisonForWeightedElection(e, ccandidates)
     val ucMatrix = BaseMatrix[Rational](ccandidates.size, ccandidates.size){ (i: Int, j: Int) => {
       zeroRational
     }

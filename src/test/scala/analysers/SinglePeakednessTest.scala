@@ -1,4 +1,4 @@
-package countvotes
+package analysers
 
 import countvotes.analysers.SinglePeakAnalyser
 import countvotes.parsers.{CandidatesParser, PreferencesParser}
