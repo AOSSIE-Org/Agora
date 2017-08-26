@@ -1,8 +1,7 @@
 package countvotes.methods
 
 import com.typesafe.scalalogging.LazyLogging
-import countvotes.structures.{Weight, WeightedBallot}
-import countvotes.structures._
+import countvotes.structures.{WeightedBallot, _}
 
 
 /**

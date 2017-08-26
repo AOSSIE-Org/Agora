@@ -2,8 +2,6 @@ package countvotes.methods
 
 import countvotes.structures._
 
-import scala.collection.mutable.ListBuffer
-
 /**
   * Algorithm : https://en.wikipedia.org/wiki/Schulze_method
   */

@@ -1,7 +1,7 @@
 package countvotes.methods
 
-import countvotes.methods.InstantRunoff2Round.{printElection, totals, winners}
 import countvotes.structures._
+
 import scala.language.postfixOps
 
 /**

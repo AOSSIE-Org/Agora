@@ -3,7 +3,7 @@ package countvotes.methods
 import com.typesafe.scalalogging.LazyLogging
 import countvotes.structures._
 
-import collection.mutable.{ListBuffer, HashMap => MMap}
+import scala.collection.mutable.{HashMap => MMap}
 
 /**
   * Algorithm : https://en.wikipedia.org/wiki/Minimax_Condorcet
