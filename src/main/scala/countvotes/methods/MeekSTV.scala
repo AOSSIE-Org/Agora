@@ -41,14 +41,14 @@ object MeekSTV extends STV[WeightedBallot]
     report
   }
 
-  def totalsMeek(election: Election[WeightedBallot], ccandidates: List[Candidate], flags: MMap[Candidate, Rational]): MMap[Candidate, Rational] ={
+  def totalsMeek(election: Election[WeightedBallot], ccandidates: List[Candidate], keepFactor: MMap[Candidate, Rational]): MMap[Candidate, Rational] ={
     val scoreMap = new MMap[Candidate, Rational]
 
     for(b<-election if !b.preferences.isEmpty) {
       var multiplier = Rational(1,1)
       for(c<-b.preferences) {
-        scoreMap(c) = scoreMap.getOrElse(c, Rational(0,1)) + b.weight * multiplier * flags(c)
-        multiplier = multiplier * (Rational(1,1) - flags(c))
+        scoreMap(c) = scoreMap.getOrElse(c, Rational(0,1)) + b.weight * multiplier * keepFactor(c)
+        multiplier = multiplier * (Rational(1,1) - keepFactor(c))
       }
     }
     scoreMap
@@ -60,19 +60,15 @@ object MeekSTV extends STV[WeightedBallot]
   }
 
   def surplusQuantity(totals: MMap[Candidate, Rational], quota: Rational): Rational = {
-    var surplusAmount: Rational = Rational(0,1)
-    totals.filter(x => x._2 >= quota).foreach(x => {
-      surplusAmount = surplusAmount + x._2 - quota} )
+    val surplusAmount: Rational = (Rational(0,1) /: (totals filter { _._2 >= quota} map {_._2})) {(surplus,t) => surplus + t - quota}
     surplusAmount
   }
 
-  def winnersList(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
+  def winnersList(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int, keepFactor: MMap[Candidate, Rational]): List[(Candidate, Rational)] = {
 
     println(" \n NEW RECURSIVE CALL \n")
 
-    val keepFactor = result.getKF
     val tls = totalsMeek(election, ccandidates, keepFactor)
-    println(tls)
     if (ccandidates.length <= numVacancies) {
       for (c <- ccandidates) yield (c, tls(c))
     }
@@ -87,13 +83,13 @@ object MeekSTV extends STV[WeightedBallot]
         val sortedScoreList = tls.toList.filter(x => ccandidates.contains(x._1)).sortWith(_._2 < _._2)
         if (sortedScoreList.head._2 + surplusAmount < tls.toList.filter(x => ccandidates.contains(x._1)).sortWith(_._2 < _._2).tail.head._2) {
           keepFactor(sortedScoreList.head._1) = Rational(0, 1)
-          winnersList(exclude(election, sortedScoreList.head._1, None, None)._1, ccandidates.filterNot(_ == sortedScoreList.head._1), numVacancies)
+          winnersList(exclude(election, sortedScoreList.head._1, None, None)._1, ccandidates.filterNot(_ == sortedScoreList.head._1), numVacancies, keepFactor)
         } else {
           val winnerList = tls.filter(x => ccandidates.contains(x._1)).filter(_._2 > result.getQuota)
           for (w <- winnerList) {
             keepFactor(w._1) = keepFactor(w._1) * Rational(w._2.denominator.toInt * result.getQuota.numerator.toInt, w._2.numerator.toInt)
           }
-          winnersList(election, ccandidates, numVacancies)
+          winnersList(election, ccandidates, numVacancies, keepFactor)
         }
       }
     }
@@ -112,8 +108,6 @@ object MeekSTV extends STV[WeightedBallot]
       keepFactor(c) = Rational(1, 1)
     }
 
-    result.setKF(keepFactor)
-
-    winnersList(election, ccandidates, numVacancies)
+    winnersList(election, ccandidates, numVacancies, keepFactor)
   }
 }

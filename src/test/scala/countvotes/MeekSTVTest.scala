@@ -6,7 +6,7 @@ import org.specs2.mutable.Specification
 
 class MeekSTVTest extends Specification {
 
-  val expectedMeekSTVWinnerList = List(Candidate("C"), Candidate("A"), Candidate("B"))
+  val expectedMeekSTVWinnerList = List(Candidate("C"), Candidate("A"), Candidate("B")) // result is from OpaVote's page - http://blog.opavote.com/2017/04/meek-stv-explained.html
 
   "MeekSTV Test " should {
 
