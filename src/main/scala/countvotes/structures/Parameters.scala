@@ -38,7 +38,7 @@ object ComparisonSets {
 
 case class Parameters(comparisonOrder: Option[Array[String]], allowedVote: Option[Int], cutOffQuota: Option[Double],
                       proportionalRatio: Option[Double], majorityBonus: Option[MajorityBonus],
-                      probabilityDistribution: Option[Array[Double]], comparisonSets: Option[ComparisonSets])
+                      probabilityDistribution: Option[Array[Map[String, Double]]], comparisonSets: Option[ComparisonSets])
 
 object Parameters {
 
@@ -58,7 +58,7 @@ object Parameters {
       (__ \ "cut_off_quota").readNullable[Double] and
       (__ \ "proportional_ratio").readNullable[Double] and
       (__ \ "majority_bonus").readNullable[MajorityBonus] and
-      (__ \ "probability_distribution").readNullable[Array[Double]] and
+      (__ \ "probability_distribution").readNullable[Array[Map[String, Double]]] and
       (__ \ "comparison_sets").readNullable[ComparisonSets]
     ) (Parameters.apply _)
 

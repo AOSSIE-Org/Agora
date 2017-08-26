@@ -20,6 +20,14 @@ package object structures {
     implicit def weightedElectionToACTElection(we: Election[WeightedBallot]): Election[ACTBallot] = {
       for (b <- we) yield ACTBallot.fromWeightedBallot(b) // b // ACTBallot.fromWeightedBallot(b)
     }
+
+    implicit def rankedElectionToWeightedElection(re: Election[RankedWeightedBallot]): Election[WeightedBallot] = {
+      for (b <- re) yield RankedWeightedBallot.toWeightedBallot(b)
+    }
+
+    implicit def scoredElectionToWeightedElection(re: Election[ScoredWeightedBallot]): Election[WeightedBallot] = {
+      for (b <- re) yield ScoredWeightedBallot.toWeightedBallot(b)
+    }
   }
 
   abstract sealed class Actions
