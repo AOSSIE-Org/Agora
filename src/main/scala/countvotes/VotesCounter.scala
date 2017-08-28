@@ -324,6 +324,13 @@ object Main extends RegexParsers {
           r.writeWinners(winnersfile)
         }
 
+        case "Maximin" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
+          var r = MaximinMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method Maximin is not implemented yet.")
+          r.writeWinners(winnersfile)
+        }
+
         case "RangeVoting" => {
           val election = PreferencesParserWithScore.read(c.directory + electionFile)
           var r = RangeVoting.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
