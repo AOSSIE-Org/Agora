@@ -23,6 +23,7 @@ Party-list proportional representation based algorithms involve calculation of q
 
 Party-lists have not yet been properly tackled. Addition of scrutiny tables is done but might need modification in future for proper display (mainly for Meek and Warren STV). Summary tables for the rest of the algorithms are not created yet which will need some work and discussion with mentors and project admins.
 
+I would like to thank my mentors at AOSSIE for being highly supportive and co-operative with me during the coding period because of which I enjoyed and learnt a lot. 
 # Project repository
 
 [AOSSIE](https://gitlab.com/aossie/Agora)
