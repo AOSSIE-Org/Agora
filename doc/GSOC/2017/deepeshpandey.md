@@ -14,7 +14,7 @@ is added for data passing.
 
 # Hosted Executable
 
-TODO
+[https://zenodo.org/record/852440#.WaQhcdMjHBI](https://zenodo.org/record/852440#.WaQhcdMjHBI)
 
 
 # GSOC-2017 TAG
@@ -74,6 +74,8 @@ TODO
 * [MR72: Schulze Algorithm][https://gitlab.com/aossie/Agora/merge_requests/72!](https://gitlab.com/aossie/Agora/merge_requests/72)
 
 * [MR73: Parameter fix][https://gitlab.com/aossie/Agora/merge_requests/73!](https://gitlab.com/aossie/Agora/merge_requests/73)
+
+* [MR77: Build Artificat][https://gitlab.com/aossie/Agora/merge_requests/77!](https://gitlab.com/aossie/Agora/merge_requests/77)
 
 ## OPEN
 
