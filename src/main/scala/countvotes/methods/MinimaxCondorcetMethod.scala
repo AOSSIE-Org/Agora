@@ -3,30 +3,16 @@ package countvotes.methods
 import com.typesafe.scalalogging.LazyLogging
 import countvotes.structures._
 
-import collection.mutable.{ListBuffer, HashMap => MMap}
+import scala.collection.mutable.{HashMap => MMap}
 
 /**
   * Algorithm : https://en.wikipedia.org/wiki/Minimax_Condorcet
   * Variant : winning votes => W = \arg \min_X ( \max_Y score(Y, X))
   */
-object MinimaxCondorcetMethod extends VoteCountingMethod[WeightedBallot] with LazyLogging{
+object MinimaxCondorcetMethod extends Scrutiny[WeightedBallot] with LazyLogging{
 
-  private val result: Result = new Result
-  private val report: Report[WeightedBallot] = new Report[WeightedBallot]
   private val rational0 = Rational(0, 1)
   private val majorityThreshold = Rational(1, 2)
-
-  def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int): Report[WeightedBallot] = {
-
-    print("\n INPUT ELECTION: \n")
-    printElection(election)
-
-    report.setCandidates(candidates)
-
-    report.setWinners(winners(election, candidates, numVacancies))
-
-    report
-  }
 
   def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int):
   List[(Candidate, Rational)] = {

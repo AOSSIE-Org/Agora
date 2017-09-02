@@ -1,11 +1,10 @@
 package countvotes.methods
 
 import countvotes.structures._
-import countvotes.algorithms._
+
 import scala.math._
 
-abstract class Egalitarian[B <: WeightedBallot with Weight] extends VoteCountingMethod[B] {
-  val report: Report[B] = new Report[B]
+abstract class Egalitarian[B <: WeightedBallot with Weight] extends Scrutiny[B] {
   val fairness: Double = 2
   var allCandidates: List[Candidate];
 

@@ -195,6 +195,8 @@ import scala.collection.mutable.{HashMap => Map}
 
 
 
+    // scalastyle:off cyclomatic.complexity
+    // scalastyle:off method.length
   def writeDistributionOfPreferences(file: String, order: Option[List[Candidate]]): Unit = {
     val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)))
 

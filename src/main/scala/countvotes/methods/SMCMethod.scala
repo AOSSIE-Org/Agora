@@ -1,8 +1,7 @@
 package countvotes.methods
 
 import com.typesafe.scalalogging.LazyLogging
-import countvotes.structures.{Weight, WeightedBallot}
-import countvotes.structures._
+import countvotes.structures.{WeightedBallot, _}
 
 
 /**
@@ -12,9 +11,7 @@ import countvotes.structures._
   * round i, if w >(majority) xi+1, and is xi+1, if xi+1 >(majority) w; and the ultimate winner is the winner
   * of round m.
   */
-object SMCMethod extends VoteCountingMethod[WeightedBallot] with LazyLogging {
-
-  private val report: Report[WeightedBallot] = new Report[WeightedBallot]
+object SMCMethod extends Scrutiny[WeightedBallot] with LazyLogging {
 
   def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], param: Parameters, numVacancies: Int): Report[WeightedBallot] = {
 

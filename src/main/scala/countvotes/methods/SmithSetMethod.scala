@@ -1,28 +1,14 @@
 package countvotes.methods
 
-import countvotes.methods.InstantRunoff2Round.{printElection, totals, winners}
 import countvotes.structures._
+
 import scala.language.postfixOps
 
 /**
   * Algorithm : http://wiki.electorama.com/wiki/Maximal_elements_algorithms#Floyd-Warshall_algorithm
   */
-object SmithSetMethod extends VoteCountingMethod[WeightedBallot] {
+object SmithSetMethod extends Scrutiny[WeightedBallot] {
 
-  private val result: Result = new Result
-  private val report: Report[WeightedBallot] = new Report[WeightedBallot]
-
-  def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int): Report[WeightedBallot] = {
-
-    print("\n INPUT ELECTION: \n")
-    printElection(election)
-
-    report.setCandidates(candidates)
-
-    report.setWinners(winners(election, candidates, numVacancies))
-
-    report
-  }
   override def winners(e: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 
     val pairWiseComp = getPairwiseComparisonForWeightedElection(e, ccandidates)
@@ -58,6 +44,7 @@ object SmithSetMethod extends VoteCountingMethod[WeightedBallot] {
     relationMatrix
   }
 
+  // scalastyle:off cyclomatic.complexity
   def floydWarshallMaximal(relations: Array[Array[Boolean]], ccandidates: List[Candidate]): Array[Boolean] = {
 
     val isInMaximal = Array.ofDim[Boolean](ccandidates.size)

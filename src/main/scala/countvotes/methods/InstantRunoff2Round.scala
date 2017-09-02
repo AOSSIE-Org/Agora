@@ -1,8 +1,8 @@
 package countvotes.methods
 
-import countvotes.methods.BordaRuleMethod.{printElection, totals, winners}
 import countvotes.structures._
-import collection.mutable.{HashMap => Map}
+
+import scala.collection.mutable.{HashMap => Map}
 
 /**
   * Created by deepeshpandey on 03/06/17.
@@ -12,27 +12,7 @@ import collection.mutable.{HashMap => Map}
   * Assumptions : voters vote only once with preferential ballots
   * Rounds : only 2 as per 2-round voting
   */
-object InstantRunoff2Round extends VoteCountingMethod[WeightedBallot] {
-
-  private val result: Result = new Result
-  private val report: Report[WeightedBallot] = new Report[WeightedBallot]
-
-  def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int): Report[WeightedBallot] = {
-
-    print("\n INPUT ELECTION: \n")
-    printElection(election)
-
-    var tls = totals(election, candidates)
-
-    result.addTotalsToHistory(tls)
-
-    report.setCandidates(candidates)
-    report.newCount(Input, None, Some(election), Some(tls), None, None)
-
-    report.setWinners(winners(election, candidates, numVacancies))
-
-    report
-  }
+object InstantRunoff2Round extends Scrutiny[WeightedBallot] {
 
   override def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 

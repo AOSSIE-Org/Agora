@@ -8,19 +8,16 @@ import countvotes.structures._
   * Every tournament is zero-sum multiplayer game and  admits a unique probability distribution - due to Von Neumann's Minimax theorem(https://www.youtube.com/watch?v=toP9XPT7Bv4)
   * Bipartisan Set is defined as : BP(A,PM) = {x∈A : p(x)>0, p balanced for (A,PM)} where PM is majority graph
   */
-object BipartisanSet extends VoteCountingMethod[WeightedBallot] {
+object BipartisanSet extends Scrutiny[WeightedBallot] {
 
-  private val result: Result = new Result
-  private val report: Report[WeightedBallot] = new Report[WeightedBallot]
-
-  def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], parameters: Parameters): Report[WeightedBallot] = {
+  def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], param: Parameters): Report[WeightedBallot] = {
 
     print("\n INPUT ELECTION: \n")
     printElection(election)
 
     report.setCandidates(candidates)
 
-    report.setWinners(bipartisanSet(election, candidates, parameters))
+    report.setWinners(bipartisanSet(election, candidates, param))
 
     report
   }

@@ -1,6 +1,6 @@
 package countvotes.methods
 
-import countvotes.structures.{Candidate, Input, Rational, Report, _}
+import countvotes.structures.{Candidate, Rational, _}
 
 import scala.collection.immutable.{Map => IMap}
 import scala.collection.mutable.{HashMap => MMap}
@@ -8,29 +8,7 @@ import scala.collection.mutable.{HashMap => MMap}
 /** *
   * https://en.wikipedia.org/wiki/Proportional_approval_voting
   */
-
-
-object ProportionalApprovalVoting extends VoteCountingMethod[WeightedBallot] {
-
-  private val result: Result = new Result
-  private val report: Report[WeightedBallot] = new Report[WeightedBallot]
-
-  def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int): Report[WeightedBallot] = {
-
-    print("\n INPUT ELECTION: \n")
-    printElection(election)
-
-    var tls = totals(election, candidates)
-
-    result.addTotalsToHistory(tls)
-
-    report.setCandidates(candidates)
-    report.newCount(Input, None, Some(election), Some(tls), None, None)
-
-    report.setWinners(winners(election, candidates, numVacancies))
-
-    report
-  }
+object ProportionalApprovalVoting extends Scrutiny[WeightedBallot] {
 
   // following function calculates score, i.e., given N, it calculates summation 1 to 1/N
   def proportionalApprovalScore(nmatches: Int): Rational = {
@@ -44,11 +22,13 @@ object ProportionalApprovalVoting extends VoteCountingMethod[WeightedBallot] {
   // following function calculates totals for each candidate subsets in the follwoing manner
   // if N of the candidate preferences matches with any one candidate subset,
   // then score for that subset is summation 1 to 1/N
-  def candidateSubsetTotals(election: Election[WeightedBallot], candidates: List[Candidate], ccandSubsetList: List[List[Candidate]]): List[(Candidate, Rational)] = {
+  def candidateSubsetTotals(election: Election[WeightedBallot], candidates: List[Candidate],
+                            ccandSubsetList: List[List[Candidate]]): List[(Candidate, Rational)] = {
     val scoredCandidateSubsetMap = new MMap[List[Candidate], Rational]
     for (a <- ccandSubsetList) {
       for (b <- election) {
-        scoredCandidateSubsetMap(a) = scoredCandidateSubsetMap.getOrElse(a, Rational(0, 1)) + proportionalApprovalScore(b.preferences.length - b.preferences.toSet[Candidate].diff(a.toSet[Candidate]).size)
+        scoredCandidateSubsetMap(a) = scoredCandidateSubsetMap.getOrElse(a, Rational(0, 1)) +
+          proportionalApprovalScore(b.preferences.length - b.preferences.toSet[Candidate].diff(a.toSet[Candidate]).size)
       }
     }
     val sortedCandidateSubsetList = scoredCandidateSubsetMap.toList.sortWith(_._2 > _._2)

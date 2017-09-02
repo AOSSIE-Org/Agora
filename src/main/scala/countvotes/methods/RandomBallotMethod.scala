@@ -8,23 +8,7 @@ import scala.util.Random
 /**
   * Algorithm : https://en.wikipedia.org/wiki/Random_ballot
   */
-object RandomBallotMethod extends VoteCountingMethod[WeightedBallot] with LazyLogging {
-
-  private val result: Result = new Result
-  private val report: Report[WeightedBallot] = new Report[WeightedBallot]
-
-  def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int): Report[WeightedBallot] = {
-
-    print("\n INPUT ELECTION: \n")
-    printElection(election)
-
-    report.setCandidates(candidates)
-
-    report.setWinners(winners(election, candidates, numVacancies))
-
-    report
-
-  }
+object RandomBallotMethod extends Scrutiny[WeightedBallot] with LazyLogging {
 
   override def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 

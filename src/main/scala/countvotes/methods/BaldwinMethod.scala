@@ -3,33 +3,12 @@ package countvotes.methods
 import com.typesafe.scalalogging.LazyLogging
 import countvotes.structures._
 
-import collection.mutable.{HashMap => Map}
-import scala.collection.mutable
+import scala.collection.mutable.{HashMap => Map}
 
 /**
   * Created by deepeshpandey on 09/03/17.
   */
-object BaldwinMethod extends VoteCountingMethod[WeightedBallot] with LazyLogging {
-
-  private val result: Result = new Result
-  private val report: Report[WeightedBallot] = new Report[WeightedBallot]
-
-  def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int): Report[WeightedBallot] = {
-
-    print("\n INPUT ELECTION: \n")
-    printElection(election)
-
-    var tls = totals(election, candidates)
-
-    result.addTotalsToHistory(tls)
-
-    report.setCandidates(candidates)
-    report.newCount(Input, None, Some(election), Some(tls), None, None)
-
-    report.setWinners(winners(election, candidates, numVacancies))
-
-    report
-  }
+object BaldwinMethod extends Scrutiny[WeightedBallot] with LazyLogging {
 
   def bordaScores(election: Election[WeightedBallot], candidates: List[Candidate]): Map[Candidate, Rational] = {
     val m = new Map[Candidate, Rational]

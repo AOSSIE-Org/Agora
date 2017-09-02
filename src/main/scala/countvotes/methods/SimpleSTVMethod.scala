@@ -1,7 +1,7 @@
 package countvotes.methods
 
-import countvotes.structures._
 import countvotes.algorithms._
+import countvotes.structures._
 
 
 class SimpleSTVMethod extends STV[WeightedBallot]
@@ -18,7 +18,7 @@ class SimpleSTVMethod extends STV[WeightedBallot]
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int):   Report[WeightedBallot]  = {
+  override def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int):   Report[WeightedBallot]  = {
    val quota = cutQuotaFraction(computeQuota(election.length, numVacancies))
    println("Quota = " + quota)
    result.setQuota(quota)

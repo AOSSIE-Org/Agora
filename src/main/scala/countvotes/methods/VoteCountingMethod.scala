@@ -1,23 +1,12 @@
 package countvotes.methods
 
 import countvotes.structures._
-import countvotes.algorithms._
 
-
-import scala.collection.immutable.ListMap
-import collection.mutable.{HashMap => Map}
-import scala.collection.SortedMap
-import collection.mutable.HashSet
-import collection.breakOut
-import scala.util.Random
-import scala.util.Sorting
-import java.io._
+import scala.collection.mutable.{HashSet, HashMap => Map}
 
 abstract class VoteCountingMethod[B <: Ballot with Weight] {
 
- def winners(e: Election[B], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)]
-
- def totals(election: Election[WeightedBallot], candidates: List[Candidate]): Map[Candidate, Rational] = {
+ def totals(election: Election[B], candidates: List[Candidate]): Map[Candidate, Rational] = {
     val m = new Map[Candidate, Rational]
 
     for (c<-candidates) m(c) = 0
@@ -84,6 +73,34 @@ abstract class VoteCountingMethod[B <: Ballot with Weight] {
           }}}}}}
     responseMatrix
   }
+}
+
+trait Scrutiny[B <: Ballot with Weight] extends VoteCountingMethod[B] {
+
+  protected val result: Result = new Result
+  protected val report: Report[B] = new Report[B]
+
+  def winners(e: Election[B], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)]
+
+  def runScrutiny(election: Election[B], candidates: List[Candidate], numVacancies: Int):   Report[B]  = {
+
+    print("\n INPUT ELECTION: \n")
+    printElection(election)
+
+    var tls = totals(election, candidates)
+
+    result.addTotalsToHistory(tls)
+
+    report.setCandidates(candidates)
+
+    report.newCount(Input, None, None, Some(tls), None, None)
+
+    report.setWinners(winners(election, candidates, numVacancies))
+
+    report
+  }
+
+
 }
 
 

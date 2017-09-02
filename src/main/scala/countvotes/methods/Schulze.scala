@@ -2,28 +2,10 @@ package countvotes.methods
 
 import countvotes.structures._
 
-import scala.collection.mutable.ListBuffer
-
 /**
   * Algorithm : https://en.wikipedia.org/wiki/Schulze_method
   */
-object Schulze extends VoteCountingMethod[RankedWeightedBallot] {
-
-  private val result: Result = new Result
-  private val report: Report[RankedWeightedBallot] = new Report[RankedWeightedBallot]
-
-  def runScrutiny(election: Election[RankedWeightedBallot], candidates: List[Candidate], numVacancies: Int): Report[RankedWeightedBallot] = {
-
-    print("\n INPUT ELECTION: \n")
-    printElection(election)
-
-    report.setCandidates(candidates)
-
-    report.setWinners(winners(election, candidates, numVacancies))
-
-    report
-  }
-
+object Schulze extends Scrutiny[RankedWeightedBallot] {
 
   override def winners(election: Election[RankedWeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 

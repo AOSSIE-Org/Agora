@@ -1,15 +1,14 @@
 package countvotes.methods
 
 import countvotes.structures._
-import countvotes.algorithms._
-import scala.math._
+
 import scala.collection.mutable.{HashMap => MMap}
 
 object EgalitarianDPMethod extends Egalitarian[WeightedBallot] {
   val memo = new MMap[(Int,Set[Candidate]), List[Candidate]] ()
   var allCandidates: List[Candidate] = List.empty
 
-  def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int):  Report[WeightedBallot] = {
+  override def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int):  Report[WeightedBallot] = {
     allCandidates = candidates
     println("Number of WeightedBallots: " + election.length)
     report.setWinners(winners(election, candidates, numVacancies))
