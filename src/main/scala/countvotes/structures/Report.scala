@@ -147,10 +147,6 @@ import scala.collection.mutable.{HashMap => Map}
       stabilityAnalysis = sa
     }
 
-    def getStabilityAnalysis(sa: List[(String, Double, Double)]): Unit = {
-      stabilityAnalysis
-    }
-
     def writeStabilityAnalysis(file: String): Unit = {
       val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)))
       //writer.write(result.getWinners.toString())

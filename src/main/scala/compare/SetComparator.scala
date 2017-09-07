@@ -1,7 +1,7 @@
 package compare
 
 import compare.extensions.{FishburnsExtension, KellyExtension}
-import countvotes.analysers.{SinglePeakAnalyser, ValueRestrictedAnalyser}
+import analyse.methods.{SinglePeakAnalyser, ValueRestrictedAnalyser}
 import countvotes.parsers.{CandidatesParser, ParameterParser, PreferencesParser}
 import countvotes.structures.{Candidate, WeightedBallot}
 import countvotes.{Concise, ScrutinyTableFormats}

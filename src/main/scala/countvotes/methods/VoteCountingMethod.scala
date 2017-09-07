@@ -73,14 +73,15 @@ abstract class VoteCountingMethod[B <: Ballot with Weight] {
           }}}}}}
     responseMatrix
   }
+  
+  
+  def winners(e: Election[B], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)]
 }
 
 trait Scrutiny[B <: Ballot with Weight] extends VoteCountingMethod[B] {
 
   protected val result: Result = new Result
   protected val report: Report[B] = new Report[B]
-
-  def winners(e: Election[B], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)]
 
   def runScrutiny(election: Election[B], candidates: List[Candidate], numVacancies: Int):   Report[B]  = {
 

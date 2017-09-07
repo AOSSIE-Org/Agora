@@ -235,6 +235,7 @@ object Main extends RegexParsers {
           r.writeWinners(winnersfile)
         }
         case "Dodgson" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
           var r = DodgsonMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Random Ballot is not implemented yet.")
           r.writeWinners(winnersfile)
