@@ -1,0 +1,11 @@
+{
+  "comparison_sets": {
+    "set1": [
+      "B"
+    ],
+    "set2": [
+      "B",
+      "C"
+    ]
+  }
+}
