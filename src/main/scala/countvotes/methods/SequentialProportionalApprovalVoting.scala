@@ -1,40 +1,18 @@
 package countvotes.methods
 
-import countvotes.structures.{Candidate, Input, Rational, Report, _}
-import countvotes.structures.{Candidate, Rational, _}
-import countvotes.methods._
 import countvotes.algorithms._
+import countvotes.structures.{Candidate, Rational, _}
 
-import collection.mutable.{HashMap => MMap}
-import collection.immutable.{Map => IMap}
+import scala.collection.immutable.{Map => IMap}
+import scala.collection.mutable.{HashMap => MMap}
 
 /***
   * https://en.wikipedia.org/wiki/Sequential_proportional_approval_voting
   */
 
 
-object SequentialProportionalApprovalVoting extends VoteCountingMethod[WeightedBallot]
+object SequentialProportionalApprovalVoting extends Scrutiny[WeightedBallot]
   with SimpleApproval {
-
-  private val result: Result = new Result
-  private val report: Report[WeightedBallot] = new Report[WeightedBallot]
-
-  def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int):   Report[WeightedBallot]  = {
-
-    print("\n INPUT ELECTION: \n")
-    printElection(election)
-
-    var tls = countApprovals(election, candidates)
-
-    result.addTotalsToHistory(tls)
-
-    report.setCandidates(candidates)
-    report.newCount(Input, None, Some(election), Some(tls), None, None)
-
-    report.setWinners(winners(election, candidates, numVacancies))
-
-    report
-  }
 
   // following function removes winner and reduces weight on ballot to 1/(N+1)
   // where N is the number of winners in one single ballot choice list

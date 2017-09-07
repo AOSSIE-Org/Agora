@@ -2,28 +2,12 @@ package countvotes.methods
 
 
 import countvotes.structures._
-import countvotes.algorithms._
+
+import scala.collection.mutable.{HashMap => Map}
 
 
-import scala.collection.immutable.ListMap
-import collection.mutable.{HashMap => Map}
-import scala.collection.SortedMap
-import collection.mutable.HashSet
-import collection.breakOut
-import scala.util.Random
-import scala.util.Sorting
-import java.io._
-
-
-abstract class STV[B <: Ballot with Weight] extends VoteCountingMethod[B] {
+abstract class STV[B <: Ballot with Weight] extends Scrutiny[B] {
   //type E = Election[B]
-
-  // GLOBAL MUTABLE VARIABLES
-  // DON'T FORGET TO RESET
-  protected val result: Result = new Result
-  protected val report: Report[B] = new Report[B]
-
-  def runScrutiny(e: Election[B], ccandidates: List[Candidate], numVacancies: Int):   Report[B]
 
   def computeQuota(numVotes: Int, numVacancies: Int): Rational
 

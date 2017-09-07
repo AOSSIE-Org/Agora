@@ -1,13 +1,11 @@
 package countvotes.methods
 
 import countvotes.structures._
-import countvotes.algorithms._
-import scala.math._
 
 object EgalitarianMethod extends Egalitarian[WeightedBallot] {
   var allCandidates: List[Candidate] = List.empty
 
-  def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int):  Report[WeightedBallot] = {
+  override def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int):  Report[WeightedBallot] = {
     allCandidates = candidates
     println("Number of WeightedBallots: " + election.length)
     report.setWinners(winners(election, allCandidates, numVacancies))

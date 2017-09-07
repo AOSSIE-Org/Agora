@@ -2,17 +2,8 @@ package countvotes.methods
 
 
 import countvotes.structures._
-import countvotes.algorithms._
 
-
-import scala.collection.immutable.ListMap
-import collection.mutable.{HashMap => Map}
-import scala.collection.SortedMap
-import collection.mutable.HashSet
-import collection.breakOut
-import scala.util.Random
-import scala.util.Sorting
-import java.io._
+import scala.collection.mutable.{HashMap => Map}
 
 
 abstract class STVAustralia extends STV[ACTBallot]
@@ -26,7 +17,7 @@ abstract class STVAustralia extends STV[ACTBallot]
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
- def runScrutiny(election: Election[ACTBallot], candidates: List[Candidate], numVacancies: Int):
+ override def runScrutiny(election: Election[ACTBallot], candidates: List[Candidate], numVacancies: Int):
     Report[ACTBallot] = {  // all ballots of e are marked when the function is called
    val quota = cutQuotaFraction(computeQuota(election.length, numVacancies))
    println("Number of ballots:" + election.length)

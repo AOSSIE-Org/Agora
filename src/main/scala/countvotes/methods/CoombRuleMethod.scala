@@ -3,32 +3,15 @@ package countvotes.methods
 import com.typesafe.scalalogging.LazyLogging
 import countvotes.structures._
 
-import collection.mutable.{ListBuffer, HashMap => MMap}
+import scala.collection.mutable.{HashMap => MMap}
 
 /**
   * Algorithm : https://en.wikipedia.org/wiki/Coombs%27_method
   * Note: This voting method requires voters to rank all the candidates
   */
-object CoombRuleMethod extends VoteCountingMethod[WeightedBallot] with LazyLogging{
+object CoombRuleMethod extends Scrutiny[WeightedBallot] with LazyLogging{
 
-  private val result: Result = new Result
-  private val report: Report[WeightedBallot] = new Report[WeightedBallot]
   private val majorityThreshold = Rational(1,2)
-
-  def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int):   Report[WeightedBallot]  = {
-
-    require(election forall(b => b.preferences.length == candidates.length))
-
-    print("\n INPUT ELECTION: \n")
-    printElection(election)
-
-    report.setCandidates(candidates)
-
-    report.setWinners(winners(election, candidates, numVacancies))
-
-    report
-  }
-
 
   def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int ):
   List[(Candidate,Rational)] = {

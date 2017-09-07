@@ -3,6 +3,7 @@ package countvotes.methods
 import com.typesafe.scalalogging.LazyLogging
 import countvotes.structures._
 import countvotes.util.matrix._
+
 import scala.language.postfixOps
 
 
@@ -13,22 +14,7 @@ import scala.language.postfixOps
   * x covers y (x C y) if D(y) is a subset of D(x)
   * where D(x) = { y ⍷ A | x >(majority) y}
   */
-object UncoveredSetMethod extends VoteCountingMethod[WeightedBallot] with LazyLogging {
-
-  private val result: Result = new Result
-  private val report: Report[WeightedBallot] = new Report[WeightedBallot]
-
-  def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int): Report[WeightedBallot] = {
-
-    print("\n INPUT ELECTION: \n")
-    printElection(election)
-
-    report.setCandidates(candidates)
-
-    report.setWinners(winners(election, candidates, numVacancies))
-
-    report
-  }
+object UncoveredSetMethod extends Scrutiny[WeightedBallot] with LazyLogging {
 
   override def winners(e: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 
