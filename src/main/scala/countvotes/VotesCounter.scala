@@ -9,8 +9,8 @@ import scala.languageFeature.implicitConversions
 import scala.util.parsing.combinator._
 
 abstract sealed class ScrutinyTableFormats
-  case object ACT extends ScrutinyTableFormats
-  case object Concise extends ScrutinyTableFormats
+case object ACT extends ScrutinyTableFormats
+case object Concise extends ScrutinyTableFormats
 
 
 object Main extends RegexParsers {
@@ -82,7 +82,7 @@ object Main extends RegexParsers {
     note(
       """Possible values are as follows:""" + "\n" +
 
-        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Baldwin, Nanson, Kemeny-Young, Contingent,| Runoff2Round, Copeland, UncoveredSet, InstantExhaustiveBallot, PreferentialBlockVoting, HybridPluralityPreferentialBlockVoting, InstantExhaustiveDropOff, SAV, PAV, SPAV, Oklahoma""".stripMargin + "\n" +
+        """for -m:  EVACS, EVACSnoLP, EVACSDWD, Simple, Majority, Borda, Approval, Baldwin, Nanson, Kemeny-Young, Contingent,| Runoff2Round, Copeland, UncoveredSet, InstantExhaustiveBallot, PreferentialBlockVoting, HybridPluralityPreferentialBlockVoting, InstantExhaustiveDropOff, SAV, PAV, SPAV, Oklahoma, Meek""".stripMargin + "\n" +
 
         """for -t:  Concise, ACT""" + "\n \n"
     )
@@ -298,12 +298,12 @@ object Main extends RegexParsers {
           r.writeWinners(winnersfile)
         }
 
-      case "SAV" => {
-        val election = PreferencesParser.read(c.directory + electionFile)
-        var r = SatisfactionApprovalVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
-        println(" Scrutiny table for method SAV is not implemented yet.")
-        r.writeWinners(winnersfile)
-      }
+        case "SAV" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
+          var r = SatisfactionApprovalVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method SAV is not implemented yet.")
+          r.writeWinners(winnersfile)
+        }
         case "SMC" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           parameters match {
@@ -323,10 +323,24 @@ object Main extends RegexParsers {
           r.writeWinners(winnersfile)
         }
 
+        case "Meek" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
+          var r = MeekSTV.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method Meek STV is not implemented yet.")
+          r.writeWinners(winnersfile)
+        }
+
         case "Schulze" => {
           val election = PreferencesParserWithRank.read(c.directory + electionFile)
           var r = Schulze.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
           println(" Scrutiny table for method Schulze is not implemented yet.")
+          r.writeWinners(winnersfile)
+        }
+
+        case "Maximin" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
+          var r = MaximinMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
+          println(" Scrutiny table for method Maximin is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
@@ -369,14 +383,14 @@ object Main extends RegexParsers {
 
       c.ballotsfile match {
         case Some(filename) => { // ONLY ONE FILE IS ANALYSED
-          val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
+        val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
           println("Candidates: " + candidates)
           val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
           val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename
           callMethod(c, filename, winnersfile, reportfile, candidates, methodParameters(c))
         }
         case None => { // ALL FILES IN THE DIRECTORY ARE ANALYSED
-          val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
+        val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
           val files = new java.io.File(c.directory).listFiles.filter(_.getName.endsWith(".kat"))
           for (file <- files) {
             val filename = file.getName
@@ -393,4 +407,3 @@ object Main extends RegexParsers {
     }
   }
 }
-
