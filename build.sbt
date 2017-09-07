@@ -1,4 +1,7 @@
 import language.postfixOps
+import com.github.retronym.SbtOneJar._
+
+mainClass in(oneJar) := Some("countvotes.Main")
 
 name := "countvotes"
 
@@ -36,7 +39,7 @@ scalacOptions in (Compile, doc) ++= Seq("-diagrams","-implicits")
 
 scalacOptions in Test ++= Seq("-Yrangepos")
 
-val allSettings = Defaults.coreDefaultSettings
+val allSettings = Defaults.coreDefaultSettings ++ oneJarSettings
 
 
 lazy val project = Project("agora", file("."), settings = allSettings)
