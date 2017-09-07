@@ -6,7 +6,7 @@ import countvotes.structures.Candidate
 import org.specs2.mutable.Specification
 
 
-class BaldwinTest extends Specification{
+class BaldwinTest extends Specification {
 
   val expectedBaldwinWinnerList = List(Candidate("A"))
 
