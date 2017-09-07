@@ -1,6 +1,6 @@
-package countvotes.analysers
+package analyse.methods
 
-import countvotes.structures.{Candidate, Election, Rational, WeightedBallot}
+import countvotes.structures.{Candidate, Election, WeightedBallot}
 
 /**
   * This analyser analyses for Sen's Value restricted preferences
