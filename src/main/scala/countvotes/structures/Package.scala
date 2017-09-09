@@ -1,6 +1,6 @@
 package countvotes
 
-import scala.collection.mutable.{HashMap => Map}
+import scala.collection.mutable.{HashMap => MMap, HashSet => MSet}
 import scala.language.implicitConversions
 
 package object structures {
@@ -8,6 +8,15 @@ package object structures {
   type Election[B <: Ballot] = List[B]
 
   object Election {
+    
+   def mentionedCandidates[B <: Ballot](election: Election[B]): List[Candidate] = {
+     val set = new MSet[Candidate]()
+     for (b <- election) {
+       for (c <- b.preferences)
+         if (!set.exists(n => n == c) ) set += c
+      }
+     set.toList
+    }
     
 
     lazy val totalWeightedVoters = (election: Election[Ballot]) => {

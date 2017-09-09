@@ -45,7 +45,7 @@ class SimpleSTVMethod extends STV[Ballot]
 
     println(" \n NEW RECURSIVE CALL \n")
 
-    val ccands = getCandidates(election)
+    val ccands = Election.mentionedCandidates(election)
 
     val tls = totals(election, ccandidates)
 

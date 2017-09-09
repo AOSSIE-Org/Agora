@@ -31,14 +31,6 @@ abstract class VoteCounter[B <: Ballot] {
   lcand
  }
 
- def getCandidates(election: Election[B]): List[Candidate] = {
-   var set = new HashSet[Candidate]()
-   for (b <- election) {
-     for (c <- b.preferences)
-       if (!set.exists(n => n == c) ) set = set + c
-    }
-   set.toList
-  }
 
   // utility method for matrix where a[i][j] = x means candidate i has got #x votes against candidate j
   def getPairwiseComparisonForWeightedElection(election: Election[Ballot], candidates: List[Candidate]): Array[Array[Rational]] = {
