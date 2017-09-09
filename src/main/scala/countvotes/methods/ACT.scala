@@ -91,7 +91,9 @@ abstract class ACT extends STVAustralia
           println("New winners: " + ws)
           result.addPendingWinners(ws.toList, Some(extractMarkings(election)))
 
-          vacanciesFilled(ws.length, numVacancies) match {
+          val vacanciesFilled = ws.length >= numVacancies
+          
+          vacanciesFilled match {
               case false =>  {
                 println("Vacancies: not yet filled.")
                 val res = surplusesDistribution(election, ccandidates, numVacancies-ws.length)

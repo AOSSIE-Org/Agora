@@ -62,7 +62,9 @@ class SimpleSTVMethod extends STV[Ballot]
           println("New winners: " + ws)
           result.addPendingWinners(ws.toList, None)
 
-          vacanciesFilled(ws.length, numVacancies) match {
+          val vacanciesFilled = ws.length >= numVacancies
+          
+          vacanciesFilled match {
               case false =>  {
                 println("Vacancies are not yet filled.")
                 val newElection = surplusesDistribution(election, numVacancies-ws.length)

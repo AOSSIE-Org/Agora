@@ -6,6 +6,7 @@ import scala.collection.mutable.{HashSet, HashMap => Map}
 
 abstract class VoteCounter[B <: Ballot] {
 
+  // TODO: Move this to the new election class eventually
   def totals(election: Election[B], candidates: List[Candidate]): Map[Candidate, Rational] = {
     val m = new Map[Candidate, Rational]
 
@@ -17,9 +18,6 @@ abstract class VoteCounter[B <: Ballot] {
     m
   }
   
-
- def vacanciesFilled(numWinners:Int, numVacancies:Int): Boolean =
-    numWinners >= numVacancies
 
  // When candidates' names are from 1 to N
  // Implemented to compare EVoting outputs with Jeremy's outputs

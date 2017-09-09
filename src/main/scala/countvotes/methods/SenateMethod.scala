@@ -287,7 +287,9 @@ class SenateMethod extends STVAustralia
           println("New winners: " + ws)
           result.addPendingWinners(ws.toList, None)
 
-          vacanciesFilled(ws.length, numVacancies) match {
+          val vacanciesFilled = ws.length >= numVacancies
+          
+          vacanciesFilled match {
               case false =>  {
                 println("Vacancies: not yet filled.")
                 val res = surplusesDistribution(election, ccandidates, numVacancies-ws.length)
