@@ -128,172 +128,146 @@ object Main extends RegexParsers {
         case "Simple" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = (new SimpleSTVMethod).runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method Simple is not implemented yet.")
           r.writeWinners(winnersfile)
         }
         case "Egalitarian" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = EgalitarianMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method Egalitarian is not implemented yet.")
           r.writeWinners(winnersfile)
         }
         case "Majority" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = MajorityRuleMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method Majority is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "Approval" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = ApprovalRule.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method Approval is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "Borda" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = BordaRuleMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method Borda is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "Kemeny-Young" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = KemenyYoungMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method Kemeny-Young is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "Baldwin" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = BaldwinMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method Baldwin is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "Nanson" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = NansonMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method Nanson is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "InstantRunoff2Round" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = InstantRunoff2Round.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method Runoff2Round is not implemented yet.")
           r.writeWinners(winnersfile)
         }
         case "Coomb" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = CoombRuleMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
-          println("Scrutinity table for method Coomb is not implemented yet")
           r.writeWinners(winnersfile)
         }
 
         case "InstantExhaustiveBallot" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = InstantExhaustiveBallot.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method ExhaustiveBallot is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "Contingent" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = ContingentMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method Contingent is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "RandomBallot" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = RandomBallotMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method Random Ballot is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "MinimaxCondorcet" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = MinimaxCondorcetMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method Random Ballot is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "Copeland" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = CopelandMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method Copeland is not implemented yet. ")
           r.writeWinners(winnersfile)
         }
         case "Dodgson" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = DodgsonMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method Random Ballot is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "UncoveredSet" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = UncoveredSetMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
-          println("Scrutinity table for method Uncovered set is not implemented yet")
           r.writeWinners(winnersfile)
         }
 
         case "SmithSet" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = SmithSetMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method Runoff2Round is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "InstantExhaustiveDropOff" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = InstantExhaustiveDropOffRule.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method Exhaustive Ballot with Drop off is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "PreferentialBlockVoting" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = PreferentialBlockVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method Preferential block voting is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "HybridPluralityPreferentialBlockVoting" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = HybridPluralityPreferentialBlockVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method Preferential block voting is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "Oklahoma" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = OklahomaMethod.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method Oklahoma is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "SPAV" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = SequentialProportionalApprovalVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method SPAV is not implemented yet.")
-
           r.writeWinners(winnersfile)
         }
 
         case "PAV" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = ProportionalApprovalVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method PAV is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "SAV" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = SatisfactionApprovalVoting.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method SAV is not implemented yet.")
           r.writeWinners(winnersfile)
         }
         case "SMC" => {
@@ -301,7 +275,6 @@ object Main extends RegexParsers {
           parameters match {
             case Some(param) => {
               var r = SMCMethod.runScrutiny(election, candidates_in_order, param, c.nvacancies.toInt)
-              println("Scrutiny table for method SMC is not implemented yet.")
               r.writeWinners(winnersfile)
             }
             case None => println("\n\nPlease provide the comparison order to execute this voting method\n\n")
@@ -311,21 +284,18 @@ object Main extends RegexParsers {
         case "RankedPairs" => {
           val election = PreferencesParserWithIndifference.read(c.directory + electionFile)
           var r = RankedPairsMethod.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method Ranked Pairs is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "Meek" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = MeekSTV.runScrutiny(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method Meek STV is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
         case "Schulze" => {
           val election = PreferencesParserWithRank.read(c.directory + electionFile)
           var r = Schulze.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method Schulze is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
@@ -339,7 +309,6 @@ object Main extends RegexParsers {
         case "RangeVoting" => {
           val election = PreferencesParserWithScore.read(c.directory + electionFile)
           var r = RangeVoting.runScrutiny(election, candidates_in_order, c.nvacancies.toInt)
-          println(" Scrutiny table for method Ranged voting is not implemented yet.")
           r.writeWinners(winnersfile)
         }
 
@@ -348,17 +317,13 @@ object Main extends RegexParsers {
           parameters match {
             case Some(param) => {
               var r = BipartisanSet.runScrutiny(election, candidates_in_order, param)
-              println("Scrutiny table for Bipartisan Set is not implemented yet.")
               r.writeWinners(winnersfile)
             }
             case None => println("Please provide probability distribution to compute bipartisan set")
           }
         }
 
-        case "Test" => {
-          Test.testSDResolution
-        }
-        case "" => println("Please, specify which algorithm should be used. Only option -m EVACS is currently stable.")
+        case "" => println("Please specify which algorithm should be used.")
       }
     }
 
