@@ -19,17 +19,6 @@ abstract class VoteCounter[B <: Ballot] {
   }
   
 
- // When candidates' names are from 1 to N
- // Implemented to compare EVoting outputs with Jeremy's outputs
- def generateNIntCandidates(n: Integer): List[Candidate] = {
-  var lcand: List[Candidate] = Nil
-  for (i <- 1 to n){
-    lcand = (Candidate(i.toString(),None,None)):: lcand
-  }
-  lcand
- }
-
-
   // utility method for matrix where a[i][j] = x means candidate i has got #x votes against candidate j
   def getPairwiseComparisonForWeightedElection(election: Election[Ballot], candidates: List[Candidate]): Array[Array[Rational]] = {
 
