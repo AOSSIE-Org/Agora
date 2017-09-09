@@ -1,4 +1,4 @@
-import countvotes.methods.UncoveredSetMethod
+import countvotes.methods.UncoveredSet
 import countvotes.parsers.{CandidatesParser, PreferencesParser}
 import countvotes.structures.Candidate
 import org.specs2.mutable.Specification
@@ -20,7 +20,7 @@ class UncoveredSetTest extends Specification {
     val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
     val election =  PreferencesParser.read("../Agora/files/Examples/" + electionFile)
 
-    UncoveredSetMethod.winners(election, candidates, candidates.length).map {_._1}.toSet
+    UncoveredSet.winners(election, candidates, candidates.length).map {_._1}.toSet
   }
 
 }

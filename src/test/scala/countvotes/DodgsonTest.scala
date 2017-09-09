@@ -1,6 +1,6 @@
 package countvotes
 
-import countvotes.methods.{DodgsonMethod}
+import countvotes.methods.{Dodgson}
 import countvotes.parsers.{CandidatesParser, PreferencesParser}
 import countvotes.structures.Candidate
 import org.specs2.mutable.Specification
@@ -22,7 +22,7 @@ class DodgsonTest extends Specification {
     val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidateFile)
     val election =  PreferencesParser.read("../Agora/files/Examples/" + electionFile)
 
-    DodgsonMethod.winners(election, candidates, 1) map {_._1}
+    Dodgson.winners(election, candidates, 1) map {_._1}
   }
 
 }

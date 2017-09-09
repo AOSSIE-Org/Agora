@@ -9,7 +9,7 @@ import collection.mutable.{ListBuffer, HashMap => MMap}
   * Algorithm : https://www.cs.cmu.edu/~arielpro/mfai_papers/lecture6.pdf page-4
   * Variant : winning votes => W = \arg \min_X ( \max_Y score(Y, X))
   */
-object MaximinMethod extends VoteCounter[Ballot] with LazyLogging{
+object Maximin extends VoteCounter[Ballot] with LazyLogging{
 
   private val rational0 = Rational(0, 1)
   private val majorityThreshold = Rational(1, 2)

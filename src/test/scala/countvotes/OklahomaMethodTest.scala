@@ -1,5 +1,5 @@
 
-import countvotes.methods.OklahomaMethod
+import countvotes.methods.Oklahoma
 import countvotes.parsers.{CandidatesParser, PreferencesParser}
 import countvotes.structures.{Candidate, Rational}
 import org.specs2.mutable.Specification
@@ -19,6 +19,6 @@ class OklahomaMethodTest extends Specification {
     val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
     val election =  PreferencesParser.read("../Agora/files/Examples/" + electionFile)
 
-    OklahomaMethod.winners(election, candidates, 1)
+    Oklahoma.winners(election, candidates, 1)
   }
 }

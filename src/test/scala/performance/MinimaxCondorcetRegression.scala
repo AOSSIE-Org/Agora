@@ -1,6 +1,6 @@
 package performance
 
-import countvotes.methods.{MinimaxCondorcetMethod}
+import countvotes.methods.{MinimaxCondorcet}
 import countvotes.structures.Ballot
 import org.scalameter.api._
 
@@ -13,7 +13,7 @@ trait MinimaxCondorcetRegression extends RuntimeRegression {
 
   override  def votingMethod(election: List[Ballot]): Unit = {
 
-    MinimaxCondorcetMethod.winners(election, randomPreference(), 1)
+    MinimaxCondorcet.winners(election, randomPreference(), 1)
   }
 
 }
@@ -23,7 +23,7 @@ trait MinimaxCondorcetMemoryRegression extends MemoryRegression {
   override def votingMethodName(): String = "MinimaxCondorcet"
 
   override def votingMethod(election: List[Ballot]): Unit = {
-    MinimaxCondorcetMethod.winners(election, randomPreference(), 1)
+    MinimaxCondorcet.winners(election, randomPreference(), 1)
   }
 
 }

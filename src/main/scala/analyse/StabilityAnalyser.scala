@@ -21,20 +21,20 @@ object StabilityAnalyser {
 
     val analysisArray = new ArrayBuffer[(String, Double, Double)]
 
-    analysisArray.append(analyseStability(BordaRuleMethod, electionsPairs, candidates))
+    analysisArray.append(analyseStability(Borda, electionsPairs, candidates))
     //analyseStability(MajorityRuleMethod, electionsPairs, candidates) /*some cases there might be no majority winner*/
     analysisArray.append(analyseStability(ApprovalRule, electionsPairs, candidates))
-    analysisArray.append(analyseStability(KemenyYoungMethod, electionsPairs, candidates))
+    analysisArray.append(analyseStability(KemenyYoung, electionsPairs, candidates))
     analysisArray.append(analyseStability(BaldwinMethod, electionsPairs, candidates))
-    analysisArray.append(analyseStability(NansonMethod, electionsPairs, candidates))
+    analysisArray.append(analyseStability(Nanson, electionsPairs, candidates))
     analysisArray.append(analyseStability(InstantRunoff2Round, electionsPairs, candidates))
-    analysisArray.append(analyseStability(CoombRuleMethod, electionsPairs, candidates))
+    analysisArray.append(analyseStability(Coomb, electionsPairs, candidates))
     analysisArray.append(analyseStability(InstantExhaustiveBallot, electionsPairs, candidates))
-    analysisArray.append(analyseStability(ContingentMethod, electionsPairs, candidates))
-    analysisArray.append(analyseStability(MinimaxCondorcetMethod, electionsPairs, candidates))
-    analysisArray.append(analyseStability(CopelandMethod, electionsPairs, candidates))
+    analysisArray.append(analyseStability(Contingent, electionsPairs, candidates))
+    analysisArray.append(analyseStability(MinimaxCondorcet, electionsPairs, candidates))
+    analysisArray.append(analyseStability(Copeland, electionsPairs, candidates))
     //analyseStability(UncoveredSetMethod, electionsPairs, candidates) /* in some cases the uncovered set could be empty*/
-    analysisArray.append(analyseStability(SmithSetMethod, electionsPairs, candidates))
+    analysisArray.append(analyseStability(SmithSet, electionsPairs, candidates))
     analysisArray.append(analyseStability(InstantExhaustiveDropOffRule, electionsPairs, candidates))
     analysisArray.append(analyseStability(PreferentialBlockVoting, electionsPairs, candidates))
     analysisArray.append(analyseStability(HybridPluralityPreferentialBlockVoting, electionsPairs, candidates))

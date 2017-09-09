@@ -12,7 +12,7 @@ import scala.util.Random
 import scala.util.Sorting
 import java.io._
 
-class EVACSMethod extends ACT
+class EVACS extends ACT
  with TransferValueWithDenominatorWithNumOfMarkedContinuingBallotsOrOne
  with ACTSurplusDistribution
  with ACTNewWinnersDuringSurplusesDistribution

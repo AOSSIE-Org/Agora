@@ -7,7 +7,7 @@ import scala.collection.mutable.{HashMap => Map}
 /**
   * Created by deepeshpandey on 10/03/17.
   */
-object KemenyYoungMethod extends VoteCounter[Ballot] {
+object KemenyYoung extends VoteCounter[Ballot] {
 
   private val rationalZero = Rational(0, 1)
 

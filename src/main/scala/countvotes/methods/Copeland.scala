@@ -8,7 +8,7 @@ import scala.collection.mutable.{HashMap => MMap}
 /**
   * Algorithm : https://en.wikipedia.org/wiki/Copeland%27s_method
   */
-object CopelandMethod extends VoteCounter[Ballot] with LazyLogging {
+object Copeland extends VoteCounter[Ballot] with LazyLogging {
 
   def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 

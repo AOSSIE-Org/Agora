@@ -1,6 +1,6 @@
 package countvotes
 
-import countvotes.methods.KemenyYoungMethod
+import countvotes.methods.KemenyYoung
 import countvotes.parsers.{CandidatesParser, PreferencesParser}
 import countvotes.structures.Candidate
 import org.specs2.mutable.Specification
@@ -23,6 +23,6 @@ class KemenyYoungTest extends Specification{
     val candidates = CandidatesParser.read("../Agora/files/Examples/14-candidates.txt")
     val election =  PreferencesParser.read("../Agora/files/Examples/" + electionFile)
 
-    KemenyYoungMethod.winners(election, candidates, candidates.length).map {_._1}
+    KemenyYoung.winners(election, candidates, candidates.length).map {_._1}
   }
 }

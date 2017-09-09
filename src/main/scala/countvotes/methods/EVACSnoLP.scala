@@ -13,7 +13,7 @@ import scala.util.Random
 import scala.util.Sorting
 import java.io._
 
-class EVACSnoLPMethod extends ACT
+class EVACSnoLP extends ACT
  with TransferValueWithDenominatorWithNumOfAllContinuingBallotsOrOne // instead of TransferValueWithDenominatorWithNumOfMarkedContinuingBallotsOrOne
  with ACTVoteCounterWithAllContinuingBallotsInSurplusDistribution // instead  ACTSurplusDistribution
  with ACTNewWinnersDuringSurplusesDistribution

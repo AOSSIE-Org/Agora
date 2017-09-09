@@ -11,7 +11,7 @@ import countvotes.structures.{Ballot, _}
   * round i, if w >(majority) xi+1, and is xi+1, if xi+1 >(majority) w; and the ultimate winner is the winner
   * of round m.
   */
-object SMCMethod extends VoteCounter[Ballot] with LazyLogging {
+object SMC extends VoteCounter[Ballot] with LazyLogging {
 
   def runVoteCounter(election: Election[Ballot], candidates: List[Candidate], param: Parameters, numVacancies: Int): Report[Ballot] = {
 

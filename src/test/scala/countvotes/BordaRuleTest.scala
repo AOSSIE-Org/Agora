@@ -1,4 +1,4 @@
-import countvotes.methods.{BordaRuleMethod, KemenyYoungMethod}
+import countvotes.methods.{Borda, KemenyYoung}
 import countvotes.parsers.{CandidatesParser, PreferencesParser}
 import countvotes.structures.Candidate
 import org.specs2.mutable.Specification
@@ -20,6 +20,6 @@ class BordaRuleTest extends Specification{
     val candidates = CandidatesParser.read("../Agora/files/Examples/14-candidates.txt")
     val election =  PreferencesParser.read("../Agora/files/Examples/" + electionFile)
 
-    BordaRuleMethod.winners(election, candidates, candidates.length).map {_._1}
+    Borda.winners(election, candidates, candidates.length).map {_._1}
   }
 }

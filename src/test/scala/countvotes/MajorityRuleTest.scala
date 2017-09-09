@@ -1,6 +1,6 @@
 package countvotes
 
-import countvotes.methods.MajorityRuleMethod
+import countvotes.methods.Majority
 import countvotes.parsers.{CandidatesParser, PreferencesParser}
 import countvotes.structures.Candidate
 import org.specs2.mutable.Specification
@@ -26,6 +26,6 @@ class MajorityRuleTest extends Specification{
     val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
     val election =  PreferencesParser.read("../Agora/files/Examples/" + electionFile)
 
-    MajorityRuleMethod.winners(election, candidates, candidates.length).map {_._1}
+    Majority.winners(election, candidates, candidates.length).map {_._1}
   }
 }

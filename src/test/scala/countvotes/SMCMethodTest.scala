@@ -1,6 +1,6 @@
 package countvotes
 
-import countvotes.methods.SMCMethod
+import countvotes.methods.SMC
 import countvotes.parsers.{CandidatesParser, ParameterParser, PreferencesParser}
 import countvotes.structures.Candidate
 import org.specs2.mutable.Specification
@@ -25,7 +25,7 @@ class SMCMethodTest extends Specification{
     val election =  PreferencesParser.read(dir + electionFile)
     val param = ParameterParser.parse(dir + paramFile)
 
-    SMCMethod.smcWinner(election, candidates, param, 1).map {_._1}
+    SMC.smcWinner(election, candidates, param, 1).map {_._1}
   }
 
 

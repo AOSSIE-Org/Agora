@@ -7,7 +7,7 @@ import scala.language.postfixOps
 /**
   * Algorithm : http://wiki.electorama.com/wiki/Maximal_elements_algorithms#Floyd-Warshall_algorithm
   */
-object SmithSetMethod extends VoteCounter[Ballot] {
+object SmithSet extends VoteCounter[Ballot] {
 
   override def winners(e: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 

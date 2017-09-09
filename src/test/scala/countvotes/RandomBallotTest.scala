@@ -1,4 +1,4 @@
-import countvotes.methods.{MajorityRuleMethod, RandomBallotMethod}
+import countvotes.methods.{Majority, RandomBallot}
 import countvotes.parsers.{CandidatesParser, PreferencesParser}
 import countvotes.structures.Candidate
 import org.specs2.mutable.Specification
@@ -30,7 +30,7 @@ class RandomBallotTest extends Specification {
     val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
     val election =  PreferencesParser.read("../Agora/files/Examples/" + electionFile)
 
-    RandomBallotMethod.randomBallotWinner(election, candidates, vacancies, seed).map {_._1}
+    RandomBallot.randomBallotWinner(election, candidates, vacancies, seed).map {_._1}
   }
 
 }

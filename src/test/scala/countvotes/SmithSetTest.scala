@@ -1,6 +1,6 @@
 package countvotes
 
-import countvotes.methods.{SmithSetMethod}
+import countvotes.methods.{SmithSet}
 import countvotes.parsers.{CandidatesParser, PreferencesParser}
 import countvotes.structures.Candidate
 import org.specs2.mutable.Specification
@@ -22,7 +22,7 @@ class SmithSetTest extends Specification {
     val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
     val election =  PreferencesParser.read("../Agora/files/Examples/" + electionFile)
 
-    SmithSetMethod.winners(election, candidates, 1).map {_._1}.toSet
+    SmithSet.winners(election, candidates, 1).map {_._1}.toSet
   }
 
 }

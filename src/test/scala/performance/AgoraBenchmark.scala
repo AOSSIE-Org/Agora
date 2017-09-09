@@ -1,6 +1,6 @@
 package performance
 
-import countvotes.methods.BordaRuleMethod
+import countvotes.methods.Borda
 import countvotes.structures.{Candidate, Ballot}
 import org.scalameter.Bench
 import org.scalameter.api._

@@ -92,7 +92,7 @@ object Main extends RegexParsers {
       c.method match {
         case "EVACS" => {
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = (new EVACSMethod).runVoteCounter(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          var r = (new EVACS).runVoteCounter(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           c.table match {
             case ACT => r.writeDistributionOfPreferencesACT(reportfile, Some(candidates_in_order))
             case _ => r.writeDistributionOfPreferences(reportfile, Some(candidates_in_order))
@@ -103,20 +103,20 @@ object Main extends RegexParsers {
         }
         case "EVACSnoLP" => {
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = (new EVACSnoLPMethod).runVoteCounter(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          var r = (new EVACSnoLP).runVoteCounter(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           r.writeDistributionOfPreferences(reportfile, Some(candidates_in_order))
           r.writeWinners(winnersfile)
         }
         case "EVACSDWD" => {
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = (new EVACSDelayedWDMethod).runVoteCounter(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          var r = (new EVACSDelayedWD).runVoteCounter(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           r.writeDistributionOfPreferences(reportfile, Some(candidates_in_order))
           r.writeWinners(winnersfile)
         }
         case "Senate" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           val electionwithIds = for (b <- election) yield Ballot(b.preferences, election.indexOf(b) + 1, Rational(1, 1))
-          var r = (new SenateMethod).runVoteCounter(Election.weightedElectionToACTElection(electionwithIds), candidates_in_order, c.nvacancies.toInt)
+          var r = (new AustralianSenate).runVoteCounter(Election.weightedElectionToACTElection(electionwithIds), candidates_in_order, c.nvacancies.toInt)
           c.table match {
             case ACT => r.writeDistributionOfPreferencesACT(reportfile, Some(candidates_in_order))
             case _ => r.writeDistributionOfPreferences(reportfile, Some(candidates_in_order))
@@ -127,17 +127,17 @@ object Main extends RegexParsers {
         }
         case "Simple" => {
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = (new SimpleSTVMethod).runVoteCounter(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          var r = (new SimpleSTV).runVoteCounter(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
         }
         case "Egalitarian" => {
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = EgalitarianMethod.runVoteCounter(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          var r = EgalitarianBrute.runVoteCounter(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
         }
         case "Majority" => {
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = MajorityRuleMethod.runVoteCounter(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          var r = Majority.runVoteCounter(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
         }
 
@@ -149,13 +149,13 @@ object Main extends RegexParsers {
 
         case "Borda" => {
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = BordaRuleMethod.runVoteCounter(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          var r = Borda.runVoteCounter(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
         }
 
         case "Kemeny-Young" => {
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = KemenyYoungMethod.runVoteCounter(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          var r = KemenyYoung.runVoteCounter(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
         }
 
@@ -167,7 +167,7 @@ object Main extends RegexParsers {
 
         case "Nanson" => {
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = NansonMethod.runVoteCounter(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          var r = Nanson.runVoteCounter(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
         }
 
@@ -178,7 +178,7 @@ object Main extends RegexParsers {
         }
         case "Coomb" => {
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = CoombRuleMethod.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r = Coomb.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
         }
 
@@ -190,42 +190,42 @@ object Main extends RegexParsers {
 
         case "Contingent" => {
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = ContingentMethod.runVoteCounter(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          var r = Contingent.runVoteCounter(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
         }
 
         case "RandomBallot" => {
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = RandomBallotMethod.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r = RandomBallot.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
         }
 
         case "MinimaxCondorcet" => {
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = MinimaxCondorcetMethod.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r = MinimaxCondorcet.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
         }
 
         case "Copeland" => {
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = CopelandMethod.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r = Copeland.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
         }
         case "Dodgson" => {
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = DodgsonMethod.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r = Dodgson.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
         }
 
         case "UncoveredSet" => {
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = UncoveredSetMethod.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r = UncoveredSet.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
         }
 
         case "SmithSet" => {
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = SmithSetMethod.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r = SmithSet.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
         }
 
@@ -249,7 +249,7 @@ object Main extends RegexParsers {
 
         case "Oklahoma" => {
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = OklahomaMethod.runVoteCounter(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
+          var r = Oklahoma.runVoteCounter(Election.weightedElectionToACTElection(election), candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
         }
 
@@ -274,7 +274,7 @@ object Main extends RegexParsers {
           val election = PreferencesParser.read(c.directory + electionFile)
           parameters match {
             case Some(param) => {
-              var r = SMCMethod.runVoteCounter(election, candidates_in_order, param, c.nvacancies.toInt)
+              var r = SMC.runVoteCounter(election, candidates_in_order, param, c.nvacancies.toInt)
               r.writeWinners(winnersfile)
             }
             case None => println("\n\nPlease provide the comparison order to execute this voting method\n\n")
@@ -283,7 +283,7 @@ object Main extends RegexParsers {
 
         case "RankedPairs" => {
           val election = PreferencesParserWithIndifference.read(c.directory + electionFile)
-          var r = RankedPairsMethod.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r = RankedPairs.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
         }
 
@@ -301,7 +301,7 @@ object Main extends RegexParsers {
 
         case "Maximin" => {
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = MaximinMethod.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r = Maximin.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           println(" VoteCounter table for method Maximin is not implemented yet.")
           r.writeWinners(winnersfile)
         }

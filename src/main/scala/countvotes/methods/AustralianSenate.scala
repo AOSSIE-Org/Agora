@@ -17,7 +17,7 @@ abstract sealed class BulkExclusionType
   case object ExclusionBulk extends BulkExclusionType
   case object SurplusDistributionBulk extends BulkExclusionType
 
-class SenateMethod extends STVAustralia
+class AustralianSenate extends STVAustralia
  with DroopQuota // Section 273 (8)
  with NoFractionInQuota // Section 273 (8)
  with NewWinnersOrderedByTotals[ACTBallot] // TODO

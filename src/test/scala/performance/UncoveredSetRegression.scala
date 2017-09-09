@@ -1,4 +1,4 @@
-import countvotes.methods.UncoveredSetMethod
+import countvotes.methods.UncoveredSet
 import countvotes.structures.Ballot
 import org.scalameter.api.Bench
 import org.scalameter.api._
@@ -13,7 +13,7 @@ trait UncoveredSetRegression extends RuntimeRegression {
 
   override  def votingMethod(election: List[Ballot]): Unit = {
 
-    UncoveredSetMethod.winners(election, randomPreference(), 1)
+    UncoveredSet.winners(election, randomPreference(), 1)
   }
 }
 
@@ -22,7 +22,7 @@ trait UncoveredSetMemoryRegression extends MemoryRegression {
   override def votingMethodName(): String = "UncoveredSet"
 
   override def votingMethod(election: List[Ballot]): Unit = {
-    UncoveredSetMethod.winners(election, randomPreference(), 1)
+    UncoveredSet.winners(election, randomPreference(), 1)
   }
 }
 

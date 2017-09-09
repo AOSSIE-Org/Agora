@@ -4,7 +4,7 @@ import countvotes.structures._
 
 import scala.collection.mutable.{HashMap => MMap}
 
-object EgalitarianDPMethod extends Egalitarian[Ballot] {
+object EgalitarianDP extends Egalitarian[Ballot] {
   val memo = new MMap[(Int,Set[Candidate]), List[Candidate]] ()
 
   def winners(election: Election[Ballot],  ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)] = {

@@ -8,7 +8,7 @@ import scala.util.Random
 /**
   * Algorithm : https://en.wikipedia.org/wiki/Random_ballot
   */
-object RandomBallotMethod extends VoteCounter[Ballot] with LazyLogging {
+object RandomBallot extends VoteCounter[Ballot] with LazyLogging {
 
   override def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 

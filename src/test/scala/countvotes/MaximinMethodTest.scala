@@ -1,6 +1,6 @@
 package countvotes
 
-import countvotes.methods.MaximinMethod
+import countvotes.methods.Maximin
 import countvotes.parsers.{CandidatesParser, PreferencesParser}
 import countvotes.structures.Candidate
 import org.specs2.mutable.Specification
@@ -20,7 +20,7 @@ class MaximinMethodTest extends Specification{
     val candidates = CandidatesParser.read("../Agora/files/Examples/14-candidates.txt")
     val election =  PreferencesParser.read("../Agora/files/Examples/" + electionFile)
 
-    MaximinMethod.winners(election, candidates, 1).map {_._1}
+    Maximin.winners(election, candidates, 1).map {_._1}
   }
 
 }

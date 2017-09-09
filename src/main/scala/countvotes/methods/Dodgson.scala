@@ -7,7 +7,7 @@ import collection.mutable.{HashMap => MMap}
   * Wiki : https://en.wikipedia.org/wiki/Dodgson%27s_method
   * Implementation : http://infosyncratic.nl/talks/2008-votingprocedures.pdf
   */
-object DodgsonMethod extends VoteCounter[Ballot] {
+object Dodgson extends VoteCounter[Ballot] {
 
 
   override def winners(e: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {

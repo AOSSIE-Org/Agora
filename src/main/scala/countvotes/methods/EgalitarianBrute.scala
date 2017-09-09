@@ -2,7 +2,7 @@ package countvotes.methods
 
 import countvotes.structures._
 
-object EgalitarianMethod extends Egalitarian[Ballot] {
+object EgalitarianBrute extends Egalitarian[Ballot] {
 
   def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)] = {
     val candidateCount: Int = ccandidates.length

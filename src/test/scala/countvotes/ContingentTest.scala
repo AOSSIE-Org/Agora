@@ -1,6 +1,6 @@
 package countvotes
 
-import countvotes.methods.ContingentMethod
+import countvotes.methods.Contingent
 import countvotes.parsers.{CandidatesParser, PreferencesParser}
 import countvotes.structures.Candidate
 import org.specs2.mutable.Specification
@@ -21,6 +21,6 @@ class ContingentTest extends Specification{
     val candidates = CandidatesParser.read("../Agora/files/Examples/15-candidates.txt")
     val election =  PreferencesParser.read("../Agora/files/Examples/" + electionFile)
 
-    ContingentMethod.winners(election, candidates, 1).map {_._1}
+    Contingent.winners(election, candidates, 1).map {_._1}
   }
 }

@@ -1,4 +1,4 @@
-import countvotes.methods.{CopelandMethod, InstantRunoff2Round}
+import countvotes.methods.{Copeland, InstantRunoff2Round}
 import countvotes.parsers.{CandidatesParser, PreferencesParser}
 import countvotes.structures.Candidate
 import org.specs2.mutable.Specification
@@ -22,7 +22,7 @@ class CopelandTest extends Specification {
     val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
     val election =  PreferencesParser.read("../Agora/files/Examples/" + electionFile)
 
-    CopelandMethod.winners(election, candidates, 1).map {_._1}
+    Copeland.winners(election, candidates, 1).map {_._1}
   }
 
 }

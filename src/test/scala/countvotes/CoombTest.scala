@@ -1,6 +1,6 @@
 package countvotes
 
-import countvotes.methods.CoombRuleMethod
+import countvotes.methods.Coomb
 import countvotes.parsers.{CandidatesParser, PreferencesParser}
 import countvotes.structures.Candidate
 import org.specs2.mutable.Specification
@@ -25,7 +25,7 @@ class CoombTest extends Specification {
     val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
     val election = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
 
-    CoombRuleMethod.winners(election, candidates, 1).map { _._1 }
+    Coomb.winners(election, candidates, 1).map { _._1 }
 
   }
 }
