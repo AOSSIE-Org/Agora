@@ -14,7 +14,6 @@ object Schulze extends Scrutiny[RankBallot] {
     val electionResponse = getPairwiseComparisonForWeightedElection(Election.rankedElectionToWeightedElection(election), ccandidates)
 
     schulzeWinnerRanking(getSchulzeStrongestPathMatrix(electionResponse, ccandidates), ccandidates).take(numVacancies)
-    ???
   }
 
   // calculating the schulze response matrix using algorithm on https://en.m.wikipedia.org/wiki/Schulze_method
