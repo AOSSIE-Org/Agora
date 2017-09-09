@@ -2,7 +2,7 @@ package countvotes
 
 import countvotes.methods._
 import countvotes.parsers._
-import countvotes.structures.{Election, _}
+import countvotes.structures._
 
 import scala.collection.mutable.{HashMap => Map}
 import scala.languageFeature.implicitConversions
@@ -18,13 +18,9 @@ object Main extends RegexParsers {
   case class Config(directory: String = "",
                     ballotsfile: Option[String] = None,
                     method: String = "",
-                    parameterFile: Option[String] = None,
+                    parameters: Option[Parameters] = None,
                     nvacancies: String = "",
-                    //order: String = "",
                     nkandidates: Option[String] = None,
-                    // for numerical ordering and for having candidates not occuring in the elections
-                    // sufficient when candidates' names are integers from 1 to ncandidates
-                    // TODO: for a general case, a list of all candidates has to be provided
                     candidatesfile: String = "",
                     table: ScrutinyTableFormats = Concise)
 
@@ -53,7 +49,7 @@ object Main extends RegexParsers {
     } text ("use vote counting method  <met>\n") valueName ("<met>")
 
     opt[String]('p', "parameterFile") action { (v, c) =>
-      c.copy(parameterFile = Some(v))
+      c.copy(parameters = Some(ParameterParser.parse(c.directory + v)))
     } text ("set paramfile to <pfile>\n") valueName ("<pfile>")
 
     opt[String]('v', "nvacancies") required() action { (v, c) =>
@@ -366,27 +362,18 @@ object Main extends RegexParsers {
       }
     }
 
-    def methodParameters(c: Config): Option[Parameters] = {
-      c.parameterFile match {
-        case Some(fileName) => {
-          Option(ParameterParser.parse(c.directory + fileName))
-        }
-        case None => None
-      }
-    }
-
     parser.parse(args, Config()) map { c =>
 
       c.ballotsfile match {
         case Some(filename) => { // ONLY ONE FILE IS ANALYSED
-        val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
+          val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
           println("Candidates: " + candidates)
           val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
           val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename
-          callMethod(c, filename, winnersfile, reportfile, candidates, methodParameters(c))
+          callMethod(c, filename, winnersfile, reportfile, candidates, c.parameters)
         }
         case None => { // ALL FILES IN THE DIRECTORY ARE ANALYSED
-        val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
+          val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
           val files = new java.io.File(c.directory).listFiles.filter(_.getName.endsWith(".kat"))
           for (file <- files) {
             val filename = file.getName
@@ -396,7 +383,7 @@ object Main extends RegexParsers {
             //val election =  PreferencesParser.read(c.directory + filename)
             val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
             val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename
-            callMethod(c, filename, winnersfile, reportfile, candidates, methodParameters(c))
+            callMethod(c, filename, winnersfile, reportfile, candidates, c.parameters)
           }
         }
       }
