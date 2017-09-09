@@ -2,9 +2,10 @@ package countvotes.structures
 
 import scala.language.implicitConversions
 
-// class BallotB(val id: Int, val weight: Rational)
+class BallotBase(val id: Int, val weight: Rational)
 
-class Ballot(val preferences: List[Candidate], val id: Int, val weight: Rational)
+class Ballot(val preferences: List[Candidate], override val id: Int, override val weight: Rational)
+extends BallotBase(id, weight)
 object Ballot {
   def apply(p: List[Candidate], id: Int, w: Rational): Ballot  = new Ballot(p, id, w)
 }
