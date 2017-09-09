@@ -5,9 +5,9 @@ import countvotes.structures._
 /**
   * Algorithm : https://en.wikipedia.org/wiki/Schulze_method
   */
-object Schulze extends Scrutiny[RankedBallot] {
+object Schulze extends Scrutiny[RankBallot] {
 
-  override def winners(election: Election[RankedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
+  override def winners(election: Election[RankBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 
     val electionResponse = getPairwiseComparisonForWeightedElection(Election.rankedElectionToWeightedElection(election), ccandidates)
 

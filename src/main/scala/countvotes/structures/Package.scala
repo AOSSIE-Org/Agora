@@ -17,12 +17,12 @@ package object structures {
       for (b <- we) yield ACTBallot.fromBallot(b) // b // ACTBallot.fromBallot(b)
     }
 
-    implicit def rankedElectionToWeightedElection(re: Election[RankedBallot]): Election[Ballot] = {
-      for (b <- re) yield RankedBallot.toBallot(b)
+    implicit def rankedElectionToWeightedElection(re: Election[RankBallot]): Election[Ballot] = {
+      for (b <- re) yield RankBallot.toBallot(b)
     }
 
-    implicit def scoredElectionToWeightedElection(re: Election[ScoredBallot]): Election[Ballot] = {
-      for (b <- re) yield ScoredBallot.toBallot(b)
+    implicit def scoredElectionToWeightedElection(re: Election[ScoreBallot]): Election[Ballot] = {
+      for (b <- re) yield ScoreBallot.toBallot(b)
     }
   }
 

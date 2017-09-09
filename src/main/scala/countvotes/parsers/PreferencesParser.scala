@@ -41,11 +41,11 @@ object PreferencesParser extends ElectionParser[Ballot] with RegexParsers with E
   }
 }
 
-object PreferencesParserWithIndifference extends ElectionParser[RankedBallot] with RegexParsers with ElectionParsers {
+object PreferencesParserWithIndifference extends ElectionParser[RankBallot] with RegexParsers with ElectionParsers {
 
-  def line: Parser[RankedBallot] = id ~ weight ~ preferences ^^ {
+  def line: Parser[RankBallot] = id ~ weight ~ preferences ^^ {
     case ~(~(i, w), prefs) => {
-      RankedBallot(prefs, i, w)
+      RankBallot(prefs, i, w)
     }
   }
 
@@ -71,11 +71,11 @@ object PreferencesParserWithIndifference extends ElectionParser[RankedBallot] wi
 
 }
 
-object PreferencesParserWithScore extends ElectionParser[ScoredBallot] with RegexParsers with ElectionParsers {
+object PreferencesParserWithScore extends ElectionParser[ScoreBallot] with RegexParsers with ElectionParsers {
 
-  def line: Parser[ScoredBallot] = id ~ weight ~ opt("(") ~ preferences ~ opt(")") ^^ {
+  def line: Parser[ScoreBallot] = id ~ weight ~ opt("(") ~ preferences ~ opt(")") ^^ {
     case ~(~(~(~(i, w), _), prefs), _) => {
-      ScoredBallot(prefs, i, w)
+      ScoreBallot(prefs, i, w)
     }
   }
 
@@ -93,11 +93,11 @@ object PreferencesParserWithScore extends ElectionParser[ScoredBallot] with Rege
   }
 }
 
-object PreferencesParserWithRank extends ElectionParser[RankedBallot] with RegexParsers with ElectionParsers {
+object PreferencesParserWithRank extends ElectionParser[RankBallot] with RegexParsers with ElectionParsers {
 
-  def line: Parser[RankedBallot] = id ~ weight ~ opt("(") ~ preferences ~ opt(")") ^^ {
+  def line: Parser[RankBallot] = id ~ weight ~ opt("(") ~ preferences ~ opt(")") ^^ {
     case ~(~(~(~(i, w), _), prefs), _) => {
-      RankedBallot(prefs, i, w)
+      RankBallot(prefs, i, w)
     }
   }
 
