@@ -15,7 +15,7 @@ object RangeVoting extends Scrutiny[ScoreBallot] {
 
     val candidateScores = new MMap[Candidate, Rational]
 
-    for (b <- election if b.preferences.nonEmpty) {
+    for (b <- election) {
       b.scores.foreach { case(candidate, score) => {
         candidateScores(candidate) = candidateScores.getOrElse(candidate, Rational(0, 1)) + score * b.weight
       }}
