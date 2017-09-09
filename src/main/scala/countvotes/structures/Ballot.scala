@@ -26,32 +26,30 @@ object MarkedBallot{
   def apply(p: List[Candidate], id: Int, m:Boolean, w: Rational): MarkedBallot = new MarkedBallot(p, id, m, w)
 }
 
-class ScoreBallot(p: List[(Candidate, Rational)], id: Int, w: Rational) extends Ballot(p map {
+class ScoreBallot(val scores: List[(Candidate, Rational)], id: Int, w: Rational) extends Ballot(scores map {
   _._1
 }, id, w) {
-  val scorePreferences = p
 
-  override def toString: String = "[" + id + ", " + p + ", " + w + "]"
+  override def toString: String = "[" + id + ", " + scores + ", " + w + "]"
 }
 object ScoreBallot {
   def apply(p: List[(Candidate, Rational)], id: Int, w: Rational): ScoreBallot = new ScoreBallot(p, id, w)
   implicit def toBallot(sb: ScoreBallot): Ballot = {
-    new Ballot(sb.scorePreferences.map(_._1), sb.id, sb.weight)
+    new Ballot(sb.scores.map(_._1), sb.id, sb.weight)
   }
 }
 
-class RankBallot(p: List[(Candidate, Int)], id: Int, w: Rational) extends Ballot(p map {
+class RankBallot(val ranks: List[(Candidate, Int)], id: Int, w: Rational) extends Ballot(ranks map {
   _._1
 }, id, w) {
-  val rankPreferences = p
 
-  override def toString: String = "[" + id + ", " + p + ", " + w + "]"
+  override def toString: String = "[" + id + ", " + ranks + ", " + w + "]"
 }
 
 object RankBallot {
   def apply(p: List[(Candidate, Int)], id: Int, w: Rational): RankBallot = new RankBallot(p, id, w)
   implicit def toBallot(rb: RankBallot): Ballot = {
-    new Ballot(rb.rankPreferences.map(_._1), rb.id, rb.weight)
+    new Ballot(rb.ranks.map(_._1), rb.id, rb.weight)
   }
 }
 
