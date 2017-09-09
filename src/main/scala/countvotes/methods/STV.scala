@@ -8,6 +8,7 @@ import scala.collection.mutable.{HashMap => Map}
 
 abstract class STV[B <: Ballot] extends VoteCounter[B] {
   //type E = Election[B]
+ 
 
   def computeQuota(numVotes: Int, numVacancies: Int): Rational
 

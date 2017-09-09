@@ -15,6 +15,9 @@ object SMCMethod extends VoteCounter[Ballot] with LazyLogging {
 
   def runVoteCounter(election: Election[Ballot], candidates: List[Candidate], param: Parameters, numVacancies: Int): Report[Ballot] = {
 
+    val result: Result = new Result
+    val report: Report[Ballot] = new Report[Ballot]
+    
     print("\n INPUT ELECTION: \n")
     //printElection(election)
 

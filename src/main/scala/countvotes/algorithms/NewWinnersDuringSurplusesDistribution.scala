@@ -19,6 +19,8 @@ trait ACTNewWinnersDuringSurplusesDistribution extends ACT{
 
 // Like ACTNewWinnersDuringSurplusesDistribution, but None instead of markings
 trait SenateNewWinnersDuringSurplusesDistribution extends STV[ACTBallot]{
+  val result: Result
+  
   def declareNewWinnersWhileDistributingSurpluses(totals: Map[Candidate, Rational], election:Election[ACTBallot]):  List[(Candidate,Rational)] = {
     var ws:  List[(Candidate,Rational)] = List()
     if (quotaReached(totals, result.getQuota)){

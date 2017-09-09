@@ -6,8 +6,10 @@ import countvotes.structures._
 import scala.collection.mutable.{HashMap => Map}
 
 
-abstract class STVAustralia extends STV[ACTBallot]
- {
+abstract class STVAustralia extends STV[ACTBallot] {
+  
+  val result: Result = new Result
+  val report: Report[ACTBallot] = new Report[ACTBallot]
 
 
  def tryToDistributeSurplusVotes(

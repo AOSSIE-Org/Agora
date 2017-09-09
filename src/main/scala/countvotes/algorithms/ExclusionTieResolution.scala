@@ -22,7 +22,9 @@ trait UnfairExclusionTieResolutuim {
  }
 }
 
-trait ACTExclusionTieResolution extends STV[ACTBallot] with ExclusionTieResolution{
+trait ACTExclusionTieResolution extends STV[ACTBallot] with ExclusionTieResolution {
+  
+  val result: Result
 
   def recFindSmallest(equaltotals: Map[Candidate, Rational], totalshistory: List[Map[Candidate, Rational]]): Map[Candidate, Rational] = {
      if (equaltotals.size > 1 && totalshistory.nonEmpty) {

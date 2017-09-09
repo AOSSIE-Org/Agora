@@ -37,11 +37,13 @@ abstract class VoteCounter[B <: Ballot] {
   
   def winners(e: Election[B], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)]
   
-  protected val result: Result = new Result
-  protected val report: Report[B] = new Report[B]
+  // protected val result: Result = new Result
+  // protected val report: Report[B] = new Report[B]
 
   def runVoteCounter(election: Election[B], candidates: List[Candidate], numVacancies: Int):   Report[B]  = {
 
+    val result: Result = new Result
+    val report: Report[B] = new Report[B]
 
     var tls = totals(election, candidates)
 

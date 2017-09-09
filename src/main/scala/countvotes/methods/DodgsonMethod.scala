@@ -9,19 +9,6 @@ import collection.mutable.{HashMap => MMap}
   */
 object DodgsonMethod extends VoteCounter[Ballot] {
 
-  override def runVoteCounter(election: Election[Ballot], candidates: List[Candidate], numVacancies: Int): Report[Ballot] = {
-
-    require(election forall(b => b.weight.denominator == 1) )
-
-    //print("\n INPUT ELECTION: \n")
-    ////printElection(election)
-
-    report.setCandidates(candidates)
-
-    report.setWinners(winners(election, candidates, numVacancies))
-
-    report
-  }
 
   override def winners(e: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 

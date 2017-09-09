@@ -14,6 +14,9 @@ object BipartisanSet extends VoteCounter[Ballot] {
 
     // print("\n INPUT ELECTION: \n")
     // //printElection(election)
+    
+    val result: Result = new Result
+    val report: Report[Ballot] = new Report[Ballot]
 
     report.setCandidates(candidates)
 

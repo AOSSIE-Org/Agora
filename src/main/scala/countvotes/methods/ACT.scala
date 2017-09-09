@@ -24,6 +24,9 @@ abstract class ACT extends STVAustralia
  with ACTExclusionTieResolution
  with ACTExactWinnerRemoval
  {
+  
+//  val result: Result = new Result
+//  val report: Report[ACTBallot] = new Report[ACTBallot]
 
   def declareNewWinnersWhileExcluding(
     candidate: Candidate, exhaustedBallots: Set[ACTBallot], newtotals: Map[Candidate, Rational],

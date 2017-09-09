@@ -19,6 +19,9 @@ object MeekSTV extends STV[Ballot]
   with TransferValueWithDenominatorEqualToTotal
   with VoteCounterWithAllBallotsInSurplusDistribution
   with ExactWinnerRemoval {
+  
+  val result: Result = new Result
+  val report: Report[Ballot] = new Report[Ballot]
 
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

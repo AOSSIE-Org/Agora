@@ -31,6 +31,10 @@ trait ACTNewWinnersDuringExclusion extends ACT{
 
 // Like ACT, but no markings
 trait SenateNewWinnersDuringExclusion extends STV[ACTBallot]{
+  
+  val result: Result
+  val report: Report[ACTBallot]
+  
   def declareNewWinnersWhileExcluding(candidate: Candidate,
                                       exhaustedBallots: Set[ACTBallot],
                                       newtotals: Map[Candidate, Rational],

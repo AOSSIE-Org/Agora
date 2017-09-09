@@ -6,7 +6,6 @@ import scala.math._
 
 abstract class Egalitarian[B <: Ballot] extends VoteCounter[B] {
   val fairness: Double = 2
-  var allCandidates: List[Candidate];
 
   /*
   def getCandidateList(election: Election[B]): List[Candidate] = {
@@ -32,20 +31,20 @@ abstract class Egalitarian[B <: Ballot] extends VoteCounter[B] {
     (false,0)
   }
 
-  def utilityIndividual(election: Election[B], voter: Int, candidate: Candidate): Int = rank(election,voter,candidate) match {
-    case (true,rank) => allCandidates.length - rank
+  def utilityIndividual(election: Election[B], voter: Int, candidate: Candidate, numCandidates: Int): Int = rank(election,voter,candidate) match {
+    case (true,rank) => numCandidates - rank
     case _ => 0
   }
 
-  def utilitySet(election: Election[B], voter: Int, candidates: List[Candidate]): Int = {
-    val sum: Int = candidates map { c => utilityIndividual(election, voter, c)} reduce { _ + _ }
+  def utilitySet(election: Election[B], voter: Int, candidates: List[Candidate], numCandidates: Int): Int = {
+    val sum: Int = candidates map { c => utilityIndividual(election, voter, c, numCandidates)} reduce { _ + _ }
     sum
   }
 
-  def socialWelfare(election: Election[B], candidates: List[Candidate]): Double = {
+  def socialWelfare(election: Election[B], candidates: List[Candidate], numCandidates: Int): Double = {
     var sum: Double = 0
     for(i <- 0 to (election.length-1)){
-      sum = sum + (election(i).weight).toDouble * exp((1/fairness) * log(utilitySet(election,i,candidates)))
+      sum = sum + (election(i).weight).toDouble * exp((1/fairness) * log(utilitySet(election,i,candidates, numCandidates)))
     }
     sum
   }

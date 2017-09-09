@@ -3,17 +3,9 @@ package countvotes.methods
 import countvotes.structures._
 
 object EgalitarianMethod extends Egalitarian[Ballot] {
-  var allCandidates: List[Candidate] = List.empty
-
-  override def runVoteCounter(election: Election[Ballot], candidates: List[Candidate], numVacancies: Int):  Report[Ballot] = {
-    allCandidates = candidates
-    println("Number of Ballots: " + election.length)
-    report.setWinners(winners(election, allCandidates, numVacancies))
-    report
-  }
 
   def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)] = {
-    val candidateCount: Int = allCandidates.length
+    val candidateCount: Int = ccandidates.length
 
     val candidateSubsets: List[List[Candidate]] = getCandidateSubsets(ccandidates,candidateCount,List.empty,0,numVacancies)
 
@@ -24,7 +16,7 @@ object EgalitarianMethod extends Egalitarian[Ballot] {
 
     for(i <- candidateSubsets){
       var contemplatedMax: Double = 0
-      contemplatedMax = socialWelfare(election, i)
+      contemplatedMax = socialWelfare(election, i, candidateCount)
       if(currentMax < contemplatedMax){
         currentMax = contemplatedMax
         currentCandidates = i

@@ -14,17 +14,6 @@ object MaximinMethod extends VoteCounter[Ballot] with LazyLogging{
   private val rational0 = Rational(0, 1)
   private val majorityThreshold = Rational(1, 2)
 
-  override def runVoteCounter(election: Election[Ballot], candidates: List[Candidate], numVacancies: Int): Report[Ballot] = {
-
-    //print("\n INPUT ELECTION: \n")
-    ////printElection(election)
-
-    report.setCandidates(candidates)
-
-    report.setWinners(winners(election, candidates, numVacancies))
-
-    report
-  }
 
   def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int):
   List[(Candidate, Rational)] = {

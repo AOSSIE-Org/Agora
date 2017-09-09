@@ -11,6 +11,8 @@ trait SurplusDistributionTieResolution {
 
 // Section 273 (22)
 trait SenateSurplusDistributionTieResolution extends STV[ACTBallot] with SurplusDistributionTieResolution{
+  
+  val result: Result
 
   def resolveSurpluseDistributionTie(totalsOfWinners: Map[Candidate, Rational]): List[(Candidate, Rational)] = {
    val candidates = totalsOfWinners.map(_._1).toSet
@@ -49,8 +51,11 @@ trait SenateSurplusDistributionTieResolution extends STV[ACTBallot] with Surplus
 
 
 trait ACTSurplusDistributionTieResolution extends STV[ACTBallot] with SurplusDistributionTieResolution{
-
- def recOrderIdentical(equaltotals: List[Candidate], totalshistory: List[Map[Candidate, Rational]]): List[Candidate] = {
+  
+  val result: Result
+   
+  
+  def recOrderIdentical(equaltotals: List[Candidate], totalshistory: List[Map[Candidate, Rational]]): List[Candidate] = {
 
      if (totalshistory.nonEmpty) {
       var biggestcandidate: Candidate = equaltotals.head
