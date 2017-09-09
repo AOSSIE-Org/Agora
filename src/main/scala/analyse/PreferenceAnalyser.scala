@@ -3,7 +3,7 @@ package analyse
 import analyse.methods.{SinglePeakAnalyser, ValueRestrictedAnalyser}
 import countvotes.parsers.{CandidatesParser, PreferencesParser}
 import countvotes.structures.{Candidate, Ballot}
-import countvotes.{Concise, ScrutinyTableFormats}
+import countvotes.{Concise, VoteCounterTableFormats}
 
 
 object PreferenceAnalyser {
@@ -12,7 +12,7 @@ object PreferenceAnalyser {
                               ballotsfile: Option[String] = None,
                               method: String = "",
                               candidatesfile: String = "",
-                              table: ScrutinyTableFormats = Concise)
+                              table: VoteCounterTableFormats = Concise)
 
   val parser = new scopt.OptionParser[PreferenceConfig]("compress") {
     head("\nCommand Line Interface for Electronic Votes preference analysis\n\n  ")

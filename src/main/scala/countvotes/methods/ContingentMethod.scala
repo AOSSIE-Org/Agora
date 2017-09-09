@@ -8,7 +8,7 @@ import scala.collection.mutable.{HashMap => MMap}
 /**
   * https://en.wikipedia.org/wiki/Contingent_vote
   */
-object ContingentMethod extends Scrutiny[Ballot] {
+object ContingentMethod extends VoteCounter[Ballot] {
 
   val majorityThreshold = Rational(1, 2)
 

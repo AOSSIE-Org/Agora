@@ -9,7 +9,7 @@ import scala.collection.mutable.{HashMap => MMap}
   * Algorithm : https://en.wikipedia.org/wiki/Minimax_Condorcet
   * Variant : winning votes => W = \arg \min_X ( \max_Y score(Y, X))
   */
-object MinimaxCondorcetMethod extends Scrutiny[Ballot] with LazyLogging{
+object MinimaxCondorcetMethod extends VoteCounter[Ballot] with LazyLogging{
 
   private val rational0 = Rational(0, 1)
   private val majorityThreshold = Rational(1, 2)

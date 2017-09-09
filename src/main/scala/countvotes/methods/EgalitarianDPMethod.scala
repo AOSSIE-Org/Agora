@@ -8,7 +8,7 @@ object EgalitarianDPMethod extends Egalitarian[Ballot] {
   val memo = new MMap[(Int,Set[Candidate]), List[Candidate]] ()
   var allCandidates: List[Candidate] = List.empty
 
-  override def runScrutiny(election: Election[Ballot], candidates: List[Candidate], numVacancies: Int):  Report[Ballot] = {
+  override def runVoteCounter(election: Election[Ballot], candidates: List[Candidate], numVacancies: Int):  Report[Ballot] = {
     allCandidates = candidates
     println("Number of Ballots: " + election.length)
     report.setWinners(winners(election, candidates, numVacancies))

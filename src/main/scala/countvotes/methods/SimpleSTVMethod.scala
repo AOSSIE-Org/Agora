@@ -12,13 +12,13 @@ class SimpleSTVMethod extends STV[Ballot]
   with SimpleExclusion
   with UnfairExclusionTieResolutuim
   with TransferValueWithDenominatorEqualToTotal
-  with ScrutinyWithAllBallotsInSurplusDistribution
+  with VoteCounterWithAllBallotsInSurplusDistribution
   with ExactWinnerRemoval{
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  override def runScrutiny(election: Election[Ballot], candidates: List[Candidate], numVacancies: Int):   Report[Ballot]  = {
+  override def runVoteCounter(election: Election[Ballot], candidates: List[Candidate], numVacancies: Int):   Report[Ballot]  = {
    val quota = cutQuotaFraction(computeQuota(election.length, numVacancies))
    println("Quota = " + quota)
    result.setQuota(quota)

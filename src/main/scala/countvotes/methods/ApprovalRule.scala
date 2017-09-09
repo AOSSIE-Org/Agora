@@ -6,7 +6,7 @@ import countvotes.structures._
 
 import scala.collection.mutable.{HashMap => MMap}
 
-object ApprovalRule extends Scrutiny[Ballot]
+object ApprovalRule extends VoteCounter[Ballot]
   with SimpleApproval {
 
   override def winners(election: Election[Ballot], ccandidates: List[Candidate],  numVacancies: Int): List[(Candidate, Rational)] = {

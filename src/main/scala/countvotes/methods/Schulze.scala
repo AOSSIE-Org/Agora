@@ -5,7 +5,7 @@ import countvotes.structures._
 /**
   * Algorithm : https://en.wikipedia.org/wiki/Schulze_method
   */
-object Schulze extends Scrutiny[RankBallot] {
+object Schulze extends VoteCounter[RankBallot] {
 
   override def winners(election: Election[RankBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 

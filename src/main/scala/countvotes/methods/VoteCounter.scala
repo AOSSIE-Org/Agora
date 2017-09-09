@@ -36,14 +36,11 @@ abstract class VoteCounter[B <: Ballot] {
   
   
   def winners(e: Election[B], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)]
-}
-
-trait Scrutiny[B <: Ballot] extends VoteCounter[B] {
-
+  
   protected val result: Result = new Result
   protected val report: Report[B] = new Report[B]
 
-  def runScrutiny(election: Election[B], candidates: List[Candidate], numVacancies: Int):   Report[B]  = {
+  def runVoteCounter(election: Election[B], candidates: List[Candidate], numVacancies: Int):   Report[B]  = {
 
 
     var tls = totals(election, candidates)
@@ -58,9 +55,8 @@ trait Scrutiny[B <: Ballot] extends VoteCounter[B] {
 
     report
   }
-
-
 }
+
 
 
 

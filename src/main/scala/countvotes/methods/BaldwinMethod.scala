@@ -8,7 +8,7 @@ import scala.collection.mutable.{HashMap => Map}
 /**
   * Created by deepeshpandey on 09/03/17.
   */
-object BaldwinMethod extends Scrutiny[Ballot] with LazyLogging {
+object BaldwinMethod extends VoteCounter[Ballot] with LazyLogging {
 
   def bordaScores(election: Election[Ballot], candidates: List[Candidate]): Map[Candidate, Rational] = {
     val m = new Map[Candidate, Rational]

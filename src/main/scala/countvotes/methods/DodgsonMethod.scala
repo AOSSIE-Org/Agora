@@ -9,10 +9,7 @@ import collection.mutable.{HashMap => MMap}
   */
 object DodgsonMethod extends VoteCounter[Ballot] {
 
-  private val result: Result = new Result
-  private val report: Report[Ballot] = new Report[Ballot]
-
-  def runScrutiny(election: Election[Ballot], candidates: List[Candidate], numVacancies: Int): Report[Ballot] = {
+  override def runVoteCounter(election: Election[Ballot], candidates: List[Candidate], numVacancies: Int): Report[Ballot] = {
 
     require(election forall(b => b.weight.denominator == 1) )
 

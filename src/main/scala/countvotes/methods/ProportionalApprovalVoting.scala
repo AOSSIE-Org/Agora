@@ -8,7 +8,7 @@ import scala.collection.mutable.{HashMap => MMap}
 /** *
   * https://en.wikipedia.org/wiki/Proportional_approval_voting
   */
-object ProportionalApprovalVoting extends Scrutiny[Ballot] {
+object ProportionalApprovalVoting extends VoteCounter[Ballot] {
 
   // following function calculates score, i.e., given N, it calculates summation 1 to 1/N
   def proportionalApprovalScore(nmatches: Int): Rational = {

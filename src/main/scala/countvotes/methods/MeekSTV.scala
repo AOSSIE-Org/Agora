@@ -17,13 +17,13 @@ object MeekSTV extends STV[Ballot]
   with SimpleExclusion
   with UnfairExclusionTieResolutuim
   with TransferValueWithDenominatorEqualToTotal
-  with ScrutinyWithAllBallotsInSurplusDistribution
+  with VoteCounterWithAllBallotsInSurplusDistribution
   with ExactWinnerRemoval {
 
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  override def runScrutiny(election: Election[Ballot], candidates: List[Candidate], numVacancies: Int): Report[Ballot] = {
+  override def runVoteCounter(election: Election[Ballot], candidates: List[Candidate], numVacancies: Int): Report[Ballot] = {
 
     print("\n INPUT ELECTION: \n")
     //printElection(election)

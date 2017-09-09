@@ -17,7 +17,7 @@ abstract class STVAustralia extends STV[ACTBallot]
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
- override def runScrutiny(election: Election[ACTBallot], candidates: List[Candidate], numVacancies: Int):
+ override def runVoteCounter(election: Election[ACTBallot], candidates: List[Candidate], numVacancies: Int):
     Report[ACTBallot] = {  // all ballots of e are marked when the function is called
    val quota = cutQuotaFraction(computeQuota(election.length, numVacancies))
    println("Number of ballots:" + election.length)

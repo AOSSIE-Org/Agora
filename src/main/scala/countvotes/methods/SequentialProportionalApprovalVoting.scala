@@ -11,7 +11,7 @@ import scala.collection.mutable.{HashMap => MMap}
   */
 
 
-object SequentialProportionalApprovalVoting extends Scrutiny[Ballot]
+object SequentialProportionalApprovalVoting extends VoteCounter[Ballot]
   with SimpleApproval {
 
   // following function removes winner and reduces weight on ballot to 1/(N+1)

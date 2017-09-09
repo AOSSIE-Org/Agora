@@ -7,7 +7,7 @@ import countvotes.structures._
   * https://en.wikipedia.org/wiki/Exhaustive_ballot
   */
 
-object InstantExhaustiveBallot extends Scrutiny[Ballot]
+object InstantExhaustiveBallot extends VoteCounter[Ballot]
   with SimpleExclusionWithFixedElectionSize {
 
   override def winners(election: Election[Ballot], ccandidates: List[Candidate],  numVacancies: Int): List[(Candidate, Rational)] = {

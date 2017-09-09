@@ -9,7 +9,7 @@ import scala.collection.mutable.{HashMap => MMap}
   * https://en.wikipedia.org/wiki/Preferential_block_voting
   */
 
-object HybridPluralityPreferentialBlockVoting extends Scrutiny[Ballot] {
+object HybridPluralityPreferentialBlockVoting extends VoteCounter[Ballot] {
 
   def totalsForFirstNVacancies(election: Election[Ballot],ccandidates: List[Candidate], numVacancies: Int): MMap[Candidate,Rational] = {
     //calculates the totals for first n candidates where n is equal to number of vacancies

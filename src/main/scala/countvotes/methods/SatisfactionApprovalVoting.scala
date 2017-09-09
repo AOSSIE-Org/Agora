@@ -10,7 +10,7 @@ import scala.collection.mutable.{HashMap => MMap}
   */
 
 
-object SatisfactionApprovalVoting extends Scrutiny[Ballot] {
+object SatisfactionApprovalVoting extends VoteCounter[Ballot] {
   
   def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int ):
   List[(Candidate,Rational)] = {

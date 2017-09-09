@@ -9,7 +9,7 @@ import scala.collection.mutable.{HashMap => MMap}
   * https://en.wikipedia.org/wiki/Preferential_block_voting
   */
 
-object PreferentialBlockVoting extends Scrutiny[Ballot] {
+object PreferentialBlockVoting extends VoteCounter[Ballot] {
 
   val majorityThreshold = Rational(1, 2)
 

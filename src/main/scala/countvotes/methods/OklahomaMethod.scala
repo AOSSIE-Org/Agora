@@ -11,7 +11,7 @@ import scala.collection.mutable.{HashMap => MMap}
   * so ballots with fewer prefererences are not voided
   */
 
-object OklahomaMethod extends Scrutiny[Ballot] {
+object OklahomaMethod extends VoteCounter[Ballot] {
 
   // following recursive function calculates totals and if total of any candidate exceeds half of election length
   // candidate wins, else next preferences are added, reducing their weights by 1/N,

@@ -4,7 +4,7 @@ import compare.extensions.{FishburnsExtension, KellyExtension}
 import analyse.methods.{SinglePeakAnalyser, ValueRestrictedAnalyser}
 import countvotes.parsers.{CandidatesParser, ParameterParser, PreferencesParser}
 import countvotes.structures.{Candidate, Ballot}
-import countvotes.{Concise, ScrutinyTableFormats}
+import countvotes.{Concise, VoteCounterTableFormats}
 
 object SetComparator {
 
@@ -13,7 +13,7 @@ object SetComparator {
                               method: String = "",
                               parameterFile: String = "",
                               candidatesfile: String = "",
-                              table: ScrutinyTableFormats = Concise)
+                              table: VoteCounterTableFormats = Concise)
 
   val parser = new scopt.OptionParser[CompareConfig]("compress") {
     head("\nCommand Line Interface for candidates set comparisons\n\n  ")

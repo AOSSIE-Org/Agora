@@ -9,7 +9,7 @@ import scala.collection.mutable.{HashMap => MMap}
   * Algorithm : https://en.wikipedia.org/wiki/Coombs%27_method
   * Note: This voting method requires voters to rank all the candidates
   */
-object CoombRuleMethod extends Scrutiny[Ballot] with LazyLogging{
+object CoombRuleMethod extends VoteCounter[Ballot] with LazyLogging{
 
   private val majorityThreshold = Rational(1,2)
 

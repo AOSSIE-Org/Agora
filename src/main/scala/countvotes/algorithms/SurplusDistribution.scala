@@ -115,7 +115,7 @@ trait SenateSurplusDistribution extends STV[ACTBallot]{
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-trait ACTScrutinyWithAllContinuingBallotsInSurplusDistribution extends STV[ACTBallot]{
+trait ACTVoteCounterWithAllContinuingBallotsInSurplusDistribution extends STV[ACTBallot]{
 
  def distributeSurplusVotes(election: Election[ACTBallot],
                             candidate: Candidate,
@@ -158,7 +158,7 @@ trait ACTScrutinyWithAllContinuingBallotsInSurplusDistribution extends STV[ACTBa
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-trait ScrutinyWithAllContinuingBallotsInSurplusDistribution extends STV[Ballot]{
+trait VoteCounterWithAllContinuingBallotsInSurplusDistribution extends STV[Ballot]{
 
  def distributeSurplusVotes(election: Election[Ballot],
                             candidate: Candidate, total:Rational,
@@ -195,7 +195,7 @@ trait ScrutinyWithAllContinuingBallotsInSurplusDistribution extends STV[Ballot]{
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-trait ScrutinyWithAllBallotsInSurplusDistribution extends STV[Ballot]{
+trait VoteCounterWithAllBallotsInSurplusDistribution extends STV[Ballot]{
 
  def distributeSurplusVotes(election: Election[Ballot],
                             candidate: Candidate,

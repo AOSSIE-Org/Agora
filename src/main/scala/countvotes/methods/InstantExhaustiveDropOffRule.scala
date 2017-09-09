@@ -8,7 +8,7 @@ import countvotes.structures._
   * https://en.wikipedia.org/wiki/Exhaustive_ballot#Notes
   */
 
-object InstantExhaustiveDropOffRule extends Scrutiny[Ballot]
+object InstantExhaustiveDropOffRule extends VoteCounter[Ballot]
   with SimpleExclusionWithFixedElectionSize{
 
   var dropOffPercentage = Rational(0, 100)

@@ -11,12 +11,10 @@ import collection.mutable.{ListBuffer, HashMap => MMap}
   */
 object MaximinMethod extends VoteCounter[Ballot] with LazyLogging{
 
-  private val result: Result = new Result
-  private val report: Report[Ballot] = new Report[Ballot]
   private val rational0 = Rational(0, 1)
   private val majorityThreshold = Rational(1, 2)
 
-  def runScrutiny(election: Election[Ballot], candidates: List[Candidate], numVacancies: Int): Report[Ballot] = {
+  override def runVoteCounter(election: Election[Ballot], candidates: List[Candidate], numVacancies: Int): Report[Ballot] = {
 
     //print("\n INPUT ELECTION: \n")
     ////printElection(election)

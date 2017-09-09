@@ -6,7 +6,7 @@ import countvotes.structures._
 import scala.collection.mutable.{HashMap => Map}
 
 
-abstract class STV[B <: Ballot] extends Scrutiny[B] {
+abstract class STV[B <: Ballot] extends VoteCounter[B] {
   //type E = Election[B]
 
   def computeQuota(numVotes: Int, numVacancies: Int): Rational
@@ -33,7 +33,7 @@ abstract class STV[B <: Ballot] extends Scrutiny[B] {
 
 
     //def run(e: Election[B], numVacancies: Int):   Report[B] = {
-  //  val output = runScrutiny(e: Election[B], numVacancies: Int)
+  //  val output = runVoteCounter(e: Election[B], numVacancies: Int)
   //  result.clear
   //  report.clear
   //  output
