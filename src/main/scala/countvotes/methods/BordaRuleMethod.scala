@@ -12,13 +12,13 @@ object BordaRuleMethod extends Scrutiny[Ballot] with LazyLogging{
 
   override def totals(election: Election[Ballot], candidates: List[Candidate]): Map[Candidate, Rational] = {
     val m = new Map[Candidate, Rational]
-    val totalCandidates = getCandidates(election).length
+    val numCandidates = candidates.length
 
     for (b <- election if !b.preferences.isEmpty) {
 
       // need to take the size of the list first and then calculate the borda scores
      b.preferences.zipWithIndex.foreach(preference => {
-       m(preference._1) = m.getOrElse(preference._1, new Rational(0,1)) + ((totalCandidates - 1 - preference._2) * b.weight.numerator.toInt)
+       m(preference._1) = m.getOrElse(preference._1, new Rational(0,1)) + ((numCandidates - 1 - preference._2) * b.weight.numerator.toInt)
      })
 
     }
