@@ -71,7 +71,7 @@ object DodgsonMethod extends VoteCountingMethod[WeightedBallot] {
 
     val candElectionResponse = Array.ofDim[Int](candidates.size)
 
-    val succesful = dispersedElection zip flipVector forall { case(ballotsWithFlip) => {
+    val succesful = dispersedElection zip flipVector forall { ballotsWithFlip  => {
 
       if (isFlippable(candidate, ballotsWithFlip._2, ballotsWithFlip._1.preferences)) {
 
