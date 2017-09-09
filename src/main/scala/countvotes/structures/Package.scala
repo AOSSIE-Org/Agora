@@ -17,13 +17,11 @@ package object structures {
       for (b <- we) yield ACTBallot.fromBallot(b) // b // ACTBallot.fromBallot(b)
     }
 
+    // FIXME: remove this implicit. Rank ballots cannot always be converted to Preferential Ballots.
     implicit def rankedElectionToWeightedElection(re: Election[RankBallot]): Election[Ballot] = {
-      for (b <- re) yield RankBallot.toBallot(b)
+      for (rb <- re) yield new Ballot(rb.ranks.map(_._1), rb.id, rb.weight)
     }
 
-    implicit def scoredElectionToWeightedElection(re: Election[ScoreBallot]): Election[Ballot] = {
-      for (b <- re) yield ScoreBallot.toBallot(b)
-    }
   }
 
   abstract sealed class Actions

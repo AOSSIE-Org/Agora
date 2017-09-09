@@ -9,10 +9,12 @@ object Schulze extends Scrutiny[RankBallot] {
 
   override def winners(election: Election[RankBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 
+    
+    //FIXME: when ranked ballot is converted to ballot, ties are arbitrarily broken, and this affects the result of Schulze's algorithm.
     val electionResponse = getPairwiseComparisonForWeightedElection(Election.rankedElectionToWeightedElection(election), ccandidates)
 
     schulzeWinnerRanking(getSchulzeStrongestPathMatrix(electionResponse, ccandidates), ccandidates).take(numVacancies)
-
+    ???
   }
 
   // calculating the schulze response matrix using algorithm on https://en.m.wikipedia.org/wiki/Schulze_method
