@@ -9,7 +9,7 @@ import collection.mutable.{ListBuffer, HashMap => MMap}
   * Algorithm : https://www.cs.cmu.edu/~arielpro/mfai_papers/lecture6.pdf page-4
   * Variant : winning votes => W = \arg \min_X ( \max_Y score(Y, X))
   */
-object MaximinMethod extends VoteCountingMethod[WeightedBallot] with LazyLogging{
+object MaximinMethod extends VoteCounter[WeightedBallot] with LazyLogging{
 
   private val result: Result = new Result
   private val report: Report[WeightedBallot] = new Report[WeightedBallot]

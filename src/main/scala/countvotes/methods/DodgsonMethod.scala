@@ -7,7 +7,7 @@ import collection.mutable.{HashMap => MMap}
   * Wiki : https://en.wikipedia.org/wiki/Dodgson%27s_method
   * Implementation : http://infosyncratic.nl/talks/2008-votingprocedures.pdf
   */
-object DodgsonMethod extends VoteCountingMethod[WeightedBallot] {
+object DodgsonMethod extends VoteCounter[WeightedBallot] {
 
   private val result: Result = new Result
   private val report: Report[WeightedBallot] = new Report[WeightedBallot]

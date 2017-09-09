@@ -50,7 +50,7 @@ object StabilityAnalyser {
   }
 
 
-  def analyseStability(vcm: VoteCountingMethod[WeightedBallot], electionsPair: List[List[Election[WeightedBallot]]],
+  def analyseStability(vcm: VoteCounter[WeightedBallot], electionsPair: List[List[Election[WeightedBallot]]],
                        candidates: List[Candidate]): (String, Double, Double) = {
 
 
@@ -64,7 +64,7 @@ object StabilityAnalyser {
 
   }
 
-  def stability(vcm: VoteCountingMethod[WeightedBallot], elections: List[Election[WeightedBallot]], candidates: List[Candidate]): Double = {
+  def stability(vcm: VoteCounter[WeightedBallot], elections: List[Election[WeightedBallot]], candidates: List[Candidate]): Double = {
 
     val winnerEA = vcm.winners(elections(0), candidates, 1)
     val winnerEB = vcm.winners(elections(1), candidates, 1)

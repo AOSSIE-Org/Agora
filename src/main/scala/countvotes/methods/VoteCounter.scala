@@ -4,7 +4,7 @@ import countvotes.structures._
 
 import scala.collection.mutable.{HashSet, HashMap => Map}
 
-abstract class VoteCountingMethod[B <: Ballot with Weight] {
+abstract class VoteCounter[B <: Ballot with Weight] {
 
  def totals(election: Election[B], candidates: List[Candidate]): Map[Candidate, Rational] = {
     val m = new Map[Candidate, Rational]
@@ -78,7 +78,7 @@ abstract class VoteCountingMethod[B <: Ballot with Weight] {
   def winners(e: Election[B], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)]
 }
 
-trait Scrutiny[B <: Ballot with Weight] extends VoteCountingMethod[B] {
+trait Scrutiny[B <: Ballot with Weight] extends VoteCounter[B] {
 
   protected val result: Result = new Result
   protected val report: Report[B] = new Report[B]
