@@ -64,10 +64,6 @@ object Main extends RegexParsers {
       c.copy(nkandidates = Some(v))
     } text ("set number of candidates  <numk>\n") valueName ("<numk>")
 
-    //opt[String]('o', "order") action { (v, c) =>
-    //  c.copy(order = v)
-    //} text("set order in which the candidates appear in output tables <ord>\n") valueName("<ord>")
-
     opt[String]('t', "table") action { (v, c) => {
 
       val tableFormat = v match {
