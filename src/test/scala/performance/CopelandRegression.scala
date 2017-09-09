@@ -1,5 +1,5 @@
 import countvotes.methods.{BordaRuleMethod, CopelandMethod}
-import countvotes.structures.WeightedBallot
+import countvotes.structures.Ballot
 import org.scalameter.api.Bench
 import org.scalameter.api._
 import performance.BordaRegressionTest.include
@@ -12,7 +12,7 @@ trait CopelandRegression extends RuntimeRegression {
 
   override def votingMethodName(): String = "Copeland"
 
-  override def votingMethod(election: List[WeightedBallot]): Unit = {
+  override def votingMethod(election: List[Ballot]): Unit = {
     CopelandMethod.winners(election, randomPreference(), 1)
   }
 
@@ -22,7 +22,7 @@ trait CopelandMemoryRegression extends MemoryRegression {
 
   override def votingMethodName(): String = "Copeland"
 
-  override def votingMethod(election: List[WeightedBallot]): Unit = {
+  override def votingMethod(election: List[Ballot]): Unit = {
     CopelandMethod.winners(election, randomPreference(), 1)
   }
 

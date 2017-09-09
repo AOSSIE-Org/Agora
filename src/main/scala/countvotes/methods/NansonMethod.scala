@@ -8,9 +8,9 @@ import scala.collection.mutable.{HashMap => Map}
 /**
   * https://en.wikipedia.org/wiki/Nanson%27s_method
   */
-object NansonMethod extends Scrutiny[WeightedBallot] {
+object NansonMethod extends Scrutiny[Ballot] {
 
-  def winners(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int):
+  def winners(election: Election[Ballot], candidates: List[Candidate], numVacancies: Int):
   List[(Candidate, Rational)] = {
 
     if (candidates.length == 1) {

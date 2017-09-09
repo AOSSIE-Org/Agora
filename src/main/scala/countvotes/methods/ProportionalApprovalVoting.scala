@@ -8,7 +8,7 @@ import scala.collection.mutable.{HashMap => MMap}
 /** *
   * https://en.wikipedia.org/wiki/Proportional_approval_voting
   */
-object ProportionalApprovalVoting extends Scrutiny[WeightedBallot] {
+object ProportionalApprovalVoting extends Scrutiny[Ballot] {
 
   // following function calculates score, i.e., given N, it calculates summation 1 to 1/N
   def proportionalApprovalScore(nmatches: Int): Rational = {
@@ -22,7 +22,7 @@ object ProportionalApprovalVoting extends Scrutiny[WeightedBallot] {
   // following function calculates totals for each candidate subsets in the follwoing manner
   // if N of the candidate preferences matches with any one candidate subset,
   // then score for that subset is summation 1 to 1/N
-  def candidateSubsetTotals(election: Election[WeightedBallot], candidates: List[Candidate],
+  def candidateSubsetTotals(election: Election[Ballot], candidates: List[Candidate],
                             ccandSubsetList: List[List[Candidate]]): List[(Candidate, Rational)] = {
     val scoredCandidateSubsetMap = new MMap[List[Candidate], Rational]
     for (a <- ccandSubsetList) {
@@ -55,7 +55,7 @@ object ProportionalApprovalVoting extends Scrutiny[WeightedBallot] {
     }
   }
 
-  def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int):
+  def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int):
   List[(Candidate, Rational)] = {
     val ccandSubsetList = candidateSubsetListGenerator(numVacancies, ccandidates)
     candidateSubsetTotals(election, ccandidates, ccandSubsetList)

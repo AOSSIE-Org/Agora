@@ -5,7 +5,7 @@ import countvotes.structures._
 
 import scala.collection.mutable.{HashMap => Map}
 
-abstract class MajorityRule[B <: WeightedBallot with Weight] extends Scrutiny[B] {
+abstract class MajorityRule[B <: Ballot] extends Scrutiny[B] {
 
 }
 

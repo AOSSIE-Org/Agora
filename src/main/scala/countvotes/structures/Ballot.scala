@@ -2,10 +2,9 @@ package countvotes.structures
 
 import scala.language.implicitConversions
 
-class Ballot(val preferences: List[Candidate], val id: Int)
-
-trait Weight extends Ballot {
-  val weight: Rational
+class Ballot(val preferences: List[Candidate], val id: Int, val weight: Rational)
+object Ballot {
+  def apply(p: List[Candidate], id: Int, w: Rational): Ballot  = new Ballot(p, id, w)
 }
 
 trait Value extends Ballot {
@@ -16,61 +15,41 @@ trait Marking extends Ballot {
   val marking: Boolean
 }
 
-class WeightedBallot(p: List[Candidate], id: Int, w: Rational)
-  extends Ballot(p, id) with Weight {
-  val weight = w
-  override def toString: String = "[" + id + ", " + p + ", " + w + "]"
-}
-object WeightedBallot {
-  def apply(p: List[Candidate], id: Int, w: Rational): WeightedBallot  = new WeightedBallot(p, id, w)
-  //def apply(p: List[Candidate], id: Int, w: Rational = new Rational(1,1)) = new SimpleBallot(p, id, w)
-  //def apply(p: List[Candidate], id: Int) = new SimpleBallot(p, id, new Rational(1,1))
-  // implicit def fromBallot(b: Ballot) = {
-  //   new WeightedBallot(b.preferences, b.id, 1) // note that the weight is assigned 1 here
-  // }
-}
-
-
-class MarkedWeightedBallot(p: List[Candidate], id: Int,  m: Boolean, w: Rational)
-  extends WeightedBallot(p, id, w) with Marking {
+class MarkedBallot(p: List[Candidate], id: Int,  m: Boolean, w: Rational)
+  extends Ballot(p, id, w) with Marking {
   val marking = m
 }
-object MarkedWeightedBallot{
-  def apply(p: List[Candidate], id: Int, m:Boolean, w: Rational): MarkedWeightedBallot = new MarkedWeightedBallot(p, id, m, w)
-  // implicit def fromWeightedBallot(b: WeightedBallot) = {
-  //   new MarkedWeightedBallot(b.preferences, b.id, true, b.weight) // note that the marking is assigned true here
-  // }
+object MarkedBallot{
+  def apply(p: List[Candidate], id: Int, m:Boolean, w: Rational): MarkedBallot = new MarkedBallot(p, id, m, w)
 }
 
-class ScoredWeightedBallot(p: List[(Candidate, Rational)], id: Int, w: Rational) extends Ballot(p map {
+class ScoredBallot(p: List[(Candidate, Rational)], id: Int, w: Rational) extends Ballot(p map {
   _._1
-}, id) with Weight {
-  val weight = w
+}, id, w) {
   val scorePreferences = p
 
   override def toString: String = "[" + id + ", " + p + ", " + w + "]"
 }
 
-object ScoredWeightedBallot {
-  def apply(p: List[(Candidate, Rational)], id: Int, w: Rational): ScoredWeightedBallot = new ScoredWeightedBallot(p, id, w)
-  implicit def toWeightedBallot(sb: ScoredWeightedBallot): WeightedBallot = {
-    WeightedBallot(sb.scorePreferences.map(_._1), sb.id, sb.weight)
+object ScoredBallot {
+  def apply(p: List[(Candidate, Rational)], id: Int, w: Rational): ScoredBallot = new ScoredBallot(p, id, w)
+  implicit def toBallot(sb: ScoredBallot): Ballot = {
+    new Ballot(sb.scorePreferences.map(_._1), sb.id, sb.weight)
   }
 }
 
-class RankedWeightedBallot(p: List[(Candidate, Int)], id: Int, w: Rational) extends Ballot(p map {
+class RankedBallot(p: List[(Candidate, Int)], id: Int, w: Rational) extends Ballot(p map {
   _._1
-}, id) with Weight {
-  val weight = w
+}, id, w) {
   val rankPreferences = p
 
   override def toString: String = "[" + id + ", " + p + ", " + w + "]"
 }
 
-object RankedWeightedBallot {
-  def apply(p: List[(Candidate, Int)], id: Int, w: Rational): RankedWeightedBallot = new RankedWeightedBallot(p, id, w)
-  implicit def toWeightedBallot(rb: RankedWeightedBallot): WeightedBallot = {
-    WeightedBallot(rb.rankPreferences.map(_._1), rb.id, rb.weight)
+object RankedBallot {
+  def apply(p: List[(Candidate, Int)], id: Int, w: Rational): RankedBallot = new RankedBallot(p, id, w)
+  implicit def toBallot(rb: RankedBallot): Ballot = {
+    new Ballot(rb.rankPreferences.map(_._1), rb.id, rb.weight)
   }
 }
 

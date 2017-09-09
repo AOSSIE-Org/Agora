@@ -125,7 +125,7 @@ trait ACTSurplusDistributionTieResolution extends STV[ACTBallot] with SurplusDis
 
 
 
-trait SimpleSurplusDistributionTieResolution extends STV[WeightedBallot] with SurplusDistributionTieResolution{
+trait SimpleSurplusDistributionTieResolution extends STV[Ballot] with SurplusDistributionTieResolution{
   def resolveSurpluseDistributionTie(equaltotals: Map[Candidate, Rational]): List[(Candidate, Rational)] = {
     equaltotals.toList.sortBy(x => x._2).reverse // >
   }

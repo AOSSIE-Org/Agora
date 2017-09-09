@@ -11,13 +11,13 @@ import countvotes.structures._
   * called a set extension. This implementation includes two of the natural and well studied
   * set extension methods - Kellys and Fishburn's extension methods.
   */
-abstract class SetExtensionMethods[B <: Ballot with Weight] {
+abstract class SetExtensionMethods[B <: Ballot] {
 
   // will return the set that is preferred over another as given in the json parameters file
-  def compare(election: Election[WeightedBallot], candidates: List[Candidate], parameters: Parameters): Set[Candidate]
+  def compare(election: Election[Ballot], candidates: List[Candidate], parameters: Parameters): Set[Candidate]
 
   // utility method for matrix where a[i][j] = x means candidate i has got #x votes against candidate j
-  def getPairwiseComparisons(election: Election[WeightedBallot], candidates: List[Candidate]): Array[Array[Rational]] = {
+  def getPairwiseComparisons(election: Election[Ballot], candidates: List[Candidate]): Array[Array[Rational]] = {
 
     val zeroRational = Rational(0, 1)
     val responseMatrix = Array.fill(candidates.size, candidates.size)(Rational(0, 1))

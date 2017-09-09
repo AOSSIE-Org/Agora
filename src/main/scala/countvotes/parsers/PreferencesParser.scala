@@ -32,20 +32,20 @@ trait ElectionParsers extends RegexParsers {
 }
 
 
-object PreferencesParser extends ElectionParser[WeightedBallot] with RegexParsers with ElectionParsers {
+object PreferencesParser extends ElectionParser[Ballot] with RegexParsers with ElectionParsers {
   
   def preferences: Parser[List[Candidate]] = repsep(candidate, ">")
 
-  def line: Parser[WeightedBallot] = id ~ weight ~ preferences ^^ {
-    case ~(~(i, w), prefs) => { WeightedBallot(prefs, i, w) }
+  def line: Parser[Ballot] = id ~ weight ~ preferences ^^ {
+    case ~(~(i, w), prefs) => { new Ballot(prefs, i, w) }
   }
 }
 
-object PreferencesParserWithIndifference extends ElectionParser[RankedWeightedBallot] with RegexParsers with ElectionParsers {
+object PreferencesParserWithIndifference extends ElectionParser[RankedBallot] with RegexParsers with ElectionParsers {
 
-  def line: Parser[RankedWeightedBallot] = id ~ weight ~ preferences ^^ {
+  def line: Parser[RankedBallot] = id ~ weight ~ preferences ^^ {
     case ~(~(i, w), prefs) => {
-      RankedWeightedBallot(prefs, i, w)
+      RankedBallot(prefs, i, w)
     }
   }
 
@@ -71,11 +71,11 @@ object PreferencesParserWithIndifference extends ElectionParser[RankedWeightedBa
 
 }
 
-object PreferencesParserWithScore extends ElectionParser[ScoredWeightedBallot] with RegexParsers with ElectionParsers {
+object PreferencesParserWithScore extends ElectionParser[ScoredBallot] with RegexParsers with ElectionParsers {
 
-  def line: Parser[ScoredWeightedBallot] = id ~ weight ~ opt("(") ~ preferences ~ opt(")") ^^ {
+  def line: Parser[ScoredBallot] = id ~ weight ~ opt("(") ~ preferences ~ opt(")") ^^ {
     case ~(~(~(~(i, w), _), prefs), _) => {
-      ScoredWeightedBallot(prefs, i, w)
+      ScoredBallot(prefs, i, w)
     }
   }
 
@@ -93,11 +93,11 @@ object PreferencesParserWithScore extends ElectionParser[ScoredWeightedBallot] w
   }
 }
 
-object PreferencesParserWithRank extends ElectionParser[RankedWeightedBallot] with RegexParsers with ElectionParsers {
+object PreferencesParserWithRank extends ElectionParser[RankedBallot] with RegexParsers with ElectionParsers {
 
-  def line: Parser[RankedWeightedBallot] = id ~ weight ~ opt("(") ~ preferences ~ opt(")") ^^ {
+  def line: Parser[RankedBallot] = id ~ weight ~ opt("(") ~ preferences ~ opt(")") ^^ {
     case ~(~(~(~(i, w), _), prefs), _) => {
-      RankedWeightedBallot(prefs, i, w)
+      RankedBallot(prefs, i, w)
     }
   }
 

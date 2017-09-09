@@ -1,7 +1,7 @@
 package performance
 
 import countvotes.methods.BordaRuleMethod
-import countvotes.structures.{Candidate, WeightedBallot}
+import countvotes.structures.{Candidate, Ballot}
 import org.scalameter.Bench
 import org.scalameter.api._
 import org.scalameter.persistence.GZIPJSONSerializationPersistor
@@ -19,7 +19,7 @@ class AgoraBenchmark extends Bench.OfflineRegressionReport {
   } yield {
     for {
       i <- List.range(1, size)
-    } yield WeightedBallot(randomPreference(), i, 1)
+    } yield Ballot(randomPreference(), i, 1)
   }
 
   def randomPreference(): List[Candidate] = {
@@ -32,7 +32,7 @@ class AgoraBenchmark extends Bench.OfflineRegressionReport {
     ""
   }
 
-  def votingMethod(election: List[WeightedBallot]) = {}
+  def votingMethod(election: List[Ballot]) = {}
 }
 
 
@@ -51,7 +51,7 @@ trait RuntimeRegression extends AgoraBenchmark {
 
   def votingMethodName(): String
 
-  def votingMethod(election: List[WeightedBallot]): Unit
+  def votingMethod(election: List[Ballot]): Unit
 }
 
 trait MemoryRegression extends AgoraBenchmark {
@@ -74,7 +74,7 @@ trait MemoryRegression extends AgoraBenchmark {
 
   def votingMethodName(): String
 
-  def votingMethod(election: List[WeightedBallot]): Unit
+  def votingMethod(election: List[Ballot]): Unit
 }
 
 

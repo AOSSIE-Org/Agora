@@ -5,9 +5,9 @@ import countvotes.structures._
 /*
   Link : https://drive.google.com/file/d/0B4uPp6wWiMpSbWh2NGNfLXdiTTA/view?usp=sharing
  */
-object FishburnsExtension extends SetExtensionMethods[WeightedBallot] {
+object FishburnsExtension extends SetExtensionMethods[Ballot] {
 
-  override def compare(election: Election[WeightedBallot], candidates: List[Candidate], parameters: Parameters): Set[Candidate] = {
+  override def compare(election: Election[Ballot], candidates: List[Candidate], parameters: Parameters): Set[Candidate] = {
 
     // candidates in comparison sets should be consistent with the actual candidates
     require(parameters.comparisonSets.isDefined && parameters.comparisonSets.get.set1.forall(c => candidates.exists(cand => cand.name == c)) &&

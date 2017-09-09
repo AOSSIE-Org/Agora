@@ -4,10 +4,10 @@ import countvotes.algorithms._
 import countvotes.structures._
 
 
-class SimpleSTVMethod extends STV[WeightedBallot]
+class SimpleSTVMethod extends STV[Ballot]
   with DroopQuota
   with NoFractionInQuota
-  with NewWinnersNotOrdered[WeightedBallot]
+  with NewWinnersNotOrdered[Ballot]
   with SimpleSurplusDistributionTieResolution // not necessary because of NewWinnersNotOrdered
   with SimpleExclusion
   with UnfairExclusionTieResolutuim
@@ -18,7 +18,7 @@ class SimpleSTVMethod extends STV[WeightedBallot]
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  override def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int):   Report[WeightedBallot]  = {
+  override def runScrutiny(election: Election[Ballot], candidates: List[Candidate], numVacancies: Int):   Report[Ballot]  = {
    val quota = cutQuotaFraction(computeQuota(election.length, numVacancies))
    println("Quota = " + quota)
    result.setQuota(quota)
@@ -41,7 +41,7 @@ class SimpleSTVMethod extends STV[WeightedBallot]
   }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  override def winners(election: Election[WeightedBallot], ccandidates: List[Candidate],  numVacancies: Int): List[(Candidate, Rational)] = {
+  override def winners(election: Election[Ballot], ccandidates: List[Candidate],  numVacancies: Int): List[(Candidate, Rational)] = {
 
     println(" \n NEW RECURSIVE CALL \n")
 
@@ -84,7 +84,7 @@ class SimpleSTVMethod extends STV[WeightedBallot]
   }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-def surplusesDistribution(election: Election[WeightedBallot], numVacancies: Int): Election[WeightedBallot] = {
+def surplusesDistribution(election: Election[Ballot], numVacancies: Int): Election[Ballot] = {
   println("Distribution of surpluses.")
   var newElection = election
   while (result.getPendingWinners.nonEmpty){
@@ -96,7 +96,7 @@ def surplusesDistribution(election: Election[WeightedBallot], numVacancies: Int)
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- def tryToDistributeSurplusVotes(election: Election[WeightedBallot], winner: Candidate, ctotal:Rational): Election[WeightedBallot] = {
+ def tryToDistributeSurplusVotes(election: Election[Ballot], winner: Candidate, ctotal:Rational): Election[Ballot] = {
 
   val pendingWinners = result.getPendingWinners.map(x => x._1)
 
@@ -117,7 +117,7 @@ def surplusesDistribution(election: Election[WeightedBallot], numVacancies: Int)
 
  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
- def exclusion(election: Election[WeightedBallot], candidate: Candidate, numVacancies: Int): Election[WeightedBallot] = {
+ def exclusion(election: Election[Ballot], candidate: Candidate, numVacancies: Int): Election[Ballot] = {
    println("Exclusion of " + candidate)
    val ex = exclude(election, candidate, None, None)
    ex._1

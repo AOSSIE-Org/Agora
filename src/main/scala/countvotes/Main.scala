@@ -115,7 +115,7 @@ object Main extends RegexParsers {
         }
         case "Senate" => {
           val election = PreferencesParser.read(c.directory + electionFile)
-          val electionwithIds = for (b <- election) yield WeightedBallot(b.preferences, election.indexOf(b) + 1, Rational(1, 1))
+          val electionwithIds = for (b <- election) yield Ballot(b.preferences, election.indexOf(b) + 1, Rational(1, 1))
           var r = (new SenateMethod).runScrutiny(Election.weightedElectionToACTElection(electionwithIds), candidates_in_order, c.nvacancies.toInt)
           c.table match {
             case ACT => r.writeDistributionOfPreferencesACT(reportfile, Some(candidates_in_order))

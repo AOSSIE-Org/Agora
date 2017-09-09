@@ -9,20 +9,20 @@ package object structures {
 
   object Election {
 
-    lazy val totalWeightedVoters = (election: Election[WeightedBallot]) => {
+    lazy val totalWeightedVoters = (election: Election[Ballot]) => {
       election filter { _.preferences.nonEmpty} map {_.weight} reduce { _ + _ }
     }
 
-    implicit def weightedElectionToACTElection(we: Election[WeightedBallot]): Election[ACTBallot] = {
-      for (b <- we) yield ACTBallot.fromWeightedBallot(b) // b // ACTBallot.fromWeightedBallot(b)
+    implicit def weightedElectionToACTElection(we: Election[Ballot]): Election[ACTBallot] = {
+      for (b <- we) yield ACTBallot.fromBallot(b) // b // ACTBallot.fromBallot(b)
     }
 
-    implicit def rankedElectionToWeightedElection(re: Election[RankedWeightedBallot]): Election[WeightedBallot] = {
-      for (b <- re) yield RankedWeightedBallot.toWeightedBallot(b)
+    implicit def rankedElectionToWeightedElection(re: Election[RankedBallot]): Election[Ballot] = {
+      for (b <- re) yield RankedBallot.toBallot(b)
     }
 
-    implicit def scoredElectionToWeightedElection(re: Election[ScoredWeightedBallot]): Election[WeightedBallot] = {
-      for (b <- re) yield ScoredWeightedBallot.toWeightedBallot(b)
+    implicit def scoredElectionToWeightedElection(re: Election[ScoredBallot]): Election[Ballot] = {
+      for (b <- re) yield ScoredBallot.toBallot(b)
     }
   }
 

@@ -110,25 +110,25 @@ trait SenateExclusion extends STV[ACTBallot] {
 }
 
 
-trait SimpleExclusion extends STV[WeightedBallot] {
+trait SimpleExclusion extends STV[Ballot] {
 
- def exclude(election: Election[WeightedBallot],
+ def exclude(election: Election[Ballot],
              candidate: Candidate,
              value: Option[Rational],
-             newWinners: Option[List[Candidate]]): (Election[WeightedBallot], Set[WeightedBallot] ) = {
-   var list: Election[WeightedBallot]  = Nil
-   var setExhausted: Set[WeightedBallot] = Set()
+             newWinners: Option[List[Candidate]]): (Election[Ballot], Set[Ballot] ) = {
+   var list: Election[Ballot]  = Nil
+   var setExhausted: Set[Ballot] = Set()
    for (b <- election if !b.preferences.isEmpty) {
       if (b.preferences.head == candidate ) {
         if (b.preferences.tail.nonEmpty) {
-          list = WeightedBallot(b.preferences.tail,  b.id,  b.weight)::list
+          list = new Ballot(b.preferences.tail,  b.id,  b.weight)::list
         }
         else {
           setExhausted += b
         }
       }
       else {
-        list = WeightedBallot(b.preferences.head :: b.preferences.tail filter {
+        list = new Ballot(b.preferences.head :: b.preferences.tail filter {
           _ != candidate
         }, b.id, b.weight) :: list
       }
@@ -140,11 +140,11 @@ trait SimpleExclusion extends STV[WeightedBallot] {
 
 trait SimpleExclusionWithFixedElectionSize  {
   // Removes the candidate from the ballot but does not reduce the election size by removing empty ballots
-  def exclude(election: Election[WeightedBallot],
-              candidate: Candidate): Election[WeightedBallot] = {
+  def exclude(election: Election[Ballot],
+              candidate: Candidate): Election[Ballot] = {
     election map { b =>
       val newPrefs = b.preferences filter { _ != candidate }
-      WeightedBallot(newPrefs, b.id, b.weight)
+      new Ballot(newPrefs, b.id, b.weight)
     }
   }
 }

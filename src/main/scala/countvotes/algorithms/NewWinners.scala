@@ -6,7 +6,7 @@ import collection.mutable.{HashMap => Map}
 
 
 
-trait NewWinnersOrderedByTotals[B <: Ballot with Weight] extends STV[B] with SurplusDistributionTieResolution{
+trait NewWinnersOrderedByTotals[B <: Ballot] extends STV[B] with SurplusDistributionTieResolution{
   def returnNewWinners(totals: Map[Candidate, Rational], quota: Rational): List[(Candidate,Rational)] = {
     val ws = totals.clone().retain((k,v) => v >= quota)
     // val lws = ws.toSeq.sortWith(_._2 < _._2).toList
@@ -18,7 +18,7 @@ trait NewWinnersOrderedByTotals[B <: Ballot with Weight] extends STV[B] with Sur
 
 
 
-trait NewWinnersNotOrdered[B <: Ballot with Weight] extends STV[B]{
+trait NewWinnersNotOrdered[B <: Ballot] extends STV[B]{
   def returnNewWinners(totals: Map[Candidate, Rational], quota: Rational): List[(Candidate,Rational)] = {
     totals.clone().retain((k,v) => v >= quota).toList
   }

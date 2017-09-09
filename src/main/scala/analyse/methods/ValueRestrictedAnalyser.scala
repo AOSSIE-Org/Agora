@@ -1,12 +1,12 @@
 package analyse.methods
 
-import countvotes.structures.{Candidate, Election, WeightedBallot}
+import countvotes.structures.{Candidate, Election, Ballot}
 
 /**
   * This analyser analyses for Sen's Value restricted preferences
   * source link : https://www.youtube.com/watch?v=F51U9Sv9QNo&t=26s
   */
-object ValueRestrictedAnalyser extends PreferenceAnalysisMethod[WeightedBallot] {
+object ValueRestrictedAnalyser extends PreferenceAnalysisMethod[Ballot] {
 
   /**
     * assumption : voters preference relations are complete over set of candidates.
@@ -18,7 +18,7 @@ object ValueRestrictedAnalyser extends PreferenceAnalysisMethod[WeightedBallot] 
     * @param ccandidates => candidates list
     * @return
     */
-  override def analyse(election: Election[WeightedBallot], ccandidates: List[Candidate]): Boolean = {
+  override def analyse(election: Election[Ballot], ccandidates: List[Candidate]): Boolean = {
 
 
     require(election forall (b => b.preferences.length == ccandidates.length))
@@ -66,7 +66,7 @@ object ValueRestrictedAnalyser extends PreferenceAnalysisMethod[WeightedBallot] 
     * @param triplet  a triplet of candidate against which we want to check value restructed preferences
     * @param election election file
     */
-  def valueRestrictedTriplet(triplet: List[Candidate], election: Election[WeightedBallot]): Boolean = {
+  def valueRestrictedTriplet(triplet: List[Candidate], election: Election[Ballot]): Boolean = {
 
     val tripletRankings = Array.ofDim[Int](3, 3)
 

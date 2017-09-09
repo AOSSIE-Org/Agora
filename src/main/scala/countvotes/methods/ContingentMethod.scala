@@ -8,11 +8,11 @@ import scala.collection.mutable.{HashMap => MMap}
 /**
   * https://en.wikipedia.org/wiki/Contingent_vote
   */
-object ContingentMethod extends Scrutiny[WeightedBallot] {
+object ContingentMethod extends Scrutiny[Ballot] {
 
   val majorityThreshold = Rational(1, 2)
 
-  override def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
+  override def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
     val tls = totals(election, ccandidates)
     val ctSorted: List[(Candidate, Rational)] = tls.toList.sortWith(_._2 > _._2)
     if (ctSorted.head._2 > majorityThreshold * election.length) {

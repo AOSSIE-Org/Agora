@@ -14,9 +14,9 @@ import scala.language.postfixOps
   * x covers y (x C y) if D(y) is a subset of D(x)
   * where D(x) = { y ⍷ A | x >(majority) y}
   */
-object UncoveredSetMethod extends Scrutiny[WeightedBallot] with LazyLogging {
+object UncoveredSetMethod extends Scrutiny[Ballot] with LazyLogging {
 
-  override def winners(e: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
+  override def winners(e: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 
     logger.info("Computing Uncovered Set")
     val zeroRational = Rational(0, 1)

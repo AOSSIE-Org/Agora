@@ -9,11 +9,11 @@ import scala.collection.mutable.{HashMap => MMap}
   * https://en.wikipedia.org/wiki/Preferential_block_voting
   */
 
-object PreferentialBlockVoting extends Scrutiny[WeightedBallot] {
+object PreferentialBlockVoting extends Scrutiny[Ballot] {
 
   val majorityThreshold = Rational(1, 2)
 
-  override def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
+  override def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
     var winnerlist: List[(Candidate, Rational)] = Nil
     var vacancies = numVacancies
     var ccandidates1 = ccandidates

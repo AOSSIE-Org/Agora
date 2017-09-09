@@ -7,9 +7,9 @@ import scala.language.postfixOps
 /**
   * Algorithm : http://wiki.electorama.com/wiki/Maximal_elements_algorithms#Floyd-Warshall_algorithm
   */
-object SmithSetMethod extends Scrutiny[WeightedBallot] {
+object SmithSetMethod extends Scrutiny[Ballot] {
 
-  override def winners(e: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
+  override def winners(e: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 
     val pairWiseComp = getPairwiseComparisonForWeightedElection(e, ccandidates)
 
@@ -30,7 +30,7 @@ object SmithSetMethod extends Scrutiny[WeightedBallot] {
     * @param pairWiseComp
     * @return
     */
-  def getRelationMatrix(election: Election[WeightedBallot], ccandidates: List[Candidate], pairWiseComp: Array[Array[Rational]]): Array[Array[Boolean]] = {
+  def getRelationMatrix(election: Election[Ballot], ccandidates: List[Candidate], pairWiseComp: Array[Array[Rational]]): Array[Array[Boolean]] = {
 
     val relationMatrix = BaseMatrix[Boolean](ccandidates.size, ccandidates.size){(i: Int, j: Int) => false}
 

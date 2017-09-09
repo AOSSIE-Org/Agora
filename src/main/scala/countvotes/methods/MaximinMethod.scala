@@ -9,14 +9,14 @@ import collection.mutable.{ListBuffer, HashMap => MMap}
   * Algorithm : https://www.cs.cmu.edu/~arielpro/mfai_papers/lecture6.pdf page-4
   * Variant : winning votes => W = \arg \min_X ( \max_Y score(Y, X))
   */
-object MaximinMethod extends VoteCounter[WeightedBallot] with LazyLogging{
+object MaximinMethod extends VoteCounter[Ballot] with LazyLogging{
 
   private val result: Result = new Result
-  private val report: Report[WeightedBallot] = new Report[WeightedBallot]
+  private val report: Report[Ballot] = new Report[Ballot]
   private val rational0 = Rational(0, 1)
   private val majorityThreshold = Rational(1, 2)
 
-  def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int): Report[WeightedBallot] = {
+  def runScrutiny(election: Election[Ballot], candidates: List[Candidate], numVacancies: Int): Report[Ballot] = {
 
     print("\n INPUT ELECTION: \n")
     printElection(election)
@@ -28,7 +28,7 @@ object MaximinMethod extends VoteCounter[WeightedBallot] with LazyLogging{
     report
   }
 
-  def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int):
+  def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int):
   List[(Candidate, Rational)] = {
 
     logger.info("Computing maximin Condorcet Winner")
@@ -41,7 +41,7 @@ object MaximinMethod extends VoteCounter[WeightedBallot] with LazyLogging{
 
   }
 
-  def getMaximinScores(pairwiseComparisons: Array[Array[Rational]], ccandidates: List[Candidate], election: Election[WeightedBallot]): MMap[Candidate, Rational] = {
+  def getMaximinScores(pairwiseComparisons: Array[Array[Rational]], ccandidates: List[Candidate], election: Election[Ballot]): MMap[Candidate, Rational] = {
 
     val maximinScores = new MMap[Candidate, Rational]
 

@@ -8,14 +8,14 @@ import scala.util.Random
 /**
   * Algorithm : https://en.wikipedia.org/wiki/Random_ballot
   */
-object RandomBallotMethod extends Scrutiny[WeightedBallot] with LazyLogging {
+object RandomBallotMethod extends Scrutiny[Ballot] with LazyLogging {
 
-  override def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
+  override def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 
     randomBallotWinner(election, ccandidates, numVacancies, None)
   }
 
-  def randomBallotWinner(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int,
+  def randomBallotWinner(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int,
                          seed: Option[Int]): List[(Candidate, Rational)] = {
 
     logger.info("computing random ballot winner")

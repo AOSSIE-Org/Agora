@@ -2,7 +2,7 @@ package countvotes.structures
 
 import collection.mutable.{HashMap => Map}
 
-class Count[B <: Ballot with Weight]  {
+class Count[B <: Ballot]  {
 
     private var action: Option[Actions] = None
 

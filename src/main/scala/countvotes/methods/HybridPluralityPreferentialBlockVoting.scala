@@ -9,9 +9,9 @@ import scala.collection.mutable.{HashMap => MMap}
   * https://en.wikipedia.org/wiki/Preferential_block_voting
   */
 
-object HybridPluralityPreferentialBlockVoting extends Scrutiny[WeightedBallot] {
+object HybridPluralityPreferentialBlockVoting extends Scrutiny[Ballot] {
 
-  def totalsForFirstNVacancies(election: Election[WeightedBallot],ccandidates: List[Candidate], numVacancies: Int): MMap[Candidate,Rational] = {
+  def totalsForFirstNVacancies(election: Election[Ballot],ccandidates: List[Candidate], numVacancies: Int): MMap[Candidate,Rational] = {
     //calculates the totals for first n candidates where n is equal to number of vacancies
     var m = new MMap[Candidate, Rational]
     for(b<-election if !b.preferences.isEmpty){
@@ -22,17 +22,17 @@ object HybridPluralityPreferentialBlockVoting extends Scrutiny[WeightedBallot] {
     m
   }
 
-  def exclude(election: Election[WeightedBallot],ccandidate: Candidate) : Election[WeightedBallot] ={
-    var list: Election[WeightedBallot] = Nil
+  def exclude(election: Election[Ballot],ccandidate: Candidate) : Election[Ballot] ={
+    var list: Election[Ballot] = Nil
     for(b<-election if !b.preferences.isEmpty){
-      list = WeightedBallot(b.preferences.filter(_!=ccandidate), b.id, b.weight) :: list
+      list = new Ballot(b.preferences.filter(_!=ccandidate), b.id, b.weight) :: list
     }
     list
   }
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  override def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
+  override def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
     var winnerlist: List[(Candidate, Rational)] = Nil
     var election1 = election
     var ccandidates1 = ccandidates

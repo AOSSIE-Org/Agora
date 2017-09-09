@@ -7,13 +7,13 @@ import scala.collection.mutable.{HashMap => Map}
 /**
   * Created by deepeshpandey on 10/03/17.
   */
-object KemenyYoungMethod extends Scrutiny[WeightedBallot] {
+object KemenyYoungMethod extends Scrutiny[Ballot] {
 
   private val rationalZero = Rational(0, 1)
 
   // scalastyle:off cyclomatic.complexity
   // scalastyle:off method.length
-  def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int):
+  def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int):
   List[(Candidate, Rational)] = {
 
     var tallyTable = new Map[Map[Candidate, Candidate], Integer]

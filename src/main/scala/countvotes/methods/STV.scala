@@ -6,7 +6,7 @@ import countvotes.structures._
 import scala.collection.mutable.{HashMap => Map}
 
 
-abstract class STV[B <: Ballot with Weight] extends Scrutiny[B] {
+abstract class STV[B <: Ballot] extends Scrutiny[B] {
   //type E = Election[B]
 
   def computeQuota(numVotes: Int, numVacancies: Int): Rational
@@ -49,7 +49,7 @@ abstract class STV[B <: Ballot with Weight] extends Scrutiny[B] {
     sum
   }
 
-  def computeTotal(election: Election[WeightedBallot], candidate: Candidate): Rational = {
+  def computeTotal(election: Election[B], candidate: Candidate): Rational = {
      var r: Rational = 0
      for (b <- election if (!b.preferences.isEmpty && b.preferences.head == candidate) )
        r = r + b.weight

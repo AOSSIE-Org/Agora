@@ -158,30 +158,30 @@ trait ACTScrutinyWithAllContinuingBallotsInSurplusDistribution extends STV[ACTBa
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-trait ScrutinyWithAllContinuingBallotsInSurplusDistribution extends STV[WeightedBallot]{
+trait ScrutinyWithAllContinuingBallotsInSurplusDistribution extends STV[Ballot]{
 
- def distributeSurplusVotes(election: Election[WeightedBallot],
+ def distributeSurplusVotes(election: Election[Ballot],
                             candidate: Candidate, total:Rational,
                             markings: Option[Set[Int]],
                             pendingWinners: List[Candidate],
-                            transferValue: Rational):  (Election[WeightedBallot], Set[WeightedBallot], Option[Election[WeightedBallot]]) = {
+                            transferValue: Rational):  (Election[Ballot], Set[Ballot], Option[Election[Ballot]]) = {
 
-    var list: Election[WeightedBallot] = Nil
-    var setExhausted: Set[WeightedBallot] = Set()
+    var list: Election[Ballot] = Nil
+    var setExhausted: Set[Ballot] = Set()
 
     for (b <- election if !b.preferences.isEmpty){
 
         if (b.preferences.head == candidate) {
           val continuingPreferences = filterPreferences(b.preferences.tail, candidate::pendingWinners)
           if (continuingPreferences.nonEmpty) {
-            list = WeightedBallot(continuingPreferences, b.id,  b.weight * transferValue)::list
+            list = new Ballot(continuingPreferences, b.id,  b.weight * transferValue)::list
           }
           else {
             setExhausted += b  // this ballot is exhausted
           }
         }
         else {
-          list = WeightedBallot(b.preferences.head :: filterPreferences(b.preferences.tail filter {
+          list = new Ballot(b.preferences.head :: filterPreferences(b.preferences.tail filter {
             _ != candidate
           }, pendingWinners), b.id, b.weight) :: list
         }
@@ -195,30 +195,30 @@ trait ScrutinyWithAllContinuingBallotsInSurplusDistribution extends STV[Weighted
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-trait ScrutinyWithAllBallotsInSurplusDistribution extends STV[WeightedBallot]{
+trait ScrutinyWithAllBallotsInSurplusDistribution extends STV[Ballot]{
 
- def distributeSurplusVotes(election: Election[WeightedBallot],
+ def distributeSurplusVotes(election: Election[Ballot],
                             candidate: Candidate,
                             total:Rational,
                             markings: Option[Set[Int]],
                             pendingWinners: List[Candidate],
-                            transferValue: Rational):  (Election[WeightedBallot], Set[WeightedBallot], Option[Election[WeightedBallot]]) = {
+                            transferValue: Rational):  (Election[Ballot], Set[Ballot], Option[Election[Ballot]]) = {
 
-    var list: Election[WeightedBallot] = Nil
-    var setExhausted: Set[WeightedBallot] = Set()
+    var list: Election[Ballot] = Nil
+    var setExhausted: Set[Ballot] = Set()
 
     for (b <- election if !b.preferences.isEmpty){
 
         if (b.preferences.head == candidate) {
           if (b.preferences.tail.nonEmpty) {
-            list = WeightedBallot(b.preferences.tail, b.id,  b.weight * transferValue)::list
+            list = new Ballot(b.preferences.tail, b.id,  b.weight * transferValue)::list
           }
           else {
             setExhausted += b  // this ballot is exhausted
           }
         }
         else {
-          list = WeightedBallot(b.preferences.head :: b.preferences.tail filter {
+          list = new Ballot(b.preferences.head :: b.preferences.tail filter {
             _ != candidate
           }, b.id, b.weight) :: list
         }

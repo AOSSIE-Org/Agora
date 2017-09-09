@@ -11,24 +11,24 @@ import scala.collection.mutable.{HashMap => MMap}
   */
 
 
-object SequentialProportionalApprovalVoting extends Scrutiny[WeightedBallot]
+object SequentialProportionalApprovalVoting extends Scrutiny[Ballot]
   with SimpleApproval {
 
   // following function removes winner and reduces weight on ballot to 1/(N+1)
   // where N is the number of winners in one single ballot choice list
-  def excludeWinner(election: Election[WeightedBallot], winner: (Candidate, Rational)): Election[WeightedBallot] = {
-    var newElection: Election[WeightedBallot]  = Nil
+  def excludeWinner(election: Election[Ballot], winner: (Candidate, Rational)): Election[Ballot] = {
+    var newElection: Election[Ballot]  = Nil
     for(b<-election) {
       if(b.preferences.contains(winner._1)) {
-        newElection = WeightedBallot(b.preferences.filter(_ != winner._1), b.id, Rational(b.weight.numerator, b.weight.denominator + 1)) :: newElection
+        newElection = new Ballot(b.preferences.filter(_ != winner._1), b.id, Rational(b.weight.numerator, b.weight.denominator + 1)) :: newElection
       } else {
-        newElection = WeightedBallot(b.preferences, b.id, b.weight) :: newElection
+        newElection = new Ballot(b.preferences, b.id, b.weight) :: newElection
       }
     }
     newElection
   }
 
-  def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int ):
+  def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int ):
   List[(Candidate,Rational)] = {
     var winnerList: List[(Candidate, Rational)] = Nil
     var election1 = election

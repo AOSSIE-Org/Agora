@@ -8,9 +8,9 @@ import scala.collection.mutable.{HashMap => Map}
 /**
   * Created by deepeshpandey on 09/03/17.
   */
-object BaldwinMethod extends Scrutiny[WeightedBallot] with LazyLogging {
+object BaldwinMethod extends Scrutiny[Ballot] with LazyLogging {
 
-  def bordaScores(election: Election[WeightedBallot], candidates: List[Candidate]): Map[Candidate, Rational] = {
+  def bordaScores(election: Election[Ballot], candidates: List[Candidate]): Map[Candidate, Rational] = {
     val m = new Map[Candidate, Rational]
 
     for (b <- election if !b.preferences.isEmpty) {
@@ -24,7 +24,7 @@ object BaldwinMethod extends Scrutiny[WeightedBallot] with LazyLogging {
     m
   }
 
-  def winners(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int):
+  def winners(election: Election[Ballot], candidates: List[Candidate], numVacancies: Int):
   List[(Candidate, Rational)] = {
 
     logger.info("Baldwin rule method called")

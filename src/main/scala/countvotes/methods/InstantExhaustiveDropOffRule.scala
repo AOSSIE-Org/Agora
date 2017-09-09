@@ -8,7 +8,7 @@ import countvotes.structures._
   * https://en.wikipedia.org/wiki/Exhaustive_ballot#Notes
   */
 
-object InstantExhaustiveDropOffRule extends Scrutiny[WeightedBallot]
+object InstantExhaustiveDropOffRule extends Scrutiny[Ballot]
   with SimpleExclusionWithFixedElectionSize{
 
   var dropOffPercentage = Rational(0, 100)
@@ -29,7 +29,7 @@ object InstantExhaustiveDropOffRule extends Scrutiny[WeightedBallot]
     }
   }
 
-  override def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
+  override def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 
     val majorityRational = Rational(1, 2)
     val incrememtSize = 5 // drop off percentage increases by 5% in each round of elimination till 25%

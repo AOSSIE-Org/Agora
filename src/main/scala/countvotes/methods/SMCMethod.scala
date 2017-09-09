@@ -1,7 +1,7 @@
 package countvotes.methods
 
 import com.typesafe.scalalogging.LazyLogging
-import countvotes.structures.{WeightedBallot, _}
+import countvotes.structures.{Ballot, _}
 
 
 /**
@@ -11,9 +11,9 @@ import countvotes.structures.{WeightedBallot, _}
   * round i, if w >(majority) xi+1, and is xi+1, if xi+1 >(majority) w; and the ultimate winner is the winner
   * of round m.
   */
-object SMCMethod extends Scrutiny[WeightedBallot] with LazyLogging {
+object SMCMethod extends Scrutiny[Ballot] with LazyLogging {
 
-  def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], param: Parameters, numVacancies: Int): Report[WeightedBallot] = {
+  def runScrutiny(election: Election[Ballot], candidates: List[Candidate], param: Parameters, numVacancies: Int): Report[Ballot] = {
 
     print("\n INPUT ELECTION: \n")
     printElection(election)
@@ -25,7 +25,7 @@ object SMCMethod extends Scrutiny[WeightedBallot] with LazyLogging {
     report
   }
 
-  def smcWinner(election: Election[WeightedBallot], ccandidates: List[Candidate], param: Parameters, numVacancies: Int):
+  def smcWinner(election: Election[Ballot], ccandidates: List[Candidate], param: Parameters, numVacancies: Int):
   List[(Candidate, Rational)] = {
 
     // it may be possible that param candidates and actual candidates are inconsistent
@@ -46,5 +46,5 @@ object SMCMethod extends Scrutiny[WeightedBallot] with LazyLogging {
 
   }
 
-  override def winners(e: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = ???
+  override def winners(e: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = ???
 }

@@ -2,11 +2,11 @@ package countvotes.methods
 
 import countvotes.structures._
 
-object MajorityRuleMethod extends MajorityRule[WeightedBallot] {
+object MajorityRuleMethod extends MajorityRule[Ballot] {
 
   // TODO: There is an implicit assumption here that all votes have weight 1.
   // Should this be checked?
-  def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int ):
+  def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int ):
   List[(Candidate,Rational)] = {
       totals(election, ccandidates).toList sortWith {
         (ct1, ct2) => ct1._2 > ct2._2

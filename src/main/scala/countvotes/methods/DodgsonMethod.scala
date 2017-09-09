@@ -7,12 +7,12 @@ import collection.mutable.{HashMap => MMap}
   * Wiki : https://en.wikipedia.org/wiki/Dodgson%27s_method
   * Implementation : http://infosyncratic.nl/talks/2008-votingprocedures.pdf
   */
-object DodgsonMethod extends VoteCounter[WeightedBallot] {
+object DodgsonMethod extends VoteCounter[Ballot] {
 
   private val result: Result = new Result
-  private val report: Report[WeightedBallot] = new Report[WeightedBallot]
+  private val report: Report[Ballot] = new Report[Ballot]
 
-  def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int): Report[WeightedBallot] = {
+  def runScrutiny(election: Election[Ballot], candidates: List[Candidate], numVacancies: Int): Report[Ballot] = {
 
     require(election forall(b => b.weight.denominator == 1) )
 
@@ -26,7 +26,7 @@ object DodgsonMethod extends VoteCounter[WeightedBallot] {
     report
   }
 
-  override def winners(e: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
+  override def winners(e: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 
     // find flip vector from min sum to max sum which satisfies condorcet condition
     val minDodgsonFlipList = List.fill(Election.totalWeightedVoters(e).toInt)(0 to ccandidates.length)
@@ -50,7 +50,7 @@ object DodgsonMethod extends VoteCounter[WeightedBallot] {
   }
 
 
-  def getCondorcetWinnerIfExist(list: List[Int], candidates: List[Candidate], election: Election[WeightedBallot]): Option[Candidate] = {
+  def getCondorcetWinnerIfExist(list: List[Int], candidates: List[Candidate], election: Election[Ballot]): Option[Candidate] = {
 
     val dodgsonWinner = candidates.find(c => getCandidateMajorityArray(election, c, list, candidates) match {
       case Some(matrix) => isCondorcetWinner(c, candidates, matrix, Election.totalWeightedVoters(election).toInt)
@@ -62,7 +62,7 @@ object DodgsonMethod extends VoteCounter[WeightedBallot] {
 
   // returns an array where the value at index i represents total votes to param candidate against candidates(i)
   // this is all required to calculate if the param candidate is condorcet winner or not
-  def getCandidateMajorityArray(election: Election[WeightedBallot], candidate: Candidate, flipVector: List[Int],
+  def getCandidateMajorityArray(election: Election[Ballot], candidate: Candidate, flipVector: List[Int],
                                 candidates: List[Candidate]): Option[Array[Int]] = {
 
     val dispersedElection = dispersed(election)
@@ -95,11 +95,11 @@ object DodgsonMethod extends VoteCounter[WeightedBallot] {
     }
   }
 
-  private val cache = new MMap[Election[WeightedBallot], Election[WeightedBallot]]()
+  private val cache = new MMap[Election[Ballot], Election[Ballot]]()
 
-  def dispersed(election: Election[WeightedBallot]): Election[WeightedBallot] = {
+  def dispersed(election: Election[Ballot]): Election[Ballot] = {
 
-    def disperseUtil(election: Election[WeightedBallot]) = {
+    def disperseUtil(election: Election[Ballot]) = {
       for {
         b <- election
         i <- 1 to b.weight.toInt

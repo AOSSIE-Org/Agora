@@ -9,10 +9,10 @@ import countvotes.structures._
 import countvotes.algorithms._
 import collection.mutable.{HashMap => MMap}
 
-object MeekSTV extends STV[WeightedBallot]
+object MeekSTV extends STV[Ballot]
   with DroopQuota // Imp
   with NoFractionInQuota // Imp
-  with NewWinnersNotOrdered[WeightedBallot]
+  with NewWinnersNotOrdered[Ballot]
   with SimpleSurplusDistributionTieResolution // not necessary because of NewWinnersNotOrdered
   with SimpleExclusion
   with UnfairExclusionTieResolutuim
@@ -23,7 +23,7 @@ object MeekSTV extends STV[WeightedBallot]
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  override def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int): Report[WeightedBallot] = {
+  override def runScrutiny(election: Election[Ballot], candidates: List[Candidate], numVacancies: Int): Report[Ballot] = {
 
     print("\n INPUT ELECTION: \n")
     printElection(election)
@@ -41,7 +41,7 @@ object MeekSTV extends STV[WeightedBallot]
     report
   }
 
-  def totalsMeek(election: Election[WeightedBallot], ccandidates: List[Candidate], keepFactor: MMap[Candidate, Rational]): MMap[Candidate, Rational] ={
+  def totalsMeek(election: Election[Ballot], ccandidates: List[Candidate], keepFactor: MMap[Candidate, Rational]): MMap[Candidate, Rational] ={
     val scoreMap = new MMap[Candidate, Rational]
 
     for(b<-election if !b.preferences.isEmpty) {
@@ -64,7 +64,7 @@ object MeekSTV extends STV[WeightedBallot]
     surplusAmount
   }
 
-  def winnersList(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int, keepFactor: MMap[Candidate, Rational]): List[(Candidate, Rational)] = {
+  def winnersList(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int, keepFactor: MMap[Candidate, Rational]): List[(Candidate, Rational)] = {
 
     println(" \n NEW RECURSIVE CALL \n")
 
@@ -98,7 +98,7 @@ object MeekSTV extends STV[WeightedBallot]
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  override def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
+  override def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
     val quota = cutQuotaFraction(computeQuota(election.length, numVacancies))
     //println("Quota = " + quota)
     result.setQuota(quota)

@@ -8,9 +8,9 @@ import scala.collection.mutable.{HashMap => MMap}
 /**
   * Algorithm : https://en.wikipedia.org/wiki/Copeland%27s_method
   */
-object CopelandMethod extends Scrutiny[WeightedBallot] with LazyLogging {
+object CopelandMethod extends Scrutiny[Ballot] with LazyLogging {
 
-  def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
+  def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 
     logger.info("Computing Copeland winner")
 

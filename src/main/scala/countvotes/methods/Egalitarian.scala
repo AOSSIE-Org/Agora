@@ -4,7 +4,7 @@ import countvotes.structures._
 
 import scala.math._
 
-abstract class Egalitarian[B <: WeightedBallot with Weight] extends Scrutiny[B] {
+abstract class Egalitarian[B <: Ballot] extends Scrutiny[B] {
   val fairness: Double = 2
   var allCandidates: List[Candidate];
 

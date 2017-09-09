@@ -2,17 +2,17 @@ package countvotes.methods
 
 import countvotes.structures._
 
-object EgalitarianMethod extends Egalitarian[WeightedBallot] {
+object EgalitarianMethod extends Egalitarian[Ballot] {
   var allCandidates: List[Candidate] = List.empty
 
-  override def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int):  Report[WeightedBallot] = {
+  override def runScrutiny(election: Election[Ballot], candidates: List[Candidate], numVacancies: Int):  Report[Ballot] = {
     allCandidates = candidates
-    println("Number of WeightedBallots: " + election.length)
+    println("Number of Ballots: " + election.length)
     report.setWinners(winners(election, allCandidates, numVacancies))
     report
   }
 
-  def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)] = {
+  def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)] = {
     val candidateCount: Int = allCandidates.length
 
     val candidateSubsets: List[List[Candidate]] = getCandidateSubsets(ccandidates,candidateCount,List.empty,0,numVacancies)

@@ -7,10 +7,10 @@ import countvotes.structures._
   * https://en.wikipedia.org/wiki/Exhaustive_ballot
   */
 
-object InstantExhaustiveBallot extends Scrutiny[WeightedBallot]
+object InstantExhaustiveBallot extends Scrutiny[Ballot]
   with SimpleExclusionWithFixedElectionSize {
 
-  override def winners(election: Election[WeightedBallot], ccandidates: List[Candidate],  numVacancies: Int): List[(Candidate, Rational)] = {
+  override def winners(election: Election[Ballot], ccandidates: List[Candidate],  numVacancies: Int): List[(Candidate, Rational)] = {
 
     val ct = totals(election,ccandidates)
     val sortedCandList = ct.toList.sortWith(_._2 < _._2)

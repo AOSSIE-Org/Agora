@@ -9,9 +9,9 @@ import scala.collection.mutable.{HashMap => MMap}
   * Note: This variant sums the score of candidates over all voters
   * TODO: Variant where average score of a candidate is used to compute the winner
   */
-object RangeVoting extends Scrutiny[ScoredWeightedBallot] {
+object RangeVoting extends Scrutiny[ScoredBallot] {
 
-  def winners(election: Election[ScoredWeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
+  def winners(election: Election[ScoredBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 
     val candidateScores = new MMap[Candidate, Rational]
 

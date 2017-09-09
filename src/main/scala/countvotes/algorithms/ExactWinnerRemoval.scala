@@ -36,14 +36,14 @@ trait SenateExactWinnerRemoval extends STV[ACTBallot]{
 
 
 
-trait ExactWinnerRemoval extends STV[WeightedBallot]{
+trait ExactWinnerRemoval extends STV[Ballot]{
 
 
-  def removeWinnerWithoutSurplusFromElection(election: Election[WeightedBallot], winner: Candidate): Election[WeightedBallot] = {
-   var list: Election[WeightedBallot] = Nil
+  def removeWinnerWithoutSurplusFromElection(election: Election[Ballot], winner: Candidate): Election[Ballot] = {
+   var list: Election[Ballot] = Nil
    for (b <- election if !b.preferences.isEmpty)
       if (b.preferences.head.name != winner.name) {
-        list =  WeightedBallot(filterPreferences(b.preferences, winner::List()),  b.id,  b.weight)::list
+        list =  Ballot(filterPreferences(b.preferences, winner::List()),  b.id,  b.weight)::list
       }
    list
   }

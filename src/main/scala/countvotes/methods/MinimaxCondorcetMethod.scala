@@ -9,12 +9,12 @@ import scala.collection.mutable.{HashMap => MMap}
   * Algorithm : https://en.wikipedia.org/wiki/Minimax_Condorcet
   * Variant : winning votes => W = \arg \min_X ( \max_Y score(Y, X))
   */
-object MinimaxCondorcetMethod extends Scrutiny[WeightedBallot] with LazyLogging{
+object MinimaxCondorcetMethod extends Scrutiny[Ballot] with LazyLogging{
 
   private val rational0 = Rational(0, 1)
   private val majorityThreshold = Rational(1, 2)
 
-  def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int):
+  def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int):
   List[(Candidate, Rational)] = {
 
     logger.info("Computing minimax Condorcet Winner")

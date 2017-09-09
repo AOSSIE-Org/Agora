@@ -3,7 +3,7 @@ package compare
 import compare.extensions.{FishburnsExtension, KellyExtension}
 import analyse.methods.{SinglePeakAnalyser, ValueRestrictedAnalyser}
 import countvotes.parsers.{CandidatesParser, ParameterParser, PreferencesParser}
-import countvotes.structures.{Candidate, WeightedBallot}
+import countvotes.structures.{Candidate, Ballot}
 import countvotes.{Concise, ScrutinyTableFormats}
 
 object SetComparator {
@@ -54,7 +54,7 @@ object SetComparator {
   def main(args: Array[String]): Unit = {
 
 
-    def callMethod(c: CompareConfig, election: List[WeightedBallot], candidates_in_order:  List[Candidate]) = {
+    def callMethod(c: CompareConfig, election: List[Ballot], candidates_in_order:  List[Candidate]) = {
 
       c.method match {
         case "Kelly" => {

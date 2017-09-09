@@ -4,7 +4,7 @@ import java.io._
 
 import scala.collection.mutable.{HashMap => Map}
 
-  class Report[B <: Ballot with Weight] {
+  class Report[B <: Ballot] {
 
     private var countHistory : List[Count[B]] = Nil
     //private var totals: Map[Candidate, Rational] = Map()

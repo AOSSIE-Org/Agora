@@ -4,18 +4,18 @@ import countvotes.structures._
 
 import scala.collection.mutable.{HashMap => MMap}
 
-object EgalitarianDPMethod extends Egalitarian[WeightedBallot] {
+object EgalitarianDPMethod extends Egalitarian[Ballot] {
   val memo = new MMap[(Int,Set[Candidate]), List[Candidate]] ()
   var allCandidates: List[Candidate] = List.empty
 
-  override def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], numVacancies: Int):  Report[WeightedBallot] = {
+  override def runScrutiny(election: Election[Ballot], candidates: List[Candidate], numVacancies: Int):  Report[Ballot] = {
     allCandidates = candidates
-    println("Number of WeightedBallots: " + election.length)
+    println("Number of Ballots: " + election.length)
     report.setWinners(winners(election, candidates, numVacancies))
     report
   }
 
-  def winners(election: Election[WeightedBallot],  ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)] = {
+  def winners(election: Election[Ballot],  ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)] = {
     val candidateCount: Int = allCandidates.length
     if(candidateCount < numVacancies) {println("not enough candidates") }
 
@@ -29,7 +29,7 @@ object EgalitarianDPMethod extends Egalitarian[WeightedBallot] {
     candidatesForReturn
   }
 
-  def recursiveWinnersComputation(candidateList: List[Candidate], numVacancies: Int, election: Election[WeightedBallot]): List[Candidate] = numVacancies match {
+  def recursiveWinnersComputation(candidateList: List[Candidate], numVacancies: Int, election: Election[Ballot]): List[Candidate] = numVacancies match {
     case 0 => List.empty
     case n => {
       if(memo.contains((numVacancies,candidateList.toSet))){

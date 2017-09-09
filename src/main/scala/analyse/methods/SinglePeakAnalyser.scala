@@ -1,6 +1,6 @@
 package analyse.methods
 
-import countvotes.structures.{Candidate, Election, WeightedBallot}
+import countvotes.structures.{Candidate, Election, Ballot}
 
 import scala.collection.mutable.ListBuffer
 
@@ -8,9 +8,9 @@ import scala.collection.mutable.ListBuffer
   * Please check the last page of the pdf https://drive.google.com/file/d/0B4uPp6wWiMpSZ2FaTFFneGtJSDg/view
   * when preferences are single peaked there is always a unique condorcet winner
   */
-object SinglePeakAnalyser extends PreferenceAnalysisMethod[WeightedBallot] {
+object SinglePeakAnalyser extends PreferenceAnalysisMethod[Ballot] {
 
-  def analyse(election: Election[WeightedBallot], candidates: List[Candidate]): Boolean = {
+  def analyse(election: Election[Ballot], candidates: List[Candidate]): Boolean = {
 
     require(election.forall(b => b.preferences.size == candidates.size))
 
@@ -37,7 +37,7 @@ object SinglePeakAnalyser extends PreferenceAnalysisMethod[WeightedBallot] {
     * @param candidates
     * @return
     */
-  def getSinglePeakAxis(election: Election[WeightedBallot], candidates: List[Candidate]): Option[List[Candidate]] = {
+  def getSinglePeakAxis(election: Election[Ballot], candidates: List[Candidate]): Option[List[Candidate]] = {
 
     val B = election.map(_.preferences.last).distinct
 
@@ -68,7 +68,7 @@ object SinglePeakAnalyser extends PreferenceAnalysisMethod[WeightedBallot] {
     * @param candidates
     * @return
     */
-  def singlePeakAxisAux(left: ListBuffer[Candidate], right: ListBuffer[Candidate], election: Election[WeightedBallot],
+  def singlePeakAxisAux(left: ListBuffer[Candidate], right: ListBuffer[Candidate], election: Election[Ballot],
                         candidates: List[Candidate]): Option[List[Candidate]] = {
 
     if (candidates.isEmpty) {
@@ -118,7 +118,7 @@ object SinglePeakAnalyser extends PreferenceAnalysisMethod[WeightedBallot] {
     * @param candidates
     * @return
     */
-  def existNrxl(election: Election[WeightedBallot], x: Candidate, l: Option[Candidate], r: Option[Candidate],
+  def existNrxl(election: Election[Ballot], x: Candidate, l: Option[Candidate], r: Option[Candidate],
                 candidates: List[Candidate]): Boolean = {
 
     // get all the preferences where candidate x is last ranked
@@ -143,7 +143,7 @@ object SinglePeakAnalyser extends PreferenceAnalysisMethod[WeightedBallot] {
     * @param election - election
     * @return
     */
-  def isCompatibleAxis(axis: List[Candidate], election : Election[WeightedBallot]): Boolean = {
+  def isCompatibleAxis(axis: List[Candidate], election : Election[Ballot]): Boolean = {
 
     election.forall(b => {
 

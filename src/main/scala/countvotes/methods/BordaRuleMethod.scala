@@ -8,9 +8,9 @@ import scala.collection.mutable.{HashMap => Map}
 /**
   * Created by deepeshpandey on 07/03/17.
   */
-object BordaRuleMethod extends Scrutiny[WeightedBallot] with LazyLogging{
+object BordaRuleMethod extends Scrutiny[Ballot] with LazyLogging{
 
-  override def totals(election: Election[WeightedBallot], candidates: List[Candidate]): Map[Candidate, Rational] = {
+  override def totals(election: Election[Ballot], candidates: List[Candidate]): Map[Candidate, Rational] = {
     val m = new Map[Candidate, Rational]
     val totalCandidates = getCandidates(election).length
 
@@ -25,7 +25,7 @@ object BordaRuleMethod extends Scrutiny[WeightedBallot] with LazyLogging{
     m
   }
 
-  def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int ):
+  def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int ):
   List[(Candidate,Rational)] = {
 
 

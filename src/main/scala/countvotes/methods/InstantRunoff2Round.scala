@@ -12,9 +12,9 @@ import scala.collection.mutable.{HashMap => Map}
   * Assumptions : voters vote only once with preferential ballots
   * Rounds : only 2 as per 2-round voting
   */
-object InstantRunoff2Round extends Scrutiny[WeightedBallot] {
+object InstantRunoff2Round extends Scrutiny[Ballot] {
 
-  override def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
+  override def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 
     val majorityRational = Rational(1, 2)
     val rnd1Winners = totals(election, ccandidates).toList.sortWith(_._2 > _._2).take(2)
@@ -27,7 +27,7 @@ object InstantRunoff2Round extends Scrutiny[WeightedBallot] {
 
   }
 
-  def getSecondRoundWinner(election: Election[WeightedBallot], ccandidates: List[Candidate],
+  def getSecondRoundWinner(election: Election[Ballot], ccandidates: List[Candidate],
                            rnd1Winners: List[Candidate], totalVoters: Int, numVacancies: Int): List[(Candidate, Rational)] = {
 
     val m = new Map[Candidate, Rational]

@@ -8,9 +8,9 @@ import countvotes.structures._
   * Every tournament is zero-sum multiplayer game and  admits a unique probability distribution - due to Von Neumann's Minimax theorem(https://www.youtube.com/watch?v=toP9XPT7Bv4)
   * Bipartisan Set is defined as : BP(A,PM) = {x∈A : p(x)>0, p balanced for (A,PM)} where PM is majority graph
   */
-object BipartisanSet extends Scrutiny[WeightedBallot] {
+object BipartisanSet extends Scrutiny[Ballot] {
 
-  def runScrutiny(election: Election[WeightedBallot], candidates: List[Candidate], param: Parameters): Report[WeightedBallot] = {
+  def runScrutiny(election: Election[Ballot], candidates: List[Candidate], param: Parameters): Report[Ballot] = {
 
     print("\n INPUT ELECTION: \n")
     printElection(election)
@@ -23,7 +23,7 @@ object BipartisanSet extends Scrutiny[WeightedBallot] {
   }
 
   // scalastyle:off method.length
-  def bipartisanSet(election: Election[WeightedBallot], candidates: List[Candidate], parameters: Parameters): List[(Candidate, Rational)] = {
+  def bipartisanSet(election: Election[Ballot], candidates: List[Candidate], parameters: Parameters): List[(Candidate, Rational)] = {
 
     // check if the probability distribution is given for each candidate
     require(parameters.probabilityDistribution.isDefined && parameters.probabilityDistribution.get.length == candidates.length,
@@ -81,5 +81,5 @@ object BipartisanSet extends Scrutiny[WeightedBallot] {
   }
 
 
-  override def winners(e: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = ???
+  override def winners(e: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = ???
 }

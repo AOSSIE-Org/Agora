@@ -10,9 +10,9 @@ import scala.collection.mutable.{HashMap => MMap}
   */
 
 
-object SatisfactionApprovalVoting extends Scrutiny[WeightedBallot] {
+object SatisfactionApprovalVoting extends Scrutiny[Ballot] {
   
-  def winners(election: Election[WeightedBallot], ccandidates: List[Candidate], numVacancies: Int ):
+  def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int ):
   List[(Candidate,Rational)] = {
     // following code makes use of additive satisfcation property of Satisfaction Approval Voting
     val candidateScoreMap = new MMap[Candidate, Rational]

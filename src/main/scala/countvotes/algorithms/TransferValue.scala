@@ -118,9 +118,9 @@ trait TransferValueWithDenominatorWithNumOfAllContinuingBallotsOrOne extends STV
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 // TV = surplus /  total of continuing ballot papers (i.e. with further continuing preferences)
-trait TransferValueWithDenominatorWithTotalOfContinuingBallots extends STV[WeightedBallot]{
+trait TransferValueWithDenominatorWithTotalOfContinuingBallots extends STV[Ballot]{
   def computeTransferValue(surplus: Rational,
-                           election: Election[WeightedBallot],
+                           election: Election[Ballot],
                            pendingWinners:  List[Candidate],
                            candidate: Candidate, markings: Option[Set[Int]]): Rational = {
     var num:Rational = 0
@@ -137,9 +137,9 @@ trait TransferValueWithDenominatorWithTotalOfContinuingBallots extends STV[Weigh
 /*
  * TV =  surplus /  total
  * */
-trait TransferValueWithDenominatorEqualToTotal extends STV[WeightedBallot]{
+trait TransferValueWithDenominatorEqualToTotal extends STV[Ballot]{
   def computeTransferValue(surplus: Rational,
-                           election: Election[WeightedBallot],
+                           election: Election[Ballot],
                            pendingWinners:  List[Candidate],
                            candidate: Candidate, markings: Option[Set[Int]]): Rational = {
     surplus/computeTotal(election, candidate)

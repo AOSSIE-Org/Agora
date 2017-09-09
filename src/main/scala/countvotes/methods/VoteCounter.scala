@@ -4,7 +4,7 @@ import countvotes.structures._
 
 import scala.collection.mutable.{HashSet, HashMap => Map}
 
-abstract class VoteCounter[B <: Ballot with Weight] {
+abstract class VoteCounter[B <: Ballot] {
 
  def totals(election: Election[B], candidates: List[Candidate]): Map[Candidate, Rational] = {
     val m = new Map[Candidate, Rational]
@@ -60,7 +60,7 @@ abstract class VoteCounter[B <: Ballot with Weight] {
  }
 
   // utility method for matrix where a[i][j] = x means candidate i has got #x votes against candidate j
-  def getPairwiseComparisonForWeightedElection(election: Election[WeightedBallot], candidates: List[Candidate]): Array[Array[Rational]] = {
+  def getPairwiseComparisonForWeightedElection(election: Election[Ballot], candidates: List[Candidate]): Array[Array[Rational]] = {
 
     val zeroRational = Rational(0, 1)
     val responseMatrix = Array.fill(candidates.size, candidates.size)(Rational(0, 1))
@@ -78,7 +78,7 @@ abstract class VoteCounter[B <: Ballot with Weight] {
   def winners(e: Election[B], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)]
 }
 
-trait Scrutiny[B <: Ballot with Weight] extends VoteCounter[B] {
+trait Scrutiny[B <: Ballot] extends VoteCounter[B] {
 
   protected val result: Result = new Result
   protected val report: Report[B] = new Report[B]
