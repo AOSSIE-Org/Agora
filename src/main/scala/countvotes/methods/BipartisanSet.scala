@@ -12,8 +12,8 @@ object BipartisanSet extends Scrutiny[Ballot] {
 
   def runScrutiny(election: Election[Ballot], candidates: List[Candidate], param: Parameters): Report[Ballot] = {
 
-    print("\n INPUT ELECTION: \n")
-    printElection(election)
+    // print("\n INPUT ELECTION: \n")
+    // //printElection(election)
 
     report.setCandidates(candidates)
 

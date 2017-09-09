@@ -231,7 +231,7 @@ class SenateMethod extends STVAustralia
 
    println(" \n NEW RECURSIVE CALL \n")
 
-   printElection(election)
+   ////printElection(election)
 
    if (election.isEmpty){Nil}  // If all ballots are removed by the candidate who reached the quota exactly, the election will be empty.
    //                             For example (3 seats, quota=2):
@@ -246,7 +246,6 @@ class SenateMethod extends STVAustralia
    println("Continuing candidates: " + ccandidates)
 
    val tls = totals(election, ccandidates)
-   printTotal(tls)
 
    //result.addTotalsToHistory(tls)
 
@@ -383,7 +382,7 @@ class SenateMethod extends STVAustralia
     result.removePendingWinner(cand)
     val res = tryToDistributeSurplusVotes(newElection, ccandidates, cand, ctotal, markings)
       newElection = res._1
-      printElection(newElection)
+      ////printElection(newElection)
       newws = newws ::: res._2
       println("Are there pending candidates? " + result.getPendingWinners.nonEmpty)
    }
@@ -404,7 +403,7 @@ class SenateMethod extends STVAustralia
       val newElection = removeWinnerWithoutSurplusFromElection(election, winner)
       result.removePendingWinner(winner)
       println("Candidate with exact total is eliminated: " + winner)
-      //printElection(newElection)
+      ////printElection(newElection)
       (newElection, List())
    }
   else
@@ -418,7 +417,7 @@ class SenateMethod extends STVAustralia
     //  else
     {
 
-    printElection(election)
+    ////printElection(election)
 
     println("Distributing the surplus of " + winner)
 
@@ -447,7 +446,7 @@ class SenateMethod extends STVAustralia
     result.addTotalsToHistory(newtotalsWithoutFractionWithoutpendingwinners)
     var ws = declareNewWinnersWhileDistributingSurpluses(newtotalsWithoutFractionWithoutpendingwinners,newElection)
 
-        printElection(newElection)
+        ////printElection(newElection)
 
      //------------ Reporting ------------------------------------------
     if (ws.nonEmpty) {
@@ -517,7 +516,6 @@ class SenateMethod extends STVAustralia
          // excluding winners that are already identified in the while-loop
 
          result.addTotalsToHistory(totalsWithoutNewWinners)
-         printTotal(totalsWithoutNewWinners)
 
          newws =
            declareNewWinnersWhileExcluding(

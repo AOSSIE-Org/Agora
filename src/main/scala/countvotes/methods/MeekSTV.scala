@@ -26,7 +26,7 @@ object MeekSTV extends STV[Ballot]
   override def runScrutiny(election: Election[Ballot], candidates: List[Candidate], numVacancies: Int): Report[Ballot] = {
 
     print("\n INPUT ELECTION: \n")
-    printElection(election)
+    //printElection(election)
 
     val tls = totals(election, candidates) // Here are totals of candidates also not OCCURING in the ballots
     result.addTotalsToHistory(tls)

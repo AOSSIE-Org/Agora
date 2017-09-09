@@ -16,8 +16,8 @@ object DodgsonMethod extends VoteCounter[Ballot] {
 
     require(election forall(b => b.weight.denominator == 1) )
 
-    print("\n INPUT ELECTION: \n")
-    printElection(election)
+    //print("\n INPUT ELECTION: \n")
+    ////printElection(election)
 
     report.setCandidates(candidates)
 

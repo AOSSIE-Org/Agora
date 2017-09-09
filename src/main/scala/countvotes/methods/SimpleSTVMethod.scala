@@ -25,7 +25,7 @@ class SimpleSTVMethod extends STV[Ballot]
 
 
    print("\n INPUT ELECTION: \n")
-   printElection(election)
+   //printElection(election)
 
    val tls = totals(election, candidates) // Here are totals of candidates also not OCCURING in the ballots
    result.addTotalsToHistory(tls)
@@ -66,7 +66,7 @@ class SimpleSTVMethod extends STV[Ballot]
               case false =>  {
                 println("Vacancies are not yet filled.")
                 val newElection = surplusesDistribution(election, numVacancies-ws.length)
-                printElection(newElection)
+                //printElection(newElection)
                 winners(newElection, ccandidates.filterNot(ws.contains(_)), numVacancies-ws.length):::ws
                 // TODO: care should be taken that newElection is not empty?!
               }
@@ -77,7 +77,7 @@ class SimpleSTVMethod extends STV[Ballot]
           println("Excluding " + leastVotedCandidate)
           result.addExcludedCandidate(leastVotedCandidate._1, leastVotedCandidate._2)
           val newElection = exclusion(election, leastVotedCandidate._1, numVacancies)
-          printElection(newElection)
+          //printElection(newElection)
           winners(newElection, ccandidates.filterNot(x => x == leastVotedCandidate._1), numVacancies)
       }
     }

@@ -16,7 +16,7 @@ object SMCMethod extends Scrutiny[Ballot] with LazyLogging {
   def runScrutiny(election: Election[Ballot], candidates: List[Candidate], param: Parameters, numVacancies: Int): Report[Ballot] = {
 
     print("\n INPUT ELECTION: \n")
-    printElection(election)
+    //printElection(election)
 
     report.setCandidates(candidates)
 

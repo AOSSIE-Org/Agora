@@ -6,7 +6,7 @@ import scala.collection.mutable.{HashSet, HashMap => Map}
 
 abstract class VoteCounter[B <: Ballot] {
 
- def totals(election: Election[B], candidates: List[Candidate]): Map[Candidate, Rational] = {
+  def totals(election: Election[B], candidates: List[Candidate]): Map[Candidate, Rational] = {
     val m = new Map[Candidate, Rational]
 
     for (c<-candidates) m(c) = 0
@@ -15,7 +15,8 @@ abstract class VoteCounter[B <: Ballot] {
       m(b.preferences.head) = b.weight + (m.getOrElse(b.preferences.head, 0))
     }
     m
- }
+  }
+  
 
  def vacanciesFilled(numWinners:Int, numVacancies:Int): Boolean =
     numWinners >= numVacancies
@@ -38,26 +39,6 @@ abstract class VoteCounter[B <: Ballot] {
     }
    set.toList
   }
-
-  // just printing in terminal
- def printElection(election: Election[B]): Unit = {
-    print("\n")
-    for (e <- election.sortBy(x => x.id)) {
-      var pr = ""
-      for (p <- e.preferences) pr = pr + p + " > "
-      println(e.id + "   " + pr.dropRight(2) + "  " + e.weight)
-    }
-    print("\n")
- }
-
- def printTotal(total: Map[Candidate, Rational]): Unit = {
-    print("\n")
-    for (t <- total) {
-      var pr = ""
-      println(t)
-    }
-    print("\n")
- }
 
   // utility method for matrix where a[i][j] = x means candidate i has got #x votes against candidate j
   def getPairwiseComparisonForWeightedElection(election: Election[Ballot], candidates: List[Candidate]): Array[Array[Rational]] = {
@@ -85,8 +66,6 @@ trait Scrutiny[B <: Ballot] extends VoteCounter[B] {
 
   def runScrutiny(election: Election[B], candidates: List[Candidate], numVacancies: Int):   Report[B]  = {
 
-    print("\n INPUT ELECTION: \n")
-    printElection(election)
 
     var tls = totals(election, candidates)
 

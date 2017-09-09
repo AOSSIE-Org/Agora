@@ -18,8 +18,8 @@ object MaximinMethod extends VoteCounter[Ballot] with LazyLogging{
 
   def runScrutiny(election: Election[Ballot], candidates: List[Candidate], numVacancies: Int): Report[Ballot] = {
 
-    print("\n INPUT ELECTION: \n")
-    printElection(election)
+    //print("\n INPUT ELECTION: \n")
+    ////printElection(election)
 
     report.setCandidates(candidates)
 

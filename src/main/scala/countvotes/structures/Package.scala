@@ -8,6 +8,7 @@ package object structures {
   type Election[B <: Ballot] = List[B]
 
   object Election {
+    
 
     lazy val totalWeightedVoters = (election: Election[Ballot]) => {
       election filter { _.preferences.nonEmpty} map {_.weight} reduce { _ + _ }
