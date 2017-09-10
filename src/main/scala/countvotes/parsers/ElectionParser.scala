@@ -1,14 +1,13 @@
 package countvotes.parsers
 
 import countvotes.structures._
-import countvotes.structures.{PreferenceBallot => Ballot}
 
 import scala.io.Source
 import java.io.{FileReader, FileNotFoundException, IOException}
 
 import scala.util.parsing.combinator._
 
-abstract class ElectionParser[T <: BallotBase] extends LineParser[T] {
+abstract class ElectionParser[T <: Ballot] extends LineParser[T] {
 
   def line: Parser[T]
 

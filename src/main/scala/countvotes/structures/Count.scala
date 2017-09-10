@@ -1,8 +1,6 @@
 package countvotes.structures
 
 import collection.mutable.{HashMap => Map}
-//import countvotes.structures.{PreferenceBallot => Ballot}
-import countvotes.structures.{BallotBase => Ballot}
 
 class Count[B <: Ballot]  {
 

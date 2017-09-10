@@ -1,7 +1,6 @@
 package countvotes.methods
 
 import countvotes.structures._
-import countvotes.structures.{BallotBase => Ballot}
 
 import scala.collection.mutable.{HashSet, HashMap => Map}
 

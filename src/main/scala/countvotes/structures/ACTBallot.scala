@@ -1,7 +1,7 @@
 package countvotes.structures
 
 import scala.language.implicitConversions
-import countvotes.structures.{PreferenceBallot => Ballot}
+import countvotes.structures.{PreferenceBallot => PBallot}
 
 
 class ACTBallot(p: List[Candidate], override val id: Int,  m:Boolean, w: Rational, v: Rational)
@@ -14,7 +14,7 @@ extends PreferenceBallot(p, id, w) with Value with Marking {
 object ACTBallot {
   def apply(p: List[Candidate], id: Int, m:Boolean, w: Rational, v: Rational): ACTBallot = new ACTBallot(p,id,m,w, v)
 
-  implicit def fromBallot(b: Ballot): ACTBallot  = {
+  implicit def fromBallot(b: PBallot): ACTBallot  = {
     new ACTBallot(b.preferences, b.id, true, b.weight, b.weight) // note that the marking is assigned true here
   }
 

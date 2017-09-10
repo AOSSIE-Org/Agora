@@ -1,10 +1,7 @@
 package countvotes.structures
 
 import java.io._
-
 import scala.collection.mutable.{HashMap => Map}
-//import countvotes.structures.{PreferenceBallot => Ballot}
-import countvotes.structures.{BallotBase => Ballot}
 
 class Report[B <: Ballot] {
 

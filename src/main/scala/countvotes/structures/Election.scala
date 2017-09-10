@@ -4,7 +4,6 @@ import scala.collection._
 import scala.collection.generic._
 import scala.collection.mutable.{Builder, ListBuffer}
 import scala.collection.mutable.{HashMap => MMap, HashSet => MSet}
-import countvotes.structures.{BallotBase => Ballot}
 
 import scala.language.implicitConversions
 
