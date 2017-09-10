@@ -1,6 +1,5 @@
 package agora.votecounter
 
-import agora.votecounter.Majority
 import agora.parser.{CandidatesParser, PreferencesParser}
 import agora.structures.Candidate
 import org.specs2.mutable.Specification

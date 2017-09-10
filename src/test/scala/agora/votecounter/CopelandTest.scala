@@ -1,5 +1,5 @@
-package agora.votecounter;
-import agora.votecounter.{Copeland, InstantRunoff2Round}
+package agora.votecounter
+
 import agora.parser.{CandidatesParser, PreferencesParser}
 import agora.structures.Candidate
 import org.specs2.mutable.Specification
