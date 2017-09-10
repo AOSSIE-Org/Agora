@@ -1,4 +1,4 @@
-package agora.structures
+package agora.model
 
 import scala.language.implicitConversions
 import spire.math.Rational

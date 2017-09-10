@@ -1,7 +1,7 @@
 package agora.votecounter
 
 import agora.parser.{CandidatesParser, PreferencesParser}
-import agora.structures.Candidate
+import agora.model.Candidate
 import org.specs2.mutable.Specification
 
 //To verify tests using example from Wikipedia - https://en.wikipedia.org/wiki/Contingent_vote#Example_I

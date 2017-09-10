@@ -1,4 +1,4 @@
-package agora.structures
+package agora.model
 
 import collection.mutable.{HashMap => Map}
 import spire.math.Rational

@@ -1,7 +1,7 @@
 package agora.parser
 
 import agora._
-import agora.structures._
+import agora.model._
 
 import scala.util.parsing.combinator._
 

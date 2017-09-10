@@ -1,7 +1,7 @@
 package agora.votecounter
 
 import com.typesafe.scalalogging.LazyLogging
-import agora.structures._
+import agora.model._
 
 import spire.math.Rational
 

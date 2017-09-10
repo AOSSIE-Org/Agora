@@ -1,6 +1,6 @@
 package agora.parser
 
-import agora.structures._
+import agora.model._
 
 import scala.io.Source
 import java.io.{FileReader, FileNotFoundException, IOException}

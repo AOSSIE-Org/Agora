@@ -1,8 +1,8 @@
 package agora.votecounter
 
 import com.typesafe.scalalogging.LazyLogging
-import agora.structures.{Candidate, Election}
-import agora.structures.{PreferenceBallot => Ballot}
+import agora.model.{Candidate, Election}
+import agora.model.{PreferenceBallot => Ballot}
 
 import scala.collection.mutable.{HashMap => Map}
 import spire.math.Rational

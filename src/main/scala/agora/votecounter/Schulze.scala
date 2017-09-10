@@ -1,6 +1,6 @@
 package agora.votecounter
 
-import agora.structures._
+import agora.model._
 
 import spire.math.Rational
 

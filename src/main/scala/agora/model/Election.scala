@@ -1,4 +1,4 @@
-package agora.structures
+package agora.model
 
 import scala.collection._
 import scala.collection.generic._
@@ -25,16 +25,6 @@ with SeqLike[B, Election[B]] {
 }
 object Election {
   
-  def mentionedCandidates[B <: PreferenceBallot](election: Election[B]): List[Candidate] = {
-    val set = new MSet[Candidate]()
-    for (b <- election) {
-      for (c <- b.preferences)
-        if (!set.exists(n => n == c) ) set += c
-    }
-    set.toList
-  }
-  
-  // TODO: Move this to the new election class eventually
   def totals(election: Election[PreferenceBallot], candidates: List[Candidate]): MMap[Candidate, Rational] = {
     val m = new MMap[Candidate, Rational]
 

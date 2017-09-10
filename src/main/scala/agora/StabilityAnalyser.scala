@@ -1,7 +1,7 @@
 package agora
 
 import agora.votecounter._
-import agora.structures.{PreferenceBallot => Ballot, _ }
+import agora.model.{PreferenceBallot => Ballot, _ }
 import scala.collection.mutable.ArrayBuffer
 import scala.language.postfixOps
 import scala.util.Random

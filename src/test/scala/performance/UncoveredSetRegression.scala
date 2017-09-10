@@ -1,6 +1,6 @@
 import agora.votecounter.UncoveredSet
-import agora.structures.{Election}
-import agora.structures.{PreferenceBallot => Ballot}
+import agora.model.{Election}
+import agora.model.{PreferenceBallot => Ballot}
 import org.scalameter.api.Bench
 import org.scalameter.api._
 import performance.{MemoryRegression, RuntimeRegression}

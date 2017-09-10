@@ -1,6 +1,6 @@
 package agora.parser
 
-import agora.structures.Parameters
+import agora.model.Parameters
 import play.api.libs.json.Json
 
 import scala.io.Source

@@ -1,6 +1,6 @@
 package agora.analyzer
 
-import agora.structures.{Candidate, Election, PreferenceBallot => Ballot}
+import agora.model.{Candidate, Election, PreferenceBallot => Ballot}
 
 /**
   * This analyser analyses for Sen's Value restricted preferences
@@ -18,7 +18,7 @@ object ValueRestrictedAnalyser extends PreferenceAnalysisMethod[Ballot] {
     * @param ccandidates => candidates list
     * @return
     */
-  override def analyse(election: agora.structures.Election[Ballot], ccandidates: List[Candidate]): Boolean = {
+  override def analyse(election: agora.model.Election[Ballot], ccandidates: List[Candidate]): Boolean = {
 
 
     require(election forall (b => b.preferences.length == ccandidates.length))

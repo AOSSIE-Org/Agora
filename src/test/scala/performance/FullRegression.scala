@@ -1,6 +1,6 @@
 package performance
 
-import agora.structures.{PreferenceBallot => Ballot}
+import agora.model.{PreferenceBallot => Ballot}
 import org.scalameter.Bench
 import org.scalameter.api._
 

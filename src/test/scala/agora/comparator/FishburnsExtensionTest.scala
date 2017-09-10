@@ -1,7 +1,7 @@
 package agora.comparator
 
 import agora.parser.{CandidatesParser, ParameterParser, PreferencesParser}
-import agora.structures.Candidate
+import agora.model.Candidate
 import org.specs2.mutable.Specification
 
 class FishburnsExtensionTest extends Specification {

@@ -1,9 +1,9 @@
 package agora.votecounter.stv
 
 import scala.language.implicitConversions
-import agora.structures.PreferenceBallot
+import agora.model.PreferenceBallot
 import spire.math.Rational
-import agora.structures.Candidate
+import agora.model.Candidate
 
 class ACTBallot(p: List[Candidate], override val id: Int,  m:Boolean, w: Rational, v: Rational)
 //extends MarkedBallot(p, id, m, w) with Value {

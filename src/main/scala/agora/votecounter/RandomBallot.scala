@@ -1,8 +1,8 @@
 package agora.votecounter
 
 import com.typesafe.scalalogging.LazyLogging
-import agora.structures._
-import agora.structures.{PreferenceBallot => Ballot}
+import agora.model._
+import agora.model.{PreferenceBallot => Ballot}
 
 import scala.util.Random
 

@@ -1,8 +1,8 @@
 package agora.votecounter
 
 import agora.votecounter.stv._
-import agora.structures._
-import agora.structures.{PreferenceBallot => Ballot}
+import agora.model._
+import agora.model.{PreferenceBallot => Ballot}
 
 import spire.math.Rational
 import agora.votecounter.stv.Input
@@ -51,7 +51,16 @@ class SimpleSTV extends STV[Ballot]
 
     println(" \n NEW RECURSIVE CALL \n")
 
-    val ccands = Election.mentionedCandidates(election)
+    def mentionedCandidates[B <: PreferenceBallot](election: Election[B]): List[Candidate] = {
+      val set = new collection.mutable.HashSet[Candidate]()
+      for (b <- election) {
+        for (c <- b.preferences)
+          if (!set.exists(n => n == c) ) set += c
+      }
+      set.toList
+    }
+      
+    val ccands = mentionedCandidates(election)
 
     val tls = Election.totals(election, ccandidates)
 

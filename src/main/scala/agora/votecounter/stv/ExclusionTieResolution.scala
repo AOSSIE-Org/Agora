@@ -1,6 +1,6 @@
 package agora.votecounter.stv
 
-import agora.structures._
+import agora.model._
 import agora.votecounter._
 import collection.mutable.{HashMap => Map}
 import scala.util.Random

@@ -2,8 +2,8 @@ package agora.votecounter
 
 import spire.math.Rational
 
-import agora.structures._
-import agora.structures.{PreferenceBallot => Ballot}
+import agora.model._
+import agora.model.{PreferenceBallot => Ballot}
 
 import scala.collection.immutable.{Map => IMap}
 import scala.collection.mutable.{HashMap => MMap}

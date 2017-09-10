@@ -2,8 +2,8 @@ package agora
 
 import agora.votecounter._
 import agora.parser._
-import agora.structures._
-import agora.structures.{PreferenceBallot => Ballot}
+import agora.model._
+import agora.model.{PreferenceBallot => Ballot}
 
 import scala.collection.mutable.{HashMap => Map}
 import scala.languageFeature.implicitConversions

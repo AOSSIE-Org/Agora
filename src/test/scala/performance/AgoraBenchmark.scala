@@ -1,8 +1,8 @@
 package performance
 
 import agora.votecounter.Borda
-import agora.structures.{Candidate, Election}
-import agora.structures.{PreferenceBallot => Ballot}
+import agora.model.{Candidate, Election}
+import agora.model.{PreferenceBallot => Ballot}
 import org.scalameter.Bench
 import org.scalameter.api._
 import org.scalameter.persistence.GZIPJSONSerializationPersistor

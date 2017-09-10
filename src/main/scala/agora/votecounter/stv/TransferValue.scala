@@ -1,7 +1,7 @@
 package agora.votecounter.stv
 
-import agora.structures._
-import agora.structures.{PreferenceBallot => Ballot}
+import agora.model._
+import agora.model.{PreferenceBallot => Ballot}
 import agora.votecounter._
 import collection.mutable.{HashMap => Map}
 import java.io._

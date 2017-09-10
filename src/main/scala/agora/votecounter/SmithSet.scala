@@ -1,7 +1,7 @@
 package agora.votecounter
 
-import agora.structures._
-import agora.structures.{PreferenceBallot => Ballot}
+import agora.model._
+import agora.model.{PreferenceBallot => Ballot}
 
 import scala.language.postfixOps
 

@@ -1,4 +1,4 @@
-package agora.structures
+package agora.model
 
 import java.io._
 import scala.collection.mutable.{HashMap => Map}

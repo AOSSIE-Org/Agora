@@ -2,7 +2,7 @@ package agora
 
 import agora.comparator.{FishburnsExtension, KellyExtension}
 import agora.parser.{CandidatesParser, ParameterParser, PreferencesParser}
-import agora.structures.{Candidate, PreferenceBallot => Ballot, Election}
+import agora.model.{Candidate, PreferenceBallot => Ballot, Election}
 
 object SetComparator {
 

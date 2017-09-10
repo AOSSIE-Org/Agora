@@ -1,7 +1,7 @@
 package agora.comparator
 
 import com.typesafe.scalalogging.LazyLogging
-import agora.structures.{PreferenceBallot => Ballot, _}
+import agora.model.{PreferenceBallot => Ballot, _}
 
 import spire.math.Rational
 
@@ -11,7 +11,7 @@ import spire.math.Rational
 object KellyExtension extends SetExtensionMethods[Ballot] with LazyLogging {
 
 
-  override def compare(election: agora.structures.Election[Ballot], candidates: List[Candidate], parameters: Parameters): Set[Candidate] = {
+  override def compare(election: agora.model.Election[Ballot], candidates: List[Candidate], parameters: Parameters): Set[Candidate] = {
     // require that the sets are consistent with the candidates list
     require(parameters.comparisonSets.isDefined && parameters.comparisonSets.get.set1.forall(c => candidates.exists(cand => cand.name == c)) &&
       parameters.comparisonSets.get.set2.forall(c => candidates.exists(cand => cand.name == c)))

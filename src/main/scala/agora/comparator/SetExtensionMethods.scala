@@ -1,6 +1,6 @@
 package agora.comparator
 
-import agora.structures.{PreferenceBallot => Ballot, _}
+import agora.model.{PreferenceBallot => Ballot, _}
 
 import spire.math.Rational
 
@@ -16,7 +16,7 @@ import spire.math.Rational
 abstract class SetExtensionMethods[B <: Ballot] {
 
   // will return the set that is preferred over another as given in the json parameters file
-  def compare(election: agora.structures.Election[Ballot], candidates: List[Candidate], parameters: Parameters): Set[Candidate]
+  def compare(election: agora.model.Election[Ballot], candidates: List[Candidate], parameters: Parameters): Set[Candidate]
 
   // utility method for matrix where a[i][j] = x means candidate i has got #x votes against candidate j
   def getPairwiseComparisons(election: Election[Ballot], candidates: List[Candidate]): Array[Array[Rational]] = {
