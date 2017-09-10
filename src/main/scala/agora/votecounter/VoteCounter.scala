@@ -5,6 +5,7 @@ import agora.structures._
 import scala.collection.mutable.{HashSet, HashMap => Map}
 
 import spire.math.Rational
+import agora.votecounter.stv.Input
 
 abstract class VoteCounter[B <: Ballot] {
   

@@ -13,6 +13,10 @@ import collection.breakOut
 import scala.util.Random
 import scala.util.Sorting
 import java.io._
+import agora.votecounter.stv.VictoryWithoutQuota
+import agora.votecounter.stv.TwoLastCandidatesForOneVacancy
+import agora.votecounter.stv.SurplusDistribution
+import agora.votecounter.stv.ACTBallot
 
 abstract sealed class BulkExclusionType
   case object ExclusionBulk extends BulkExclusionType

@@ -5,6 +5,7 @@ import agora.structures._
 import agora.structures.{PreferenceBallot => Ballot}
 
 import spire.math.Rational
+import agora.votecounter.stv.Input
 
 class SimpleSTV extends STV[Ballot]
   with DroopQuota

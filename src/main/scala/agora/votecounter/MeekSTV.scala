@@ -11,6 +11,7 @@ import collection.mutable.{HashMap => MMap}
 import agora.structures.{PreferenceBallot => Ballot}
 
 import spire.math.Rational
+import agora.votecounter.stv.Input
 
 object MeekSTV extends STV[Ballot]
   with DroopQuota // Imp

@@ -7,6 +7,7 @@ import scala.collection.mutable.{HashMap => MMap, HashSet => MSet}
 
 import scala.language.implicitConversions
 import spire.math.Rational
+import agora.votecounter.stv.ACTBallot
 
 
 class Election[+B <: Ballot](val ballots: Seq[B]) 

@@ -6,6 +6,8 @@ import agora.structures._
 import scala.collection.mutable.{HashMap => Map}
 
 import spire.math.Rational
+import agora.votecounter.stv.Input
+import agora.votecounter.stv.ACTBallot
 
 abstract class STVAustralia extends STV[ACTBallot] {
   

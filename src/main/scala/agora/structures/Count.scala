@@ -2,6 +2,7 @@ package agora.structures
 
 import collection.mutable.{HashMap => Map}
 import spire.math.Rational
+import agora.votecounter.stv.Action
 
 class Count[B <: Ballot]  {
 

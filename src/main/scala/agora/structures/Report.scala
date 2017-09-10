@@ -3,6 +3,7 @@ package agora.structures
 import java.io._
 import scala.collection.mutable.{HashMap => Map}
 import spire.math.Rational
+import agora.votecounter.stv.Action
 
 class Report[B <: Ballot] {
 
