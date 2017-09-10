@@ -8,6 +8,7 @@ import agora.util.matrix._
 import scala.language.postfixOps
 
 import spire.math.Rational
+import agora.util.matrix.BaseMatrix
 
 /**
   * Algorithm via multiplication

@@ -1,4 +1,4 @@
-package agora.structures
+package agora.util.matrix
 
 /**
   * 2 Dimensional matrix

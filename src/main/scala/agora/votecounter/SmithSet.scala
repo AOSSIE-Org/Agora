@@ -6,6 +6,7 @@ import agora.structures.{PreferenceBallot => Ballot}
 import scala.language.postfixOps
 
 import spire.math.Rational
+import agora.util.matrix.BaseMatrix
 
 /**
   * Algorithm : http://wiki.electorama.com/wiki/Maximal_elements_algorithms#Floyd-Warshall_algorithm

@@ -1,6 +1,6 @@
 package agora.util
 
-import agora.structures.BaseMatrix
+import agora.util.matrix.BaseMatrix
 
 import spire.math.Rational
 
