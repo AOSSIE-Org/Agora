@@ -1,7 +1,7 @@
 package agora.votecounter
 
 import agora.votecounter.BipartisanSet
-import agora.parsers.{CandidatesParser, ParameterParser, PreferencesParser}
+import agora.parser.{CandidatesParser, ParameterParser, PreferencesParser}
 import agora.structures.Candidate
 import org.specs2.mutable.Specification
 

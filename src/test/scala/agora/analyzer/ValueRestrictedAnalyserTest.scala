@@ -1,6 +1,6 @@
 package agora.analyzer
 
-import agora.parsers.{CandidatesParser, PreferencesParser}
+import agora.parser.{CandidatesParser, PreferencesParser}
 import org.specs2.mutable.Specification
 
 

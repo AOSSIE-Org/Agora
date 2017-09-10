@@ -1,6 +1,6 @@
 package agora.votecounter;
 import agora.votecounter.UncoveredSet
-import agora.parsers.{CandidatesParser, PreferencesParser}
+import agora.parser.{CandidatesParser, PreferencesParser}
 import agora.structures.Candidate
 import org.specs2.mutable.Specification
 

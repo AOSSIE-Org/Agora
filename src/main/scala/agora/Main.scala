@@ -1,7 +1,7 @@
 package agora
 
 import agora.votecounter._
-import agora.parsers._
+import agora.parser._
 import agora.structures._
 import agora.structures.{PreferenceBallot => Ballot}
 

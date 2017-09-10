@@ -1,4 +1,4 @@
-package agora.parsers
+package agora.parser
 
 import agora.structures.Parameters
 import play.api.libs.json.Json

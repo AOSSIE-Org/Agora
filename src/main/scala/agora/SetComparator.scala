@@ -1,7 +1,7 @@
 package agora
 
 import agora.comparator.{FishburnsExtension, KellyExtension}
-import agora.parsers.{CandidatesParser, ParameterParser, PreferencesParser}
+import agora.parser.{CandidatesParser, ParameterParser, PreferencesParser}
 import agora.structures.{Candidate, PreferenceBallot => Ballot, Election}
 
 object SetComparator {
