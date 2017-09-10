@@ -1,11 +1,9 @@
-package agora.algorithms
+package agora.methods
 
 
 import agora.structures.{PreferenceBallot => Ballot, _}
 import agora.methods._
-
 import collection.mutable.{HashMap => MMap}
-
 import spire.math.Rational
 
 trait SimpleApproval {
