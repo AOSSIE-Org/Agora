@@ -1,6 +1,6 @@
 package analyse.methods
 
-import countvotes.structures.{Candidate, Election, PreferenceBallot => Ballot}
+import agora.structures.{Candidate, Election, PreferenceBallot => Ballot}
 
 import scala.collection.mutable.ListBuffer
 
@@ -10,7 +10,7 @@ import scala.collection.mutable.ListBuffer
   */
 object SinglePeakAnalyser extends PreferenceAnalysisMethod[Ballot] {
 
-  def analyse(election: countvotes.structures.Election[Ballot], candidates: List[Candidate]): Boolean = {
+  def analyse(election: agora.structures.Election[Ballot], candidates: List[Candidate]): Boolean = {
 
     require(election.forall(b => b.preferences.size == candidates.size))
 

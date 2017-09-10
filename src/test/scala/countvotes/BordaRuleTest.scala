@@ -1,6 +1,6 @@
-import countvotes.methods.{Borda, KemenyYoung}
-import countvotes.parsers.{CandidatesParser, PreferencesParser}
-import countvotes.structures.Candidate
+import agora.methods.{Borda, KemenyYoung}
+import agora.parsers.{CandidatesParser, PreferencesParser}
+import agora.structures.Candidate
 import org.specs2.mutable.Specification
 
 /**

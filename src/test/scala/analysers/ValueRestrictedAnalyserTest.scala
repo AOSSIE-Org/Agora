@@ -1,7 +1,7 @@
 package analysers
 
 import analyse.methods.ValueRestrictedAnalyser
-import countvotes.parsers.{CandidatesParser, PreferencesParser}
+import agora.parsers.{CandidatesParser, PreferencesParser}
 import org.specs2.mutable.Specification
 
 

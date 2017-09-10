@@ -1,7 +1,7 @@
 
-import countvotes.methods.InstantRunoff2Round
-import countvotes.parsers.{CandidatesParser, PreferencesParser}
-import countvotes.structures.Candidate
+import agora.methods.InstantRunoff2Round
+import agora.parsers.{CandidatesParser, PreferencesParser}
+import agora.structures.Candidate
 import org.specs2.mutable.Specification
 
 /**

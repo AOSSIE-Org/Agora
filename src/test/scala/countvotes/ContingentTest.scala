@@ -1,8 +1,8 @@
 package countvotes
 
-import countvotes.methods.Contingent
-import countvotes.parsers.{CandidatesParser, PreferencesParser}
-import countvotes.structures.Candidate
+import agora.methods.Contingent
+import agora.parsers.{CandidatesParser, PreferencesParser}
+import agora.structures.Candidate
 import org.specs2.mutable.Specification
 
 //To verify tests using example from Wikipedia - https://en.wikipedia.org/wiki/Contingent_vote#Example_I

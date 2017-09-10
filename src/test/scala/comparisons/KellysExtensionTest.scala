@@ -1,8 +1,8 @@
 package comparisons
 
 import compare.extensions.KellyExtension
-import countvotes.parsers.{CandidatesParser, ParameterParser, PreferencesParser}
-import countvotes.structures.Candidate
+import agora.parsers.{CandidatesParser, ParameterParser, PreferencesParser}
+import agora.structures.Candidate
 import org.specs2.mutable.Specification
 
 class KellysExtensionTest extends Specification {

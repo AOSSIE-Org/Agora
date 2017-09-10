@@ -1,8 +1,8 @@
 package performance
 
-import countvotes.methods.{Borda, BaldwinMethod}
-import countvotes.structures.{Election}
-import countvotes.structures.{PreferenceBallot => Ballot}
+import agora.methods.{Borda, BaldwinMethod}
+import agora.structures.{Election}
+import agora.structures.{PreferenceBallot => Ballot}
 import org.scalameter.api._
 import org.scalameter.persistence.GZIPJSONSerializationPersistor
 

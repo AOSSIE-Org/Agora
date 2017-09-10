@@ -1,9 +1,9 @@
 package analyse
 
 import analyse.methods.{SinglePeakAnalyser, ValueRestrictedAnalyser}
-import countvotes.parsers.{CandidatesParser, PreferencesParser}
-import countvotes.structures.{Candidate, PreferenceBallot => Ballot, Election}
-import countvotes.{Concise, VoteCounterTableFormats}
+import agora.parsers.{CandidatesParser, PreferencesParser}
+import agora.structures.{Candidate, PreferenceBallot => Ballot, Election}
+import agora.{Concise, VoteCounterTableFormats}
 
 
 object PreferenceAnalyser {

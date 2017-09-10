@@ -1,6 +1,6 @@
-import countvotes.methods.Copeland
-import countvotes.structures.{Election}
-import countvotes.structures.{PreferenceBallot => Ballot}
+import agora.methods.Copeland
+import agora.structures.{Election}
+import agora.structures.{PreferenceBallot => Ballot}
 import org.scalameter.api.Bench
 import org.scalameter.api._
 import performance.BordaRegressionTest.include

@@ -1,8 +1,8 @@
 package countvotes
 
-import countvotes.methods.SMC
-import countvotes.parsers.{CandidatesParser, ParameterParser, PreferencesParser}
-import countvotes.structures.Candidate
+import agora.methods.SMC
+import agora.parsers.{CandidatesParser, ParameterParser, PreferencesParser}
+import agora.structures.Candidate
 import org.specs2.mutable.Specification
 
 /**

@@ -45,7 +45,7 @@ lazy val project = Project("agora", file("."), settings = allSettings)
   .configs(Testing.configs: _*)
   .settings(Testing.settings: _*)
 
-mainClass in(oneJar) := Some("countvotes.Main")
+mainClass in(oneJar) := Some("agora.Main")
 
 licenses := Seq("CC BY-NC-SA" -> url("http://creativecommons.org/licenses/by-nc-sa/4.0/"))
 

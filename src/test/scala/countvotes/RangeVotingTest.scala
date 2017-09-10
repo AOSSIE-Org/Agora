@@ -1,8 +1,8 @@
 package countvotes
 
-import countvotes.methods.RangeVoting
-import countvotes.parsers.{CandidatesParser, PreferencesParserWithScore}
-import countvotes.structures.Candidate
+import agora.methods.RangeVoting
+import agora.parsers.{CandidatesParser, PreferencesParserWithScore}
+import agora.structures.Candidate
 import org.specs2.mutable.Specification
 
 

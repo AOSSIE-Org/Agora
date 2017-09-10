@@ -1,8 +1,8 @@
 package countvotes
 
-import countvotes.methods.Schulze
-import countvotes.parsers.{CandidatesParser, PreferencesParserWithRank}
-import countvotes.structures.Candidate
+import agora.methods.Schulze
+import agora.parsers.{CandidatesParser, PreferencesParserWithRank}
+import agora.structures.Candidate
 import org.specs2.mutable.Specification
 
 

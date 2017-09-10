@@ -4,6 +4,7 @@ package countvotes
 import ammonite.ops._
 import org.specs2.mutable.Specification
 
+import agora.Main;
 import scala.collection.mutable
 
 /**

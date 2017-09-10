@@ -2,9 +2,9 @@ package compare
 
 import compare.extensions.{FishburnsExtension, KellyExtension}
 import analyse.methods.{SinglePeakAnalyser, ValueRestrictedAnalyser}
-import countvotes.parsers.{CandidatesParser, ParameterParser, PreferencesParser}
-import countvotes.structures.{Candidate, PreferenceBallot => Ballot, Election}
-import countvotes.{Concise, VoteCounterTableFormats}
+import agora.parsers.{CandidatesParser, ParameterParser, PreferencesParser}
+import agora.structures.{Candidate, PreferenceBallot => Ballot, Election}
+import agora.{Concise, VoteCounterTableFormats}
 
 object SetComparator {
 

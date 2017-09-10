@@ -13,7 +13,7 @@ object Testing {
     Seq(
       fork in VerificationTest := false,
       parallelExecution in VerificationTest := false,
-      scalaSource in VerificationTest := baseDirectory.value / "src/test/scala/countvotes")
+      scalaSource in VerificationTest := baseDirectory.value / "src/test/scala/agora")
 
   private lazy val performanceTestSettings =
     inConfig(PerformanceTest)(Defaults.testSettings) ++

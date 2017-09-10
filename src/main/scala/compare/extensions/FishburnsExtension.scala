@@ -1,6 +1,6 @@
 package compare.extensions
 
-import countvotes.structures.{PreferenceBallot => Ballot, _}
+import agora.structures.{PreferenceBallot => Ballot, _}
 
 import spire.math.Rational
 
@@ -9,7 +9,7 @@ import spire.math.Rational
  */
 object FishburnsExtension extends SetExtensionMethods[Ballot] {
 
-  override def compare(election: countvotes.structures.Election[Ballot], candidates: List[Candidate], parameters: Parameters): Set[Candidate] = {
+  override def compare(election: agora.structures.Election[Ballot], candidates: List[Candidate], parameters: Parameters): Set[Candidate] = {
 
     // candidates in comparison sets should be consistent with the actual candidates
     require(parameters.comparisonSets.isDefined && parameters.comparisonSets.get.set1.forall(c => candidates.exists(cand => cand.name == c)) &&

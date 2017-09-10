@@ -1,7 +1,7 @@
 package analysers
 
 import analyse.methods.SinglePeakAnalyser
-import countvotes.parsers.{CandidatesParser, PreferencesParser}
+import agora.parsers.{CandidatesParser, PreferencesParser}
 import org.specs2.mutable.Specification
 
 /**

@@ -1,7 +1,7 @@
 
-import countvotes.methods.PreferentialBlockVoting
-import countvotes.parsers.{CandidatesParser, PreferencesParser}
-import countvotes.structures.Candidate
+import agora.methods.PreferentialBlockVoting
+import agora.parsers.{CandidatesParser, PreferencesParser}
+import agora.structures.Candidate
 import org.specs2.mutable.Specification
 
 class PreferentialBlockVotingTest extends Specification {
