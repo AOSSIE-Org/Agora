@@ -1,6 +1,6 @@
 package agora.methods
 
-import agora.algorithms._
+import agora.methods.stv._
 import agora.structures._
 import agora.structures.{PreferenceBallot => Ballot}
 

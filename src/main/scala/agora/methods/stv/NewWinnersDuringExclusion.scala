@@ -1,4 +1,4 @@
-package agora.algorithms
+package agora.methods.stv
 
 import agora.structures._
 import agora.methods._

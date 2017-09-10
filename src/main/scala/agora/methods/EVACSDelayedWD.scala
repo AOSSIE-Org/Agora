@@ -17,7 +17,7 @@
 package agora.methods
 
 import agora.structures._
-import agora.algorithms._
+import agora.methods.stv._
 
 
 import scala.collection.immutable.ListMap

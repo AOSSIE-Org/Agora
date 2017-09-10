@@ -6,7 +6,7 @@ package agora.methods
   */
 
 import agora.structures._
-import agora.algorithms._
+import agora.methods.stv._
 import collection.mutable.{HashMap => MMap}
 import agora.structures.{PreferenceBallot => Ballot}
 
