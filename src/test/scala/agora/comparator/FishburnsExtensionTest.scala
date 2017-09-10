@@ -1,6 +1,5 @@
-package comparisons
+package agora.comparator
 
-import agora.comparator.FishburnsExtension
 import agora.parsers.{CandidatesParser, ParameterParser, PreferencesParser}
 import agora.structures.Candidate
 import org.specs2.mutable.Specification

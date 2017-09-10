@@ -1,6 +1,5 @@
-package analysers
+package agora.analyzer
 
-import agora.analyser.ValueRestrictedAnalyser
 import agora.parsers.{CandidatesParser, PreferencesParser}
 import org.specs2.mutable.Specification
 
