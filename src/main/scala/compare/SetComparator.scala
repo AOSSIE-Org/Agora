@@ -1,7 +1,7 @@
 package compare
 
 import compare.extensions.{FishburnsExtension, KellyExtension}
-import analyse.methods.{SinglePeakAnalyser, ValueRestrictedAnalyser}
+import agora.analyser.{SinglePeakAnalyser, ValueRestrictedAnalyser}
 import agora.parsers.{CandidatesParser, ParameterParser, PreferencesParser}
 import agora.structures.{Candidate, PreferenceBallot => Ballot, Election}
 import agora.{Concise, VoteCounterTableFormats}

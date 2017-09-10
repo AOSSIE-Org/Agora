@@ -1,13 +1,12 @@
-package analyse
+package agora
 
 import agora.methods._
 import agora.structures.{PreferenceBallot => Ballot, _ }
-
-import scala.collection.mutable.{ArrayBuffer, ListBuffer}
+import scala.collection.mutable.ArrayBuffer
 import scala.language.postfixOps
 import scala.util.Random
-
 import spire.math.Rational
+import spire.math.Rational.apply
 
 
 object StabilityAnalyser {

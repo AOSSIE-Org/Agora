@@ -1,6 +1,6 @@
 package analysers
 
-import analyse.methods.SinglePeakAnalyser
+import agora.analyser.SinglePeakAnalyser
 import agora.parsers.{CandidatesParser, PreferencesParser}
 import org.specs2.mutable.Specification
 
