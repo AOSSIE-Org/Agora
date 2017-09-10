@@ -1,2 +1,2 @@
 
-scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-optimize")
+scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")

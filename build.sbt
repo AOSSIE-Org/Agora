@@ -1,15 +1,13 @@
 import language.postfixOps
 import com.github.retronym.SbtOneJar._
 
-mainClass in(oneJar) := Some("countvotes.Main")
-
 name := "countvotes"
 
 organization := "AOSSIE"
 
-version := "1.1"
+version := "1.2"
 
-scalaVersion := "2.11.7"
+scalaVersion := "2.12.3"
 
 resolvers += Resolver.sonatypeRepo("public")
 resolvers += "Sonatype OSS Snapshots" at
@@ -17,14 +15,14 @@ resolvers += "Sonatype OSS Snapshots" at
 
 libraryDependencies ++= Seq(
   "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4",
-  "com.github.scopt" %% "scopt" % "3.3.0",
-  "org.specs2" %% "specs2-core" % "3.8.6" % "test,verification-test,bench",
-  "com.lihaoyi" %% "ammonite-ops" % "0.8.1",
-  "ch.qos.logback" % "logback-classic" % "1.1.7",
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
+  "com.github.scopt" %% "scopt" % "3.7.0",
+  "org.specs2" %% "specs2-core" % "3.9.5" % "test,verification-test,bench",
+  "com.lihaoyi" %% "ammonite-ops" % "1.0.2",
+  "ch.qos.logback" % "logback-classic" % "1.2.3",
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.7.2",
   "com.storm-enroute" %% "scalameter" % "0.8.2",
   "com.storm-enroute" %% "scalameter-core" % "0.8.2",
-  "com.typesafe.play" %% "play-json" % "2.6.0"
+  "com.typesafe.play" %% "play-json" % "2.6.3"
 )
 
 testFrameworks += new TestFramework("org.scalameter.ScalaMeterFramework")
@@ -33,7 +31,7 @@ logBuffered := false
 
 parallelExecution in Test := false
 
-scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-optimize", "-Yinline-warnings")
+scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
 
 scalacOptions in (Compile, doc) ++= Seq("-diagrams","-implicits")
 
@@ -46,6 +44,7 @@ lazy val project = Project("agora", file("."), settings = allSettings)
   .configs(Testing.configs: _*)
   .settings(Testing.settings: _*)
 
+mainClass in(oneJar) := Some("countvotes.Main")
 
 licenses := Seq("CC BY-NC-SA" -> url("http://creativecommons.org/licenses/by-nc-sa/4.0/"))
 
