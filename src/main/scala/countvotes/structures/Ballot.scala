@@ -12,14 +12,9 @@ object PreferenceBallot {
 
 case class ScoreBallot(scores: List[(Candidate, Rational)], override val id: Int, w: Rational) 
 extends BallotBase(id, w) 
-{
-  override def toString: String = "[" + id + ", " + scores + ", " + w + "]"
-}
 
 case class RankBallot(val ranks: List[(Candidate, Int)], override val id: Int, w: Rational) 
-extends BallotBase(id, w) {
-  override def toString: String = "[" + id + ", " + ranks + ", " + w + "]"
-}
+extends BallotBase(id, w)
 
 
 trait Value extends PreferenceBallot {
