@@ -1,6 +1,6 @@
 package analyse.methods
 
-import countvotes.structures.{Ballot, Candidate, Election}
+import countvotes.structures.{PreferenceBallot => Ballot, Candidate, Election}
 
 /**
   * Created by deepeshpandey on 18/06/17.

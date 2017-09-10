@@ -3,6 +3,7 @@ package countvotes.parsers
 
 import countvotes.structures.Rational.realToRational
 import countvotes.structures._
+import countvotes.structures.{PreferenceBallot => Ballot}
 
 import scala.util.parsing.combinator._
 

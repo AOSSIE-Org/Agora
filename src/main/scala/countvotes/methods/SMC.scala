@@ -1,7 +1,9 @@
 package countvotes.methods
 
 import com.typesafe.scalalogging.LazyLogging
-import countvotes.structures.{Ballot, _}
+import countvotes.structures._
+import countvotes.structures.{PreferenceBallot => Ballot}
+import countvotes.structures.{PreferenceBallot => Ballot}
 
 
 /**

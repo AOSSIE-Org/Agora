@@ -3,6 +3,7 @@ package countvotes
 import countvotes.methods._
 import countvotes.parsers._
 import countvotes.structures._
+import countvotes.structures.{PreferenceBallot => Ballot}
 
 import scala.collection.mutable.{HashMap => Map}
 import scala.languageFeature.implicitConversions

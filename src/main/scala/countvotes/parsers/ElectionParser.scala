@@ -1,6 +1,7 @@
 package countvotes.parsers
 
 import countvotes.structures._
+import countvotes.structures.{PreferenceBallot => Ballot}
 
 import scala.io.Source
 import java.io.{FileReader, FileNotFoundException, IOException}

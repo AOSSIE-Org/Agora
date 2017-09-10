@@ -2,6 +2,7 @@ package countvotes.methods
 
 import com.typesafe.scalalogging.LazyLogging
 import countvotes.structures._
+import countvotes.structures.{PreferenceBallot => Ballot}
 import countvotes.util.matrix._
 
 import scala.language.postfixOps

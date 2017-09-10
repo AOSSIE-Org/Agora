@@ -1,7 +1,7 @@
 package analyse
 
 import countvotes.methods._
-import countvotes.structures._
+import countvotes.structures.{PreferenceBallot => Ballot, _ }
 
 import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 import scala.language.postfixOps

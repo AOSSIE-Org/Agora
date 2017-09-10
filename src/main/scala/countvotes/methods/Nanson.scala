@@ -2,6 +2,7 @@ package countvotes.methods
 
 import countvotes.methods.BaldwinMethod.bordaScores
 import countvotes.structures._
+import countvotes.structures.{PreferenceBallot => Ballot}
 
 import scala.collection.mutable.{HashMap => Map}
 

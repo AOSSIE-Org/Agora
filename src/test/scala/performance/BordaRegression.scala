@@ -1,7 +1,8 @@
 package performance
 
 import countvotes.methods.{Borda, BaldwinMethod}
-import countvotes.structures.{Ballot, Election}
+import countvotes.structures.{Election}
+import countvotes.structures.{PreferenceBallot => Ballot}
 import org.scalameter.api._
 import org.scalameter.persistence.GZIPJSONSerializationPersistor
 

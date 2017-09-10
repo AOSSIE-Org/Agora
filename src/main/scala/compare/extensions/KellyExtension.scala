@@ -1,7 +1,7 @@
 package compare.extensions
 
 import com.typesafe.scalalogging.LazyLogging
-import countvotes.structures._
+import countvotes.structures.{PreferenceBallot => Ballot, _}
 
 /*
   Link : https://drive.google.com/file/d/0B4uPp6wWiMpScEM2Q21kT2x1N3M/view?usp=sharing

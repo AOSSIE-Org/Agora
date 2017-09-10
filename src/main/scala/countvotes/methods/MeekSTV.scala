@@ -8,6 +8,7 @@ package countvotes.methods
 import countvotes.structures._
 import countvotes.algorithms._
 import collection.mutable.{HashMap => MMap}
+import countvotes.structures.{PreferenceBallot => Ballot}
 
 object MeekSTV extends STV[Ballot]
   with DroopQuota // Imp

@@ -1,6 +1,6 @@
 package performance
 
-import countvotes.structures.Ballot
+import countvotes.structures.{PreferenceBallot => Ballot}
 import org.scalameter.Bench
 import org.scalameter.api._
 

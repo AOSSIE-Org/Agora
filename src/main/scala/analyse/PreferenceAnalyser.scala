@@ -2,7 +2,7 @@ package analyse
 
 import analyse.methods.{SinglePeakAnalyser, ValueRestrictedAnalyser}
 import countvotes.parsers.{CandidatesParser, PreferencesParser}
-import countvotes.structures.{Candidate, Ballot, Election}
+import countvotes.structures.{Candidate, PreferenceBallot => Ballot, Election}
 import countvotes.{Concise, VoteCounterTableFormats}
 
 

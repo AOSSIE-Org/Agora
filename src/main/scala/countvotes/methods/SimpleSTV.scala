@@ -2,6 +2,7 @@ package countvotes.methods
 
 import countvotes.algorithms._
 import countvotes.structures._
+import countvotes.structures.{PreferenceBallot => Ballot}
 
 
 class SimpleSTV extends STV[Ballot]

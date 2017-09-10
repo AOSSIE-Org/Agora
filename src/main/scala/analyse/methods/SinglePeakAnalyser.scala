@@ -1,6 +1,6 @@
 package analyse.methods
 
-import countvotes.structures.{Candidate, Election, Ballot}
+import countvotes.structures.{Candidate, Election, PreferenceBallot => Ballot}
 
 import scala.collection.mutable.ListBuffer
 

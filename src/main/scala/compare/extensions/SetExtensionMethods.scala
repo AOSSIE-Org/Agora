@@ -1,6 +1,6 @@
 package compare.extensions
 
-import countvotes.structures._
+import countvotes.structures.{PreferenceBallot => Ballot, _}
 
 /**
   * A proper definition of strategyproofness for irresolute social choice functions requires the

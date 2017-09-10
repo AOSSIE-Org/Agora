@@ -4,22 +4,22 @@ import scala.language.implicitConversions
 
 abstract class BallotBase(val id: Int, val weight: Rational)
 
-class Ballot(val preferences: List[Candidate], override val id: Int, override val weight: Rational)
+class PreferenceBallot(val preferences: List[Candidate], override val id: Int, override val weight: Rational)
 extends BallotBase(id, weight)
-object Ballot {
-  def apply(p: List[Candidate], id: Int, w: Rational): Ballot  = new Ballot(p, id, w)
+object PreferenceBallot {
+  def apply(p: List[Candidate], id: Int, w: Rational) = new PreferenceBallot(p, id, w)
 }
 
-trait Value extends Ballot {
+trait Value extends PreferenceBallot {
   val value: Rational
 }
 
-trait Marking extends Ballot {
+trait Marking extends PreferenceBallot {
   val marking: Boolean
 }
 
 class MarkedBallot(p: List[Candidate], id: Int,  m: Boolean, w: Rational)
-  extends Ballot(p, id, w) with Marking {
+  extends PreferenceBallot(p, id, w) with Marking {
   val marking = m
 }
 object MarkedBallot{
@@ -27,7 +27,7 @@ object MarkedBallot{
 }
 
 case class ScoreBallot(scores: List[(Candidate, Rational)], override val id: Int, w: Rational) 
-extends Ballot(
+extends PreferenceBallot(
   scores map { _._1}, 
   id, 
   w
@@ -36,7 +36,7 @@ extends Ballot(
   override def toString: String = "[" + id + ", " + scores + ", " + w + "]"
 }
 
-case class RankBallot(val ranks: List[(Candidate, Int)], override val id: Int, w: Rational) extends Ballot(ranks map {
+case class RankBallot(val ranks: List[(Candidate, Int)], override val id: Int, w: Rational) extends PreferenceBallot(ranks map {
   _._1
 }, id, w) {
   override def toString: String = "[" + id + ", " + ranks + ", " + w + "]"

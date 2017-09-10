@@ -2,6 +2,7 @@ package countvotes.methods
 
 import com.typesafe.scalalogging.LazyLogging
 import countvotes.structures.{Candidate, Rational, _}
+import countvotes.structures.{PreferenceBallot => Ballot}
 
 import scala.collection.mutable.{HashMap => Map}
 

@@ -4,8 +4,11 @@ import scala.collection._
 import scala.collection.generic._
 import scala.collection.mutable.{Builder, ListBuffer}
 import scala.collection.mutable.{HashMap => MMap, HashSet => MSet}
+import countvotes.structures.{PreferenceBallot => Ballot}
 
 import scala.language.implicitConversions
+
+
 
 class Election[+B <: Ballot](val ballots: Seq[B]) 
 extends Seq[B]

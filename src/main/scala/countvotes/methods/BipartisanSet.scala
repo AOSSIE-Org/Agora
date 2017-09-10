@@ -1,6 +1,7 @@
 package countvotes.methods
 
 import countvotes.structures._
+import countvotes.structures.{PreferenceBallot => Ballot}
 
 /**
   * Link: https://drive.google.com/file/d/0B4uPp6wWiMpSMHZqaWVva0RZZjA/view?usp=sharing

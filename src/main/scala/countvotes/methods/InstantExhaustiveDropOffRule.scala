@@ -3,6 +3,7 @@ package countvotes.methods
 
 import countvotes.algorithms._
 import countvotes.structures._
+import countvotes.structures.{PreferenceBallot => Ballot}
 
 /**
   * https://en.wikipedia.org/wiki/Exhaustive_ballot#Notes
