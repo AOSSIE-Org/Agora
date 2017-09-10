@@ -308,7 +308,7 @@ abstract class ACT extends STVAustralia
   // }
    var dws:  List[(Candidate, Rational)]  = List()
    if (ws.nonEmpty) {
-     val res = surplusesDistribution(newElectionWithoutFractionInTotals, ccandidates.filterNot { x => x == candidate }, numVacancies - ws.length)
+     val res = surplusesDistribution(newElectionWithoutFractionInTotals, ccandidates.filterNot { x => x == candidate._1 }, numVacancies - ws.length)
      newElectionWithoutFractionInTotals = res._1
      dws = res._2
    }
