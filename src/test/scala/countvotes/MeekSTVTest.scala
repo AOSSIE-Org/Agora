@@ -1,4 +1,4 @@
-import agora.methods.MeekSTV
+import agora.votecounter.MeekSTV
 import agora.parsers.{CandidatesParser, PreferencesParser}
 import agora.structures.Candidate
 import org.specs2.mutable.Specification

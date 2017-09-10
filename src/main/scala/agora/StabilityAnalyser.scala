@@ -1,6 +1,6 @@
 package agora
 
-import agora.methods._
+import agora.votecounter._
 import agora.structures.{PreferenceBallot => Ballot, _ }
 import scala.collection.mutable.ArrayBuffer
 import scala.language.postfixOps

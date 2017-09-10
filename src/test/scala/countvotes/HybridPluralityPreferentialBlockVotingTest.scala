@@ -1,5 +1,5 @@
 
-import agora.methods.HybridPluralityPreferentialBlockVoting
+import agora.votecounter.HybridPluralityPreferentialBlockVoting
 import agora.parsers.{CandidatesParser, PreferencesParser}
 import agora.structures.Candidate
 import org.specs2.mutable.Specification

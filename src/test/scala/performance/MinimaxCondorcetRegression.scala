@@ -1,6 +1,6 @@
 package performance
 
-import agora.methods.{MinimaxCondorcet}
+import agora.votecounter.{MinimaxCondorcet}
 import agora.structures.{Election}
 import agora.structures.{PreferenceBallot => Ballot}
 import org.scalameter.api._

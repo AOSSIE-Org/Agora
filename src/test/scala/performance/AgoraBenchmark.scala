@@ -1,6 +1,6 @@
 package performance
 
-import agora.methods.Borda
+import agora.votecounter.Borda
 import agora.structures.{Candidate, Election}
 import agora.structures.{PreferenceBallot => Ballot}
 import org.scalameter.Bench

@@ -1,6 +1,6 @@
 package countvotes
 
-import agora.methods.{SmithSet}
+import agora.votecounter.{SmithSet}
 import agora.parsers.{CandidatesParser, PreferencesParser}
 import agora.structures.Candidate
 import org.specs2.mutable.Specification

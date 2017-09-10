@@ -1,4 +1,4 @@
-import agora.methods.Copeland
+import agora.votecounter.Copeland
 import agora.structures.{Election}
 import agora.structures.{PreferenceBallot => Ballot}
 import org.scalameter.api.Bench

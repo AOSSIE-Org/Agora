@@ -1,5 +1,5 @@
 
-import agora.methods.SatisfactionApprovalVoting
+import agora.votecounter.SatisfactionApprovalVoting
 import agora.parsers.{CandidatesParser, PreferencesParser}
 import agora.structures.Candidate
 import org.specs2.mutable.Specification

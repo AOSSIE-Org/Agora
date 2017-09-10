@@ -1,6 +1,6 @@
 package countvotes
 
-import agora.methods.Maximin
+import agora.votecounter.Maximin
 import agora.parsers.{CandidatesParser, PreferencesParser}
 import agora.structures.Candidate
 import org.specs2.mutable.Specification

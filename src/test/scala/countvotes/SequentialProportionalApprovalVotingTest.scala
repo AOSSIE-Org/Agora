@@ -1,4 +1,4 @@
-import agora.methods.SequentialProportionalApprovalVoting
+import agora.votecounter.SequentialProportionalApprovalVoting
 import agora.parsers.{CandidatesParser, PreferencesParser}
 import agora.structures.Candidate
 import org.specs2.mutable.Specification

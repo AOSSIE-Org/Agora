@@ -1,4 +1,4 @@
-import agora.methods.{Borda, KemenyYoung}
+import agora.votecounter.{Borda, KemenyYoung}
 import agora.parsers.{CandidatesParser, PreferencesParser}
 import agora.structures.Candidate
 import org.specs2.mutable.Specification

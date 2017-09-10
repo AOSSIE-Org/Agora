@@ -1,4 +1,4 @@
-import agora.methods.UncoveredSet
+import agora.votecounter.UncoveredSet
 import agora.structures.{Election}
 import agora.structures.{PreferenceBallot => Ballot}
 import org.scalameter.api.Bench

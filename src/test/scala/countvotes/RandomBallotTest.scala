@@ -1,4 +1,4 @@
-import agora.methods.{Majority, RandomBallot}
+import agora.votecounter.{Majority, RandomBallot}
 import agora.parsers.{CandidatesParser, PreferencesParser}
 import agora.structures.Candidate
 import org.specs2.mutable.Specification

@@ -1,6 +1,6 @@
 package countvotes
 
-import agora.methods.{KemenyYoung, MinimaxCondorcet}
+import agora.votecounter.{KemenyYoung, MinimaxCondorcet}
 import agora.parsers.{CandidatesParser, PreferencesParser}
 import agora.structures.Candidate
 import org.specs2.mutable.Specification

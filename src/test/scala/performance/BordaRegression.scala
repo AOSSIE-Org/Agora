@@ -1,6 +1,6 @@
 package performance
 
-import agora.methods.{Borda, BaldwinMethod}
+import agora.votecounter.{Borda, BaldwinMethod}
 import agora.structures.{Election}
 import agora.structures.{PreferenceBallot => Ballot}
 import org.scalameter.api._

@@ -1,6 +1,6 @@
 package performance
 
-import agora.methods.RandomBallot
+import agora.votecounter.RandomBallot
 import agora.structures.{Election}
 import agora.structures.{PreferenceBallot => Ballot}
 import org.scalameter.api._

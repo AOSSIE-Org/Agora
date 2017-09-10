@@ -1,4 +1,4 @@
-import agora.methods.InstantExhaustiveDropOffRule
+import agora.votecounter.InstantExhaustiveDropOffRule
 import agora.parsers.{CandidatesParser, PreferencesParser}
 import agora.structures.Candidate
 import org.specs2.mutable.Specification

@@ -1,6 +1,6 @@
 package countvotes
 
-import agora.methods.BipartisanSet
+import agora.votecounter.BipartisanSet
 import agora.parsers.{CandidatesParser, ParameterParser, PreferencesParser}
 import agora.structures.Candidate
 import org.specs2.mutable.Specification

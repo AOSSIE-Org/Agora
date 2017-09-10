@@ -1,5 +1,5 @@
 
-import agora.methods.InstantRunoff2Round
+import agora.votecounter.InstantRunoff2Round
 import agora.parsers.{CandidatesParser, PreferencesParser}
 import agora.structures.Candidate
 import org.specs2.mutable.Specification

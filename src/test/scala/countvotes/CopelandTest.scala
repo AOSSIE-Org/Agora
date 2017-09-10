@@ -1,4 +1,4 @@
-import agora.methods.{Copeland, InstantRunoff2Round}
+import agora.votecounter.{Copeland, InstantRunoff2Round}
 import agora.parsers.{CandidatesParser, PreferencesParser}
 import agora.structures.Candidate
 import org.specs2.mutable.Specification
