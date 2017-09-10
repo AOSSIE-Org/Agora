@@ -79,7 +79,7 @@ class Report[B <: Ballot] {
   }
 
 
- def newCount(action: Actions, initiator: Option[Candidate], relection: Option[Election[B]],
+ def newCount(action: Action, initiator: Option[Candidate], relection: Option[Election[B]],
    totals: Option[Map[Candidate, Rational]], winners: Option[List[(Candidate, Rational)]],
    exhaustedBallots: Option[Set[B]]): Unit = {
 

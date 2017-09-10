@@ -5,7 +5,7 @@ import spire.math.Rational
 
 class Count[B <: Ballot]  {
 
-    private var action: Option[Actions] = None
+    private var action: Option[Action] = None
 
     private var initiator: Option[Candidate] = None //  initiator of the action
 
@@ -67,11 +67,11 @@ class Count[B <: Ballot]  {
     }
 
 
-    def setAction(a: Actions): Unit = {
+    def setAction(a: Action): Unit = {
        action = Some(a)
     }
 
-    def getAction: Actions = {
+    def getAction: Action = {
       action match {
         case Some(a) => a
         case None => throw new Exception("Action is not set.")

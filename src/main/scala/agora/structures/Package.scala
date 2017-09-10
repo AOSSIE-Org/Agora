@@ -5,13 +5,13 @@ import scala.language.implicitConversions
 
 package object structures {
 
-  abstract sealed class Actions
-  case object Exclusion extends Actions
-  case object SurplusDistribution extends Actions
-  case object ExactWinner extends Actions
-  case object Input extends Actions
-  case object VictoryWithoutQuota extends Actions
-  case object TwoLastCandidatesForOneVacancy extends Actions
+  abstract sealed class Action
+  case object Exclusion extends Action
+  case object SurplusDistribution extends Action
+  case object ExactWinner extends Action
+  case object Input extends Action
+  case object VictoryWithoutQuota extends Action
+  case object TwoLastCandidatesForOneVacancy extends Action
 
 
 }
