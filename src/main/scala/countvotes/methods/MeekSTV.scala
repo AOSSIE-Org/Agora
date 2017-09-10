@@ -10,6 +10,8 @@ import countvotes.algorithms._
 import collection.mutable.{HashMap => MMap}
 import countvotes.structures.{PreferenceBallot => Ballot}
 
+import spire.math.Rational
+
 object MeekSTV extends STV[Ballot]
   with DroopQuota // Imp
   with NoFractionInQuota // Imp

@@ -5,6 +5,7 @@ import countvotes.structures._
 import countvotes.structures.{PreferenceBallot => Ballot}
 import countvotes.structures.{PreferenceBallot => Ballot}
 
+import spire.math.Rational
 
 /**
   * Created by deepeshpandey on 03/06/17.

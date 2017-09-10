@@ -2,6 +2,8 @@ package compare.extensions
 
 import countvotes.structures.{PreferenceBallot => Ballot, _}
 
+import spire.math.Rational
+
 /*
   Link : https://drive.google.com/file/d/0B4uPp6wWiMpSbWh2NGNfLXdiTTA/view?usp=sharing
  */

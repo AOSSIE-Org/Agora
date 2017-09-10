@@ -6,6 +6,9 @@ import countvotes.structures.{PreferenceBallot => Ballot}
 import countvotes.methods._
 import collection.mutable.{HashMap => Map}
 
+import spire.math.Rational
+
+
 trait ACTExclusion extends STV[ACTBallot] {
 
  def excludeZero( election: Election[ACTBallot], candidate: Candidate): (Election[ACTBallot], Set[ACTBallot] ) ={

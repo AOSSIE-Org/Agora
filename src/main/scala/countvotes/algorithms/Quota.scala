@@ -3,6 +3,8 @@ package countvotes.algorithms
 
 import countvotes.structures._
 
+import spire.math.Rational
+
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -24,6 +26,6 @@ trait HareQuota {
 // ACT, TAS, NSW LC, NSW LG, SENATE
 trait NoFractionInQuota {
   def cutQuotaFraction(num: Rational): Rational = {
-   BigDecimal(num.numerator / num.denominator).setScale(0, BigDecimal.RoundingMode.DOWN).toInt
+   num.toBigDecimal(0, java.math.RoundingMode.DOWN).toInt
   }
 }

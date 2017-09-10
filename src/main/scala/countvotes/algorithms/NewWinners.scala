@@ -5,7 +5,7 @@ import countvotes.structures.{PreferenceBallot => Ballot}
 import countvotes.methods._
 import collection.mutable.{HashMap => Map}
 
-
+import spire.math.Rational
 
 trait NewWinnersOrderedByTotals[B <: Ballot] extends STV[B] with SurplusDistributionTieResolution{
   def returnNewWinners(totals: Map[Candidate, Rational], quota: Rational): List[(Candidate,Rational)] = {

@@ -2,6 +2,7 @@ package countvotes.methods
 
 import countvotes.structures._
 import countvotes.structures.{PreferenceBallot => Ballot}
+import spire.math.Rational
 
 import scala.collection.mutable.{HashMap => MMap}
 
@@ -17,7 +18,7 @@ object EgalitarianDP extends Egalitarian[Ballot] {
 
     var candidatesForReturn : List[(Candidate,Rational)] = List.empty
     for(i <- winningCandidates){
-      candidatesForReturn = candidatesForReturn :+ (i,new Rational(n=1,d=1))
+      candidatesForReturn = candidatesForReturn :+ (i, Rational(n=1,d=1))
     }
     candidatesForReturn
   }

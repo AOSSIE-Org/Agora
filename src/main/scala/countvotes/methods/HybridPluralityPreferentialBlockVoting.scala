@@ -5,6 +5,7 @@ import countvotes.structures.{PreferenceBallot => Ballot}
 
 import scala.collection.mutable.{HashMap => MMap}
 
+import spire.math.Rational
 
 /**
   * https://en.wikipedia.org/wiki/Preferential_block_voting

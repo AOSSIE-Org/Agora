@@ -5,6 +5,8 @@ import countvotes.structures.{PreferenceBallot => Ballot}
 
 import scala.language.postfixOps
 
+import spire.math.Rational
+
 /**
   * Algorithm : http://wiki.electorama.com/wiki/Maximal_elements_algorithms#Floyd-Warshall_algorithm
   */

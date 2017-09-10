@@ -5,9 +5,12 @@ import countvotes.algorithms._
 import countvotes.structures._
 import countvotes.structures.{PreferenceBallot => Ballot}
 
+import spire.math.Rational
+
 /**
   * https://en.wikipedia.org/wiki/Exhaustive_ballot#Notes
   */
+
 
 object InstantExhaustiveDropOffRule extends VoteCounter[Ballot]
   with SimpleExclusionWithFixedElectionSize{

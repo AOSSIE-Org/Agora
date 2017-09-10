@@ -2,6 +2,8 @@ package compare.extensions
 
 import countvotes.structures.{PreferenceBallot => Ballot, _}
 
+import spire.math.Rational
+
 /**
   * A proper definition of strategyproofness for irresolute social choice functions requires the
   * specification of preferences over sets of alternatives. One way to obtain such preferences is

@@ -6,7 +6,7 @@ import scala.collection.mutable.{Builder, ListBuffer}
 import scala.collection.mutable.{HashMap => MMap, HashSet => MSet}
 
 import scala.language.implicitConversions
-
+import spire.math.Rational
 
 
 class Election[+B <: Ballot](val ballots: Seq[B]) 

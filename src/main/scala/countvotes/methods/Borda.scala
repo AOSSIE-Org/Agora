@@ -1,10 +1,11 @@
 package countvotes.methods
 
 import com.typesafe.scalalogging.LazyLogging
-import countvotes.structures.{Candidate, Rational, _}
+import countvotes.structures.{Candidate, Election}
 import countvotes.structures.{PreferenceBallot => Ballot}
 
 import scala.collection.mutable.{HashMap => Map}
+import spire.math.Rational
 
 /**
   * Created by deepeshpandey on 07/03/17.
@@ -19,7 +20,7 @@ object Borda extends VoteCounter[Ballot] with LazyLogging{
 
       // need to take the size of the list first and then calculate the borda scores
      b.preferences.zipWithIndex.foreach(preference => {
-       m(preference._1) = m.getOrElse(preference._1, new Rational(0,1)) + ((numCandidates - 1 - preference._2) * b.weight.numerator.toInt)
+       m(preference._1) = m.getOrElse(preference._1, Rational(0,1)) + ((numCandidates - 1 - preference._2) * b.weight.numerator.toInt)
      })
 
     }

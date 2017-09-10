@@ -9,13 +9,14 @@ import scala.collection.mutable.{HashMap => Map}
 import scala.languageFeature.implicitConversions
 import scala.util.parsing.combinator._
 
+import spire.math.Rational
+
 abstract sealed class VoteCounterTableFormats
 case object ACT extends VoteCounterTableFormats
 case object Concise extends VoteCounterTableFormats
 
 
 object Main extends RegexParsers {
-
   case class Config(directory: String = "",
                     ballotsfile: Option[String] = None,
                     method: String = "",

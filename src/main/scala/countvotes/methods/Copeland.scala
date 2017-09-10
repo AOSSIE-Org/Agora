@@ -1,6 +1,8 @@
 package countvotes.methods
 
 import com.typesafe.scalalogging.LazyLogging
+import spire.math.Rational
+
 import countvotes.structures._
 import countvotes.structures.{PreferenceBallot => Ballot}
 

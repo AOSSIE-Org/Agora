@@ -6,6 +6,8 @@ import countvotes.structures.{PreferenceBallot => Ballot}
 
 import scala.collection.mutable.{HashMap => MMap}
 
+import spire.math.Rational
+
 /***
   * https://en.wikipedia.org/wiki/Oklahoma_primary_electoral_system
   * we are not enforcing a strict number of preferences per ballot, unlike in the original Oklahoma method

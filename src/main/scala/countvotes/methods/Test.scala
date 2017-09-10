@@ -7,7 +7,7 @@ import collection.mutable.{HashMap => Map}
 import scala.util.Random
 
 
-
+import spire.math.Rational
 
 object Test{
 
@@ -135,7 +135,7 @@ object Test{
     println(result)
     */
 
-    var min = new Rational(Int.MaxValue, 1)
+    var min = Rational(Int.MaxValue, 1)
     for (kv <- totalsHistory.head) if (kv._2 < min) min = kv._2
     val equaltotals = totalsHistory.head.clone() filter {_._2 == min}
 

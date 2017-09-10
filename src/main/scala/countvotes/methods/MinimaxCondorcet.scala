@@ -6,6 +6,8 @@ import countvotes.structures.{PreferenceBallot => Ballot}
 
 import scala.collection.mutable.{HashMap => MMap}
 
+import spire.math.Rational
+
 /**
   * Algorithm : https://en.wikipedia.org/wiki/Minimax_Condorcet
   * Variant : winning votes => W = \arg \min_X ( \max_Y score(Y, X))

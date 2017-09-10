@@ -3,6 +3,8 @@ package countvotes.methods
 import com.typesafe.scalalogging.LazyLogging
 import countvotes.structures._
 
+import spire.math.Rational
+
 object RankedPairs extends VoteCounter[RankBallot] with LazyLogging {
 
   def winners(e: Election[RankBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {

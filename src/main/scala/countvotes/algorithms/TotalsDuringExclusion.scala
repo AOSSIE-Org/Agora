@@ -5,6 +5,7 @@ import countvotes.methods._
 import collection.mutable.{HashMap => Map}
 import scala.util.Random
 
+import spire.math.Rational
 
 trait ACTTotalsDuringExclusion extends ACT{
 
@@ -25,7 +26,7 @@ trait ACTTotalsDuringExclusion extends ACT{
         numOccurences += 1
       }
     val total = numOccurences * step._2
-    val roundedtotal = BigDecimal(total.numerator / total.denominator).setScale(0, BigDecimal.RoundingMode.DOWN).toInt
+    val roundedtotal = total.toBigDecimal(0, java.math.RoundingMode.DOWN).toInt
     roundedtotal
   }
 

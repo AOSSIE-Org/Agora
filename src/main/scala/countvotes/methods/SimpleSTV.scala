@@ -4,6 +4,7 @@ import countvotes.algorithms._
 import countvotes.structures._
 import countvotes.structures.{PreferenceBallot => Ballot}
 
+import spire.math.Rational
 
 class SimpleSTV extends STV[Ballot]
   with DroopQuota

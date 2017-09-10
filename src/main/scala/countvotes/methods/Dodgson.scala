@@ -3,7 +3,10 @@ package countvotes.methods
 import countvotes.structures._
 import countvotes.structures.{PreferenceBallot => Ballot}
 
+import spire.math.Rational
+
 import collection.mutable.{HashMap => MMap}
+
 /**
   * Wiki : https://en.wikipedia.org/wiki/Dodgson%27s_method
   * Implementation : http://infosyncratic.nl/talks/2008-votingprocedures.pdf

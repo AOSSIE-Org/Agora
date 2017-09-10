@@ -6,6 +6,8 @@ import countvotes.methods._
 
 import collection.mutable.{HashMap => MMap}
 
+import spire.math.Rational
+
 trait SimpleApproval {
   def countApprovals(election: Election[Ballot], candidates: List[Candidate]): MMap[Candidate, Rational] = {
     val m = new MMap[Candidate, Rational]

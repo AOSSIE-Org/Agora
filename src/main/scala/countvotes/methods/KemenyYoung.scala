@@ -1,9 +1,11 @@
 package countvotes.methods
 
-import countvotes.structures.{Candidate, Rational, _}
+import countvotes.structures._
 import countvotes.structures.{PreferenceBallot => Ballot}
 
 import scala.collection.mutable.{HashMap => Map}
+
+import spire.math.Rational
 
 /**
   * Created by deepeshpandey on 10/03/17.

@@ -6,6 +6,8 @@ import countvotes.structures.{PreferenceBallot => Ballot}
 
 import scala.collection.mutable.{HashMap => Map}
 
+import spire.math.Rational
+
 /**
   * https://en.wikipedia.org/wiki/Nanson%27s_method
   */

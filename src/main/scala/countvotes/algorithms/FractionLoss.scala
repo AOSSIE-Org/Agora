@@ -5,6 +5,8 @@ import countvotes.structures._
 import countvotes.methods._
 import collection.mutable.{HashMap => Map}
 
+import spire.math.Rational
+
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -17,7 +19,7 @@ trait ACTFractionLoss extends STV[ACTBallot]{
     val pt = Election.totals(e,ccandidates)
     var newe = e
     for ((k,v) <- pt) {
-      val n = BigDecimal(v.numerator / v.denominator).setScale(0, BigDecimal.RoundingMode.DOWN).toInt
+      val n = v.toBigDecimal(0, java.math.RoundingMode.DOWN).toInt
       //println("k: " + k + "; v: " + v + "; n: " + n)
       val neweste = for (b <- newe if !b.preferences.isEmpty) yield {
         if (b.preferences.head == k) {

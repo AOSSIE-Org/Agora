@@ -6,6 +6,7 @@ import countvotes.structures.{PreferenceBallot => Ballot}
 
 import scala.collection.mutable.{HashMap => Map}
 
+import spire.math.Rational
 
 abstract class STV[B <: Ballot] extends VoteCounter[B] {
   //type E = Election[B]

@@ -1,6 +1,7 @@
 package countvotes.structures
 
 import scala.language.implicitConversions
+import spire.math.Rational
 
 abstract class Ballot(val id: Int, val weight: Rational)
 

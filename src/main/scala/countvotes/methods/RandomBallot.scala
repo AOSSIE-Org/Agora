@@ -6,6 +6,8 @@ import countvotes.structures.{PreferenceBallot => Ballot}
 
 import scala.util.Random
 
+import spire.math.Rational
+
 /**
   * Algorithm : https://en.wikipedia.org/wiki/Random_ballot
   */

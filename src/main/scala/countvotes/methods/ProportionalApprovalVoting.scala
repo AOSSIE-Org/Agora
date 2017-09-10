@@ -1,10 +1,12 @@
 package countvotes.methods
 
-import countvotes.structures.{Candidate, Rational, _}
+import countvotes.structures._
 import countvotes.structures.{PreferenceBallot => Ballot}
 
 import scala.collection.immutable.{Map => IMap}
 import scala.collection.mutable.{HashMap => MMap}
+
+import spire.math.Rational
 
 /** *
   * https://en.wikipedia.org/wiki/Proportional_approval_voting

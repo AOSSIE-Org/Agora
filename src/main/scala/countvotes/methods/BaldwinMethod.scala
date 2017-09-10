@@ -1,6 +1,8 @@
 package countvotes.methods
 
 import com.typesafe.scalalogging.LazyLogging
+import spire.math.Rational
+
 import countvotes.structures._
 import countvotes.structures.{PreferenceBallot => Ballot}
 
@@ -18,7 +20,7 @@ object BaldwinMethod extends VoteCounter[Ballot] with LazyLogging {
       // need to take the size of the list first and then calculate the borda scores
       var bordaCounter = candidates.length
       b.preferences.filter(candidate => candidates.contains(candidate)).map(candidate => {
-        m(candidate) = m.getOrElse(candidate, new Rational(0, 1)) + ((bordaCounter - 1) * b.weight.numerator.toInt)
+        m(candidate) = m.getOrElse(candidate, Rational(0, 1)) + ((bordaCounter - 1) * b.weight.numerator.toInt)
         bordaCounter -= 1
       })
     }

@@ -4,6 +4,8 @@ import countvotes.structures.{PreferenceBallot => Ballot}
 import countvotes.algorithms._
 import countvotes.structures._
 
+import spire.math.Rational
+
 import scala.collection.mutable.{HashMap => MMap}
 
 object ApprovalRule extends VoteCounter[Ballot]

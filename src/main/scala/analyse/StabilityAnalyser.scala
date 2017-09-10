@@ -7,6 +7,8 @@ import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 import scala.language.postfixOps
 import scala.util.Random
 
+import spire.math.Rational
+
 
 object StabilityAnalyser {
 

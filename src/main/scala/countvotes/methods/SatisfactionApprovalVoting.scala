@@ -1,6 +1,8 @@
 package countvotes.methods
 
-import countvotes.structures.{Candidate, Rational, _}
+import spire.math.Rational
+
+import countvotes.structures._
 import countvotes.structures.{PreferenceBallot => Ballot}
 
 import scala.collection.immutable.{Map => IMap}

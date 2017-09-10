@@ -4,6 +4,8 @@ import countvotes.structures._
 
 import scala.collection.mutable.{HashMap => MMap}
 
+import spire.math.Rational
+
 /**
   * Algorithm : https://en.wikipedia.org/wiki/Range_voting
   * Note: This variant sums the score of candidates over all voters

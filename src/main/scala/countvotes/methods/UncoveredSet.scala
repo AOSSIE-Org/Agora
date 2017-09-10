@@ -7,6 +7,7 @@ import countvotes.util.matrix._
 
 import scala.language.postfixOps
 
+import spire.math.Rational
 
 /**
   * Algorithm via multiplication

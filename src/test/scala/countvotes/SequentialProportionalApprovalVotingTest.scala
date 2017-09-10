@@ -1,8 +1,9 @@
 import countvotes.methods.SequentialProportionalApprovalVoting
 import countvotes.parsers.{CandidatesParser, PreferencesParser}
-import countvotes.structures.{Candidate,Rational}
+import countvotes.structures.Candidate
 import org.specs2.mutable.Specification
 
+import spire.math.Rational
 
 class SequentialProportionalApprovalVotingTest extends Specification {
 

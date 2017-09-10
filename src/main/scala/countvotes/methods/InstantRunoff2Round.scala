@@ -5,6 +5,8 @@ import countvotes.structures.{PreferenceBallot => Ballot}
 
 import scala.collection.mutable.{HashMap => Map}
 
+import spire.math.Rational
+
 /**
   * Created by deepeshpandey on 03/06/17.
   * Algorithm : https://en.wikipedia.org/wiki/Two-round_system

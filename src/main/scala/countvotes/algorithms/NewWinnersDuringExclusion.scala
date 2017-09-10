@@ -4,7 +4,7 @@ import countvotes.structures._
 import countvotes.methods._
 import collection.mutable.{HashMap => Map}
 
-
+import spire.math.Rational
 
 // for ACT newElection is newElectionWithoutFractionInTotals
 trait ACTNewWinnersDuringExclusion extends ACT{

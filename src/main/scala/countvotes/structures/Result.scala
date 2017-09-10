@@ -1,6 +1,7 @@
 package countvotes.structures
 
 import collection.mutable.{HashMap => Map}
+import spire.math.Rational
 
  class Result{
 

@@ -3,6 +3,7 @@ package countvotes.methods
 import countvotes.structures._
 import countvotes.algorithms._
 
+import spire.math.Rational
 
 import scala.collection.immutable.ListMap
 import collection.mutable.{HashMap => Map}

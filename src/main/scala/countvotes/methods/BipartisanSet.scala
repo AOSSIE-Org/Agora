@@ -3,6 +3,8 @@ package countvotes.methods
 import countvotes.structures._
 import countvotes.structures.{PreferenceBallot => Ballot}
 
+import spire.math.Rational
+
 /**
   * Link: https://drive.google.com/file/d/0B4uPp6wWiMpSMHZqaWVva0RZZjA/view?usp=sharing
   * Important: Dominion of a candidate a is D(a) = { b ∈ A : a >M b }, Dominators of candidate a is D'(a) = { b ∈ A : b >M a }
@@ -81,7 +83,7 @@ object BipartisanSet extends VoteCounter[Ballot] {
 
     // BP(A,PM) = {x∈A : p(x)>0, p balanced for (A,PM)} where PM is majority graph
     candidatesProbabilities filter {case (cand, prob) => prob > 0 &&
-      probabilityMargin(dominions(cand), dominators(cand)) == 0} map {case (cand, prob) => (cand, Rational.doubleToRational(prob))}
+      probabilityMargin(dominions(cand), dominators(cand)) == 0} map {case (cand, prob) => (cand, Rational(prob))}
   }
 
 

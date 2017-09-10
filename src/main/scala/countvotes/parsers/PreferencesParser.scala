@@ -1,9 +1,9 @@
 package countvotes.parsers
 
-
-import countvotes.structures.Rational.realToRational
 import countvotes.structures._
 import countvotes.structures.{PreferenceBallot => Ballot}
+
+import spire.math.Rational
 
 import scala.util.parsing.combinator._
 
@@ -24,12 +24,7 @@ trait ElectionParsers extends RegexParsers {
       _.toInt
     }
 
-  def score: Parser[Rational] =
-    """[0-9\.]+""".r ^^ { case (value) => {
-      val (n, d) = realToRational(value)
-      Rational(n.toInt, d.toInt)
-    }
-    }
+  def score: Parser[Rational] = """[0-9\.]+""".r ^^ { case (value) => Rational(value) }
 }
 
 

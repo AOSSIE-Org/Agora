@@ -5,6 +5,8 @@ import countvotes.structures.{PreferenceBallot => Ballot}
 
 object Majority extends VoteCounter[Ballot] {
 
+  import spire.math.Rational
+  
   // TODO: There is an implicit assumption here that all votes have weight 1.
   // Should this be checked?
   def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int ):

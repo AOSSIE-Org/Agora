@@ -3,6 +3,8 @@ package countvotes.methods
 import countvotes.structures._
 import countvotes.structures.{PreferenceBallot => Ballot}
 
+import spire.math.Rational
+
 object EgalitarianBrute extends Egalitarian[Ballot] {
 
   def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)] = {
@@ -25,7 +27,7 @@ object EgalitarianBrute extends Egalitarian[Ballot] {
     }
     var currentCandidatesForReturn : List[(Candidate,Rational)] = List.empty
     for(i <- currentCandidates){
-      currentCandidatesForReturn = currentCandidatesForReturn :+ (i,new Rational(n=1,d=1))
+      currentCandidatesForReturn = currentCandidatesForReturn :+ (i, Rational(n=1,d=1))
     }
     currentCandidatesForReturn
   }

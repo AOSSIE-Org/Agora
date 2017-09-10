@@ -1,6 +1,8 @@
 package countvotes.util
 
-import countvotes.structures.{BaseMatrix, Rational}
+import countvotes.structures.BaseMatrix
+
+import spire.math.Rational
 
 /**
   * Created by deepeshpandey on 30/07/17.

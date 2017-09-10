@@ -6,6 +6,8 @@ import countvotes.structures.{PreferenceBallot => Ballot}
 
 import collection.mutable.{ListBuffer, HashMap => MMap}
 
+import spire.math.Rational
+
 /**
   * Algorithm : https://www.cs.cmu.edu/~arielpro/mfai_papers/lecture6.pdf page-4
   * Variant : winning votes => W = \arg \min_X ( \max_Y score(Y, X))

@@ -7,6 +7,8 @@ import scala.util.Random
 
 import scala.language.postfixOps
 
+import spire.math.Rational
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 trait ExclusionTieResolution {
@@ -15,7 +17,7 @@ trait ExclusionTieResolution {
 
 trait UnfairExclusionTieResolutuim {
  def chooseCandidateForExclusion(totals: Map[Candidate, Rational]): (Candidate, Rational)   = {
-   var min = new Rational(Int.MaxValue, 1)
+   var min = Rational(Int.MaxValue, 1)
    for (kv <- totals) if (kv._2 < min) min = kv._2
    val equaltotals = totals filter {_._2 == min}
    equaltotals head
@@ -47,7 +49,7 @@ trait ACTExclusionTieResolution extends STV[ACTBallot] with ExclusionTieResoluti
 
   def chooseCandidateForExclusion(totals: Map[Candidate, Rational]): (Candidate, Rational)  = {
 
-    var min = new Rational(Int.MaxValue, 1)
+    var min = Rational(Int.MaxValue, 1)
     for (kv <- totals) if (kv._2 < min) min = kv._2
     val equaltotals = totals.clone() filter {_._2 == min}
     //println("Equal smallest totals: " + equaltotals)

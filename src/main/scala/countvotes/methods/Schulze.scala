@@ -2,6 +2,8 @@ package countvotes.methods
 
 import countvotes.structures._
 
+import spire.math.Rational
+
 /**
   * Algorithm : https://en.wikipedia.org/wiki/Schulze_method
   */

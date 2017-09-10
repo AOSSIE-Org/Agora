@@ -7,7 +7,7 @@ import countvotes.methods._
 import collection.mutable.{HashMap => Map}
 import java.io._
 
-
+import spire.math.Rational
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // * ACT Electoral act 1992:

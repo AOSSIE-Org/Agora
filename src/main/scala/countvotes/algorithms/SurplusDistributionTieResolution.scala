@@ -6,6 +6,8 @@ import countvotes.methods._
 import collection.mutable.{HashMap => Map}
 import scala.util.Random
 
+import spire.math.Rational
+
 trait SurplusDistributionTieResolution {
   def resolveSurpluseDistributionTie(equaltotals: Map[Candidate, Rational]): List[(Candidate, Rational)]
 }

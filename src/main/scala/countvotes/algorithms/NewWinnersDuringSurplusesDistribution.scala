@@ -4,6 +4,7 @@ import countvotes.structures._
 import countvotes.methods._
 import collection.mutable.{HashMap => Map}
 
+import spire.math.Rational
 
 trait ACTNewWinnersDuringSurplusesDistribution extends ACT{
   def declareNewWinnersWhileDistributingSurpluses(totals: Map[Candidate, Rational], election:Election[ACTBallot]):  List[(Candidate,Rational)] = {

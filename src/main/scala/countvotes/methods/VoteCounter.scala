@@ -4,6 +4,8 @@ import countvotes.structures._
 
 import scala.collection.mutable.{HashSet, HashMap => Map}
 
+import spire.math.Rational
+
 abstract class VoteCounter[B <: Ballot] {
   
   
