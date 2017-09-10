@@ -1,10 +1,8 @@
-package compare
+package agora
 
-import compare.extensions.{FishburnsExtension, KellyExtension}
-import agora.analyser.{SinglePeakAnalyser, ValueRestrictedAnalyser}
+import agora.comparator.{FishburnsExtension, KellyExtension}
 import agora.parsers.{CandidatesParser, ParameterParser, PreferencesParser}
 import agora.structures.{Candidate, PreferenceBallot => Ballot, Election}
-import agora.{Concise, VoteCounterTableFormats}
 
 object SetComparator {
 

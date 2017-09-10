@@ -1,4 +1,4 @@
-package compare.extensions
+package agora.comparator
 
 import agora.structures.{PreferenceBallot => Ballot, _}
 

@@ -1,4 +1,4 @@
-package compare.extensions
+package agora.comparator
 
 import com.typesafe.scalalogging.LazyLogging
 import agora.structures.{PreferenceBallot => Ballot, _}

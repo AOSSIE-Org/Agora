@@ -1,6 +1,6 @@
 package comparisons
 
-import compare.extensions.KellyExtension
+import agora.comparator.KellyExtension
 import agora.parsers.{CandidatesParser, ParameterParser, PreferencesParser}
 import agora.structures.Candidate
 import org.specs2.mutable.Specification
