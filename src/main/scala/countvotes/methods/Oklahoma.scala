@@ -27,11 +27,11 @@ object Oklahoma extends VoteCounter[Ballot] {
     if (sortedCandidateScoreMap.head._2 > (Rational(election.length, 2))) {
       sortedCandidateScoreMap.head :: List()
     } else {
-      var newElection: Election[Ballot] = Nil
+      var ballots: List[Ballot] = Nil
       for (b<-election) {
-        newElection = new Ballot(if (b.preferences != Nil) b.preferences.tail else Nil, b.id, b.weight) :: newElection
+        ballots = new Ballot(if (b.preferences != Nil) b.preferences.tail else Nil, b.id, b.weight) :: ballots
       }
-      oklahomaTotals(newElection, ccandidates, candidateScoreMap, Rational(multiplier.numerator, multiplier.denominator + 1))
+      oklahomaTotals(Election(ballots), ccandidates, candidateScoreMap, Rational(multiplier.numerator, multiplier.denominator + 1))
     }
   }
 

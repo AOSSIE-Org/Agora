@@ -1,7 +1,7 @@
 package performance
 
 import countvotes.methods.{Borda, BaldwinMethod}
-import countvotes.structures.Ballot
+import countvotes.structures.{Ballot, Election}
 import org.scalameter.api._
 import org.scalameter.persistence.GZIPJSONSerializationPersistor
 
@@ -10,7 +10,7 @@ trait BordaRegression extends RuntimeRegression {
 
   override  def votingMethodName(): String = "Borda"
 
-  override  def votingMethod(election: List[Ballot]): Unit = {
+  override  def votingMethod(election: Election[Ballot]): Unit = {
 
     Borda.winners(election, randomPreference(), 1)
   }
@@ -21,7 +21,7 @@ trait BordaMemoryRegression extends MemoryRegression {
 
   override def votingMethodName(): String = "Borda"
 
-  override def votingMethod(election: List[Ballot]): Unit = {
+  override def votingMethod(election: Election[Ballot]): Unit = {
     Borda.winners(election, randomPreference(), 1)
   }
 

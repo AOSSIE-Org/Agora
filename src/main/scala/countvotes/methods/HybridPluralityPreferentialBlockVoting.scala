@@ -23,11 +23,11 @@ object HybridPluralityPreferentialBlockVoting extends VoteCounter[Ballot] {
   }
 
   def exclude(election: Election[Ballot],ccandidate: Candidate) : Election[Ballot] ={
-    var list: Election[Ballot] = Nil
+    var list: List[Ballot] = Nil
     for(b<-election if !b.preferences.isEmpty){
       list = new Ballot(b.preferences.filter(_!=ccandidate), b.id, b.weight) :: list
     }
-    list
+    Election(list)
   }
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

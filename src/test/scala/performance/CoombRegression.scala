@@ -1,7 +1,7 @@
 package performance
 
 import countvotes.methods.{Coomb}
-import countvotes.structures.Ballot
+import countvotes.structures.{Ballot, Election}
 import org.scalameter.api._
 
 
@@ -9,7 +9,7 @@ trait CoombRegression extends RuntimeRegression {
 
   override  def votingMethodName(): String = "Coomb"
 
-  override  def votingMethod(election: List[Ballot]): Unit = {
+  override  def votingMethod(election: Election[Ballot]): Unit = {
 
     Coomb.winners(election, randomPreference(), 1)
   }
@@ -20,7 +20,7 @@ trait CoombMemoryRegression extends MemoryRegression {
 
   override def votingMethodName(): String = "Coomb"
 
-  override def votingMethod(election: List[Ballot]): Unit = {
+  override def votingMethod(election: Election[Ballot]): Unit = {
     Coomb.winners(election, randomPreference(), 1)
   }
 

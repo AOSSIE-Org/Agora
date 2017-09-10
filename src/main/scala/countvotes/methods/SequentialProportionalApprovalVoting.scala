@@ -17,15 +17,15 @@ object SequentialProportionalApprovalVoting extends VoteCounter[Ballot]
   // following function removes winner and reduces weight on ballot to 1/(N+1)
   // where N is the number of winners in one single ballot choice list
   def excludeWinner(election: Election[Ballot], winner: (Candidate, Rational)): Election[Ballot] = {
-    var newElection: Election[Ballot]  = Nil
+    var ballots: List[Ballot]  = Nil
     for(b<-election) {
       if(b.preferences.contains(winner._1)) {
-        newElection = new Ballot(b.preferences.filter(_ != winner._1), b.id, Rational(b.weight.numerator, b.weight.denominator + 1)) :: newElection
+        ballots = new Ballot(b.preferences.filter(_ != winner._1), b.id, Rational(b.weight.numerator, b.weight.denominator + 1)) :: ballots
       } else {
-        newElection = new Ballot(b.preferences, b.id, b.weight) :: newElection
+        ballots = new Ballot(b.preferences, b.id, b.weight) :: ballots
       }
     }
-    newElection
+    Election(ballots)
   }
 
   def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int ):

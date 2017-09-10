@@ -1,6 +1,6 @@
 package performance
 import countvotes.methods.BaldwinMethod
-import countvotes.structures.Ballot
+import countvotes.structures.{Ballot, Election}
 import org.scalameter.api._
 
 /**
@@ -10,7 +10,7 @@ trait BaldwinRegression extends RuntimeRegression {
 
   override  def votingMethodName(): String = "Baldwin"
 
-  override  def votingMethod(election: List[Ballot]): Unit = {
+  override  def votingMethod(election: Election[Ballot]): Unit = {
 
     BaldwinMethod.winners(election, randomPreference(), 1)
   }
@@ -21,7 +21,7 @@ trait BaldwinMemoryRegression extends MemoryRegression {
 
   override def votingMethodName(): String = "Baldwin"
 
-  override def votingMethod(election: List[Ballot]): Unit = {
+  override def votingMethod(election: Election[Ballot]): Unit = {
     BaldwinMethod.winners(election, randomPreference(), 1)
   }
 

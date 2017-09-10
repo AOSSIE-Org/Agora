@@ -2,7 +2,7 @@ package analyse
 
 import analyse.methods.{SinglePeakAnalyser, ValueRestrictedAnalyser}
 import countvotes.parsers.{CandidatesParser, PreferencesParser}
-import countvotes.structures.{Candidate, Ballot}
+import countvotes.structures.{Candidate, Ballot, Election}
 import countvotes.{Concise, VoteCounterTableFormats}
 
 
@@ -49,7 +49,7 @@ object PreferenceAnalyser {
   def main(args: Array[String]): Unit = {
 
 
-    def callMethod(c: PreferenceConfig, election: List[Ballot], candidates_in_order:  List[Candidate]) = {
+    def callMethod(c: PreferenceConfig, election: Election[Ballot], candidates_in_order:  List[Candidate]) = {
 
       c.method match {
         case "single-peak" => {

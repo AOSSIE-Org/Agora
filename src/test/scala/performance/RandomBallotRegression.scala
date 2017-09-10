@@ -1,7 +1,7 @@
 package performance
 
 import countvotes.methods.RandomBallot
-import countvotes.structures.Ballot
+import countvotes.structures.{Ballot, Election}
 import org.scalameter.api._
 
 
@@ -9,7 +9,7 @@ trait RandomBallotRegression extends RuntimeRegression {
 
   override  def votingMethodName(): String = "RandomBallot"
 
-  override  def votingMethod(election: List[Ballot]): Unit = {
+  override  def votingMethod(election: Election[Ballot]): Unit = {
 
     RandomBallot.winners(election, randomPreference(), 1)
   }
@@ -20,7 +20,7 @@ trait RandomBallotMemoryRegression extends MemoryRegression {
 
   override def votingMethodName(): String = "RandomBallot"
 
-  override def votingMethod(election: List[Ballot]): Unit = {
+  override def votingMethod(election: Election[Ballot]): Unit = {
     RandomBallot.winners(election, randomPreference(), 1)
   }
 

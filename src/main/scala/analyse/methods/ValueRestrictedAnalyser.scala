@@ -18,7 +18,7 @@ object ValueRestrictedAnalyser extends PreferenceAnalysisMethod[Ballot] {
     * @param ccandidates => candidates list
     * @return
     */
-  override def analyse(election: Election[Ballot], ccandidates: List[Candidate]): Boolean = {
+  override def analyse(election: countvotes.structures.Election[Ballot], ccandidates: List[Candidate]): Boolean = {
 
 
     require(election forall (b => b.preferences.length == ccandidates.length))

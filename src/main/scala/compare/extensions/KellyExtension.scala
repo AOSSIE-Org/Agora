@@ -9,7 +9,7 @@ import countvotes.structures._
 object KellyExtension extends SetExtensionMethods[Ballot] with LazyLogging {
 
 
-  override def compare(election: Election[Ballot], candidates: List[Candidate], parameters: Parameters): Set[Candidate] = {
+  override def compare(election: countvotes.structures.Election[Ballot], candidates: List[Candidate], parameters: Parameters): Set[Candidate] = {
     // require that the sets are consistent with the candidates list
     require(parameters.comparisonSets.isDefined && parameters.comparisonSets.get.set1.forall(c => candidates.exists(cand => cand.name == c)) &&
       parameters.comparisonSets.get.set2.forall(c => candidates.exists(cand => cand.name == c)))

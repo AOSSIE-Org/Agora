@@ -8,11 +8,11 @@ import collection.mutable.{HashMap => Map}
 trait ACTExclusion extends STV[ACTBallot] {
 
  def excludeZero( election: Election[ACTBallot], candidate: Candidate): (Election[ACTBallot], Set[ACTBallot] ) ={
-  var list: Election[ACTBallot] = Nil
+  var list: List[ACTBallot] = Nil
   var setExhausted: Set[ACTBallot] = Set()
     for (b<-election if b.preferences.nonEmpty)
       list = ACTBallot(b.preferences.head :: b.preferences.tail filter { _ != candidate}, b.id, false, b.weight, b.value ):: list
-  (list, setExhausted)
+  (Election(list), setExhausted)
  }
 
 
@@ -21,7 +21,7 @@ trait ACTExclusion extends STV[ACTBallot] {
               candidate: Candidate,
               value: Option[Rational],
               newWinners: Option[List[Candidate]]): (Election[ACTBallot], Set[ACTBallot] ) ={
-  var list: Election[ACTBallot] = Nil
+  var list: List[ACTBallot] = Nil
   var setExhausted: Set[ACTBallot] = Set()
    value match {
     case None => throw new Exception("Argument value are missing in trait ACTExclusion")
@@ -49,7 +49,7 @@ trait ACTExclusion extends STV[ACTBallot] {
        }
     }
   }
-  (list, setExhausted)
+  (Election(list), setExhausted)
  }
 
 }
@@ -59,11 +59,11 @@ trait ACTExclusion extends STV[ACTBallot] {
 trait SenateExclusion extends STV[ACTBallot] {
 
  def excludeZero( election: Election[ACTBallot], candidate: Candidate): (Election[ACTBallot], Set[ACTBallot] ) ={
-  var list: Election[ACTBallot] = Nil
+  var list: List[ACTBallot] = Nil
   var setExhausted: Set[ACTBallot] = Set()
     for (b<-election if b.preferences.nonEmpty)
       list = ACTBallot(b.preferences.head :: b.preferences.tail filter { _ != candidate}, b.id, false, b.weight, b.value ):: list
-  (list, setExhausted)
+  (Election(list), setExhausted)
  }
 
 
@@ -71,7 +71,7 @@ trait SenateExclusion extends STV[ACTBallot] {
               candidate: Candidate,
               value: Option[Rational],
               newWinners: Option[List[Candidate]]): (Election[ACTBallot], Set[ACTBallot] ) ={
-  var list: Election[ACTBallot] = Nil
+  var list: List[ACTBallot] = Nil
   var setExhausted: Set[ACTBallot] = Set()
    value match {
     case None => throw new Exception("Argument value are missing in trait ACTExclusion")
@@ -99,7 +99,7 @@ trait SenateExclusion extends STV[ACTBallot] {
        }
     }
   }
-  (list, setExhausted)
+  (Election(list), setExhausted)
  }
 
 
@@ -116,7 +116,7 @@ trait SimpleExclusion extends STV[Ballot] {
              candidate: Candidate,
              value: Option[Rational],
              newWinners: Option[List[Candidate]]): (Election[Ballot], Set[Ballot] ) = {
-   var list: Election[Ballot]  = Nil
+   var list: List[Ballot]  = Nil
    var setExhausted: Set[Ballot] = Set()
    for (b <- election if !b.preferences.isEmpty) {
       if (b.preferences.head == candidate ) {
@@ -134,7 +134,7 @@ trait SimpleExclusion extends STV[Ballot] {
       }
    }
 
-  (list, setExhausted)
+  (Election(list), setExhausted)
  }
 }
 

@@ -7,6 +7,6 @@ import countvotes.structures.{Ballot, Candidate, Election}
   */
 abstract class PreferenceAnalysisMethod[B <: Ballot] {
 
-    def analyse(e: Election[B], ccandidates: List[Candidate]): Boolean
+    def analyse(e: countvotes.structures.Election[B], ccandidates: List[Candidate]): Boolean
 
 }

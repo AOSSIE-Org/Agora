@@ -42,11 +42,11 @@ abstract class ACT extends STVAustralia
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   def filterBallotsWithFirstPreferences(election: Election[ACTBallot], preferences: List[Candidate]): Election[ACTBallot] = {
-    var ballots:  Election[ACTBallot] = List()
+    var ballots:  List[ACTBallot] = List()
     for (b <- election) {
       if (b.preferences.take(preferences.length) == preferences) ballots = b::ballots
     }
-    ballots
+    Election(ballots)
   }
 
 

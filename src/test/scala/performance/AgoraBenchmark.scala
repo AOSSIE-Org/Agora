@@ -1,13 +1,16 @@
 package performance
 
 import countvotes.methods.Borda
-import countvotes.structures.{Candidate, Ballot}
+import countvotes.structures.{Candidate, Ballot, Election}
 import org.scalameter.Bench
 import org.scalameter.api._
 import org.scalameter.persistence.GZIPJSONSerializationPersistor
 
 import scala.collection.immutable.ListSet
 import scala.util.Random
+
+
+//TODO: Get rid of code duplication in the performance regression tests
 
 class AgoraBenchmark extends Bench.OfflineRegressionReport {
 
@@ -17,9 +20,9 @@ class AgoraBenchmark extends Bench.OfflineRegressionReport {
   val election = for {
     size <- electionSizes
   } yield {
-    for {
+    Election(for {
       i <- List.range(1, size)
-    } yield Ballot(randomPreference(), i, 1)
+    } yield Ballot(randomPreference(), i, 1))
   }
 
   def randomPreference(): List[Candidate] = {
@@ -32,7 +35,7 @@ class AgoraBenchmark extends Bench.OfflineRegressionReport {
     ""
   }
 
-  def votingMethod(election: List[Ballot]) = {}
+  def votingMethod(election: Election[Ballot]) = {}
 }
 
 
@@ -51,7 +54,7 @@ trait RuntimeRegression extends AgoraBenchmark {
 
   def votingMethodName(): String
 
-  def votingMethod(election: List[Ballot]): Unit
+  def votingMethod(election: Election[Ballot]): Unit
 }
 
 trait MemoryRegression extends AgoraBenchmark {
@@ -74,7 +77,7 @@ trait MemoryRegression extends AgoraBenchmark {
 
   def votingMethodName(): String
 
-  def votingMethod(election: List[Ballot]): Unit
+  def votingMethod(election: Election[Ballot]): Unit
 }
 
 

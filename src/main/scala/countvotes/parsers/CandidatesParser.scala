@@ -5,7 +5,9 @@ import countvotes.structures._
 
 import scala.util.parsing.combinator._
 
-object CandidatesParser extends ElectionParser[Candidate] with RegexParsers {
+object CandidatesParser extends LineParser[Candidate] {
+  
+  def read(filename: String) = readLines(filename)
 
   // the method line returns a Parser of type ACTBallotPapersDataStructure
    def line : Parser[Candidate] = name ~ opt(id) ~ opt(party) ^^ {

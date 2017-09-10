@@ -81,15 +81,15 @@ object StabilityAnalyser {
 
     val candidates = ('A' to 'Z') take c map(name => new Candidate(name.toString)) toList
 
-    val election = for {
+    val elections = for {
       i <- List.range(1, n)
     } yield {
-      for {
+      Election(for {
         j <- List.range(1, m)
-      } yield Ballot(Random.shuffle(candidates), i, 1)
+      } yield Ballot(Random.shuffle(candidates), i, 1) )
     }
 
-    (candidates,election)
+    (candidates,elections)
   }
 
   // calculate the kendall tau distance between two profiles
