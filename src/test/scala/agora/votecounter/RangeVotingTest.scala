@@ -1,4 +1,4 @@
-package countvotes
+package agora.votecounter
 
 import agora.votecounter.RangeVoting
 import agora.parsers.{CandidatesParser, PreferencesParserWithScore}

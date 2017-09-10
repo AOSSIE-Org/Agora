@@ -1,3 +1,4 @@
+package agora.votecounter;
 import agora.votecounter.{Copeland, InstantRunoff2Round}
 import agora.parsers.{CandidatesParser, PreferencesParser}
 import agora.structures.Candidate

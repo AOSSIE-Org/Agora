@@ -1,3 +1,4 @@
+package agora.votecounter;
 import agora.votecounter.InstantExhaustiveDropOffRule
 import agora.parsers.{CandidatesParser, PreferencesParser}
 import agora.structures.Candidate

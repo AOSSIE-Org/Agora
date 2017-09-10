@@ -1,4 +1,4 @@
-package countvotes
+package agora.votecounter
 
 
 import ammonite.ops._

@@ -1,3 +1,4 @@
+package agora.votecounter;
 import agora.votecounter.SequentialProportionalApprovalVoting
 import agora.parsers.{CandidatesParser, PreferencesParser}
 import agora.structures.Candidate

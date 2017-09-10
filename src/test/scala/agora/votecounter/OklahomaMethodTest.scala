@@ -1,3 +1,4 @@
+package agora.votecounter;
 
 import agora.votecounter.Oklahoma
 import agora.parsers.{CandidatesParser, PreferencesParser}

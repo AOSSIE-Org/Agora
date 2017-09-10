@@ -1,3 +1,4 @@
+package agora.votecounter;
 
 import agora.votecounter.HybridPluralityPreferentialBlockVoting
 import agora.parsers.{CandidatesParser, PreferencesParser}

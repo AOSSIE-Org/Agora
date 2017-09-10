@@ -1,4 +1,4 @@
-package countvotes
+package agora.votecounter
 
 import agora.votecounter.Schulze
 import agora.parsers.{CandidatesParser, PreferencesParserWithRank}
