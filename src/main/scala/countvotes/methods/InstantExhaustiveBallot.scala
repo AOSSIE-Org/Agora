@@ -13,7 +13,7 @@ object InstantExhaustiveBallot extends VoteCounter[Ballot]
 
   override def winners(election: Election[Ballot], ccandidates: List[Candidate],  numVacancies: Int): List[(Candidate, Rational)] = {
 
-    val ct = totals(election,ccandidates)
+    val ct = Election.totals(election,ccandidates)
     val sortedCandList = ct.toList.sortWith(_._2 < _._2)
     if (ct.size > 2) {
       val losingCand =  sortedCandList.head

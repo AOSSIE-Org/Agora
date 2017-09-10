@@ -40,7 +40,7 @@ object SMC extends VoteCounter[Ballot] with LazyLogging {
     val majorityRational = Rational(1, 2)
 
     val totalVoters = Election.totalWeightedVoters(election)
-    val electionResponse = getPairwiseComparisonForWeightedElection(election, ccandidates)
+    val electionResponse = Election.getPairwiseComparisonForWeightedElection(election, ccandidates)
 
     // generate the ordered list of candidates
     val candOrderList = param.comparisonOrder.get.map(name => ccandidates.find(cand => cand.name == name).get)

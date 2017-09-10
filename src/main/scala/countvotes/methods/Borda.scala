@@ -11,7 +11,7 @@ import scala.collection.mutable.{HashMap => Map}
   */
 object Borda extends VoteCounter[Ballot] with LazyLogging{
 
-  override def totals(election: Election[Ballot], candidates: List[Candidate]): Map[Candidate, Rational] = {
+  def totals(election: Election[Ballot], candidates: List[Candidate]): Map[Candidate, Rational] = {
     val m = new Map[Candidate, Rational]
     val numCandidates = candidates.length
 

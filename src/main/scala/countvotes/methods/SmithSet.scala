@@ -12,7 +12,7 @@ object SmithSet extends VoteCounter[Ballot] {
 
   override def winners(e: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 
-    val pairWiseComp = getPairwiseComparisonForWeightedElection(e, ccandidates)
+    val pairWiseComp = Election.getPairwiseComparisonForWeightedElection(e, ccandidates)
 
     val relationMatrix = getRelationMatrix(e, ccandidates, pairWiseComp)
 

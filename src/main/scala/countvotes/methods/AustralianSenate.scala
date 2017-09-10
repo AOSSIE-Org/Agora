@@ -245,7 +245,7 @@ class AustralianSenate extends STVAustralia
    //val ccands = getCandidates(election)
    println("Continuing candidates: " + ccandidates)
 
-   val tls = totals(election, ccandidates)
+   val tls = Election.totals(election, ccandidates)
 
    //result.addTotalsToHistory(tls)
 
@@ -367,7 +367,7 @@ class AustralianSenate extends STVAustralia
    while (result.getPendingWinners.nonEmpty && newws.length != numVacancies){
     val (cand, ctotal, markings) = result.takeButRetainFirstPendingWinner  // IT IS NOT REMOVED FROM PENDING YET
 
-    val tls = totals(newElection, ccandidates)
+    val tls = Election.totals(newElection, ccandidates)
     val candidatesToExclude = getCandidatesToExclude(tls, numVacancies, result.getQuota, SurplusDistributionBulk, Some(ctotal-result.getQuota))
 
     if (candidatesToExclude.nonEmpty){
@@ -435,7 +435,7 @@ class AustralianSenate extends STVAustralia
     val newElectionWithoutFractionInTotals = loseFraction(newElection, ccandidates)
 
 
-    val newtotalsWithoutFraction = totals(newElectionWithoutFractionInTotals, ccandidates)
+    val newtotalsWithoutFraction = Election.totals(newElectionWithoutFractionInTotals, ccandidates)
 
     val newtotalsWithoutFractionWithoutpendingwinners = newtotalsWithoutFraction.clone().retain((k,v) => !pendingWinners.contains(k))
 
@@ -461,7 +461,7 @@ class AustralianSenate extends STVAustralia
         SurplusDistribution, Some(winner), Some(newElectionWithoutFractionInTotals),
         Some(newtotalsWithoutFraction), None, Some(exhaustedBallots))
     }
-    report.setLossByFraction(totals(newElection,ccandidates), newtotalsWithoutFraction)
+    report.setLossByFraction(Election.totals(newElection,ccandidates), newtotalsWithoutFraction)
     ignoredBallots match { // ballots ignored because they don't belong to the last parcel of the winner
       case Some(ib) => report.setIgnoredBallots(ib)
       case None =>
@@ -508,11 +508,11 @@ class AustralianSenate extends STVAustralia
          newElection = ex._1
          exhaustedBallots = ex._2
 
-         val totalsBeforeFractionLoss = totals(newElection, ccandidates) // for computing LbF
+         val totalsBeforeFractionLoss = Election.totals(newElection, ccandidates) // for computing LbF
 
          newElectionWithoutFractionInTotals = loseFraction(newElection, ccandidates) // perhaps it is better  to get rid of newws in a separate function
 
-         val totalsAfterFractionLoss = totals(newElectionWithoutFractionInTotals, ccandidates)
+         val totalsAfterFractionLoss = Election.totals(newElectionWithoutFractionInTotals, ccandidates)
 
          val totalsWithoutNewWinners = totalsAfterFractionLoss.clone().retain((k,v) => !ws.map(_._1).contains(k))
          // excluding winners that are already identified in the while-loop

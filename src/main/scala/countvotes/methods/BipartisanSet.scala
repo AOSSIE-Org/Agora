@@ -41,7 +41,7 @@ object BipartisanSet extends VoteCounter[Ballot] {
 
     val candidatesProbabilities = candidates map(cand => (cand, distribution(cand.name)))
 
-    val majorityMatrix = getPairwiseComparisonForWeightedElection(election, candidates)
+    val majorityMatrix = Election.getPairwiseComparisonForWeightedElection(election, candidates)
 
     //Dominion of a candidate a is D(a) = { b ∈ A : a >M b }
     def dominions(candidate: Candidate): List[(Candidate, Double)] = {

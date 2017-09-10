@@ -32,7 +32,7 @@ object MeekSTV extends STV[Ballot]
     print("\n INPUT ELECTION: \n")
     //printElection(election)
 
-    val tls = totals(election, candidates) // Here are totals of candidates also not OCCURING in the ballots
+    val tls = Election.totals(election, candidates) // Here are totals of candidates also not OCCURING in the ballots
     result.addTotalsToHistory(tls)
 
     //report.setCandidates(getCandidates(election))  // Here are candidates OCCURING in the election

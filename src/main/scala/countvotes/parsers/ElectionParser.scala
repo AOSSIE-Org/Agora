@@ -8,7 +8,7 @@ import java.io.{FileReader, FileNotFoundException, IOException}
 
 import scala.util.parsing.combinator._
 
-abstract class ElectionParser[T <: Ballot] extends LineParser[T] {
+abstract class ElectionParser[T <: BallotBase] extends LineParser[T] {
 
   def line: Parser[T]
 

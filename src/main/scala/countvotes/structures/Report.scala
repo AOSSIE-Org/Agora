@@ -3,7 +3,8 @@ package countvotes.structures
 import java.io._
 
 import scala.collection.mutable.{HashMap => Map}
-import countvotes.structures.{PreferenceBallot => Ballot}
+//import countvotes.structures.{PreferenceBallot => Ballot}
+import countvotes.structures.{BallotBase => Ballot}
 
 class Report[B <: Ballot] {
 
@@ -283,7 +284,7 @@ def writeDistributionOfPreferences(file: String, order: Option[List[Candidate]])
         var s = ""
 
         for (b <- iB) {
-          s += b.id + " " + b.preferences + " " + b.weight + "\n"
+          s += b.toString + "\n"
         }
 
          writer.write(s)

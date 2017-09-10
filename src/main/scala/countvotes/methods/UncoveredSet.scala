@@ -22,7 +22,7 @@ object UncoveredSet extends VoteCounter[Ballot] with LazyLogging {
     logger.info("Computing Uncovered Set")
     val zeroRational = Rational(0, 1)
     val majorityRational = Rational(1, 2)
-    val electionResponse = getPairwiseComparisonForWeightedElection(e, ccandidates)
+    val electionResponse = Election.getPairwiseComparisonForWeightedElection(e, ccandidates)
     val ucMatrix = BaseMatrix[Rational](ccandidates.size, ccandidates.size){ (i: Int, j: Int) => {
       zeroRational
     }
