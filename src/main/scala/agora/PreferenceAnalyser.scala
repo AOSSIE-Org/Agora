@@ -1,6 +1,6 @@
 package agora
 
-import agora.analyser.{SinglePeakAnalyser, ValueRestrictedAnalyser}
+import agora.analyzer.{SinglePeakAnalyser, ValueRestrictedAnalyser}
 import agora.parsers.{CandidatesParser, PreferencesParser}
 import agora.structures.{Candidate, PreferenceBallot => Ballot, Election}
 

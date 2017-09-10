@@ -1,4 +1,4 @@
-package agora.analyser
+package agora.analyzer
 
 import agora.structures.{PreferenceBallot => Ballot, Candidate, Election}
 
