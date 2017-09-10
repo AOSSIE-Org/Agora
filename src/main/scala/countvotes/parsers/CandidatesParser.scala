@@ -11,9 +11,8 @@ object CandidatesParser extends LineParser[Candidate] {
 
   // the method line returns a Parser of type ACTBallotPapersDataStructure
    def line : Parser[Candidate] = name ~ opt(id) ~ opt(party) ^^ {
-     case  ~(~(name, id), party)  =>
-       {  Candidate(name, id, party)
-       }
+     case  ~(~(name, id), party)  => Candidate(name, id, party)
+     case _ => throw new Exception
    }
 
   def string: Parser[String] = """[0-9A-Za-z\-\,\.\ \']+""".r
@@ -21,16 +20,14 @@ object CandidatesParser extends LineParser[Candidate] {
 
   //obligatory semi-colon only if party present
   def party = ";" ~ string ^^ {
-    case ~(";", string) =>
-    { string.toString
-    }
+    case ~(";", string) => string
+    case _ => throw new Exception
   }
 
   //obligatory semi-colon only if id exists
   def id : Parser[Int] = ";" ~ """[0-9]+""".r ^^ {
-    case ~(";", number) =>
-    { number.toInt
-    }
+    case ~(";", number) => number.toInt
+    case _ => throw new Exception
   }
 
 }

@@ -53,15 +53,15 @@ object PreferencesParserWithIndifference extends ElectionParser[RankBallot] with
   def preferences: Parser[List[(Candidate, Int)]] = {
 
     var rank = 1
-    ((candidate ^^ { case (cand) => List((cand, rank)) }) ~ rep((">" ~ candidate) ^^ {
+    ((candidate ^^ { cand => List((cand, rank)) }) ~ rep((">" ~ candidate) ^^ {
       case ~(">", cand) => {
         rank = rank + 1
         (cand, rank)
       }
+      case _ => throw new Exception
     } | ("=" ~ candidate) ^^ {
-      case ~("=", cand) => {
-        (cand, rank)
-      }
+      case ~("=", cand) => (cand, rank)
+      case _ => throw new Exception
     })) ^^ { case ~(list1, list2) => list1 ++ list2 }
   } ^^ {
     case prefs => prefs sortWith {
