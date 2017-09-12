@@ -29,7 +29,7 @@ object UncoveredSet extends VoteCounter[Ballot] with LazyLogging {
       zeroRational
     }
     }
-    val totalVoters = Election.totalWeightedVoters(e)
+    val totalVoters = e.totalWeightedVoters
 
     // mark all majority winners as rational 1
     ccandidates.foreach(c1 => {

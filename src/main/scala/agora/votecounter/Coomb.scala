@@ -34,7 +34,7 @@ object Coomb extends VoteCounter[Ballot] with LazyLogging{
       }
     }
 
-    if(firstRankedMap.maxBy(_._2)._2 > Rational(1, 2) * Election.totalWeightedVoters(election)) {
+    if(firstRankedMap.maxBy(_._2)._2 > Rational(1, 2) * election.totalWeightedVoters) {
 
       List(firstRankedMap.maxBy(_._2))
 

@@ -33,6 +33,10 @@ with SeqLike[B, Election[B]] {
     }
     m
   }
+  
+  lazy val totalWeightedVoters = {
+    ballots.asInstanceOf[Seq[PreferenceBallot]] filter { _.preferences.nonEmpty} map {_.weight} reduce { _ + _ }
+  }
 }
 object Election {
   
@@ -43,6 +47,9 @@ object Election {
     val zeroRational = Rational(0, 1)
     val responseMatrix = Array.fill(candidates.size, candidates.size)(Rational(0, 1))
 
+    
+    
+    
     for (b <- election if b.preferences.nonEmpty) {
       b.preferences.zipWithIndex foreach { case (c1,i1) => {
         b.preferences.zipWithIndex foreach { case (c2,i2) => {
@@ -52,10 +59,6 @@ object Election {
     responseMatrix
   }
   
-  
-  def totalWeightedVoters(election: Election[PreferenceBallot]) = {
-    election filter { _.preferences.nonEmpty} map {_.weight} reduce { _ + _ }
-  }
 
   implicit def weightedElectionToACTElection(we: Election[PreferenceBallot]): Election[ACTBallot] = {
     new Election(for (b <- we) yield ACTBallot.fromBallot(b)) // b // ACTBallot.fromBallot(b)

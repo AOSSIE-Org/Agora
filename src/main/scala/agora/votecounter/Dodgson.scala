@@ -17,9 +17,9 @@ object Dodgson extends VoteCounter[Ballot] {
   override def winners(e: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 
     // find flip vector from min sum to max sum which satisfies condorcet condition
-    val minDodgsonFlipList = List.fill(Election.totalWeightedVoters(e).toInt)(0 to ccandidates.length)
+    val minDodgsonFlipList = List.fill(e.totalWeightedVoters.toInt)(0 to ccandidates.length)
       .flatten.view
-      .combinations(Election.totalWeightedVoters(e).toInt)
+      .combinations(e.totalWeightedVoters.toInt)
       .flatMap(_.permutations)
       .toList
       .sortBy(_.sum)
@@ -41,7 +41,7 @@ object Dodgson extends VoteCounter[Ballot] {
   def getCondorcetWinnerIfExist(list: List[Int], candidates: List[Candidate], election: Election[Ballot]): Option[Candidate] = {
 
     val dodgsonWinner = candidates.find(c => getCandidateMajorityArray(election, c, list, candidates) match {
-      case Some(matrix) => isCondorcetWinner(c, candidates, matrix, Election.totalWeightedVoters(election).toInt)
+      case Some(matrix) => isCondorcetWinner(c, candidates, matrix, election.totalWeightedVoters.toInt)
       case None => false
     })
 
