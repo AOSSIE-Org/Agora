@@ -18,13 +18,13 @@ abstract class VoteCounter[B <: Ballot] {
     val report: Report[B] = new Report[B]
 
     
-    if (!election.isEmpty && election.head.isInstanceOf[PreferenceBallot]) {
-      var tls = Election.firstVotes(election.asInstanceOf[Election[PreferenceBallot]], candidates)
+    //if (!election.isEmpty) {
+      var tls = election.firstVotes(candidates)
 
       result.addTotalsToHistory(tls)
       
       report.newCount(Input, None, None, Some(tls), None, None)
-    }
+    //}
 
 
     report.setCandidates(candidates)

@@ -22,7 +22,7 @@ object PreferentialBlockVoting extends VoteCounter[Ballot] {
     var ccandidates1 = ccandidates
     var election1 = election
     while (vacancies != 0) {
-      val sortedCandList = Election.firstVotes(election1, ccandidates1).toList.sortWith(_._2 > _._2)
+      val sortedCandList = election1.firstVotes(ccandidates1).toList.sortWith(_._2 > _._2)
       if (sortedCandList.head._2 > majorityThreshold * election1.length && ccandidates1.length > vacancies) {
         winnerlist = sortedCandList.head :: winnerlist
         vacancies -= 1

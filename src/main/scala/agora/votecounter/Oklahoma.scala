@@ -22,7 +22,7 @@ object Oklahoma extends VoteCounter[Ballot] {
   // that is, 1st preference has weight 1, 2nd preference has weight 1/2. 3rd preference has weight 1/3 and so on
   def oklahomaTotals(election: Election[Ballot], ccandidates: List[Candidate], ccandScoreMap: MMap[Candidate, Rational], multiplier: Rational): List[(Candidate, Rational)] = {
     val candidateScoreMap = ccandScoreMap
-    val candidateTotalScores = Election.firstVotes(election, ccandidates)
+    val candidateTotalScores = election.firstVotes(ccandidates)
     for (c<-ccandidates) {
       candidateScoreMap(c) = candidateScoreMap.getOrElse(c, Rational(0, 1)) + candidateTotalScores.getOrElse(c, Rational(0, 1)) * multiplier
     }

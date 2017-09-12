@@ -23,19 +23,18 @@ with SeqLike[B, Election[B]] {
   
   override def toString = ballots map { _.toString } mkString("\n")
   
-}
-object Election {
-  
-  def firstVotes[B <: Ballot](election: Election[B], candidates: List[Candidate]): MMap[Candidate, Rational] = {
+  def firstVotes(candidates: List[Candidate]): MMap[Candidate, Rational] = {
     val m = new MMap[Candidate, Rational]
 
     for (c<-candidates) m(c) = 0
 
-    for (b <- election; (c, t) <- b.firstVotes) {
+    for (b <- ballots; (c, t) <- b.firstVotes) {
       m(c) = t * b.weight + m(c)
     }
     m
   }
+}
+object Election {
   
   // TODO: Use Breeze
   // utility method for matrix where a[i][j] = x means candidate i has got #x votes against candidate j

@@ -33,7 +33,7 @@ class SimpleSTV extends STV[Ballot]
    print("\n INPUT ELECTION: \n")
    //printElection(election)
 
-   val tls = Election.firstVotes(election, candidates) // Here are totals of candidates also not OCCURING in the ballots
+   val tls = election.firstVotes(candidates) // Here are totals of candidates also not OCCURING in the ballots
    result.addTotalsToHistory(tls)
 
    //report.setCandidates(getCandidates(election))  // Here are candidates OCCURING in the election
@@ -62,7 +62,7 @@ class SimpleSTV extends STV[Ballot]
       
     val ccands = mentionedCandidates(election)
 
-    val tls = Election.firstVotes(election, ccandidates)
+    val tls = election.firstVotes(ccandidates)
 
     println("Totals: " + tls)
 
