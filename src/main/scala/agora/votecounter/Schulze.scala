@@ -1,19 +1,20 @@
 package agora.votecounter
 
 import agora.model._
+import agora.votecounter.common.RankPairwiseComparison
 
 import spire.math.Rational
 
 /**
   * Algorithm : https://en.wikipedia.org/wiki/Schulze_method
   */
-object Schulze extends VoteCounter[RankBallot] {
+object Schulze extends VoteCounter[RankBallot] with RankPairwiseComparison {
 
   override def winners(election: Election[RankBallot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 
     
     //FIXME: when ranked ballot is converted to ballot, ties are arbitrarily broken, and this affects the result of Schulze's algorithm.
-    val electionResponse = Election.pairwiseComparisonRank(election, ccandidates)
+    val electionResponse = pairwiseComparison(election, ccandidates)
 
     schulzeWinnerRanking(getSchulzeStrongestPathMatrix(electionResponse, ccandidates), ccandidates).take(numVacancies)
   }

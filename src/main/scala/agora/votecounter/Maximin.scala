@@ -3,6 +3,7 @@ package agora.votecounter
 import com.typesafe.scalalogging.LazyLogging
 import agora.model._
 import agora.model.{PreferenceBallot => Ballot}
+import agora.votecounter.common.PreferencePairwiseComparison
 
 import collection.mutable.{ListBuffer, HashMap => MMap}
 
@@ -12,7 +13,7 @@ import spire.math.Rational
   * Algorithm : https://www.cs.cmu.edu/~arielpro/mfai_papers/lecture6.pdf page-4
   * Variant : winning votes => W = \arg \min_X ( \max_Y score(Y, X))
   */
-object Maximin extends VoteCounter[Ballot] with LazyLogging{
+object Maximin extends VoteCounter[Ballot] with PreferencePairwiseComparison with LazyLogging {
 
   private val rational0 = Rational(0, 1)
   private val majorityThreshold = Rational(1, 2)
@@ -23,7 +24,7 @@ object Maximin extends VoteCounter[Ballot] with LazyLogging{
 
     logger.info("Computing maximin Condorcet Winner")
 
-    val pairwiseComparisons = Election.pairwiseComparison(election, ccandidates)
+    val pairwiseComparisons = pairwiseComparison(election, ccandidates)
     val mcScores = getMaximinScores(pairwiseComparisons, ccandidates, election).toList.sortWith(_._2>_._2)
 
     mcScores.head :: List()

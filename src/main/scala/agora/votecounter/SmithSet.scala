@@ -2,6 +2,7 @@ package agora.votecounter
 
 import agora.model._
 import agora.model.{PreferenceBallot => Ballot}
+import agora.votecounter.common.PreferencePairwiseComparison
 
 import scala.language.postfixOps
 
@@ -11,11 +12,11 @@ import agora.util.matrix.BaseMatrix
 /**
   * Algorithm : http://wiki.electorama.com/wiki/Maximal_elements_algorithms#Floyd-Warshall_algorithm
   */
-object SmithSet extends VoteCounter[Ballot] {
+object SmithSet extends VoteCounter[Ballot] with PreferencePairwiseComparison {
 
   override def winners(e: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 
-    val pairWiseComp = Election.pairwiseComparison(e, ccandidates)
+    val pairWiseComp = pairwiseComparison(e, ccandidates)
 
     val relationMatrix = getRelationMatrix(e, ccandidates, pairWiseComp)
 

@@ -2,6 +2,7 @@ package agora.votecounter
 
 import agora.model._
 import agora.model.{PreferenceBallot => Ballot}
+import agora.votecounter.common.PreferencePairwiseComparison
 
 import spire.math.Rational
 
@@ -11,7 +12,7 @@ import spire.math.Rational
   * Every tournament is zero-sum multiplayer game and  admits a unique probability distribution - due to Von Neumann's Minimax theorem(https://www.youtube.com/watch?v=toP9XPT7Bv4)
   * Bipartisan Set is defined as : BP(A,PM) = {x∈A : p(x)>0, p balanced for (A,PM)} where PM is majority graph
   */
-object BipartisanSet extends VoteCounter[Ballot] {
+object BipartisanSet extends VoteCounter[Ballot] with PreferencePairwiseComparison {
 
   def runVoteCounter(election: Election[Ballot], candidates: List[Candidate], param: Parameters): Report[Ballot] = {
 
@@ -43,7 +44,7 @@ object BipartisanSet extends VoteCounter[Ballot] {
 
     val candidatesProbabilities = candidates map(cand => (cand, distribution(cand.name)))
 
-    val majorityMatrix = Election.pairwiseComparison(election, candidates)
+    val majorityMatrix = pairwiseComparison(election, candidates)
 
     //Dominion of a candidate a is D(a) = { b ∈ A : a >M b }
     def dominions(candidate: Candidate): List[(Candidate, Double)] = {

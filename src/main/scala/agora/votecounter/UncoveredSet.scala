@@ -3,6 +3,7 @@ package agora.votecounter
 import com.typesafe.scalalogging.LazyLogging
 import agora.model._
 import agora.model.{PreferenceBallot => Ballot}
+import agora.votecounter.common.PreferencePairwiseComparison
 import agora.util.matrix._
 
 import scala.language.postfixOps
@@ -17,14 +18,14 @@ import agora.util.matrix.BaseMatrix
   * x covers y (x C y) if D(y) is a subset of D(x)
   * where D(x) = { y ⍷ A | x >(majority) y}
   */
-object UncoveredSet extends VoteCounter[Ballot] with LazyLogging {
+object UncoveredSet extends VoteCounter[Ballot] with PreferencePairwiseComparison with LazyLogging {
 
   override def winners(e: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
 
     logger.info("Computing Uncovered Set")
     val zeroRational = Rational(0, 1)
     val majorityRational = Rational(1, 2)
-    val electionResponse = Election.pairwiseComparison(e, ccandidates)
+    val electionResponse = pairwiseComparison(e, ccandidates)
     val ucMatrix = BaseMatrix[Rational](ccandidates.size, ccandidates.size){ (i: Int, j: Int) => {
       zeroRational
     }

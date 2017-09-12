@@ -36,34 +36,6 @@ with SeqLike[B, Election[B]] {
 }
 object Election {
   
-  // utility method for matrix where a[i][j] = x means candidate i has got #x votes against candidate j
-  def pairwiseComparison(election: Election[PreferenceBallot], candidates: List[Candidate]): Array[Array[Rational]] = {
-    val responseMatrix = Array.fill(candidates.size, candidates.size)(Rational(0, 1))
-
-    for (b <- election) {
-      val pi = b.preferences.zipWithIndex
-      for ( (c1,i1) <- pi; (c2,i2) <- pi.take(i1)) {
-        responseMatrix(candidates.indexOf(c2))(candidates.indexOf(c1)) += b.weight
-      }
-    }      
-     
-    responseMatrix
-  }
-  
-  // utility method for matrix where a[i][j] = x means candidate i has got #x votes against candidate j
-  def pairwiseComparisonRank(election: Election[RankBallot], candidates: List[Candidate]): Array[Array[Rational]] = {
-    val responseMatrix = Array.fill(candidates.size, candidates.size)(Rational(0, 1))
- 
-    for (b <- election) {
-      val pi = b.sortedRanks.zipWithIndex
-      for ( ((c1,s1),i1) <- pi; ((c2,s2),i2) <- pi.take(i1) if s1 != s2) {
-        responseMatrix(candidates.indexOf(c2))(candidates.indexOf(c1)) += b.weight
-      }
-    }
-    
-    responseMatrix
-  }
-  
   def newBuilder[B <: Ballot] = new mutable.Builder[B, Election[B]] {
     private[this] val base = Seq().genericBuilder[B]
     override def +=(e: B) = { base += e; this }

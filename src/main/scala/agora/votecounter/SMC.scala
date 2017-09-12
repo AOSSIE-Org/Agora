@@ -3,6 +3,7 @@ package agora.votecounter
 import com.typesafe.scalalogging.LazyLogging
 import agora.model._
 import agora.model.{PreferenceBallot => Ballot}
+import agora.votecounter.common.PreferencePairwiseComparison
 
 import spire.math.Rational
 
@@ -13,7 +14,7 @@ import spire.math.Rational
   * round i, if w >(majority) xi+1, and is xi+1, if xi+1 >(majority) w; and the ultimate winner is the winner
   * of round m.
   */
-object SMC extends VoteCounter[Ballot] with LazyLogging {
+object SMC extends VoteCounter[Ballot] with PreferencePairwiseComparison with LazyLogging {
 
   def runVoteCounter(election: Election[Ballot], candidates: List[Candidate], param: Parameters, numVacancies: Int): Report[Ballot] = {
 
@@ -40,7 +41,7 @@ object SMC extends VoteCounter[Ballot] with LazyLogging {
     val majorityRational = Rational(1, 2)
 
     val totalVoters = election.weight
-    val electionResponse = Election.pairwiseComparison(election, ccandidates)
+    val electionResponse = pairwiseComparison(election, ccandidates)
 
     // generate the ordered list of candidates
     val candOrderList = param.comparisonOrder.get.map(name => ccandidates.find(cand => cand.name == name).get)
