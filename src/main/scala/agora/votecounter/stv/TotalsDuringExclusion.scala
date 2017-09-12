@@ -2,7 +2,8 @@ package agora.votecounter.stv
 
 import agora.model._
 import agora.votecounter._
-import collection.mutable.{HashMap => Map}
+import collection.mutable.{HashMap => MMap}
+import collection.Map
 import scala.util.Random
 
 import spire.math.Rational
@@ -31,12 +32,10 @@ trait ACTTotalsDuringExclusion extends ACT{
   }
 
   def rewriteTotalOfCandidate(totals: Map[Candidate, Rational], candidate: Candidate, newTotal: Option[Int]): Map[Candidate, Rational] = {
-    var newmap = totals
     newTotal match {
-      case Some(t) => newmap(candidate) = t
-      case None =>
+      case Some(t) => totals + (candidate -> t)
+      case None => totals
     }
-    newmap
   }
 
 }

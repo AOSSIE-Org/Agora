@@ -4,7 +4,9 @@ package agora.votecounter
 import agora.model._
 import agora.model.{PreferenceBallot => Ballot}
 
-import scala.collection.mutable.{HashMap => Map}
+//import scala.collection.mutable.{HashMap => MMap}
+
+import scala.collection.Map
 
 import spire.math.Rational
 

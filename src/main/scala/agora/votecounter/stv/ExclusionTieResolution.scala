@@ -2,7 +2,8 @@ package agora.votecounter.stv
 
 import agora.model._
 import agora.votecounter._
-import collection.mutable.{HashMap => Map}
+import collection.mutable.{HashMap => MMap}
+import collection.Map
 import scala.util.Random
 
 import scala.language.postfixOps
@@ -37,7 +38,7 @@ trait ACTExclusionTieResolution extends STV[ACTBallot] with ExclusionTieResoluti
           smallestcandidate = c
         }
       }
-      recFindSmallest(equaltotals.clone() filter {
+      recFindSmallest(equaltotals filter {
         p => totalshistory.head.getOrElse(p._1, Rational(0, 1)) == totalshistory.head.getOrElse(smallestcandidate, Rational(0, 1))
       }, totalshistory.tail) // it may be not unique!!!
      }
@@ -51,7 +52,7 @@ trait ACTExclusionTieResolution extends STV[ACTBallot] with ExclusionTieResoluti
 
     var min = Rational(Int.MaxValue, 1)
     for (kv <- totals) if (kv._2 < min) min = kv._2
-    val equaltotals = totals.clone() filter {_._2 == min}
+    val equaltotals = totals filter {_._2 == min}
     //println("Equal smallest totals: " + equaltotals)
     val smallestCandidate = recFindSmallest(equaltotals, result.getTotalsHistoryClone.tail)
     if (smallestCandidate.size > 1) {

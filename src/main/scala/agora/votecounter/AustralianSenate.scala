@@ -6,7 +6,8 @@ import agora.votecounter.stv._
 import spire.math.Rational
 
 import scala.collection.immutable.ListMap
-import collection.mutable.{HashMap => Map}
+import collection.mutable.{HashMap => MMap}
+import collection.Map
 import scala.collection.SortedMap
 import collection.mutable.HashSet
 import collection.breakOut
@@ -48,7 +49,7 @@ class AustralianSenate extends STVAustralia
 
   // Section 273 (29)
   def computeNotionalVotes(candidate: Candidate, totals: Map[Candidate, Rational]): Rational = {
-    totals.clone().filter(p => p._2 < totals(candidate)).foldLeft(Rational(0,1))(_ + _._2)
+    totals.filter(p => p._2 < totals(candidate)).foldLeft(Rational(0,1))(_ + _._2)
   }
 
   def computeAdjustedNotionalVotes(candidate: Candidate, totals: Map[Candidate, Rational], surplus: Option[Rational]): Rational = {
@@ -82,9 +83,9 @@ class AustralianSenate extends STVAustralia
 
    var pickedTotals: Map[Candidate, Rational] = Map()
    bulktype match {
-          case ExclusionBulk => pickedTotals = totals.clone().filter(p => computeNotionalVotes(p._1,totals) >= vacancyShortfall)   // Section 273 (13A)(a)
+          case ExclusionBulk => pickedTotals = totals.filter(p => computeNotionalVotes(p._1,totals) >= vacancyShortfall)   // Section 273 (13A)(a)
           case SurplusDistributionBulk =>
-                pickedTotals = totals.clone().filter(p => computeAdjustedNotionalVotes(p._1,totals, surplus) >= vacancyShortfall)   // Section 273 (13A)(a)
+                pickedTotals = totals.filter(p => computeAdjustedNotionalVotes(p._1,totals, surplus) >= vacancyShortfall)   // Section 273 (13A)(a)
    }
    if (pickedTotals.nonEmpty){
     pickedTotals.filter(p => p._2 == pickedTotals.valuesIterator.min)
@@ -111,14 +112,14 @@ class AustralianSenate extends STVAustralia
    var totalsOfCandidatesPotentiallyB:  Map[Candidate, Rational] = Map()
    candidateA match {
     case Some(cA) => {
-      totalsOfCandidatesPotentiallyB = totals.clone().filter(p => p._2 < totals(cA))
+      totalsOfCandidatesPotentiallyB = totals.filter(p => p._2 < totals(cA))
      // val candidateB = totals.clone().filter(p => p._2 == valueOfCandidateB).head._1
     }
     case None => {
        bulktype match {
-          case ExclusionBulk => totalsOfCandidatesPotentiallyB = totals.clone().filter(p => computeNotionalVotes(p._1, totals) < vacancyShortfall)
+          case ExclusionBulk => totalsOfCandidatesPotentiallyB = totals.filter(p => computeNotionalVotes(p._1, totals) < vacancyShortfall)
           case SurplusDistributionBulk =>  totalsOfCandidatesPotentiallyB =
-            totals.clone().filter(p => computeAdjustedNotionalVotes(p._1, totals, surplus) < vacancyShortfall)
+            totals.filter(p => computeAdjustedNotionalVotes(p._1, totals, surplus) < vacancyShortfall)
        }
       //val candidateB = totals.clone().filter(p => p._2 == valueOfCandidateB).head._1
     }
@@ -144,8 +145,8 @@ class AustralianSenate extends STVAustralia
 
    var potentialCandidatesC: Map[Candidate, Rational] = Map()
    bulktype match {
-          case ExclusionBulk => potentialCandidatesC = totals.clone().filter(p => computeNotionalVotes(p._1, totals)<leadingShortFall)
-          case SurplusDistributionBulk =>  potentialCandidatesC = totals.clone().filter(
+          case ExclusionBulk => potentialCandidatesC = totals.filter(p => computeNotionalVotes(p._1, totals)<leadingShortFall)
+          case SurplusDistributionBulk =>  potentialCandidatesC = totals.filter(
             p => computeAdjustedNotionalVotes(p._1, totals, surplus)<leadingShortFall)
    }
   println("potentialCandidatesC " + potentialCandidatesC)
@@ -442,7 +443,7 @@ class AustralianSenate extends STVAustralia
 
     val newtotalsWithoutFraction = newElectionWithoutFractionInTotals.firstVotes(ccandidates)
 
-    val newtotalsWithoutFractionWithoutpendingwinners = newtotalsWithoutFraction.clone().retain((k,v) => !pendingWinners.contains(k))
+    val newtotalsWithoutFractionWithoutpendingwinners = newtotalsWithoutFraction.filterKeys(k => !pendingWinners.contains(k))
 
     println("winner " + winner)
 
@@ -519,7 +520,7 @@ class AustralianSenate extends STVAustralia
 
          val totalsAfterFractionLoss = newElectionWithoutFractionInTotals.firstVotes(ccandidates)
 
-         val totalsWithoutNewWinners = totalsAfterFractionLoss.clone().retain((k,v) => !ws.map(_._1).contains(k))
+         val totalsWithoutNewWinners = totalsAfterFractionLoss.filterKeys(k => !ws.map(_._1).contains(k))
          // excluding winners that are already identified in the while-loop
 
          result.addTotalsToHistory(totalsWithoutNewWinners)

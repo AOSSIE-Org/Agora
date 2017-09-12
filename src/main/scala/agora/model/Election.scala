@@ -23,14 +23,11 @@ with SeqLike[B, Election[B]] {
   
   override def toString = ballots map { _.toString } mkString("\n")
   
-  def firstVotes(candidates: List[Candidate]): MMap[Candidate, Rational] = {
+  def firstVotes(candidates: List[Candidate]): Map[Candidate, Rational] = {
     val m = new MMap[Candidate, Rational]
 
-    for (c<-candidates) m(c) = 0
+    for (b <- ballots; (c, t) <- b.firstVotes) m(c) = t * b.weight + m.getOrElse(c, 0)
 
-    for (b <- ballots; (c, t) <- b.firstVotes) {
-      m(c) = t * b.weight + m(c)
-    }
     m
   }
   
@@ -42,14 +39,14 @@ object Election {
   // utility method for matrix where a[i][j] = x means candidate i has got #x votes against candidate j
   def pairwiseComparison(election: Election[PreferenceBallot], candidates: List[Candidate]): Array[Array[Rational]] = {
     val responseMatrix = Array.fill(candidates.size, candidates.size)(Rational(0, 1))
- 
+
     for (b <- election) {
       val pi = b.preferences.zipWithIndex
       for ( (c1,i1) <- pi; (c2,i2) <- pi.take(i1)) {
         responseMatrix(candidates.indexOf(c2))(candidates.indexOf(c1)) += b.weight
       }
-    }
-    
+    }      
+     
     responseMatrix
   }
   

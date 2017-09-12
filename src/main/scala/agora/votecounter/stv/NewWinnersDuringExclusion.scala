@@ -2,7 +2,9 @@ package agora.votecounter.stv
 
 import agora.model._
 import agora.votecounter._
-import collection.mutable.{HashMap => Map}
+import collection.mutable.{HashMap => MMap}
+
+import collection.Map
 
 import spire.math.Rational
 

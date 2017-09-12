@@ -1,7 +1,8 @@
 package agora.model
 
-import collection.mutable.{HashMap => Map}
+import collection.mutable.{HashMap => MMap}
 import spire.math.Rational
+import scala.collection.Map
 
  class Result{
 
@@ -83,7 +84,7 @@ import spire.math.Rational
     }
 
     def getTotalsHistoryClone: List[Map[Candidate, Rational]] = {
-      totalsHistory map { m => m.clone() }
+      totalsHistory
     }
 
     def setWinners(ws: List[(Candidate, Rational)]): Unit = {

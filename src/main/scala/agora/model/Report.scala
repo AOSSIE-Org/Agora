@@ -1,9 +1,11 @@
 package agora.model
 
 import java.io._
-import scala.collection.mutable.{HashMap => Map}
+import scala.collection.mutable.{HashMap => MMap}
 import spire.math.Rational
 import agora.votecounter.stv.Action
+
+import scala.collection.Map
 
 
 class Report[B <: Ballot] {

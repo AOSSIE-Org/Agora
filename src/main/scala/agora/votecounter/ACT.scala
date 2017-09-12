@@ -6,7 +6,7 @@ import agora.votecounter.stv._
 import spire.math.Rational
 
 import scala.collection.immutable.ListMap
-import collection.mutable.{HashMap => Map}
+//import collection.mutable.{HashMap => MMap}
 import scala.collection.SortedMap
 import collection.mutable.HashSet
 import collection.breakOut
@@ -17,6 +17,8 @@ import agora.votecounter.stv.VictoryWithoutQuota
 import agora.votecounter.stv.SurplusDistribution
 import agora.votecounter.stv.ACTBallot
 
+
+import scala.collection.Map
 
 abstract class ACT extends STVAustralia
  with DroopQuota
@@ -213,7 +215,7 @@ abstract class ACT extends STVAustralia
     val newElectionWithoutFractionInTotals = loseFraction(newElection, ccandidates)
 
     val newtotalsWithoutFraction = newElectionWithoutFractionInTotals.firstVotes(ccandidates)
-    val newtotalsWithoutFractionWithoutpendingwinners = newtotalsWithoutFraction.clone().retain((k,v) => !pendingWinners.contains(k))
+    val newtotalsWithoutFractionWithoutpendingwinners = newtotalsWithoutFraction.filterKeys(!pendingWinners.contains(_))
 
 
     result.removePendingWinner(winner)
@@ -290,7 +292,7 @@ abstract class ACT extends STVAustralia
     val totalsWithIncorrectValueForCandidate = rewriteTotalOfCandidate(totalsAfterFractionLoss, candidate._1, newTotal)
     // simulating EVACS's incorrect total as a result of partial exclusion
 
-    val totalsWithoutNewWinners = totalsWithIncorrectValueForCandidate.clone().retain((k,v) => !ws.map(_._1).contains(k))
+    val totalsWithoutNewWinners = totalsWithIncorrectValueForCandidate.filterKeys(k => !ws.map(_._1).contains(k))
     // excluding winners that are already identified in the while-loop
 
     result.addTotalsToHistory(totalsWithIncorrectValueForCandidate)
