@@ -23,8 +23,7 @@ libraryDependencies ++= Seq(
   "com.storm-enroute" %% "scalameter" % "0.8.2",
   "com.storm-enroute" %% "scalameter-core" % "0.8.2",
   "com.typesafe.play" %% "play-json" % "2.6.3",
-  "org.typelevel" %% "spire" % "0.14.1",
-  "org.scalanlp" %% "breeze" % "0.13.2"
+  "org.typelevel" %% "spire" % "0.14.1"
 )
 
 testFrameworks += new TestFramework("org.scalameter.ScalaMeterFramework")
