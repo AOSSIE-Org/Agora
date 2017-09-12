@@ -43,7 +43,7 @@ object Election {
   def pairwiseComparison(election: Election[PreferenceBallot], candidates: List[Candidate]): Array[Array[Rational]] = {
     val responseMatrix = Array.fill(candidates.size, candidates.size)(Rational(0, 1))
  
-    for (b <- election if b.preferences.nonEmpty) {
+    for (b <- election) {
       val pi = b.preferences.zipWithIndex
       for ( (c1,i1) <- pi; (c2,i2) <- pi.take(i1)) {
         responseMatrix(candidates.indexOf(c2))(candidates.indexOf(c1)) += b.weight
