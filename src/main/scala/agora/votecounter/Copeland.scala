@@ -19,7 +19,7 @@ object Copeland extends VoteCounter[Ballot] with LazyLogging {
 
     val candidatesNetScores = new MMap[Candidate, Rational]
     val majorityRational = Rational(1, 2)
-    val totalVoters = election.totalWeightedVoters
+    val totalVoters = election.weight
 
     // calculate pariwise comparison according to the ranked voting methods
     // non - ranked candidates are worse than ranked candidates

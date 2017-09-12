@@ -23,7 +23,7 @@ object RandomBallot extends VoteCounter[Ballot] with LazyLogging {
 
     logger.info("computing random ballot winner")
 
-    val totalVoters = election.totalWeightedVoters
+    val totalVoters = election.weight
 
     val random = seed match {
       case Some(seed) => new Random(seed).nextDouble()

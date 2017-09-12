@@ -34,9 +34,8 @@ with SeqLike[B, Election[B]] {
     m
   }
   
-  lazy val totalWeightedVoters = {
-    ballots.asInstanceOf[Seq[PreferenceBallot]] filter { _.preferences.nonEmpty} map {_.weight} reduce { _ + _ }
-  }
+  lazy val weight = ((ballots map {_.weight}) :\ Rational(0,1)) { _ + _ }
+ 
 }
 object Election {
   

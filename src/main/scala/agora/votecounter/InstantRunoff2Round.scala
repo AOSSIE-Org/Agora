@@ -21,7 +21,7 @@ object InstantRunoff2Round extends VoteCounter[Ballot] {
 
     val majorityRational = Rational(1, 2)
     val rnd1Winners = election.firstVotes(ccandidates).toList.sortWith(_._2 > _._2).take(2)
-    val totalVoters = election.totalWeightedVoters
+    val totalVoters = election.weight
 
     if (rnd1Winners.head._2 > majorityRational * totalVoters)
       List(rnd1Winners.head)
