@@ -13,3 +13,8 @@ extends Ballot(id, w)
 
 case class RankBallot(val ranks: List[(Candidate, Int)], override val id: Int, w: Rational) 
 extends Ballot(id, w)
+
+case class ApprovalBallot(val approvals: Set[Candidate], override val id: Int, w: Rational) 
+extends Ballot(id, w)
+
+// TODO: use ApprovalBallot in Approval voting
