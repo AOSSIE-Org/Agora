@@ -3,7 +3,6 @@ package agora.votecounter
 import com.typesafe.scalalogging.LazyLogging
 import agora.model._
 import agora.model.{PreferenceBallot => Ballot}
-import agora.model.{PreferenceBallot => Ballot}
 
 import spire.math.Rational
 
