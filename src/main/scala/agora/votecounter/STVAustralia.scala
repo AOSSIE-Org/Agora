@@ -12,7 +12,7 @@ import agora.votecounter.stv.ACTBallot
 abstract class STVAustralia extends STV[ACTBallot] {
   
   val result: Result = new Result
-  val report: Report[ACTBallot] = new Report[ACTBallot]
+  val report = new Report[ACTBallot]
 
 
  def tryToDistributeSurplusVotes(
@@ -22,6 +22,22 @@ abstract class STVAustralia extends STV[ACTBallot] {
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+  
+ //FIXME: This is an ugly hack that should be removed after we get rid of ACTBallot
+ def runVoteCounterGeneral(election: Election[PreferenceBallot], candidates: List[Candidate], numVacancies: Int):
+    Report[PreferenceBallot] = {
+    
+    val r = runVoteCounter(convertBallots(election), candidates, numVacancies)
+    val r1 = new Report[PreferenceBallot]
+    r1.setWinners(r.getWinners)
+    r1
+  }
+    
+   //FIXME: This is an ugly hack that should be removed after we get rid of ACTBallot
+  def convertBallots(we: Election[PreferenceBallot]): Election[ACTBallot] = {
+    new Election(for (b <- we) yield ACTBallot.fromBallot(b)) // b // ACTBallot.fromBallot(b)
+  }
+    
  override def runVoteCounter(election: Election[ACTBallot], candidates: List[Candidate], numVacancies: Int):
     Report[ACTBallot] = {  // all ballots of e are marked when the function is called
    val quota = cutQuotaFraction(computeQuota(election.length, numVacancies))

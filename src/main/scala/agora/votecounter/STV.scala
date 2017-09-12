@@ -9,8 +9,6 @@ import scala.collection.mutable.{HashMap => Map}
 import spire.math.Rational
 
 abstract class STV[B <: Ballot] extends VoteCounter[B] {
-  //type E = Election[B]
- 
 
   def computeQuota(numVotes: Int, numVacancies: Int): Rational
 

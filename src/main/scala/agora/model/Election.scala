@@ -45,9 +45,6 @@ object Election {
 
     val zeroRational = Rational(0, 1)
     val responseMatrix = Array.fill(candidates.size, candidates.size)(Rational(0, 1))
-
-    
-    
     
     for (b <- election if b.preferences.nonEmpty) {
       b.preferences.zipWithIndex foreach { case (c1,i1) => {
@@ -59,9 +56,7 @@ object Election {
   }
   
 
-  implicit def weightedElectionToACTElection(we: Election[PreferenceBallot]): Election[ACTBallot] = {
-    new Election(for (b <- we) yield ACTBallot.fromBallot(b)) // b // ACTBallot.fromBallot(b)
-  }
+
 
   // FIXME: remove this implicit. Rank ballots cannot always be converted to Preferential Ballots.
   implicit def rankedElectionToWeightedElection(re: Election[RankBallot]): Election[PreferenceBallot] = {

@@ -5,6 +5,7 @@ import scala.collection.mutable.{HashMap => Map}
 import spire.math.Rational
 import agora.votecounter.stv.Action
 
+
 class Report[B <: Ballot] {
 
   private var countHistory : List[Count[B]] = Nil
@@ -25,7 +26,6 @@ class Report[B <: Ballot] {
     numVacancies = None
     winners = Nil
   }
-
 
   def setLossByFractionToZero: Unit = {
     countHistory.head.setLossByFraction(Rational(0,1))
