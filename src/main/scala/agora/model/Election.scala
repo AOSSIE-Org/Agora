@@ -9,6 +9,7 @@ import scala.language.implicitConversions
 import spire.math.Rational
 import agora.votecounter.stv.ACTBallot
 
+import breeze.linalg._
 
 class Election[+B <: Ballot](val ballots: Seq[B]) 
 extends Seq[B]
@@ -56,6 +57,20 @@ object Election {
   }
   
 
+  def pairwiseComparison2(election: Election[PreferenceBallot], candidates: List[Candidate]): DenseMatrix[Rational] = {
+
+    val zeroRational = Rational(0, 1)
+    val responseMatrix = DenseMatrix.zeros[Rational](candidates.size, candidates.size)
+    
+    for (b <- election if b.preferences.nonEmpty) {
+      b.preferences.zipWithIndex foreach { case (c1,i1) => {
+        b.preferences.zipWithIndex foreach { case (c2,i2) => {
+          if (i1 < i2) {
+            responseMatrix(candidates.indexOf(c1), candidates.indexOf(c2)) += b.weight
+          }}}}}}
+    responseMatrix
+  }
+  
 
 
   // FIXME: remove this implicit. Rank ballots cannot always be converted to Preferential Ballots.
