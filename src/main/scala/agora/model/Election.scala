@@ -39,19 +39,17 @@ with SeqLike[B, Election[B]] {
 }
 object Election {
   
-  // TODO: Use Breeze
   // utility method for matrix where a[i][j] = x means candidate i has got #x votes against candidate j
   def pairwiseComparison(election: Election[PreferenceBallot], candidates: List[Candidate]): Array[Array[Rational]] = {
-
-    val zeroRational = Rational(0, 1)
     val responseMatrix = Array.fill(candidates.size, candidates.size)(Rational(0, 1))
-    
+ 
     for (b <- election if b.preferences.nonEmpty) {
-      b.preferences.zipWithIndex foreach { case (c1,i1) => {
-        b.preferences.zipWithIndex foreach { case (c2,i2) => {
-          if (i1 < i2) {
-            responseMatrix(candidates.indexOf(c1))(candidates.indexOf(c2)) += b.weight
-          }}}}}}
+      val pi = b.preferences.zipWithIndex
+      for ( (c1,i1) <- pi; (c2,i2) <- pi.take(i1)) {
+        responseMatrix(candidates.indexOf(c2))(candidates.indexOf(c1)) += b.weight
+      }
+    }
+    
     responseMatrix
   }
   
