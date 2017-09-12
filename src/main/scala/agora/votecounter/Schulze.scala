@@ -13,7 +13,7 @@ object Schulze extends VoteCounter[RankBallot] {
 
     
     //FIXME: when ranked ballot is converted to ballot, ties are arbitrarily broken, and this affects the result of Schulze's algorithm.
-    val electionResponse = Election.pairwiseComparison(Election.rankedElectionToWeightedElection(election), ccandidates)
+    val electionResponse = Election.pairwiseComparisonRank(election, ccandidates)
 
     schulzeWinnerRanking(getSchulzeStrongestPathMatrix(electionResponse, ccandidates), ccandidates).take(numVacancies)
   }
