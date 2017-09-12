@@ -19,7 +19,7 @@ object MeekSTV extends STV[Ballot]
   with NewWinnersNotOrdered[Ballot]
   with SimpleSurplusDistributionTieResolution // not necessary because of NewWinnersNotOrdered
   with SimpleExclusion
-  with UnfairExclusionTieResolutuim
+  with UnfairExclusionTieResolution
   with TransferValueWithDenominatorEqualToTotal
   with VoteCounterWithAllBallotsInSurplusDistribution
   with ExactWinnerRemoval {

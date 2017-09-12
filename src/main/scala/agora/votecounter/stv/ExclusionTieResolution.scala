@@ -15,7 +15,7 @@ trait ExclusionTieResolution {
   def chooseCandidateForExclusion(totals: Map[Candidate, Rational]): (Candidate, Rational)
 }
 
-trait UnfairExclusionTieResolutuim {
+trait UnfairExclusionTieResolution {
  def chooseCandidateForExclusion(totals: Map[Candidate, Rational]): (Candidate, Rational)   = {
    var min = Rational(Int.MaxValue, 1)
    for (kv <- totals) if (kv._2 < min) min = kv._2

@@ -34,7 +34,7 @@ class AustralianSenate extends STVAustralia
  with SenateSurplusDistribution // Section 273 (9)(b)
  with SenateNewWinnersDuringSurplusesDistribution
  with SenateNewWinnersDuringExclusion
- with UnfairExclusionTieResolutuim // TODO
+ with UnfairExclusionTieResolution // TODO
  {
 
 
