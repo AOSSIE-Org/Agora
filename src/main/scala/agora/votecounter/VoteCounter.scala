@@ -19,7 +19,7 @@ abstract class VoteCounter[B <: Ballot] {
 
     
     if (!election.isEmpty && election.head.isInstanceOf[PreferenceBallot]) {
-      var tls = Election.totals(election.asInstanceOf[Election[PreferenceBallot]], candidates)
+      var tls = Election.firstVotes(election.asInstanceOf[Election[PreferenceBallot]], candidates)
 
       result.addTotalsToHistory(tls)
       

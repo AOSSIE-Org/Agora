@@ -30,7 +30,7 @@ abstract class STVAustralia extends STV[ACTBallot] {
    result.setQuota(quota)
    report.setQuota(quota)
 
-   val tls = Election.totals(election, candidates) // Here are totals also of those candidates
+   val tls = Election.firstVotes(election, candidates) // Here are totals also of those candidates
                                           // that are NOT OCCURING in the ballots (i.e. when nobody mentioned them in preferences)
    result.addTotalsToHistory(tls)
 

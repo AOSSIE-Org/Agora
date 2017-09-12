@@ -16,7 +16,7 @@ import spire.math.Rational
 trait ACTFractionLoss extends STV[ACTBallot]{
 
   def loseFraction(e: Election[ACTBallot], ccandidates: List[Candidate]): Election[ACTBallot] = {
-    val pt = Election.totals(e,ccandidates)
+    val pt = Election.firstVotes(e,ccandidates)
     var newe = e
     for ((k,v) <- pt) {
       val n = v.toBigDecimal(0, java.math.RoundingMode.DOWN).toInt

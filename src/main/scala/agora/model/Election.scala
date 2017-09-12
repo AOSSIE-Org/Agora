@@ -26,7 +26,7 @@ with SeqLike[B, Election[B]] {
 }
 object Election {
   
-  def totals[B <: Ballot](election: Election[B], candidates: List[Candidate]): MMap[Candidate, Rational] = {
+  def firstVotes[B <: Ballot](election: Election[B], candidates: List[Candidate]): MMap[Candidate, Rational] = {
     val m = new MMap[Candidate, Rational]
 
     for (c<-candidates) m(c) = 0

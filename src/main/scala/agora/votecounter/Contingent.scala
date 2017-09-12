@@ -16,7 +16,7 @@ object Contingent extends VoteCounter[Ballot] {
   val majorityThreshold = Rational(1, 2)
 
   override def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
-    val tls = Election.totals(election, ccandidates)
+    val tls = Election.firstVotes(election, ccandidates)
     val ctSorted: List[(Candidate, Rational)] = tls.toList.sortWith(_._2 > _._2)
     if (ctSorted.head._2 > majorityThreshold * election.length) {
       List(ctSorted.head)
