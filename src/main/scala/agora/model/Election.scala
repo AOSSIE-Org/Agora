@@ -22,21 +22,21 @@ with SeqLike[B, Election[B]] {
   protected[this] override def newBuilder = Election.newBuilder 
   
   override def toString = ballots map { _.toString } mkString("\n")
+  
 }
 object Election {
   
-  def totals(election: Election[PreferenceBallot], candidates: List[Candidate]): MMap[Candidate, Rational] = {
+  def totals[B <: Ballot](election: Election[B], candidates: List[Candidate]): MMap[Candidate, Rational] = {
     val m = new MMap[Candidate, Rational]
 
     for (c<-candidates) m(c) = 0
 
-    for (b <- election if !b.preferences.isEmpty) {
-      m(b.preferences.head) = b.weight + (m.getOrElse(b.preferences.head, 0))
+    for (b <- election; (c, t) <- b.firstVotes) {
+      m(c) = t * b.weight + m(c)
     }
     m
   }
   
-
   // TODO: Use Breeze
   // utility method for matrix where a[i][j] = x means candidate i has got #x votes against candidate j
   def pairwiseComparison(election: Election[PreferenceBallot], candidates: List[Candidate]): Array[Array[Rational]] = {
