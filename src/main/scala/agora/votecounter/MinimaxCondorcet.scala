@@ -22,7 +22,7 @@ object MinimaxCondorcet extends VoteCounter[Ballot] with LazyLogging{
 
     logger.info("Computing minimax Condorcet Winner")
 
-    val pairwiseComparisons = Election.getPairwiseComparisonForWeightedElection(election, ccandidates)
+    val pairwiseComparisons = Election.pairwiseComparison(election, ccandidates)
     val mcScores = getMinimaxCondorcetScores(pairwiseComparisons, ccandidates)
 
     List(ccandidates.map(c => (c, mcScores.map {_(ccandidates.indexOf(c))}.max)).minBy(_._2))

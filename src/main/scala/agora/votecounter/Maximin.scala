@@ -23,7 +23,7 @@ object Maximin extends VoteCounter[Ballot] with LazyLogging{
 
     logger.info("Computing maximin Condorcet Winner")
 
-    val pairwiseComparisons = Election.getPairwiseComparisonForWeightedElection(election, ccandidates)
+    val pairwiseComparisons = Election.pairwiseComparison(election, ccandidates)
     val mcScores = getMaximinScores(pairwiseComparisons, ccandidates, election).toList.sortWith(_._2>_._2)
 
     mcScores.head :: List()

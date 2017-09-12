@@ -37,8 +37,9 @@ object Election {
   }
   
 
+  // TODO: Use Breeze
   // utility method for matrix where a[i][j] = x means candidate i has got #x votes against candidate j
-  def getPairwiseComparisonForWeightedElection(election: Election[PreferenceBallot], candidates: List[Candidate]): Array[Array[Rational]] = {
+  def pairwiseComparison(election: Election[PreferenceBallot], candidates: List[Candidate]): Array[Array[Rational]] = {
 
     val zeroRational = Rational(0, 1)
     val responseMatrix = Array.fill(candidates.size, candidates.size)(Rational(0, 1))
