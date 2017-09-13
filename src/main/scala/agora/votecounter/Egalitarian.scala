@@ -1,57 +1,33 @@
 package agora.votecounter
 
 import agora.model._
-import agora.model.{PreferenceBallot => Ballot}
+import agora.model.PreferenceBallot
 
-import scala.math._
+import spire.math._
 
-abstract class Egalitarian[B <: Ballot] extends VoteCounter[B] {
-  val fairness: Double = 2
+abstract class Egalitarian[B <: PreferenceBallot] extends VoteCounter[B] {
+  val fairness: Double
 
-  /*
-  def getCandidateList(election: Election[B]): List[Candidate] = {
-    var candidateList:List[Candidate] = List()
-    for(i <- election){
-      for(j <- i.preferences){
-        if(!(candidateList contains j)){
-          candidateList = candidateList :+ j
-        }
-      }
+  def rank(b: PreferenceBallot, c: Candidate): Option[Int] = {
+    val r = b.preferences.indexOf(c)
+    r match {
+      case -1 => None
+      case _ => Some(r)
     }
-    candidateList
   }
-  */
 
-
-  def rank(election: Election[B], voter: Int, candidate: Candidate): (Boolean,Int) = {
-    for(i <- 0 to (election(voter).preferences.length-1)) {
-      if(election(voter).preferences(i) == candidate){
-        (true,i)
-      }
+  def utilityIndividual(b: PreferenceBallot, c: Candidate, numCandidates: Int): Int = {
+    rank(b,c) match {  
+      case Some(rank) => numCandidates - rank
+      case _ => 0
     }
-    (false,0)
   }
 
-  def utilityIndividual(election: Election[B], voter: Int, candidate: Candidate, numCandidates: Int): Int = rank(election,voter,candidate) match {
-    case (true,rank) => numCandidates - rank
-    case _ => 0
+  def utilitySet(b: PreferenceBallot, cs: Traversable[Candidate]): Int = {
+    cs map { c => utilityIndividual(b, c, cs.size)} reduce { _ + _ }
   }
 
-  def utilitySet(election: Election[B], voter: Int, candidates: List[Candidate], numCandidates: Int): Int = {
-    val sum: Int = candidates map { c => utilityIndividual(election, voter, c, numCandidates)} reduce { _ + _ }
-    sum
-  }
-
-  def socialWelfare(election: Election[B], candidates: List[Candidate], numCandidates: Int): Double = {
-    var sum: Double = 0
-    for(i <- 0 to (election.length-1)){
-      sum = sum + (election(i).weight).toDouble * exp((1/fairness) * log(utilitySet(election,i,candidates, numCandidates)))
-    }
-    sum
-  }
-
-  def maxTuple1(x:(Double, List[Candidate]), y:(Double, List[Candidate])): (Double, List[Candidate]) = {
-    if (x._1 > y._1) {x}
-    else {y}
+  def socialWelfare(e: Election[B], cs: Traversable[Candidate]): Rational = {
+    (Rational(0,1) /: e.ballots) { (acc, b) => acc + (b.weight) * exp((1/fairness) * log(utilitySet(b,cs))) } 
   }
 }

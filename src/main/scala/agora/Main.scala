@@ -134,7 +134,7 @@ object Main extends RegexParsers {
         }
         case "Egalitarian" => {
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = EgalitarianBrute.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r = (new EgalitarianBrute).runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
         }
         case "Majority" => {

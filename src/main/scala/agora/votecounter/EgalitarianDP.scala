@@ -6,7 +6,7 @@ import spire.math.Rational
 
 import scala.collection.mutable.{HashMap => MMap}
 
-object EgalitarianDP extends Egalitarian[Ballot] {
+class EgalitarianDP(val fairness: Double = 2) extends Egalitarian[Ballot] {
   val memo = new MMap[(Int,Set[Candidate]), List[Candidate]] ()
 
   def winners(election: Election[Ballot],  ccandidates: List[Candidate], numVacancies: Int): List[(Candidate,Rational)] = {
@@ -33,8 +33,8 @@ object EgalitarianDP extends Egalitarian[Ballot] {
       for(i <- candidateList){
         contemplatedSets = contemplatedSets :+ (recursiveWinnersComputation(candidateList.filterNot(elem => elem == i), numVacancies-1, election, numCandidates) :+ i)
       }
-      val contemplatedSetsWelfareTuple: List[(Double,List[Candidate])] = contemplatedSets.map(x => (socialWelfare(election, x, numCandidates),x))
-      val result: List[Candidate] = (contemplatedSetsWelfareTuple.foldLeft ((0.0, candidateList)) ((x,y) => maxTuple1(x,y)))._2   //Error if all less than 0
+      val contemplatedSetsWelfareTuple: List[(Rational,List[Candidate])] = contemplatedSets.map(x => (socialWelfare(election, x),x))
+      val result: List[Candidate] = (contemplatedSetsWelfareTuple.foldLeft ((Rational(0,1), candidateList)) ((x,y) => Seq(x,y).maxBy(_._1)))._2   //Error if all less than 0
       memo += (((numVacancies,candidateList.toSet),result))
       result
     }
