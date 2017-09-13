@@ -8,19 +8,13 @@ import spire.math._
 abstract class Egalitarian[B <: PreferenceBallot] extends VoteCounter[B] {
   val fairness: Double
 
-  def rank(b: PreferenceBallot, c: Candidate): Option[Int] = {
+  def rank(b: PreferenceBallot, c: Candidate, numCandidates: Int): Int = {
     val r = b.preferences.indexOf(c)
-    r match {
-      case -1 => None
-      case _ => Some(r)
-    }
+    if (r != -1) r else numCandidates
   }
 
   def utilityIndividual(b: PreferenceBallot, c: Candidate, numCandidates: Int): Int = {
-    rank(b,c) match {  
-      case Some(rank) => numCandidates - rank
-      case _ => 0
-    }
+    numCandidates - rank(b, c, numCandidates)
   }
 
   def utilitySet(b: PreferenceBallot, cs: Traversable[Candidate]): Int = {
@@ -28,6 +22,6 @@ abstract class Egalitarian[B <: PreferenceBallot] extends VoteCounter[B] {
   }
 
   def socialWelfare(e: Election[B], cs: Traversable[Candidate]): Rational = {
-    (Rational(0,1) /: e.ballots) { (acc, b) => acc + (b.weight) * exp((1/fairness) * log(utilitySet(b,cs))) } 
+    (Rational(0,1) /: e.ballots) { (acc, b) => acc + (b.weight) * pow(utilitySet(b,cs), (1/fairness)) } 
   }
 }
