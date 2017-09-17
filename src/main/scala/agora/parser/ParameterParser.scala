@@ -12,8 +12,10 @@ object ParameterParser {
 
   def parse(fileName: String): Parameters = {
 
-    val src = Source.fromFile(fileName).getLines.mkString
-    Json.parse(src).as[Parameters](Parameters.methodParameterReader)
+    val src = Source.fromFile(fileName)
+    val parameters = Json.parse(src.getLines.mkString).as[Parameters](Parameters.methodParameterReader)
+    src.close()
+    parameters
   }
 
 }
