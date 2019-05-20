@@ -23,6 +23,14 @@ trait HareQuota {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
+trait ImperialiQuota {
+  def computeQuota(numVotes: Int, numVacancies: Int): Rational =  numVotes / (numVacancies + 2)
+}
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
 // ACT, TAS, NSW LC, NSW LG, SENATE
 trait NoFractionInQuota {
   def cutQuotaFraction(num: Rational): Rational = {
