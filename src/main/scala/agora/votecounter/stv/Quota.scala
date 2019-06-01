@@ -44,3 +44,11 @@ trait NoFractionInQuota {
    num.toBigDecimal(0, java.math.RoundingMode.DOWN).toInt
   }
 }
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+trait WebsterSainteLagueQuota {
+  def computeQuota(numPartyVotes: Int, numSeatsAllocated: Int): Rational =  numPartyVotes / (2*numSeatsAllocated + 1)
+}
