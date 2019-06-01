@@ -30,6 +30,15 @@ trait HareQuota {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
+trait HuntingtonHillQuota {
+  def computeQuota(numPartyVotes: Int, numSeatsAllocated: Int): Rational = {
+    numPartyVotes / scala.math.sqrt(numSeatsAllocated * (numSeatsAllocated + 1))
+  }
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
 trait ImperialiQuota {
   def computeQuota(numVotes: Int, numVacancies: Int): Rational =  numVotes / (numVacancies + 2)
 }
