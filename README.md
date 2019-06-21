@@ -6,14 +6,42 @@ Agora is a library of data structures and algorithms for counting votes in elect
 
 Currently the following methods are implemented:  
 
-* `EVACS` - an imitation of [eVACS](http://www.elections.act.gov.au/elections_and_voting/electronic_voting_and_counting), the STV system used for counting votes in Australian Capital Territory. The [ACT Electoral Act](http://www.legislation.act.gov.au/a/1992-71/default.asp) specifies the STV method used in ACT.
-* `Simple` - a simple STV counting algorithm.
-* `Egalitarian`  
-* `Majority` 
-* `Borda`
 * `Approval`
+* `Baldwin`
+* `BipartisanSet`
+* `Borda`
+* `Contingent`
+* `Coomb`
+* `Copeland`
+* `Dodgson`
+* `EVACS` - an imitation of [eVACS](http://www.elections.act.gov.au/elections_and_voting/electronic_voting_and_counting), the STV system used for counting votes in Australian Capital Territory. The [ACT Electoral Act](http://www.legislation.act.gov.au/a/1992-71/default.asp) specifies the STV method used in ACT.
+* `EVACSDWD`
+* `EVACSnoLP`
+* `Egalitarian` - a simple STV counting algorithm.
+* `HybridPluralityPreferentialBlockVoting`
+* `InstantExhaustiveBallot`
+* `InstantExhaustiveDropOff`
+* `InstantRunoff2Round`
+* `Kemeny-Young`
+* `Majority`
+* `Maximin`
+* `Meek`
+* `MinimaxCondorcet`
 * `Nanson`
-* `Kemeny-Young` 
+* `Oklahoma`
+* `PAV` - Proportional Approval Voting
+* `PreferentialBlockVoting`
+* `RandomBallot`
+* `RangeVoting`
+* `RankedPairs`
+* `SAV` - Satisfaction Approval Voting
+* `SMC`
+* `SPAV` - Sequential  Proportional Approval Voting
+* `Schulze`
+* `Senate`
+* `Simple` - A simple STV counting algorithm.
+* `SmithSet`
+* `UncoveredSet`
 
 Remark: When EVACSMethod is run on real data the computation is slow because of ACTFractionLoss
 
