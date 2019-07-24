@@ -2,12 +2,27 @@ package agora.votecounter
 
 import agora.model._
 import agora.model.{PreferenceBallot => Ballot}
+import agora.votecounter.BipartisanSet.bipartisanSet
 import spire.math.Rational
 
 object SuperMajority extends VoteCounter[Ballot] {
 
-  def runVoteCounter(e: Election[Ballot], candidates: List[Candidate], numVacancies: Int, param: Parameters):
-  List[(Candidate, Rational)] = {
+  def runVoteCounter(election: Election[Ballot], candidates: List[Candidate], numVacancies: Int, param: Parameters):
+  Report[Ballot] = {
+    // print("\n INPUT ELECTION: \n")
+    // //printElection(election)
+
+    val result: Result = new Result
+    val report: Report[Ballot] = new Report[Ballot]
+
+    report.setCandidates(candidates)
+
+    report.setWinners(superMajority(election, candidates, numVacancies, param))
+
+    report
+  }
+
+  def superMajority(e: Election[Ballot], candidates: List[Candidate], numVacancies: Int, param: Parameters): List[(Candidate,Rational)] = {
     val sortedList = e.firstVotes(candidates).toList sortWith {
       (ct1, ct2) => ct1._2 > ct2._2
     }
@@ -20,6 +35,5 @@ object SuperMajority extends VoteCounter[Ballot] {
       sortedList.take(numVacancies).filter { case (c, r) => r > (e.length * 0.5) }
     }
   }
-
   override def winners(e: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = ???
 }

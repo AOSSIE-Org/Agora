@@ -325,6 +325,16 @@ object Main extends RegexParsers {
           }
         }
 
+        case "SuperMajority" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
+          parameters match {
+            case Some(param) => {
+              var r = SuperMajority.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt, param)
+              r.writeWinners(winnersfile)
+            }
+            case None => println("Please provide majority percentage required to elect winner. An example would be 0.6 which represents 60%")
+          }
+        }
         case "" => println("Please specify which algorithm should be used.")
       }
     }

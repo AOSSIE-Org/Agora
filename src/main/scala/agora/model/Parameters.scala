@@ -36,10 +36,10 @@ object ComparisonSets {
 
 }
 
-case class Parameters(comparisonOrder: Option[Array[String]], allowedVote: Option[Int], cutOffQuota: Option[Double],
-                      proportionalRatio: Option[Double], majorityBonus: Option[MajorityBonus],
-                      probabilityDistribution: Option[Array[Map[String, Double]]], comparisonSets: Option[ComparisonSets],
-                      majorityPercentage: Option[Double]
+case class Parameters(comparisonOrder: Option[Array[String]] = None, allowedVote: Option[Int] = None, cutOffQuota: Option[Double] = None,
+                      proportionalRatio: Option[Double] = None, majorityBonus: Option[MajorityBonus] = None,
+                      probabilityDistribution: Option[Array[Map[String, Double]]] = None, comparisonSets: Option[ComparisonSets] = None,
+                      majorityPercentage: Option[Double] = None
                      )
 
 object Parameters {
