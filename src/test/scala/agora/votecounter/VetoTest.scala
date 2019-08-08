@@ -12,7 +12,7 @@ class VetoTest extends Specification{
 
   "VetoRule Test " should {
 
-    "verify result" in { vetoRuleMethodVerification("48-example.e", "48-candidates.txt") shouldEqual expectedVetoRuleWinnerList }
+    "verify result" in { vetoRuleMethodVerification("49-example.e", "49-candidates.txt") shouldEqual expectedVetoRuleWinnerList }
 
   }
 
