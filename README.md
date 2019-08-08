@@ -1,4 +1,3 @@
-
 [![build status](https://gitlab.com/aossie/Agora/badges/master/build.svg)](https://gitlab.com/aossie/Agora/commits/master)
 [![coverage report](https://gitlab.com/aossie/Agora/badges/master/coverage.svg)](https://gitlab.com/aossie/Agora/commits/master)
 
@@ -111,7 +110,7 @@ $ sbt -J-Xmx12G -J-Xms12G
 Then you can run Agora within SBT's command line. The following command runs the Majority method on preferences given by file `02-example.txt` and candidates enumerated in file `02-candidates.txt` looking for `1` winner.
 
 ```
-run -d files/Examples/ -b 02-example.txt -c 02-candidates.txt -m Majority -v 1
+run -d files/Examples/ -b 02-example.e -c 02-candidates.txt -m Majority -v 1
 ```
 The general command to run Agora is as follows:
 
