@@ -332,7 +332,7 @@ object Main extends RegexParsers {
               var r = SuperMajority.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt, param)
               r.writeWinners(winnersfile)
             }
-            case None => println("Please provide majority percentage required to elect winner. An example would be 0.6 which represents 60%")
+            case None => println("Please provide majority percentage required to elect winner.")
           }
         }
         case "" => println("Please specify which algorithm should be used.")
