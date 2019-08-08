@@ -335,6 +335,13 @@ object Main extends RegexParsers {
             case None => println("Please provide majority percentage required to elect winner.")
           }
         }
+
+        case "Bucklin" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
+          var r = Bucklin.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          r.writeWinners(winnersfile)
+        }
+
         case "" => println("Please specify which algorithm should be used.")
       }
     }
