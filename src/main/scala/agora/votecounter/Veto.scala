@@ -7,8 +7,6 @@ object Veto extends VoteCounter[Ballot] {
 
   import spire.math.Rational
 
-  // TODO: There is an implicit assumption here that all votes have weight 1.
-  // Should this be checked?
   def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int ):
   List[(Candidate,Rational)] = {
     val candidateScoreMap = new MMap[Candidate, Rational]
@@ -17,6 +15,8 @@ object Veto extends VoteCounter[Ballot] {
     for(ballot <- election) {
       for(preference <- ballot.preferences) {
         if(!(preference == ballot.preferences.last && ballot.preferences.length > 1)) {
+          //Automatically assign a weight of 1 to all candidates in the ballot except the last candidate.
+          //All ballot weights specified in the election file are ignored.
           candidateScoreMap(preference) = candidateScoreMap.getOrElse(preference, Rational(0, 1)) + Rational(1,1)
         }
       }

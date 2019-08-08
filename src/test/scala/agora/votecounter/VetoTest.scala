@@ -10,7 +10,7 @@ class VetoTest extends Specification{
   //Test data as provided by http://democratix.dbai.tuwien.ac.at/examples/veto.php
   val expectedVetoRuleWinnerList = List(Candidate("Banana"), Candidate("Cherry"))
 
-  "MajorityRule Test " should {
+  "VetoRule Test " should {
 
     "verify result" in { vetoRuleMethodVerification("48-example.e", "48-candidates.txt") shouldEqual expectedVetoRuleWinnerList }
 
