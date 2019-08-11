@@ -10,7 +10,7 @@ class BucklinTest extends Specification {
   //Test data obtained from https://en.wikipedia.org/wiki/Bucklin_voting#Example_application
   val expectedBucklinWinnerList = List(Candidate("Nashville"))
 
-  "PreferentialBlockVoting Test " should {
+  "Bucklin Vote Test " should {
 
     "verify result" in { bucklinVerification("48-example.e", "48-candidates.txt") shouldEqual expectedBucklinWinnerList }
   }
