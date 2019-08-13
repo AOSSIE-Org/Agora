@@ -325,6 +325,12 @@ object Main extends RegexParsers {
           }
         }
 
+        case "Veto" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
+          var r = Veto.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          r.writeWinners(winnersfile)
+        }
+          
         case "Bucklin" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = Bucklin.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
