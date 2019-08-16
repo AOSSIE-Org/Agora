@@ -25,6 +25,27 @@ trait UnfairExclusionTieResolution {
  }
 }
 
+trait PriorRoundExclusionTieResolution {
+  def chooseCandidateForExclusion(equalTotals: Map[Candidate, Rational], priorRoundTotals: Map[Candidate, Rational]): (Candidate, Rational) = {
+    if (equalTotals.size > 1 && priorRoundTotals.nonEmpty) {
+      val equalCandidatesList = equalTotals.toList.map(x => x._1)
+      var smallestCandidate: Candidate = equalCandidatesList.head
+      for (c<-equalCandidatesList.tail){
+        if ((priorRoundTotals.getOrElse(c, Rational(0,1))  ) < priorRoundTotals.getOrElse(smallestCandidate, Rational(0,1))) {
+          smallestCandidate = c
+        }
+      }
+      //In case there are several candidates with prior totals equal to the minimum candidate total, a random selection is made.
+      Random shuffle(equalTotals filter {
+        p => priorRoundTotals.getOrElse(p._1, Rational(0, 1)) == priorRoundTotals.getOrElse(smallestCandidate, Rational(0, 1))
+      }) head
+    }
+    else {
+      equalTotals head
+    }
+  }
+}
+
 trait ACTExclusionTieResolution extends STV[ACTBallot] with ExclusionTieResolution {
   
   val result: Result
