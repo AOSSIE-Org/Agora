@@ -332,10 +332,16 @@ object Main extends RegexParsers {
               var r = SuperMajority.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt, param)
               r.writeWinners(winnersfile)
             }
-            case None => println("Please provide majority percentage required to elect winner.")
+            case None => println("Please provide a .json file containing the majority percentage required to elect winner.")
           }
         }
 
+        case "Veto" => {
+          val election = PreferencesParser.read(c.directory + electionFile)
+          var r = Veto.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          r.writeWinners(winnersfile)
+        }
+          
         case "Bucklin" => {
           val election = PreferencesParser.read(c.directory + electionFile)
           var r = Bucklin.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
