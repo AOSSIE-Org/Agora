@@ -36,9 +36,11 @@ object ComparisonSets {
 
 }
 
-case class Parameters(comparisonOrder: Option[Array[String]], allowedVote: Option[Int], cutOffQuota: Option[Double],
-                      proportionalRatio: Option[Double], majorityBonus: Option[MajorityBonus],
-                      probabilityDistribution: Option[Array[Map[String, Double]]], comparisonSets: Option[ComparisonSets])
+case class Parameters(comparisonOrder: Option[Array[String]] = None, allowedVote: Option[Int] = None, cutOffQuota: Option[Double] = None,
+                      proportionalRatio: Option[Double] = None, majorityBonus: Option[MajorityBonus] = None,
+                      probabilityDistribution: Option[Array[Map[String, Double]]] = None, comparisonSets: Option[ComparisonSets] = None,
+                      majorityPercentage: Option[Double] = None
+                     )
 
 object Parameters {
 
@@ -59,7 +61,8 @@ object Parameters {
       (__ \ "proportional_ratio").readNullable[Double] and
       (__ \ "majority_bonus").readNullable[MajorityBonus] and
       (__ \ "probability_distribution").readNullable[Array[Map[String, Double]]] and
-      (__ \ "comparison_sets").readNullable[ComparisonSets]
+      (__ \ "comparison_sets").readNullable[ComparisonSets] and
+      (__ \ "majorityPercentage").readNullable[Double]
     ) (Parameters.apply _)
 
 }
