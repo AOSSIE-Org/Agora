@@ -7,7 +7,7 @@ organization := "AOSSIE"
 
 version := "1.2"
 
-scalaVersion := "2.12.3"
+scalaVersion := "2.12.17"
 
 resolvers += Resolver.sonatypeRepo("public")
 resolvers += "Sonatype OSS Snapshots" at
