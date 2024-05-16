@@ -44,6 +44,10 @@ lazy val project = Project("agora", file("."))
   .configs(Testing.configs: _*)
   .settings(Testing.settings: _*)
 
+lazy val core = (project in file("modules/core"))
+
+lazy val cli = (project in file("modules/cli"))
+
 licenses := Seq("CC BY-NC-SA" -> url("http://creativecommons.org/licenses/by-nc-sa/4.0/"))
 
 homepage := Some(url("https://www.gitlab.com/aossie/Agora"))
