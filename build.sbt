@@ -28,14 +28,14 @@ val allSettings = Defaults.coreDefaultSettings
 
 
 lazy val root = Project("agora", file("."))
-  .configs(Testing.configs: _*)
-  .settings(Testing.settings: _*)
   .aggregate(
     core,
     cli
   )
 
 lazy val core = (project in file("modules/core"))
+  .configs(Testing.configs: _*)
+  .settings(Testing.settings: _*)
   .settings(
     name    := "core",
     libraryDependencies ++= Seq(
@@ -53,6 +53,11 @@ lazy val core = (project in file("modules/core"))
   )
 
 lazy val cli = (project in file("modules/cli"))
+  .configs(Testing.configs: _*)
+  .settings(Testing.settings: _*)
+  .dependsOn(
+    core
+  )
 
 licenses := Seq("CC BY-NC-SA" -> url("http://creativecommons.org/licenses/by-nc-sa/4.0/"))
 
