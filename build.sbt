@@ -58,6 +58,12 @@ lazy val cli = (project in file("modules/cli"))
   .dependsOn(
     core
   )
+  .settings(
+    name := "cli",
+    libraryDependencies ++= Seq(
+      "org.specs2" %% "specs2-core" % "4.20.6" % "test,verification-test,bench",
+    )
+  )
 
 licenses := Seq("CC BY-NC-SA" -> url("http://creativecommons.org/licenses/by-nc-sa/4.0/"))
 
