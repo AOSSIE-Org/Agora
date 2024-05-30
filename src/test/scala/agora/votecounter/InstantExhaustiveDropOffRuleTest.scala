@@ -1,9 +1,9 @@
 package agora.votecounter
 
-import agora.parser.{CandidatesParser, PreferencesParser}
+import agora.parser.CandidatesParser
+import agora.parser.PreferencesParser
 import agora.model.Candidate
 import org.specs2.mutable.Specification
-
 
 class InstantExhaustiveDropOffRuleTest extends Specification {
 
@@ -11,14 +11,23 @@ class InstantExhaustiveDropOffRuleTest extends Specification {
 
   "InstantExhaustiveDropOffRule Test " should {
 
-    "verify result" in { instantExhaustiveDropOffRuleVerification("14-example.e", "14-candidates.txt") shouldEqual expectedInstantExhaustiveDropOffRuleWinnerList }
+    "verify result" in {
+      instantExhaustiveDropOffRuleVerification(
+        "14-example.e",
+        "14-candidates.txt"
+      ) shouldEqual expectedInstantExhaustiveDropOffRuleWinnerList
+    }
   }
 
-  def instantExhaustiveDropOffRuleVerification(electionFile: String, candidatesFile: String): List[Candidate] = {
+  def instantExhaustiveDropOffRuleVerification(
+      electionFile: String,
+      candidatesFile: String
+  ): List[Candidate] = {
 
     val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
-    val election =  PreferencesParser.read("../Agora/files/Examples/" + electionFile)
+    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
 
-    InstantExhaustiveDropOffRule.winners(election, candidates, 1).map {_._1}
+    InstantExhaustiveDropOffRule.winners(election, candidates, 1).map(_._1)
   }
+
 }

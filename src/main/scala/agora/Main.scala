@@ -11,20 +11,24 @@ import scala.util.parsing.combinator._
 
 import spire.math.Rational
 
-abstract sealed class VoteCounterTableFormats
+sealed abstract class VoteCounterTableFormats
+
 case object ACT extends VoteCounterTableFormats
+
 case object Concise extends VoteCounterTableFormats
 
-
 object Main extends RegexParsers {
-  case class Config(directory: String = "",
-                    ballotsfile: Option[String] = None,
-                    method: String = "",
-                    parameters: Option[Parameters] = None,
-                    nvacancies: String = "",
-                    nkandidates: Option[String] = None,
-                    candidatesfile: String = "",
-                    table: VoteCounterTableFormats = Concise)
+
+  case class Config(
+      directory: String = "",
+      ballotsfile: Option[String] = None,
+      method: String = "",
+      parameters: Option[Parameters] = None,
+      nvacancies: String = "",
+      nkandidates: Option[String] = None,
+      candidatesfile: String = "",
+      table: VoteCounterTableFormats = Concise
+  )
 
   val parser = new scopt.OptionParser[Config]("compress") {
     head("\nCommand Line Interface for Electronic Vote Counting\n\n  ")
@@ -34,44 +38,59 @@ object Main extends RegexParsers {
         """ -d [-b] -c -m [-p] -v [-k] [-t]""" + "\n \n"
     )
 
-    opt[String]('d', "directory") required() unbounded() action { (v, c) =>
-      c.copy(directory = v)
-    } text ("set working directory to <dir>\n") valueName ("<dir>")
+    opt[String]('d', "directory")
+      .required()
+      .unbounded()
+      .action { (v, c) =>
+        c.copy(directory = v)
+      }
+      .text("set working directory to <dir>\n")
+      .valueName("<dir>")
 
-    opt[String]('b', "ballotsfile") action { (v, c) =>
+    opt[String]('b', "ballotsfile").action { (v, c) =>
       c.copy(ballotsfile = Some(v))
-    } text ("use preferences listed in <bfile>\n") valueName ("<bfile>")
+    }.text("use preferences listed in <bfile>\n").valueName("<bfile>")
 
-    opt[String]('c', "candidatesfile") required() action { (v, c) =>
-      c.copy(candidatesfile = v)
-    } text ("use preferences listed in <cfile>\n") valueName ("<cfile>")
+    opt[String]('c', "candidatesfile")
+      .required()
+      .action { (v, c) =>
+        c.copy(candidatesfile = v)
+      }
+      .text("use preferences listed in <cfile>\n")
+      .valueName("<cfile>")
 
-    opt[String]('m', "method") required() action { (v, c) =>
-      c.copy(method = v)
-    } text ("use vote counting method  <met>\n") valueName ("<met>")
+    opt[String]('m', "method")
+      .required()
+      .action { (v, c) =>
+        c.copy(method = v)
+      }
+      .text("use vote counting method  <met>\n")
+      .valueName("<met>")
 
-    opt[String]('p', "parameterFile") action { (v, c) =>
+    opt[String]('p', "parameterFile").action { (v, c) =>
       c.copy(parameters = Some(ParameterParser.parse(c.directory + v)))
-    } text ("set paramfile to <pfile>\n") valueName ("<pfile>")
+    }.text("set paramfile to <pfile>\n").valueName("<pfile>")
 
-    opt[String]('v', "nvacancies") required() action { (v, c) =>
-      c.copy(nvacancies = v)
-    } text ("set number of vacancies  <numv>\n") valueName ("<numv>")
+    opt[String]('v', "nvacancies")
+      .required()
+      .action { (v, c) =>
+        c.copy(nvacancies = v)
+      }
+      .text("set number of vacancies  <numv>\n")
+      .valueName("<numv>")
 
-    opt[String]('k', "nkandidates") action { (v, c) =>
+    opt[String]('k', "nkandidates").action { (v, c) =>
       c.copy(nkandidates = Some(v))
-    } text ("set number of candidates  <numk>\n") valueName ("<numk>")
+    }.text("set number of candidates  <numk>\n").valueName("<numk>")
 
-    opt[String]('t', "table") action { (v, c) => {
-
+    opt[String]('t', "table").action { (v, c) =>
       val tableFormat = v match {
         case "ACT" => ACT
-        case _ => Concise
+        case _     => Concise
       }
       c.copy(table = tableFormat)
-    }
 
-    } text ("set format of the output table <tbl>\n") valueName ("<tbl>")
+    }.text("set format of the output table <tbl>\n").valueName("<tbl>")
 
     note(
       """Possible values are as follows:""" + "\n" +
@@ -84,299 +103,315 @@ object Main extends RegexParsers {
     help("help").text("prints this usage text")
   }
 
-
   // scalastyle:off cyclomatic.complexity
   // scalastyle:off method.length
   def main(args: Array[String]): Unit = {
 
-    def callMethod(c: Config, electionFile: String, winnersfile: String, reportfile: String,
-                   candidates_in_order: List[Candidate], parameters: Option[Parameters]) = {
+    def callMethod(
+        c: Config,
+        electionFile: String,
+        winnersfile: String,
+        reportfile: String,
+        candidates_in_order: List[Candidate],
+        parameters: Option[Parameters]
+    ) = {
       c.method match {
-        case "EVACS" => {
+        case "EVACS" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = (new EVACS).runVoteCounterGeneral(election, candidates_in_order, c.nvacancies.toInt)
+          var r =
+            (new EVACS).runVoteCounterGeneral(election, candidates_in_order, c.nvacancies.toInt)
           c.table match {
             case ACT => r.writeDistributionOfPreferencesACT(reportfile, Some(candidates_in_order))
-            case _ => r.writeDistributionOfPreferences(reportfile, Some(candidates_in_order))
+            case _   => r.writeDistributionOfPreferences(reportfile, Some(candidates_in_order))
           }
           println("The scrutiny was recorded to " + reportfile)
           r.writeWinners(winnersfile)
           println("The winners were recorded to " + winnersfile)
-        }
-        case "EVACSnoLP" => {
+        case "EVACSnoLP" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = (new EVACSnoLP).runVoteCounterGeneral(election, candidates_in_order, c.nvacancies.toInt)
+          var r =
+            (new EVACSnoLP).runVoteCounterGeneral(election, candidates_in_order, c.nvacancies.toInt)
           r.writeDistributionOfPreferences(reportfile, Some(candidates_in_order))
           r.writeWinners(winnersfile)
-        }
-        case "EVACSDWD" => {
+        case "EVACSDWD" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = (new EVACSDelayedWD).runVoteCounterGeneral(election, candidates_in_order, c.nvacancies.toInt)
+          var r = (new EVACSDelayedWD).runVoteCounterGeneral(
+            election,
+            candidates_in_order,
+            c.nvacancies.toInt
+          )
           r.writeDistributionOfPreferences(reportfile, Some(candidates_in_order))
           r.writeWinners(winnersfile)
-        }
-        case "Senate" => {
+        case "Senate" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          val electionwithIds = for (b <- election) yield Ballot(b.preferences, election.indexOf(b) + 1, Rational(1, 1))
-          var r = (new AustralianSenate).runVoteCounterGeneral(electionwithIds, candidates_in_order, c.nvacancies.toInt)
+          val electionwithIds =
+            for (b <- election) yield Ballot(b.preferences, election.indexOf(b) + 1, Rational(1, 1))
+          var r = (new AustralianSenate).runVoteCounterGeneral(
+            electionwithIds,
+            candidates_in_order,
+            c.nvacancies.toInt
+          )
           c.table match {
             case ACT => r.writeDistributionOfPreferencesACT(reportfile, Some(candidates_in_order))
-            case _ => r.writeDistributionOfPreferences(reportfile, Some(candidates_in_order))
+            case _   => r.writeDistributionOfPreferences(reportfile, Some(candidates_in_order))
           }
           println("The scrutiny was recorded to " + reportfile)
           r.writeWinners(winnersfile)
           println("The winners were recorded to " + winnersfile)
-        }
-        case "Simple" => {
+        case "Simple" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = (new SimpleSTV).runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r        = (new SimpleSTV).runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
-        }
-        case "Egalitarian" => {
+        case "Egalitarian" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = (new EgalitarianBrute).runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r =
+            (new EgalitarianBrute).runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
-        }
-        case "Majority" => {
+        case "Majority" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = Majority.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r        = Majority.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
-        }
 
-        case "Approval" => {
+        case "Approval" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = ApprovalRule.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r        = ApprovalRule.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
-        }
 
-        case "Borda" => {
+        case "Borda" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = Borda.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r        = Borda.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
-        }
 
-        case "Kemeny-Young" => {
+        case "Kemeny-Young" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = KemenyYoung.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r        = KemenyYoung.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
-        }
 
-        case "Baldwin" => {
+        case "Baldwin" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = BaldwinMethod.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r        = BaldwinMethod.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
-        }
 
-        case "Nanson" => {
+        case "Nanson" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = Nanson.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r        = Nanson.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
-        }
 
-        case "InstantRunoff2Round" => {
+        case "InstantRunoff2Round" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = InstantRunoff2Round.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r =
+            InstantRunoff2Round.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
-        }
-        case "Coomb" => {
+        case "Coomb" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = Coomb.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r        = Coomb.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
-        }
 
-        case "InstantExhaustiveBallot" => {
+        case "InstantExhaustiveBallot" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = InstantExhaustiveBallot.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r = InstantExhaustiveBallot.runVoteCounter(
+            election,
+            candidates_in_order,
+            c.nvacancies.toInt
+          )
           r.writeWinners(winnersfile)
-        }
 
-        case "Contingent" => {
+        case "Contingent" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = Contingent.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r        = Contingent.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
-        }
 
-        case "RandomBallot" => {
+        case "RandomBallot" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = RandomBallot.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r        = RandomBallot.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
-        }
 
-        case "MinimaxCondorcet" => {
+        case "MinimaxCondorcet" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = MinimaxCondorcet.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r        = MinimaxCondorcet.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
-        }
 
-        case "Copeland" => {
+        case "Copeland" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = Copeland.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r        = Copeland.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
-        }
-        case "Dodgson" => {
+        case "Dodgson" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = Dodgson.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r        = Dodgson.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
-        }
 
-        case "UncoveredSet" => {
+        case "UncoveredSet" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = UncoveredSet.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r        = UncoveredSet.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
-        }
 
-        case "SmithSet" => {
+        case "SmithSet" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = SmithSet.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r        = SmithSet.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
-        }
 
-        case "InstantExhaustiveDropOff" => {
+        case "InstantExhaustiveDropOff" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = InstantExhaustiveDropOffRule.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r = InstantExhaustiveDropOffRule.runVoteCounter(
+            election,
+            candidates_in_order,
+            c.nvacancies.toInt
+          )
           r.writeWinners(winnersfile)
-        }
 
-        case "PreferentialBlockVoting" => {
+        case "PreferentialBlockVoting" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = PreferentialBlockVoting.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r = PreferentialBlockVoting.runVoteCounter(
+            election,
+            candidates_in_order,
+            c.nvacancies.toInt
+          )
           r.writeWinners(winnersfile)
-        }
 
-        case "HybridPluralityPreferentialBlockVoting" => {
+        case "HybridPluralityPreferentialBlockVoting" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = HybridPluralityPreferentialBlockVoting.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r = HybridPluralityPreferentialBlockVoting.runVoteCounter(
+            election,
+            candidates_in_order,
+            c.nvacancies.toInt
+          )
           r.writeWinners(winnersfile)
-        }
 
-        case "Oklahoma" => {
+        case "Oklahoma" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = Oklahoma.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r        = Oklahoma.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
-        }
 
-        case "SPAV" => {
+        case "SPAV" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = SequentialProportionalApprovalVoting.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r = SequentialProportionalApprovalVoting.runVoteCounter(
+            election,
+            candidates_in_order,
+            c.nvacancies.toInt
+          )
           r.writeWinners(winnersfile)
-        }
 
-        case "PAV" => {
+        case "PAV" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = ProportionalApprovalVoting.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r = ProportionalApprovalVoting.runVoteCounter(
+            election,
+            candidates_in_order,
+            c.nvacancies.toInt
+          )
           r.writeWinners(winnersfile)
-        }
 
-        case "SAV" => {
+        case "SAV" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = SatisfactionApprovalVoting.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r = SatisfactionApprovalVoting.runVoteCounter(
+            election,
+            candidates_in_order,
+            c.nvacancies.toInt
+          )
           r.writeWinners(winnersfile)
-        }
-        case "SMC" => {
+        case "SMC" =>
           val election = PreferencesParser.read(c.directory + electionFile)
           parameters match {
-            case Some(param) => {
+            case Some(param) =>
               var r = SMC.runVoteCounter(election, candidates_in_order, param, c.nvacancies.toInt)
               r.writeWinners(winnersfile)
-            }
-            case None => println("\n\nPlease provide the comparison order to execute this voting method\n\n")
+            case None =>
+              println("\n\nPlease provide the comparison order to execute this voting method\n\n")
           }
-        }
 
-        case "RankedPairs" => {
+        case "RankedPairs" =>
           val election = PreferencesParserWithIndifference.read(c.directory + electionFile)
-          var r = RankedPairs.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r        = RankedPairs.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
-        }
 
-        case "Meek" => {
+        case "Meek" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = MeekSTV.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r        = MeekSTV.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
-        }
 
-        case "Schulze" => {
+        case "Schulze" =>
           val election = PreferencesParserWithRank.read(c.directory + electionFile)
-          var r = Schulze.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r        = Schulze.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
-        }
 
-        case "Maximin" => {
+        case "Maximin" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = Maximin.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r        = Maximin.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           println(" VoteCounter table for method Maximin is not implemented yet.")
           r.writeWinners(winnersfile)
-        }
 
-        case "RangeVoting" => {
+        case "RangeVoting" =>
           val election = PreferencesParserWithScore.read(c.directory + electionFile)
-          var r = RangeVoting.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r        = RangeVoting.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
-        }
 
-        case "BipartisanSet" => {
+        case "BipartisanSet" =>
           val election = PreferencesParser.read(c.directory + electionFile)
           parameters match {
-            case Some(param) => {
+            case Some(param) =>
               var r = BipartisanSet.runVoteCounter(election, candidates_in_order, param)
               r.writeWinners(winnersfile)
-            }
-            case None => println("Please provide probability distribution to compute bipartisan set")
+            case None =>
+              println("Please provide probability distribution to compute bipartisan set")
           }
-        }
 
-        case "SuperMajority" => {
+        case "SuperMajority" =>
           val election = PreferencesParser.read(c.directory + electionFile)
           parameters match {
-            case Some(param) => {
-              var r = SuperMajority.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt, param)
+            case Some(param) =>
+              var r = SuperMajority.runVoteCounter(
+                election,
+                candidates_in_order,
+                c.nvacancies.toInt,
+                param
+              )
               r.writeWinners(winnersfile)
-            }
-            case None => println("Please provide a .json file containing the majority percentage required to elect winner.")
+            case None =>
+              println(
+                "Please provide a .json file containing the majority percentage required to elect winner."
+              )
           }
-        }
 
-        case "Veto" => {
+        case "Veto" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = Veto.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r        = Veto.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
-        }
-          
-        case "Bucklin" => {
+
+        case "Bucklin" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r = Bucklin.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r        = Bucklin.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
-        }
 
         case "" => println("Please specify which algorithm should be used.")
       }
     }
 
-    parser.parse(args, Config()) map { c =>
-
+    parser.parse(args, Config()).map { c =>
       c.ballotsfile match {
-        case Some(filename) => { // ONLY ONE FILE IS ANALYSED
+        case Some(filename) => // ONLY ONE FILE IS ANALYSED
           val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
           println("Candidates: " + candidates)
-          val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
-          val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename
+          val winnersfile =
+            c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
+          val reportfile =
+            c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename
           callMethod(c, filename, winnersfile, reportfile, candidates, c.parameters)
-        }
-        case None => { // ALL FILES IN THE DIRECTORY ARE ANALYSED
+        case None => // ALL FILES IN THE DIRECTORY ARE ANALYSED
           val candidates = CandidatesParser.read(c.directory + c.candidatesfile)
-          val files = new java.io.File(c.directory).listFiles.filter(_.getName.endsWith(".kat"))
+          val files      = new java.io.File(c.directory).listFiles.filter(_.getName.endsWith(".kat"))
           for (file <- files) {
             val filename = file.getName
             println("------------------------------------------------")
             println("\n" + "    NEW ELECTION: " + file.getName + "\n")
             println("------------------------------------------------")
-            //val election =  PreferencesParser.read(c.directory + filename)
-            val winnersfile = c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
-            val reportfile = c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename
+            // val election =  PreferencesParser.read(c.directory + filename)
+            val winnersfile =
+              c.directory + "winners/" + "Winners_" + c.method + "_InputFile_" + filename
+            val reportfile =
+              c.directory + "reports/" + "Report_" + c.method + "_InputFile_" + filename
             callMethod(c, filename, winnersfile, reportfile, candidates, c.parameters)
           }
-        }
       }
     }
   }
+
 }

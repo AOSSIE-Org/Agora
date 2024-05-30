@@ -8,22 +8,26 @@ import scala.collection.mutable.{HashMap => MMap}
 
 import spire.math.Rational
 
-/**
-  * https://en.wikipedia.org/wiki/Preferential_block_voting
-  */
+/** https://en.wikipedia.org/wiki/Preferential_block_voting */
 
 object PreferentialBlockVoting extends VoteCounter[Ballot] {
 
   val majorityThreshold = Rational(1, 2)
 
-  override def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
+  override def winners(
+      election: Election[Ballot],
+      ccandidates: List[Candidate],
+      numVacancies: Int
+  ): List[(Candidate, Rational)] = {
     var winnerlist: List[(Candidate, Rational)] = Nil
-    var vacancies = numVacancies
-    var ccandidates1 = ccandidates
-    var election1 = election
+    var vacancies                               = numVacancies
+    var ccandidates1                            = ccandidates
+    var election1                               = election
     while (vacancies != 0) {
       val sortedCandList = election1.firstVotes(ccandidates1).toList.sortWith(_._2 > _._2)
-      if (sortedCandList.head._2 > majorityThreshold * election1.length && ccandidates1.length > vacancies) {
+      if (
+        sortedCandList.head._2 > majorityThreshold * election1.length && ccandidates1.length > vacancies
+      ) {
         winnerlist = sortedCandList.head :: winnerlist
         vacancies -= 1
         ccandidates1 = ccandidates1.filter(_ != sortedCandList.head._1)
@@ -40,4 +44,3 @@ object PreferentialBlockVoting extends VoteCounter[Ballot] {
   }
 
 }
-

@@ -6,19 +6,20 @@ import spire.math.Rational
 import agora.model._
 import agora.model.{PreferenceBallot => Ballot}
 
-
 import scala.collection.mutable.{HashMap => MMap}
 
-/**
-  * Algorithm : https://en.wikipedia.org/wiki/Coombs%27_method
-  * Note: This voting method requires voters to rank all the candidates
+/** Algorithm : https://en.wikipedia.org/wiki/Coombs%27_method Note: This voting method requires
+  * voters to rank all the candidates
   */
-object Coomb extends VoteCounter[Ballot] with LazyLogging{
+object Coomb extends VoteCounter[Ballot] with LazyLogging {
 
-  private val majorityThreshold = Rational(1,2)
+  private val majorityThreshold = Rational(1, 2)
 
-  def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int ):
-  List[(Candidate,Rational)] = {
+  def winners(
+      election: Election[Ballot],
+      ccandidates: List[Candidate],
+      numVacancies: Int
+  ): List[(Candidate, Rational)] = {
 
     logger.info("computing coomb winner")
 
@@ -28,13 +29,14 @@ object Coomb extends VoteCounter[Ballot] with LazyLogging{
 
     for (b <- election if b.preferences.nonEmpty) {
 
-        b.preferences.find(c => ccandidates.contains(c)) match {
-        case Some(candidate) => firstRankedMap(candidate) = firstRankedMap.getOrElse(candidate, Rational(0, 1)) + b.weight
-        case None => {}
+      b.preferences.find(c => ccandidates.contains(c)) match {
+        case Some(candidate) =>
+          firstRankedMap(candidate) = firstRankedMap.getOrElse(candidate, Rational(0, 1)) + b.weight
+        case None =>
       }
     }
 
-    if(firstRankedMap.maxBy(_._2)._2 > Rational(1, 2) * election.weight) {
+    if (firstRankedMap.maxBy(_._2)._2 > Rational(1, 2) * election.weight) {
 
       List(firstRankedMap.maxBy(_._2))
 
@@ -44,15 +46,20 @@ object Coomb extends VoteCounter[Ballot] with LazyLogging{
       val lastRankedMap = new MMap[Candidate, Rational]
       for (b <- election if b.preferences.nonEmpty) {
 
-          assert(b.preferences.find(c => ccandidates.contains(c)) !=  b.preferences.reverseIterator.find(c => ccandidates.contains(c)))
-          b.preferences.reverseIterator.find(c => ccandidates.contains(c)) match {
-          case Some(candidate) => lastRankedMap(candidate) = lastRankedMap.getOrElse(candidate, Rational(0, 1)) + b.weight
-          case None => {}
+        assert(
+          b.preferences.find(c => ccandidates.contains(c)) != b.preferences.reverseIterator.find(
+            c => ccandidates.contains(c)
+          )
+        )
+        b.preferences.reverseIterator.find(c => ccandidates.contains(c)) match {
+          case Some(candidate) =>
+            lastRankedMap(candidate) = lastRankedMap.getOrElse(candidate, Rational(0, 1)) + b.weight
+          case None =>
         }
 
       }
 
-      winners(election, ccandidates.filter {_ != lastRankedMap.maxBy(_._2)._1}, numVacancies)
+      winners(election, ccandidates.filter(_ != lastRankedMap.maxBy(_._2)._1), numVacancies)
     }
 
   }

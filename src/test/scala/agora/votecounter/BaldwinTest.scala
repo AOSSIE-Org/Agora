@@ -1,9 +1,9 @@
 package agora.votecounter
 
-import agora.parser.{CandidatesParser, PreferencesParser}
+import agora.parser.CandidatesParser
+import agora.parser.PreferencesParser
 import agora.model.Candidate
 import org.specs2.mutable.Specification
-
 
 class BaldwinTest extends Specification {
 
@@ -17,8 +17,9 @@ class BaldwinTest extends Specification {
   def baldwinVerification(electionFile: String): List[Candidate] = {
 
     val candidates = CandidatesParser.read("../Agora/files/Examples/13-candidates.txt")
-    val election =  PreferencesParser.read("../Agora/files/Examples/" + electionFile)
+    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
 
-    BaldwinMethod.winners(election, candidates, candidates.length).map {_._1}
+    BaldwinMethod.winners(election, candidates, candidates.length).map(_._1)
   }
+
 }

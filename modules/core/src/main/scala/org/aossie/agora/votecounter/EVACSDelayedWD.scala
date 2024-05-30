@@ -16,26 +16,12 @@
 
 package org.aossie.agora.votecounter
 
-import org.aossie.agora.model._
 import org.aossie.agora.votecounter.stv._
 
-
-import scala.collection.immutable.ListMap
-import collection.mutable.{HashMap => Map}
-import scala.collection.SortedMap
-import collection.mutable.HashSet
-import collection.breakOut
-import scala.util.Random
-import scala.util.Sorting
-import java.io._
-
-
-
-class EVACSDelayedWD extends ACT
- with TransferValueWithDenominatorWithNumOfMarkedContinuingBallotsOrOne
- with ACTSurplusDistribution
- with NoNewWinnersDuringSurplusesDistribution
- with NoNewWinnersDuringExclusion
- with ACTTotalsDuringExclusion
-{
-}
+class EVACSDelayedWD
+    extends ACT
+    with TransferValueWithDenominatorWithNumOfMarkedContinuingBallotsOrOne
+    with ACTSurplusDistribution
+    with NoNewWinnersDuringSurplusesDistribution
+    with NoNewWinnersDuringExclusion
+    with ACTTotalsDuringExclusion {}

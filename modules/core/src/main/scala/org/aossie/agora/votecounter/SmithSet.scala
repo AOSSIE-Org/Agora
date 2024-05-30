@@ -9,12 +9,15 @@ import scala.language.postfixOps
 import spire.math.Rational
 import org.aossie.agora.util.matrix.BaseMatrix
 
-/**
-  * Algorithm : http://wiki.electorama.com/wiki/Maximal_elements_algorithms#Floyd-Warshall_algorithm
+/** Algorithm : http://wiki.electorama.com/wiki/Maximal_elements_algorithms#Floyd-Warshall_algorithm
   */
 object SmithSet extends VoteCounter[Ballot] with PreferencePairwiseComparison {
 
-  override def winners(e: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
+  override def winners(
+      e: Election[Ballot],
+      ccandidates: List[Candidate],
+      numVacancies: Int
+  ): List[(Candidate, Rational)] = {
 
     val pairWiseComp = pairwiseComparison(e, ccandidates)
 
@@ -22,22 +25,33 @@ object SmithSet extends VoteCounter[Ballot] with PreferencePairwiseComparison {
 
     val maximalArray = floydWarshallMaximal(relationMatrix, ccandidates)
 
-    (maximalArray zip ccandidates) filter {
-      case (inMaximal, candidate) => inMaximal } map {
-      case(inMaximal, candidate) => (candidate, Rational(0, 1))} toList
+    maximalArray
+      .zip(ccandidates)
+      .filter { case (inMaximal, candidate) =>
+        inMaximal
+      }
+      .map { case (inMaximal, candidate) =>
+        (candidate, Rational(0, 1))
+      } toList
 
   }
 
-  /**
-    * get the relation matrix for the algorithm as described in http://wiki.electorama.com/wiki/Maximal_elements_algorithms#Background
+  /** get the relation matrix for the algorithm as described in
+    * http://wiki.electorama.com/wiki/Maximal_elements_algorithms#Background
     * @param election
     * @param ccandidates
     * @param pairWiseComp
     * @return
     */
-  def getRelationMatrix(election: Election[Ballot], ccandidates: List[Candidate], pairWiseComp: Array[Array[Rational]]): Array[Array[Boolean]] = {
+  def getRelationMatrix(
+      election: Election[Ballot],
+      ccandidates: List[Candidate],
+      pairWiseComp: Array[Array[Rational]]
+  ): Array[Array[Boolean]] = {
 
-    val relationMatrix = BaseMatrix[Boolean](ccandidates.size, ccandidates.size){(i: Int, j: Int) => false}
+    val relationMatrix = BaseMatrix[Boolean](ccandidates.size, ccandidates.size) {
+      (i: Int, j: Int) => false
+    }
 
     ccandidates.zipWithIndex.foreach(c1 => {
       ccandidates.zipWithIndex.foreach(c2 => {
@@ -50,7 +64,10 @@ object SmithSet extends VoteCounter[Ballot] with PreferencePairwiseComparison {
   }
 
   // scalastyle:off cyclomatic.complexity
-  def floydWarshallMaximal(relations: Array[Array[Boolean]], ccandidates: List[Candidate]): Array[Boolean] = {
+  def floydWarshallMaximal(
+      relations: Array[Array[Boolean]],
+      ccandidates: List[Candidate]
+  ): Array[Boolean] = {
 
     val isInMaximal = Array.ofDim[Boolean](ccandidates.size)
     for (i <- ccandidates.indices)
@@ -61,7 +78,7 @@ object SmithSet extends VoteCounter[Ballot] with PreferencePairwiseComparison {
     for (i <- ccandidates.indices)
       for (j <- ccandidates.indices)
         if (i != j) {
-            hasPath(i)(j) = relations(i)(j)
+          hasPath(i)(j) = relations(i)(j)
         }
 
     // expand consideration to paths that have intermediate nodes from 1 to k
@@ -90,4 +107,5 @@ object SmithSet extends VoteCounter[Ballot] with PreferencePairwiseComparison {
     isInMaximal
 
   }
+
 }
