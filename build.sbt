@@ -31,25 +31,14 @@ lazy val root = Project("agora", file("."))
   .aggregate(
     core,
     cli
-  )
+  ).settings(commonSettings)
 
 lazy val core = (project in file("modules/core"))
   .configs(Testing.configs: _*)
   .settings(Testing.settings: _*)
   .settings(
-    name    := "core",
-    libraryDependencies ++= Seq(
-      "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.7",
-      "com.github.scopt" %% "scopt" % "4.1.0",
-      "org.specs2" %% "specs2-core" % "4.20.6" % "test,verification-test,bench",
-      "com.lihaoyi" %% "ammonite-ops" % "2.4.1",
-      "ch.qos.logback" % "logback-classic" % "1.2.11",
-      "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
-      "com.storm-enroute" %% "scalameter" % "0.19",
-      "com.storm-enroute" %% "scalameter-core" % "0.19",
-      "com.typesafe.play" %% "play-json" % "2.9.4",
-      "org.typelevel" %% "spire" % "0.17.0"
-    )
+    commonSettings,
+    name    := "core"
   )
 
 lazy val cli = (project in file("modules/cli"))
@@ -59,12 +48,34 @@ lazy val cli = (project in file("modules/cli"))
     core
   )
   .settings(
-    name := "cli",
-    libraryDependencies ++= Seq(
-      "org.specs2" %% "specs2-core" % "4.20.6" % "test,verification-test,bench",
-    )
+    commonSettings,
+    name := "cli"
   )
+
+lazy val commonSettings = Seq(
+  scalafmtOnCompile := true,
+  semanticdbEnabled := true,
+  semanticdbVersion := scalafixSemanticdb.revision,
+  scalacOptions += {
+    if (scalaVersion.value.startsWith("2.12")) "-Ywarn-unused-import"
+    else "-Wunused:imports"
+  },
+  libraryDependencies ++= Seq(
+    "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.7",
+    "com.github.scopt" %% "scopt" % "4.1.0",
+    "org.specs2" %% "specs2-core" % "4.20.6" % "test,verification-test,bench",
+    "com.lihaoyi" %% "ammonite-ops" % "2.4.1",
+    "ch.qos.logback" % "logback-classic" % "1.2.11",
+    "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
+    "com.storm-enroute" %% "scalameter" % "0.19",
+    "com.storm-enroute" %% "scalameter-core" % "0.19",
+    "com.typesafe.play" %% "play-json" % "2.9.4",
+    "org.typelevel" %% "spire" % "0.17.0"
+  )
+)
 
 licenses := Seq("CC BY-NC-SA" -> url("http://creativecommons.org/licenses/by-nc-sa/4.0/"))
 
 homepage := Some(url("https://www.gitlab.com/aossie/Agora"))
+
+addCommandAlias("fix-lint", ";scalafixAll; scalafmtSbt;")

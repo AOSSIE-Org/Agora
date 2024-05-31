@@ -7,31 +7,44 @@ import scala.collection.mutable.{HashMap => Map}
 
 import spire.math.Rational
 
-/**
-  * Created by deepeshpandey on 03/06/17.
-  * Algorithm : https://en.wikipedia.org/wiki/Two-round_system
-  * Comments : It's a hybrid algorithm combining Instant Run-Off and 2-round voting. Two round voting cannot be handled exclusively
-  *            becuase of its nature of having two rounds at different times
-  * Assumptions : voters vote only once with preferential ballots
-  * Rounds : only 2 as per 2-round voting
+/** Created by deepeshpandey on 03/06/17. Algorithm : https://en.wikipedia.org/wiki/Two-round_system
+  * Comments : It's a hybrid algorithm combining Instant Run-Off and 2-round voting. Two round
+  * voting cannot be handled exclusively becuase of its nature of having two rounds at different
+  * times Assumptions : voters vote only once with preferential ballots Rounds : only 2 as per
+  * 2-round voting
   */
 object InstantRunoff2Round extends VoteCounter[Ballot] {
 
-  override def winners(election: Election[Ballot], ccandidates: List[Candidate], numVacancies: Int): List[(Candidate, Rational)] = {
+  override def winners(
+      election: Election[Ballot],
+      ccandidates: List[Candidate],
+      numVacancies: Int
+  ): List[(Candidate, Rational)] = {
 
     val majorityRational = Rational(1, 2)
-    val rnd1Winners = election.firstVotes(ccandidates).toList.sortWith(_._2 > _._2).take(2)
-    val totalVoters = election.weight
+    val rnd1Winners      = election.firstVotes(ccandidates).toList.sortWith(_._2 > _._2).take(2)
+    val totalVoters      = election.weight
 
     if (rnd1Winners.head._2 > majorityRational * totalVoters)
       List(rnd1Winners.head)
     else
-      getSecondRoundWinner(election, ccandidates, rnd1Winners.map(c => c._1), totalVoters.toInt, numVacancies)
+      getSecondRoundWinner(
+        election,
+        ccandidates,
+        rnd1Winners.map(c => c._1),
+        totalVoters.toInt,
+        numVacancies
+      )
 
   }
 
-  def getSecondRoundWinner(election: Election[Ballot], ccandidates: List[Candidate],
-                           rnd1Winners: List[Candidate], totalVoters: Int, numVacancies: Int): List[(Candidate, Rational)] = {
+  def getSecondRoundWinner(
+      election: Election[Ballot],
+      ccandidates: List[Candidate],
+      rnd1Winners: List[Candidate],
+      totalVoters: Int,
+      numVacancies: Int
+  ): List[(Candidate, Rational)] = {
 
     val m = new Map[Candidate, Rational]
 
@@ -44,4 +57,5 @@ object InstantRunoff2Round extends VoteCounter[Ballot] {
 
     m.toList.sortWith(_._2 > _._2).take(numVacancies)
   }
+
 }

@@ -19,7 +19,6 @@ package agora.votecounter
 import agora.model._
 import agora.votecounter.stv._
 
-
 import scala.collection.immutable.ListMap
 import collection.mutable.{HashMap => Map}
 import scala.collection.SortedMap
@@ -29,13 +28,10 @@ import scala.util.Random
 import scala.util.Sorting
 import java.io._
 
-
-
-class EVACSDelayedWD extends ACT
- with TransferValueWithDenominatorWithNumOfMarkedContinuingBallotsOrOne
- with ACTSurplusDistribution
- with NoNewWinnersDuringSurplusesDistribution
- with NoNewWinnersDuringExclusion
- with ACTTotalsDuringExclusion
-{
-}
+class EVACSDelayedWD
+    extends ACT
+    with TransferValueWithDenominatorWithNumOfMarkedContinuingBallotsOrOne
+    with ACTSurplusDistribution
+    with NoNewWinnersDuringSurplusesDistribution
+    with NoNewWinnersDuringExclusion
+    with ACTTotalsDuringExclusion {}

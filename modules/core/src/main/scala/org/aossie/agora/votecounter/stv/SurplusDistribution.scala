@@ -3,8 +3,6 @@ package org.aossie.agora.votecounter.stv
 import org.aossie.agora.model._
 import org.aossie.agora.model.{PreferenceBallot => Ballot}
 import org.aossie.agora.votecounter._
-import collection.mutable.{HashMap => Map}
-import java.io._
 
 import spire.math.Rational
 
@@ -29,205 +27,265 @@ import spire.math.Rational
 // i.e.:
 // if (tv > weight_i) then weight_(i+1) = weight_i else weight_(i+1) = tv
 //
-trait ACTSurplusDistribution extends STV[ACTBallot]{
+trait ACTSurplusDistribution extends STV[ACTBallot] {
 
-
- def distributeSurplusVotes(election: Election[ACTBallot],
-                            candidate: Candidate, total:Rational,
-                            markings: Option[Set[Int]],
-                            pendingWinners: List[Candidate],
-                            transferValue: Rational):  (Election[ACTBallot], Set[ACTBallot], Option[Election[ACTBallot]]) = {
-    var list: List[ACTBallot] = Nil
+  def distributeSurplusVotes(
+      election: Election[ACTBallot],
+      candidate: Candidate,
+      total: Rational,
+      markings: Option[Set[Int]],
+      pendingWinners: List[Candidate],
+      transferValue: Rational
+  ): (Election[ACTBallot], Set[ACTBallot], Option[Election[ACTBallot]]) = {
+    var list: List[ACTBallot]        = Nil
     var listIgnored: List[ACTBallot] = Nil
     var setExhausted: Set[ACTBallot] = Set()
     markings match {
-     case None => throw new Exception("Last parcel is undetermined.")
-     case Some(mrks) =>
-      for (b <- election if !b.preferences.isEmpty){
+      case None => throw new Exception("Last parcel is undetermined.")
+      case Some(mrks) =>
+        for (b <- election if !b.preferences.isEmpty) {
 
-        if (b.preferences.head == candidate) {
+          if (b.preferences.head == candidate) {
 
-          val continuingPreferences = filterPreferences(b.preferences.tail, candidate::pendingWinners)
-          if (continuingPreferences.nonEmpty){
-            // NOTE: HERE WE IGNORE BALLOTS THAT HAVE candidate AS FP BUT ARE NOT MARKED. THESE BALLOTS BECOME OUT OF SCRUTINY:
-            if (mrks.contains(b.id)){
-               if (transferValue > b.value ) { // 1C(4) of the ACT Electoral act 1992 Schedule 4
-                 list = ACTBallot(continuingPreferences, b.id, true, b.value, b.value)::list //take care of b.weight (4th argument) here
-               }
-               else {
-                 list = ACTBallot(continuingPreferences, b.id, true, transferValue, transferValue)::list //take care of b.weight  (4th argument) here
-               }
+            val continuingPreferences =
+              filterPreferences(b.preferences.tail, candidate :: pendingWinners)
+            if (continuingPreferences.nonEmpty) {
+              // NOTE: HERE WE IGNORE BALLOTS THAT HAVE candidate AS FP BUT ARE NOT MARKED. THESE BALLOTS BECOME OUT OF SCRUTINY:
+              if (mrks.contains(b.id)) {
+                if (transferValue > b.value) { // 1C(4) of the ACT Electoral act 1992 Schedule 4
+                  list = ACTBallot(
+                    continuingPreferences,
+                    b.id,
+                    true,
+                    b.value,
+                    b.value
+                  ) :: list // take care of b.weight (4th argument) here
+                } else {
+                  list = ACTBallot(
+                    continuingPreferences,
+                    b.id,
+                    true,
+                    transferValue,
+                    transferValue
+                  ) :: list // take care of b.weight  (4th argument) here
+                }
+              } else {
+                listIgnored = b :: listIgnored // this ballot is lost because it does not belong to the last parcel
+              }
+            } else {
+              setExhausted += b // this ballot is exhausted
             }
-            else {
-              listIgnored = b::listIgnored   // this ballot is lost because it does not belong to the last parcel
-            }
-          }
-          else {
-            setExhausted += b   // this ballot is exhausted
+          } else {
+            list = ACTBallot(
+              b.preferences.head :: filterPreferences(
+                b.preferences.tail.filter(_ != candidate),
+                pendingWinners
+              ),
+              b.id,
+              false,
+              b.weight,
+              b.value
+            ) :: list
           }
         }
-        else {
-          list = ACTBallot(b.preferences.head::filterPreferences(b.preferences.tail filter {_!= candidate}, pendingWinners), b.id, false, b.weight, b.value)::list
-        }
-      }
     }
-   // println("setExhausted " + setExhausted)
-   // println("listIgnored " + listIgnored)
-  (Election(list), setExhausted, Some(Election(listIgnored)))
- }
-}
+    // println("setExhausted " + setExhausted)
+    // println("listIgnored " + listIgnored)
+    (Election(list), setExhausted, Some(Election(listIgnored)))
+  }
 
+}
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Section 273 (9)
-trait SenateSurplusDistribution extends STV[ACTBallot]{
- def distributeSurplusVotes(election: Election[ACTBallot],
-                            candidate: Candidate, total:Rational,
-                            markings: Option[Set[Int]], pendingWinners: List[Candidate],
-                            transferValue: Rational):  (Election[ACTBallot], Set[ACTBallot], Option[Election[ACTBallot]]) = {
-    var list: List[ACTBallot] = Nil
+trait SenateSurplusDistribution extends STV[ACTBallot] {
+
+  def distributeSurplusVotes(
+      election: Election[ACTBallot],
+      candidate: Candidate,
+      total: Rational,
+      markings: Option[Set[Int]],
+      pendingWinners: List[Candidate],
+      transferValue: Rational
+  ): (Election[ACTBallot], Set[ACTBallot], Option[Election[ACTBallot]]) = {
+    var list: List[ACTBallot]        = Nil
     var listIgnored: List[ACTBallot] = Nil
     var setExhausted: Set[ACTBallot] = Set()
 
-      for (b <- election if !b.preferences.isEmpty){
-        if (b.preferences.head == candidate) {
-          val continuingPreferences = filterPreferences(b.preferences.tail, candidate :: pendingWinners)
-          if (continuingPreferences.nonEmpty) {
-            list = ACTBallot(continuingPreferences, b.id, true, transferValue, transferValue) :: list
-          }
-          else {
-            setExhausted += b // this ballot is exhausted
-          }
+    for (b <- election if !b.preferences.isEmpty) {
+      if (b.preferences.head == candidate) {
+        val continuingPreferences =
+          filterPreferences(b.preferences.tail, candidate :: pendingWinners)
+        if (continuingPreferences.nonEmpty) {
+          list = ACTBallot(continuingPreferences, b.id, true, transferValue, transferValue) :: list
+        } else {
+          setExhausted += b // this ballot is exhausted
         }
-        else {
-          list = ACTBallot(b.preferences.head :: filterPreferences(b.preferences.tail filter {
-            _ != candidate
-          }, pendingWinners), b.id, false, b.weight, b.value) :: list
-        }
+      } else {
+        list = ACTBallot(
+          b.preferences.head :: filterPreferences(
+            b.preferences.tail.filter {
+              _ != candidate
+            },
+            pendingWinners
+          ),
+          b.id,
+          false,
+          b.weight,
+          b.value
+        ) :: list
       }
-   // println("setExhausted " + setExhausted)
-   // println("listIgnored " + listIgnored)
-  (Election(list), setExhausted, Some(Election(listIgnored)))
- }
-}
+    }
+    // println("setExhausted " + setExhausted)
+    // println("listIgnored " + listIgnored)
+    (Election(list), setExhausted, Some(Election(listIgnored)))
+  }
 
+}
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+trait ACTVoteCounterWithAllContinuingBallotsInSurplusDistribution extends STV[ACTBallot] {
 
-trait ACTVoteCounterWithAllContinuingBallotsInSurplusDistribution extends STV[ACTBallot]{
+  def distributeSurplusVotes(
+      election: Election[ACTBallot],
+      candidate: Candidate,
+      total: Rational,
+      markings: Option[Set[Int]],
+      pendingWinners: List[Candidate],
+      transferValue: Rational
+  ): (Election[ACTBallot], Set[ACTBallot], Option[Election[ACTBallot]]) = {
 
- def distributeSurplusVotes(election: Election[ACTBallot],
-                            candidate: Candidate,
-                            total:Rational,
-                            markings: Option[Set[Int]],
-                            pendingWinners: List[Candidate],
-                            transferValue: Rational):  (Election[ACTBallot], Set[ACTBallot], Option[Election[ACTBallot]]) = {
-
-    var list: List[ACTBallot] = Nil
+    var list: List[ACTBallot]        = Nil
     var setExhausted: Set[ACTBallot] = Set()
 
-    for (b <- election if !b.preferences.isEmpty){
+    for (b <- election if !b.preferences.isEmpty) {
 
-        if (b.preferences.head == candidate) {
-          val continuingPreferences = filterPreferences(b.preferences.tail, candidate::pendingWinners)
-          if (continuingPreferences.nonEmpty){
-            if (transferValue > b.value ) { // 1C(4) of the ACT Electoral act 1992 Schedule 4
-                 list = ACTBallot(continuingPreferences, b.id, true, b.value, b.value)::list //take care of b.weight (4th argument) here
-               }
-               else {
-                 list = ACTBallot(continuingPreferences, b.id, true, transferValue, transferValue)::list //take care of b.weight  (4th argument) here
-               }
-            }
-          else {
-            setExhausted += b // this ballot is exhausted
+      if (b.preferences.head == candidate) {
+        val continuingPreferences =
+          filterPreferences(b.preferences.tail, candidate :: pendingWinners)
+        if (continuingPreferences.nonEmpty) {
+          if (transferValue > b.value) { // 1C(4) of the ACT Electoral act 1992 Schedule 4
+            list = ACTBallot(
+              continuingPreferences,
+              b.id,
+              true,
+              b.value,
+              b.value
+            ) :: list // take care of b.weight (4th argument) here
+          } else {
+            list = ACTBallot(
+              continuingPreferences,
+              b.id,
+              true,
+              transferValue,
+              transferValue
+            ) :: list // take care of b.weight  (4th argument) here
           }
+        } else {
+          setExhausted += b // this ballot is exhausted
         }
-        else {
-          list = ACTBallot(b.preferences.head :: filterPreferences(b.preferences.tail filter {
-            _ != candidate
-          }, pendingWinners), b.id, false, b.weight, b.value) :: list
-        }
+      } else {
+        list = ACTBallot(
+          b.preferences.head :: filterPreferences(
+            b.preferences.tail.filter {
+              _ != candidate
+            },
+            pendingWinners
+          ),
+          b.id,
+          false,
+          b.weight,
+          b.value
+        ) :: list
       }
-   (Election(list), setExhausted, None)
- }
+    }
+    (Election(list), setExhausted, None)
+  }
 
 }
 
-
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+trait VoteCounterWithAllContinuingBallotsInSurplusDistribution extends STV[Ballot] {
 
-trait VoteCounterWithAllContinuingBallotsInSurplusDistribution extends STV[Ballot]{
+  def distributeSurplusVotes(
+      election: Election[Ballot],
+      candidate: Candidate,
+      total: Rational,
+      markings: Option[Set[Int]],
+      pendingWinners: List[Candidate],
+      transferValue: Rational
+  ): (Election[Ballot], Set[Ballot], Option[Election[Ballot]]) = {
 
- def distributeSurplusVotes(election: Election[Ballot],
-                            candidate: Candidate, total:Rational,
-                            markings: Option[Set[Int]],
-                            pendingWinners: List[Candidate],
-                            transferValue: Rational):  (Election[Ballot], Set[Ballot], Option[Election[Ballot]]) = {
-
-    var list: List[Ballot] = Nil
+    var list: List[Ballot]        = Nil
     var setExhausted: Set[Ballot] = Set()
 
-    for (b <- election if !b.preferences.isEmpty){
+    for (b <- election if !b.preferences.isEmpty) {
 
-        if (b.preferences.head == candidate) {
-          val continuingPreferences = filterPreferences(b.preferences.tail, candidate::pendingWinners)
-          if (continuingPreferences.nonEmpty) {
-            list = new Ballot(continuingPreferences, b.id,  b.weight * transferValue)::list
-          }
-          else {
-            setExhausted += b  // this ballot is exhausted
-          }
+      if (b.preferences.head == candidate) {
+        val continuingPreferences =
+          filterPreferences(b.preferences.tail, candidate :: pendingWinners)
+        if (continuingPreferences.nonEmpty) {
+          list = new Ballot(continuingPreferences, b.id, b.weight * transferValue) :: list
+        } else {
+          setExhausted += b // this ballot is exhausted
         }
-        else {
-          list = new Ballot(b.preferences.head :: filterPreferences(b.preferences.tail filter {
-            _ != candidate
-          }, pendingWinners), b.id, b.weight) :: list
-        }
+      } else {
+        list = new Ballot(
+          b.preferences.head :: filterPreferences(
+            b.preferences.tail.filter {
+              _ != candidate
+            },
+            pendingWinners
+          ),
+          b.id,
+          b.weight
+        ) :: list
       }
-   (Election(list), setExhausted, None)
- }
+    }
+    (Election(list), setExhausted, None)
+  }
 
 }
 
-
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+trait VoteCounterWithAllBallotsInSurplusDistribution extends STV[Ballot] {
 
-trait VoteCounterWithAllBallotsInSurplusDistribution extends STV[Ballot]{
+  def distributeSurplusVotes(
+      election: Election[Ballot],
+      candidate: Candidate,
+      total: Rational,
+      markings: Option[Set[Int]],
+      pendingWinners: List[Candidate],
+      transferValue: Rational
+  ): (Election[Ballot], Set[Ballot], Option[Election[Ballot]]) = {
 
- def distributeSurplusVotes(election: Election[Ballot],
-                            candidate: Candidate,
-                            total:Rational,
-                            markings: Option[Set[Int]],
-                            pendingWinners: List[Candidate],
-                            transferValue: Rational):  (Election[Ballot], Set[Ballot], Option[Election[Ballot]]) = {
-
-    var list: List[Ballot] = Nil
+    var list: List[Ballot]        = Nil
     var setExhausted: Set[Ballot] = Set()
 
-    for (b <- election if !b.preferences.isEmpty){
+    for (b <- election if !b.preferences.isEmpty) {
 
-        if (b.preferences.head == candidate) {
-          if (b.preferences.tail.nonEmpty) {
-            list = new Ballot(b.preferences.tail, b.id,  b.weight * transferValue)::list
-          }
-          else {
-            setExhausted += b  // this ballot is exhausted
-          }
+      if (b.preferences.head == candidate) {
+        if (b.preferences.tail.nonEmpty) {
+          list = new Ballot(b.preferences.tail, b.id, b.weight * transferValue) :: list
+        } else {
+          setExhausted += b // this ballot is exhausted
         }
-        else {
-          list = new Ballot(b.preferences.head :: b.preferences.tail filter {
+      } else {
+        list = new Ballot(
+          (b.preferences.head :: b.preferences.tail).filter {
             _ != candidate
-          }, b.id, b.weight) :: list
-        }
+          },
+          b.id,
+          b.weight
+        ) :: list
       }
-   (Election(list), setExhausted, None)
- }
+    }
+    (Election(list), setExhausted, None)
+  }
 
 }
 
-
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-

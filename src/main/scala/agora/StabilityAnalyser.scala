@@ -1,16 +1,14 @@
 package agora
 
 import agora.votecounter._
-import agora.model.{PreferenceBallot => Ballot, _ }
+import agora.model.{PreferenceBallot => Ballot, _}
 import scala.collection.mutable.ArrayBuffer
 import scala.language.postfixOps
 import scala.util.Random
 import spire.math.Rational
 import spire.math.Rational.apply
 
-
 object StabilityAnalyser {
-
 
   def main(args: Array[String]): Unit = {
 
@@ -23,7 +21,7 @@ object StabilityAnalyser {
     val analysisArray = new ArrayBuffer[(String, Double, Double)]
 
     analysisArray.append(analyseStability(Borda, electionsPairs, candidates))
-    //analyseStability(MajorityRuleMethod, electionsPairs, candidates) /*some cases there might be no majority winner*/
+    // analyseStability(MajorityRuleMethod, electionsPairs, candidates) /*some cases there might be no majority winner*/
     analysisArray.append(analyseStability(ApprovalRule, electionsPairs, candidates))
     analysisArray.append(analyseStability(KemenyYoung, electionsPairs, candidates))
     analysisArray.append(analyseStability(BaldwinMethod, electionsPairs, candidates))
@@ -34,13 +32,17 @@ object StabilityAnalyser {
     analysisArray.append(analyseStability(Contingent, electionsPairs, candidates))
     analysisArray.append(analyseStability(MinimaxCondorcet, electionsPairs, candidates))
     analysisArray.append(analyseStability(Copeland, electionsPairs, candidates))
-    //analyseStability(UncoveredSetMethod, electionsPairs, candidates) /* in some cases the uncovered set could be empty*/
+    // analyseStability(UncoveredSetMethod, electionsPairs, candidates) /* in some cases the uncovered set could be empty*/
     analysisArray.append(analyseStability(SmithSet, electionsPairs, candidates))
     analysisArray.append(analyseStability(InstantExhaustiveDropOffRule, electionsPairs, candidates))
     analysisArray.append(analyseStability(PreferentialBlockVoting, electionsPairs, candidates))
-    analysisArray.append(analyseStability(HybridPluralityPreferentialBlockVoting, electionsPairs, candidates))
-    //analyseStability(OklahomaMethod, electionsPairs, candidates) /* going into infinite loop for some random election*/
-    analysisArray.append(analyseStability(SequentialProportionalApprovalVoting, electionsPairs, candidates))
+    analysisArray.append(
+      analyseStability(HybridPluralityPreferentialBlockVoting, electionsPairs, candidates)
+    )
+    // analyseStability(OklahomaMethod, electionsPairs, candidates) /* going into infinite loop for some random election*/
+    analysisArray.append(
+      analyseStability(SequentialProportionalApprovalVoting, electionsPairs, candidates)
+    )
     analysisArray.append(analyseStability(ProportionalApprovalVoting, electionsPairs, candidates))
     analysisArray.append(analyseStability(SatisfactionApprovalVoting, electionsPairs, candidates))
 
@@ -50,27 +52,33 @@ object StabilityAnalyser {
 
   }
 
-
-  def analyseStability(vcm: VoteCounter[Ballot], electionsPair: List[List[Election[Ballot]]],
-                       candidates: List[Candidate]): (String, Double, Double) = {
-
+  def analyseStability(
+      vcm: VoteCounter[Ballot],
+      electionsPair: List[List[Election[Ballot]]],
+      candidates: List[Candidate]
+  ): (String, Double, Double) = {
 
     val electionResults = electionsPair.map(stability(vcm, _, candidates))
 
     val averageRatio = electionResults.sum / electionResults.length
 
-    val varianceRatio = electionResults.map(c => Math.pow((c - averageRatio), 2)).sum / electionResults.length
+    val varianceRatio =
+      electionResults.map(c => Math.pow(c - averageRatio, 2)).sum / electionResults.length
 
     (vcm.getClass.getSimpleName, averageRatio, varianceRatio)
 
   }
 
-  def stability(vcm: VoteCounter[Ballot], elections: List[Election[Ballot]], candidates: List[Candidate]): Double = {
+  def stability(
+      vcm: VoteCounter[Ballot],
+      elections: List[Election[Ballot]],
+      candidates: List[Candidate]
+  ): Double = {
 
-    val winnerEA = vcm.winners(elections(0), candidates, 1)
-    val winnerEB = vcm.winners(elections(1), candidates, 1)
-    val winnersDistance = winnerSetComparison(winnerEA map {_._1}, winnerEB map {_._1})
-    val ktDistance = kendallTauDistance(elections)
+    val winnerEA        = vcm.winners(elections(0), candidates, 1)
+    val winnerEB        = vcm.winners(elections(1), candidates, 1)
+    val winnersDistance = winnerSetComparison(winnerEA.map(_._1), winnerEB.map(_._1))
+    val ktDistance      = kendallTauDistance(elections)
 
     winnersDistance.toDouble / ktDistance.toDouble
   }
@@ -80,17 +88,17 @@ object StabilityAnalyser {
 
     require(c < 26)
 
-    val candidates = ('A' to 'Z') take c map(name => new Candidate(name.toString)) toList
+    val candidates = ('A' to 'Z').take(c).map(name => new Candidate(name.toString)) toList
 
     val elections = for {
       i <- List.range(1, n)
     } yield {
       Election(for {
         j <- List.range(1, m)
-      } yield Ballot(Random.shuffle(candidates), i, 1) )
+      } yield Ballot(Random.shuffle(candidates), i, 1))
     }
 
-    (candidates,elections)
+    (candidates, elections)
   }
 
   // calculate the kendall tau distance between two profiles
@@ -98,13 +106,17 @@ object StabilityAnalyser {
 
     var kTDistance = 0
 
-    profile(0) zip profile(1) foreach { case (we1, we2) => {
+    profile(0).zip(profile(1)).foreach { case (we1, we2) =>
       we1.preferences.foreach(c1 => {
         we1.preferences.foreach(c2 => {
-          if ((we1.preferences.indexOf(c1) < we1.preferences.indexOf(c2))
-            && (we2.preferences.indexOf(c1) > we2.preferences.indexOf(c2))) {
+          if (
+            (we1.preferences.indexOf(c1) < we1.preferences.indexOf(c2))
+            && (we2.preferences.indexOf(c1) > we2.preferences.indexOf(c2))
+          ) {
             kTDistance += 1
-          }})})}
+          }
+        })
+      })
     }
 
     kTDistance
@@ -113,8 +125,8 @@ object StabilityAnalyser {
   // http://www.nature.com/nature/journal/v234/n5323/abs/234034a0.html?foxtrotcallback=true
   def winnerSetComparison(winnerEA: List[Candidate], winnerEB: List[Candidate]): Rational = {
 
-    if ((winnerEA union winnerEB).distinct.nonEmpty) {
-      ((winnerEA intersect winnerEB).distinct length) / (winnerEA union winnerEB).distinct.length
+    if (winnerEA.union(winnerEB).distinct.nonEmpty) {
+      (winnerEA.intersect(winnerEB).distinct length) / winnerEA.union(winnerEB).distinct.length
 
     } else {
       Rational(0, 1)

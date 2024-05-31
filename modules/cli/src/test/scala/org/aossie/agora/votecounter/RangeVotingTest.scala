@@ -1,9 +1,9 @@
 package org.aossie.agora.votecounter
 
-import org.aossie.agora.parser.{CandidatesParser, PreferencesParserWithScore}
+import org.aossie.agora.parser.CandidatesParser
+import org.aossie.agora.parser.PreferencesParserWithScore
 import org.aossie.agora.model.Candidate
 import org.specs2.mutable.Specification
-
 
 class RangeVotingTest extends Specification {
 
@@ -12,15 +12,18 @@ class RangeVotingTest extends Specification {
   "RangeVoting Test " should {
 
     "verify result" in {
-      rangeVotingMethod("42-example.es", "42-candidates.txt") shouldEqual expectedRangeVotingWinnerList
+      rangeVotingMethod(
+        "42-example.es",
+        "42-candidates.txt"
+      ) shouldEqual expectedRangeVotingWinnerList
     }
   }
 
   def rangeVotingMethod(electionFile: String, candidatesFile: String): List[Candidate] = {
 
-    val dir = "../Agora/files/Examples/"
+    val dir        = "../Agora/files/Examples/"
     val candidates = CandidatesParser.read(dir + candidatesFile)
-    val election = PreferencesParserWithScore.read(dir + electionFile)
+    val election   = PreferencesParserWithScore.read(dir + electionFile)
 
     RangeVoting.winners(election, candidates, 1).map {
       _._1
