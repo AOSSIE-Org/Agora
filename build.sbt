@@ -77,3 +77,5 @@ lazy val commonSettings = Seq(
 licenses := Seq("CC BY-NC-SA" -> url("http://creativecommons.org/licenses/by-nc-sa/4.0/"))
 
 homepage := Some(url("https://www.gitlab.com/aossie/Agora"))
+
+addCommandAlias("fix-lint", ";scalafixAll; scalafmtSbt;")
