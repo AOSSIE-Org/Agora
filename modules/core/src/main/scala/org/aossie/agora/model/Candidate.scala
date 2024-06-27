@@ -1,6 +1,6 @@
 package org.aossie.agora.model
 
-case class Candidate(
+class Candidate(
     val name: String,
     val id: Option[Int] = None,
     val party: Option[String] = None

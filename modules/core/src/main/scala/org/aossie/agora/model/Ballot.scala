@@ -8,7 +8,7 @@ abstract class Ballot(val id: Int, val weight: Rational) {
 
 }
 
-case class PreferenceBallot(
+class PreferenceBallot(
     val preferences: List[Candidate],
     override val id: Int,
     override val weight: Rational
@@ -21,7 +21,7 @@ case class PreferenceBallot(
 
 }
 
-case class ScoreBallot(scores: List[(Candidate, Rational)], override val id: Int, w: Rational)
+class ScoreBallot(val scores: List[(Candidate, Rational)], override val id: Int, w: Rational)
     extends Ballot(id, w) {
 
   lazy val sortedScores = scores.sortWith((cs1, cs2) => cs1._2 > cs2._2)
@@ -33,7 +33,7 @@ case class ScoreBallot(scores: List[(Candidate, Rational)], override val id: Int
 
 }
 
-case class RankBallot(val ranks: List[(Candidate, Int)], override val id: Int, w: Rational)
+class RankBallot(val ranks: List[(Candidate, Int)], override val id: Int, w: Rational)
     extends Ballot(id, w) {
 
   lazy val sortedRanks = ranks.sortWith((cs1, cs2) => cs1._2 < cs2._2)
@@ -45,7 +45,7 @@ case class RankBallot(val ranks: List[(Candidate, Int)], override val id: Int, w
 
 }
 
-case class ApprovalBallot(val approvals: Set[Candidate], override val id: Int, w: Rational)
+class ApprovalBallot(val approvals: Set[Candidate], override val id: Int, w: Rational)
     extends Ballot(id, w) {
 
   lazy val firstVotes = ???
