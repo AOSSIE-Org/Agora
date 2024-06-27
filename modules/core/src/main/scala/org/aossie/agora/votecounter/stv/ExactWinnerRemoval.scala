@@ -58,7 +58,8 @@ trait ExactWinnerRemoval extends STV[Ballot] {
     var list: List[Ballot] = Nil
     for (b <- election if !b.preferences.isEmpty)
       if (b.preferences.head.name != winner.name) {
-        list = Ballot(filterPreferences(b.preferences, winner :: List()), b.id, b.weight) :: list
+        list =
+          new Ballot(filterPreferences(b.preferences, winner :: List()), b.id, b.weight) :: list
       }
     Election(list)
   }
