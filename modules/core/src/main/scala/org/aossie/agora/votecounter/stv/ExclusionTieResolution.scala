@@ -2,11 +2,10 @@ package org.aossie.agora.votecounter.stv
 
 import org.aossie.agora.model._
 import org.aossie.agora.votecounter._
+
 import collection.Map
 import scala.util.Random
-
 import scala.language.postfixOps
-
 import spire.math.Rational
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -62,17 +61,19 @@ trait PriorRoundExclusionTieResolution {
 
 }
 
-trait ACTExclusionTieResolution extends STV[ACTBallot] with ExclusionTieResolution {
+trait ACTExclusionTieResolution[C <: Candidate, B[CC >: C <: Candidate] <: ACTBallot[CC]]
+    extends STV[C, B]
+    with ExclusionTieResolution {
 
-  val result: Result
+  val result: Result[C]
 
   def recFindSmallest(
-      equaltotals: Map[Candidate, Rational],
-      totalshistory: List[Map[Candidate, Rational]]
-  ): Map[Candidate, Rational] = {
+      equaltotals: Map[C, Rational],
+      totalshistory: List[Map[C, Rational]]
+  ): Map[C, Rational] = {
     if (equaltotals.size > 1 && totalshistory.nonEmpty) {
-      val listequalcandidates          = equaltotals.toList.map(x => x._1)
-      var smallestcandidate: Candidate = listequalcandidates.head
+      val listequalcandidates  = equaltotals.toList.map(x => x._1)
+      var smallestcandidate: C = listequalcandidates.head
       for (c <- listequalcandidates.tail) {
         if (
           (totalshistory.head.getOrElse(c, Rational(0, 1))) < totalshistory.head.getOrElse(
@@ -95,7 +96,7 @@ trait ACTExclusionTieResolution extends STV[ACTBallot] with ExclusionTieResoluti
     }
   }
 
-  def chooseCandidateForExclusion(totals: Map[Candidate, Rational]): (Candidate, Rational) = {
+  def chooseCandidateForExclusion(totals: Map[C, Rational]): (C, Rational) = {
 
     var min = Rational(Int.MaxValue, 1)
     for (kv <- totals) if (kv._2 < min) min = kv._2

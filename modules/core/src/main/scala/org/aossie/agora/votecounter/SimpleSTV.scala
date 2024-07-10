@@ -2,16 +2,15 @@ package org.aossie.agora.votecounter
 
 import org.aossie.agora.votecounter.stv._
 import org.aossie.agora.model._
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 
 import spire.math.Rational
 import org.aossie.agora.votecounter.stv.Input
 
 class SimpleSTV
-    extends STV[Ballot]
+    extends STV[PreferenceBallot]
     with DroopQuota
     with NoFractionInQuota
-    with NewWinnersNotOrdered[Ballot]
+    with NewWinnersNotOrdered[PreferenceBallot]
     with SimpleSurplusDistributionTieResolution // not necessary because of NewWinnersNotOrdered
     with SimpleExclusion
     with UnfairExclusionTieResolution
@@ -21,15 +20,15 @@ class SimpleSTV
 
   val result: Result = new Result
 
-  val report: Report[Ballot] = new Report[Ballot]
+  val report: Report[PreferenceBallot] = new Report[PreferenceBallot]
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   override def runVoteCounter(
-      election: Election[Ballot],
+      election: Election[PreferenceBallot],
       candidates: List[Candidate],
       numVacancies: Int
-  ): Report[Ballot] = {
+  ): Report[PreferenceBallot] = {
     val quota = cutQuotaFraction(computeQuota(election.length, numVacancies))
     println("Quota = " + quota)
     result.setQuota(quota)
@@ -54,7 +53,7 @@ class SimpleSTV
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   override def winners(
-      election: Election[Ballot],
+      election: Election[PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = {
@@ -116,7 +115,10 @@ class SimpleSTV
   }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  def surplusesDistribution(election: Election[Ballot], numVacancies: Int): Election[Ballot] = {
+  def surplusesDistribution(
+      election: Election[PreferenceBallot],
+      numVacancies: Int
+  ): Election[PreferenceBallot] = {
     println("Distribution of surpluses.")
     var newElection = election
     while (result.getPendingWinners.nonEmpty) {
@@ -128,10 +130,10 @@ class SimpleSTV
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   def tryToDistributeSurplusVotes(
-      election: Election[Ballot],
+      election: Election[PreferenceBallot],
       winner: Candidate,
       ctotal: Rational
-  ): Election[Ballot] = {
+  ): Election[PreferenceBallot] = {
 
     val pendingWinners = result.getPendingWinners.map(x => x._1)
 
@@ -151,10 +153,10 @@ class SimpleSTV
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   def exclusion(
-      election: Election[Ballot],
+      election: Election[PreferenceBallot],
       candidate: Candidate,
       numVacancies: Int
-  ): Election[Ballot] = {
+  ): Election[PreferenceBallot] = {
     println("Exclusion of " + candidate)
     val ex = exclude(election, candidate, None, None)
     ex._1

@@ -2,7 +2,6 @@ package org.aossie.agora.votecounter.stv
 
 import org.aossie.agora.model._
 import org.aossie.agora.votecounter._
-
 import spire.math.Rational
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -10,9 +9,9 @@ import spire.math.Rational
 // ACT
 // This function takes a lot of time. The running time is large because of it.
 
-trait ACTFractionLoss extends STV[ACTBallot] {
+trait ACTFractionLoss[C <: Candidate, B[CC >: C <: Candidate] <: ACTBallot[CC]] extends STV[C, B] {
 
-  def loseFraction(e: Election[ACTBallot], ccandidates: List[Candidate]): Election[ACTBallot] = {
+  def loseFraction(e: Election[C, B], ccandidates: List[C]): Election[C, B] = {
     val pt   = e.firstVotes(ccandidates)
     var newe = e
     for ((k, v) <- pt) {
@@ -36,9 +35,9 @@ trait ACTFractionLoss extends STV[ACTBallot] {
 
 }
 
-trait NoFractionLoss extends STV[ACTBallot] {
+trait NoFractionLoss[C <: Candidate, B[CC >: C <: Candidate] <: ACTBallot[CC]] extends STV[C, B] {
 
-  def loseFraction(e: Election[ACTBallot], ccandidates: List[Candidate]): Election[ACTBallot] =
+  def loseFraction(e: Election[C, B], ccandidates: List[C]): Election[C, B] =
     e
 
 }

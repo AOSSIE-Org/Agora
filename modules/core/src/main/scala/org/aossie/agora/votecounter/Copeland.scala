@@ -4,15 +4,14 @@ import com.typesafe.scalalogging.LazyLogging
 import spire.math.Rational
 
 import org.aossie.agora.model._
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 
 import scala.collection.mutable.{HashMap => MMap}
 
 /** Algorithm : https://en.wikipedia.org/wiki/Copeland%27s_method */
-object Copeland extends VoteCounter[Ballot] with LazyLogging {
+object Copeland extends VoteCounter[Candidate, PreferenceBallot] with LazyLogging {
 
   def winners(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = {

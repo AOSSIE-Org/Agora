@@ -12,19 +12,19 @@ import spire.math.Rational
   * set extension. This implementation includes two of the natural and well studied set extension
   * methods - Kellys and Fishburn's extension methods.
   */
-abstract class SetExtensionMethods[B <: Ballot] {
+abstract class SetExtensionMethods {
 
   // will return the set that is preferred over another as given in the json parameters file
-  def compare(
-      election: org.aossie.agora.model.Election[Ballot],
-      candidates: List[Candidate],
+  def compare[C <: Candidate, B <: Ballot[C]](
+      election: org.aossie.agora.model.Election[B],
+      candidates: List[C],
       parameters: Parameters
-  ): Set[Candidate]
+  ): Set[C]
 
   // utility method for matrix where a[i][j] = x means candidate i has got #x votes against candidate j
-  def getPairwiseComparisons(
-      election: Election[Ballot],
-      candidates: List[Candidate]
+  def getPairwiseComparisons[C <: Candidate, B <: Ballot[C]](
+      election: Election[B],
+      candidates: List[C]
   ): Array[Array[Rational]] = {
 
     val zeroRational   = Rational(0, 1)

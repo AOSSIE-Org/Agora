@@ -1,7 +1,6 @@
 package org.aossie.agora.votecounter
 
 import org.aossie.agora.model._
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 
 import scala.collection.mutable.{HashMap => MMap}
 
@@ -12,12 +11,12 @@ import spire.math.Rational
   * are not voided
   */
 
-object Bucklin extends VoteCounter[Ballot] {
+object Bucklin extends VoteCounter[Candidate, PreferenceBallot] {
 
   // The following recursive function calculates totals and if total of any candidate exceeds half of election length
   // candidate wins, else next preferences are added, with weight 1/1 as previous preferences
   def bucklinTotals(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       ccandScoreMap: MMap[Candidate, Rational]
   ): List[(Candidate, Rational)] = {
@@ -30,9 +29,9 @@ object Bucklin extends VoteCounter[Ballot] {
     if (sortedCandidateScoreMap.head._2 > (Rational(election.length, 2))) {
       sortedCandidateScoreMap.head :: List()
     } else {
-      var ballots: List[Ballot] = Nil
+      var ballots: List[PreferenceBallot[Candidate]] = Nil
       for (b <- election) {
-        ballots = new Ballot(
+        ballots = new PreferenceBallot(
           if (b.preferences != Nil) b.preferences.tail else Nil,
           b.id,
           b.weight
@@ -43,7 +42,7 @@ object Bucklin extends VoteCounter[Ballot] {
   }
 
   override def winners(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = {

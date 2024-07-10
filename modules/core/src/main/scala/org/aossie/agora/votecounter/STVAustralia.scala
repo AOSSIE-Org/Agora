@@ -1,49 +1,48 @@
 package org.aossie.agora.votecounter
 
 import org.aossie.agora.model._
-
 import spire.math.Rational
 import org.aossie.agora.votecounter.stv.Input
 import org.aossie.agora.votecounter.stv.ACTBallot
 
-abstract class STVAustralia extends STV[ACTBallot] {
+abstract class STVAustralia extends STV[Candidate, ACTBallot] {
 
-  val result: Result = new Result
+  val result: Result[Candidate] = new Result
 
-  val report = new Report[ACTBallot]
+  val report = new Report[Candidate, ACTBallot]
 
   def tryToDistributeSurplusVotes(
-      election: Election[ACTBallot],
+      election: Election[Candidate, ACTBallot],
       ccandidates: List[Candidate],
       winner: Candidate,
       ctotal: Rational,
       markings: Option[Set[Int]]
-  ): (Election[ACTBallot], List[(Candidate, Rational)])
+  ): (Election[Candidate, ACTBallot], List[(Candidate, Rational)])
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // FIXME: This is an ugly hack that should be removed after we get rid of ACTBallot
   def runVoteCounterGeneral(
-      election: Election[PreferenceBallot],
+      election: Election[Candidate, PreferenceBallot],
       candidates: List[Candidate],
       numVacancies: Int
-  ): Report[PreferenceBallot] = {
+  ): Report[Candidate, PreferenceBallot] = {
 
     val r  = runVoteCounter(convertBallots(election), candidates, numVacancies)
-    val r1 = new Report[PreferenceBallot]
+    val r1 = new Report[Candidate, PreferenceBallot]
     r1.setWinners(r.getWinners)
     r1
   }
 
   // FIXME: This is an ugly hack that should be removed after we get rid of ACTBallot
-  def convertBallots(we: Election[PreferenceBallot]): Election[ACTBallot] =
+  def convertBallots(we: Election[Candidate, PreferenceBallot]): Election[Candidate, ACTBallot] =
     new Election(for (b <- we) yield ACTBallot.fromBallot(b)) // b // ACTBallot.fromBallot(b)
 
   override def runVoteCounter(
-      election: Election[ACTBallot],
+      election: Election[Candidate, ACTBallot],
       candidates: List[Candidate],
       numVacancies: Int
-  ): Report[ACTBallot] = { // all ballots of e are marked when the function is called
+  ): Report[Candidate, ACTBallot] = { // all ballots of e are marked when the function is called
     val quota = cutQuotaFraction(computeQuota(election.length, numVacancies))
     println("Number of ballots:" + election.length)
     println("Quota: " + quota)
@@ -67,19 +66,19 @@ abstract class STVAustralia extends STV[ACTBallot] {
     report
   }
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-// ACT Legislation:
-// 9(1): If a candidate is excluded in accordance with clause 8, the ballot papers counted for the candidate
-// shall be sorted into groups according to their transfer values when counted for him or her.
-//
+  // ACT Legislation:
+  // 9(1): If a candidate is excluded in accordance with clause 8, the ballot papers counted for the candidate
+  // shall be sorted into groups according to their transfer values when counted for him or her.
+  //
   // like ACT
-// Senate Legislation:
-// (13AA)(a) and (13AA)(b)
-//
+  // Senate Legislation:
+  // (13AA)(a) and (13AA)(b)
+  //
 
   def determineStepsOfExclusion(
-      election: Election[ACTBallot],
+      election: Election[Candidate, ACTBallot],
       candidate: Candidate
   ): List[(Candidate, Rational)] = {
     var s: Set[(Candidate, Rational)] = Set()

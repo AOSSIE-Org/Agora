@@ -1,21 +1,20 @@
 package org.aossie.agora.votecounter
 
 import org.aossie.agora.model._
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 
 import scala.collection.mutable.{HashMap => Map}
 
 import spire.math.Rational
 
 /** Created by deepeshpandey on 10/03/17. */
-object KemenyYoung extends VoteCounter[Ballot] {
+object KemenyYoung extends VoteCounter[Candidate, PreferenceBallot] {
 
   private val rationalZero = Rational(0, 1)
 
   // scalastyle:off cyclomatic.complexity
   // scalastyle:off method.length
   def winners(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = {

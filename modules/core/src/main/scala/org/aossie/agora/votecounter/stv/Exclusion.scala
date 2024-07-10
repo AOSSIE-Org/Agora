@@ -1,21 +1,19 @@
 package org.aossie.agora.votecounter.stv
 
 import org.aossie.agora.model._
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 import org.aossie.agora.votecounter._
-
 import spire.math.Rational
 
-trait ACTExclusion extends STV[ACTBallot] {
+trait ACTExclusion[C <: Candidate, B[CC >: C <: Candidate] <: ACTBallot[CC]] extends STV[C, B] {
 
   def excludeZero(
-      election: Election[ACTBallot],
-      candidate: Candidate
-  ): (Election[ACTBallot], Set[ACTBallot]) = {
-    var list: List[ACTBallot]        = Nil
-    var setExhausted: Set[ACTBallot] = Set()
+      election: Election[C, B],
+      candidate: C
+  ): (Election[C, B], Set[B]) = {
+    var list: List[B]        = Nil
+    var setExhausted: Set[B] = Set()
     for (b <- election if b.preferences.nonEmpty)
-      list = ACTBallot(
+      list = new B(
         (b.preferences.head :: b.preferences.tail).filter(_ != candidate),
         b.id,
         false,
@@ -26,13 +24,13 @@ trait ACTExclusion extends STV[ACTBallot] {
   }
 
   def exclude(
-      election: Election[ACTBallot],
-      candidate: Candidate,
+      election: Election[C, B],
+      candidate: C,
       value: Option[Rational],
-      newWinners: Option[List[Candidate]]
-  ): (Election[ACTBallot], Set[ACTBallot]) = {
-    var list: List[ACTBallot]        = Nil
-    var setExhausted: Set[ACTBallot] = Set()
+      newWinners: Option[List[C]]
+  ): (Election[C, B], Set[B]) = {
+    var list: List[B]        = Nil
+    var setExhausted: Set[B] = Set()
     value match {
       case None => throw new Exception("Argument value are missing in trait ACTExclusion")
       case Some(v) =>
@@ -44,13 +42,13 @@ trait ACTExclusion extends STV[ACTBallot] {
                 if (b.preferences.tail.nonEmpty) {
                   val restOfPreferences = filterPreferences(b.preferences.tail, candidate :: nW)
                   if (restOfPreferences.nonEmpty) {
-                    list = ACTBallot(restOfPreferences, b.id, true, b.value, b.value) :: list
+                    list = new B(restOfPreferences, b.id, true, b.value, b.value) :: list
                   } else {
                     setExhausted += b
                   }
                 }
               } else {
-                list = ACTBallot(
+                list = new B(
                   b.preferences.head :: filterPreferences(
                     b.preferences.tail.filter {
                       _ != candidate
@@ -72,16 +70,16 @@ trait ACTExclusion extends STV[ACTBallot] {
 }
 
 // exactly like ACTExclusion
-trait SenateExclusion extends STV[ACTBallot] {
+trait SenateExclusion[C <: Candidate, B[CC >: C <: Candidate] <: ACTBallot[CC]] extends STV[C, B] {
 
   def excludeZero(
-      election: Election[ACTBallot],
-      candidate: Candidate
-  ): (Election[ACTBallot], Set[ACTBallot]) = {
-    var list: List[ACTBallot]        = Nil
-    var setExhausted: Set[ACTBallot] = Set()
+      election: Election[C, B],
+      candidate: C
+  ): (Election[C, B], Set[B]) = {
+    var list: List[B]        = Nil
+    var setExhausted: Set[B] = Set()
     for (b <- election if b.preferences.nonEmpty)
-      list = ACTBallot(
+      list = new B(
         (b.preferences.head :: b.preferences.tail).filter(_ != candidate),
         b.id,
         false,
@@ -92,13 +90,13 @@ trait SenateExclusion extends STV[ACTBallot] {
   }
 
   def exclude(
-      election: Election[ACTBallot],
-      candidate: Candidate,
+      election: Election[C, B],
+      candidate: C,
       value: Option[Rational],
-      newWinners: Option[List[Candidate]]
-  ): (Election[ACTBallot], Set[ACTBallot]) = {
-    var list: List[ACTBallot]        = Nil
-    var setExhausted: Set[ACTBallot] = Set()
+      newWinners: Option[List[C]]
+  ): (Election[C, B], Set[B]) = {
+    var list: List[B]        = Nil
+    var setExhausted: Set[B] = Set()
     value match {
       case None => throw new Exception("Argument value are missing in trait ACTExclusion")
       case Some(v) =>
@@ -110,13 +108,13 @@ trait SenateExclusion extends STV[ACTBallot] {
                 if (b.preferences.tail.nonEmpty) {
                   val restOfPreferences = filterPreferences(b.preferences.tail, candidate :: nW)
                   if (restOfPreferences.nonEmpty) {
-                    list = ACTBallot(restOfPreferences, b.id, true, b.value, b.value) :: list
+                    list = new B(restOfPreferences, b.id, true, b.value, b.value) :: list
                   } else {
                     setExhausted += b
                   }
                 }
               } else {
-                list = ACTBallot(
+                list = new B(
                   b.preferences.head :: filterPreferences(
                     b.preferences.tail.filter {
                       _ != candidate
@@ -137,25 +135,26 @@ trait SenateExclusion extends STV[ACTBallot] {
 
 }
 
-trait SimpleExclusion extends STV[Ballot] {
+trait SimpleExclusion[C <: Candidate, B[CC >: C <: Candidate] <: PreferenceBallot[CC]]
+    extends STV[C, B] {
 
   def exclude(
-      election: Election[Ballot],
-      candidate: Candidate,
+      election: Election[C, B],
+      candidate: C,
       value: Option[Rational],
-      newWinners: Option[List[Candidate]]
-  ): (Election[Ballot], Set[Ballot]) = {
-    var list: List[Ballot]        = Nil
-    var setExhausted: Set[Ballot] = Set()
+      newWinners: Option[List[C]]
+  ): (Election[C, B], Set[B]) = {
+    var list: List[B]        = Nil
+    var setExhausted: Set[B] = Set()
     for (b <- election if !b.preferences.isEmpty) {
       if (b.preferences.head == candidate) {
         if (b.preferences.tail.nonEmpty) {
-          list = new Ballot(b.preferences.tail, b.id, b.weight) :: list
+          list = new B(b.preferences.tail, b.id, b.weight) :: list
         } else {
           setExhausted += b
         }
       } else {
-        list = new Ballot(
+        list = new B(
           (b.preferences.head :: b.preferences.tail).filter {
             _ != candidate
           },
@@ -173,10 +172,13 @@ trait SimpleExclusion extends STV[Ballot] {
 trait SimpleExclusionWithFixedElectionSize {
 
   // Removes the candidate from the ballot but does not reduce the election size by removing empty ballots
-  def exclude(election: Election[Ballot], candidate: Candidate): Election[Ballot] = {
+  def exclude(
+      election: Election[Candidate, PreferenceBallot],
+      candidate: Candidate
+  ): Election[Candidate, PreferenceBallot] = {
     election.map { b =>
       val newPrefs = b.preferences.filter(_ != candidate)
-      new Ballot(newPrefs, b.id, b.weight)
+      new PreferenceBallot(newPrefs, b.id, b.weight)
     }
   }
 

@@ -5,10 +5,10 @@ import org.aossie.agora.model._
 
 import spire.math.Rational
 
-object RankedPairs extends VoteCounter[RankBallot] with LazyLogging {
+object RankedPairs extends VoteCounter[Candidate, RankBallot] with LazyLogging {
 
   def winners(
-      e: Election[RankBallot],
+      e: Election[Candidate, RankBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = {

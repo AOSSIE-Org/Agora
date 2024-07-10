@@ -1,35 +1,39 @@
 package org.aossie.agora.votecounter
 
 import org.aossie.agora.model._
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 
 import spire.math.Rational
 
 /** * https://en.wikipedia.org/wiki/Sequential_proportional_approval_voting
   */
 
-object SequentialProportionalApprovalVoting extends VoteCounter[Ballot] with SimpleApproval {
+object SequentialProportionalApprovalVoting
+    extends VoteCounter[Candidate, PreferenceBallot]
+    with SimpleApproval {
 
   // following function removes winner and reduces weight on ballot to 1/(N+1)
   // where N is the number of winners in one single ballot choice list
-  def excludeWinner(election: Election[Ballot], winner: (Candidate, Rational)): Election[Ballot] = {
-    var ballots: List[Ballot] = Nil
+  def excludeWinner(
+      election: Election[Candidate, PreferenceBallot],
+      winner: (Candidate, Rational)
+  ): Election[Candidate, PreferenceBallot] = {
+    var ballots: List[PreferenceBallot[Candidate]] = Nil
     for (b <- election) {
       if (b.preferences.contains(winner._1)) {
-        ballots = new Ballot(
+        ballots = new PreferenceBallot(
           b.preferences.filter(_ != winner._1),
           b.id,
           Rational(b.weight.numerator, b.weight.denominator + 1)
         ) :: ballots
       } else {
-        ballots = new Ballot(b.preferences, b.id, b.weight) :: ballots
+        ballots = new PreferenceBallot(b.preferences, b.id, b.weight) :: ballots
       }
     }
     Election(ballots)
   }
 
   def winners(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = {

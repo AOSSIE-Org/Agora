@@ -2,15 +2,14 @@ package org.aossie.agora.votecounter
 
 import org.aossie.agora.votecounter.BaldwinMethod.bordaScores
 import org.aossie.agora.model._
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 
 import spire.math.Rational
 
 /** https://en.wikipedia.org/wiki/Nanson%27s_method */
-object Nanson extends VoteCounter[Ballot] {
+object Nanson extends VoteCounter[Candidate, PreferenceBallot] {
 
   def winners(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       candidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = {

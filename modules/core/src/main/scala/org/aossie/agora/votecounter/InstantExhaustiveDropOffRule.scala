@@ -2,14 +2,13 @@ package org.aossie.agora.votecounter
 
 import org.aossie.agora.votecounter.stv._
 import org.aossie.agora.model._
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 
 import spire.math.Rational
 
 /** https://en.wikipedia.org/wiki/Exhaustive_ballot#Notes */
 
 object InstantExhaustiveDropOffRule
-    extends VoteCounter[Ballot]
+    extends VoteCounter[Candidate, PreferenceBallot]
     with SimpleExclusionWithFixedElectionSize {
 
   var dropOffPercentage = Rational(0, 100)
@@ -37,7 +36,7 @@ object InstantExhaustiveDropOffRule
   }
 
   override def winners(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = {

@@ -4,19 +4,18 @@ import com.typesafe.scalalogging.LazyLogging
 import spire.math.Rational
 
 import org.aossie.agora.model._
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 
 import scala.collection.mutable.{HashMap => MMap}
 
 /** Algorithm : https://en.wikipedia.org/wiki/Coombs%27_method Note: This voting method requires
   * voters to rank all the candidates
   */
-object Coomb extends VoteCounter[Ballot] with LazyLogging {
+object Coomb extends VoteCounter[Candidate, PreferenceBallot] with LazyLogging {
 
   private val majorityThreshold = Rational(1, 2)
 
   def winners(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = {

@@ -4,13 +4,13 @@ import org.aossie.agora.model._
 import org.aossie.agora.model.{PreferenceBallot => Ballot}
 import org.aossie.agora.votecounter._
 
-trait ACTExactWinnerRemoval extends STV[ACTBallot] {
+trait ACTExactWinnerRemoval extends STV[Candidate, ACTBallot] {
 
   def removeWinnerWithoutSurplusFromElection(
-      election: Election[ACTBallot],
+      election: Election[Candidate, ACTBallot],
       winner: Candidate
-  ): Election[ACTBallot] = {
-    var list: List[ACTBallot] = Nil
+  ): Election[Candidate, ACTBallot] = {
+    var list: List[ACTBallot[Candidate]] = Nil
     for (b <- election if !b.preferences.isEmpty)
       if (b.preferences.head.name != winner.name) {
         list = ACTBallot(
@@ -27,13 +27,13 @@ trait ACTExactWinnerRemoval extends STV[ACTBallot] {
 }
 
 // exactly like ACTExactWinnerRemoval
-trait SenateExactWinnerRemoval extends STV[ACTBallot] {
+trait SenateExactWinnerRemoval extends STV[Candidate, ACTBallot] {
 
   def removeWinnerWithoutSurplusFromElection(
-      election: Election[ACTBallot],
+      election: Election[Candidate, ACTBallot],
       winner: Candidate
-  ): Election[ACTBallot] = {
-    var list: List[ACTBallot] = Nil
+  ): Election[Candidate, ACTBallot] = {
+    var list: List[ACTBallot[Candidate]] = Nil
     for (b <- election if !b.preferences.isEmpty)
       if (b.preferences.head.name != winner.name) {
         list = ACTBallot(
@@ -49,17 +49,16 @@ trait SenateExactWinnerRemoval extends STV[ACTBallot] {
 
 }
 
-trait ExactWinnerRemoval extends STV[Ballot] {
+trait ExactWinnerRemoval extends STV[Candidate, Ballot] {
 
   def removeWinnerWithoutSurplusFromElection(
-      election: Election[Ballot],
+      election: Election[Candidate, Ballot],
       winner: Candidate
-  ): Election[Ballot] = {
-    var list: List[Ballot] = Nil
+  ): Election[Candidate, Ballot] = {
+    var list: List[Ballot[Candidate]] = Nil
     for (b <- election if !b.preferences.isEmpty)
       if (b.preferences.head.name != winner.name) {
-        list =
-          new Ballot(filterPreferences(b.preferences, winner :: List()), b.id, b.weight) :: list
+        list = Ballot(filterPreferences(b.preferences, winner :: List()), b.id, b.weight) :: list
       }
     Election(list)
   }

@@ -6,17 +6,16 @@ package org.aossie.agora.votecounter
 
 import org.aossie.agora.model._
 import org.aossie.agora.votecounter.stv._
-import collection.mutable.{HashMap => MMap}
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 
+import collection.mutable.{HashMap => MMap}
 import spire.math.Rational
 import org.aossie.agora.votecounter.stv.Input
 
 object MeekSTV
-    extends STV[Ballot]
+    extends STV[Candidate, PreferenceBallot]
     with DroopQuota        // Imp
     with NoFractionInQuota // Imp
-    with NewWinnersNotOrdered[Ballot]
+    with NewWinnersNotOrdered[Candidate, PreferenceBallot]
     with SimpleSurplusDistributionTieResolution // not necessary because of NewWinnersNotOrdered
     with SimpleExclusion
     with UnfairExclusionTieResolution
@@ -24,17 +23,17 @@ object MeekSTV
     with VoteCounterWithAllBallotsInSurplusDistribution
     with ExactWinnerRemoval {
 
-  val result: Result = new Result
+  val result: Result[Candidate] = new Result
 
-  val report: Report[Ballot] = new Report[Ballot]
+  val report: Report[Candidate, PreferenceBallot] = new Report
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   override def runVoteCounter(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       candidates: List[Candidate],
       numVacancies: Int
-  ): Report[Ballot] = {
+  ): Report[Candidate, PreferenceBallot] = {
 
     print("\n INPUT ELECTION: \n")
     // printElection(election)
@@ -55,7 +54,7 @@ object MeekSTV
   }
 
   def totalsMeek(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       keepFactor: MMap[Candidate, Rational]
   ): MMap[Candidate, Rational] = {
@@ -85,7 +84,7 @@ object MeekSTV
   }
 
   def winnersList(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int,
       keepFactor: MMap[Candidate, Rational]
@@ -139,7 +138,7 @@ object MeekSTV
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   override def winners(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = {

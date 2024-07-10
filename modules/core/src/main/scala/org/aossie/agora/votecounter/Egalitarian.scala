@@ -1,8 +1,6 @@
 package org.aossie.agora.votecounter
 
 import org.aossie.agora.model._
-import org.aossie.agora.model.PreferenceBallot
-
 import spire.math._
 
 abstract class Egalitarian[B <: PreferenceBallot] extends VoteCounter[B] {

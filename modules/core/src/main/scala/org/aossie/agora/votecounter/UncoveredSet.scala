@@ -2,7 +2,6 @@ package org.aossie.agora.votecounter
 
 import com.typesafe.scalalogging.LazyLogging
 import org.aossie.agora.model._
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 import org.aossie.agora.votecounter.common.PreferencePairwiseComparison
 import org.aossie.agora.util.matrix._
 
@@ -16,10 +15,13 @@ import org.aossie.agora.util.matrix.BaseMatrix
   * The Uncovered Set(UC) consists of all uncovered alternatives x covers y (x C y) if D(y) is a
   * subset of D(x) where D(x) = { y ⍷ A | x >(majority) y}
   */
-object UncoveredSet extends VoteCounter[Ballot] with PreferencePairwiseComparison with LazyLogging {
+object UncoveredSet
+    extends VoteCounter[Candidate, PreferenceBallot]
+    with PreferencePairwiseComparison[Candidate, PreferenceBallot]
+    with LazyLogging {
 
   override def winners(
-      e: Election[Ballot],
+      e: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = {

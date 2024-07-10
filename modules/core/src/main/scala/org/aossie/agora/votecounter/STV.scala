@@ -9,48 +9,49 @@ import scala.collection.Map
 
 import spire.math.Rational
 
-abstract class STV[B <: Ballot] extends VoteCounter[B] {
+abstract class STV[C <: Candidate, B[CC >: C <: Candidate] <: Ballot[CC]]
+    extends VoteCounter[C, B] {
 
   def computeQuota(numVotes: Int, numVacancies: Int): Rational
 
   def cutQuotaFraction(num: Rational): Rational
 
   def returnNewWinners(
-      totals: Map[Candidate, Rational],
+      totals: Map[C, Rational],
       quota: Rational
-  ): List[(Candidate, Rational)]
+  ): List[(C, Rational)]
 
   def computeTransferValue(
       surplus: Rational,
-      election: Election[B],
-      pendingWinners: List[Candidate],
-      candidate: Candidate,
+      election: Election[C, B],
+      pendingWinners: List[C],
+      candidate: C,
       markings: Option[Set[Int]]
   ): Rational
 
   def distributeSurplusVotes(
-      election: Election[B],
-      candidate: Candidate,
+      election: Election[C, B],
+      candidate: C,
       total: Rational,
       markings: Option[Set[Int]],
-      pendingWinners: List[Candidate],
+      pendingWinners: List[C],
       transferValue: Rational
-  ): (Election[B], Set[B], Option[Election[B]])
+  ): (Election[C, B], Set[B], Option[Election[C, B]])
 
   def resolveSurpluseDistributionTie(
-      equaltotals: Map[Candidate, Rational]
-  ): List[(Candidate, Rational)]
+      equaltotals: Map[C, Rational]
+  ): List[(C, Rational)]
 
-  def chooseCandidateForExclusion(totals: Map[Candidate, Rational]): (Candidate, Rational)
+  def chooseCandidateForExclusion(totals: Map[C, Rational]): (C, Rational)
 
   def exclude(
-      election: Election[B],
-      candidate: Candidate,
+      election: Election[C, B],
+      candidate: C,
       value: Option[Rational],
-      newWinners: Option[List[Candidate]]
-  ): (Election[B], Set[B])
+      newWinners: Option[List[C]]
+  ): (Election[C, B], Set[B])
 
-  def removeWinnerWithoutSurplusFromElection(election: Election[B], winner: Candidate): Election[B]
+  def removeWinnerWithoutSurplusFromElection(election: Election[C, B], winner: C): Election[C, B]
 
   // def run(e: Election[B], numVacancies: Int):   Report[B] = {
   //  val output = runVoteCounter(e: Election[B], numVacancies: Int)
@@ -59,21 +60,21 @@ abstract class STV[B <: Ballot] extends VoteCounter[B] {
   //  output
   // }
 
-  def sumTotals(totals: Map[Candidate, Rational]): Rational = {
+  def sumTotals(totals: Map[C, Rational]): Rational = {
     var sum: Rational = 0
     for (t <- totals)
       sum += t._2
     sum
   }
 
-  def computeTotal(election: Election[B], candidate: Candidate): Rational = {
+  def computeTotal(election: Election[C, B], candidate: C): Rational = {
     var r: Rational = 0
     for (b <- election if !b.preferences.isEmpty && b.preferences.head == candidate)
       r = r + b.weight
     r
   }
 
-  def quotaReached(totals: Map[Candidate, Rational], quota: Rational): Boolean = {
+  def quotaReached(totals: Map[C, Rational], quota: Rational): Boolean = {
     if (totals.exists(_._2 >= quota)) {
       println("\nQuota: reached")
       true
@@ -84,9 +85,9 @@ abstract class STV[B <: Ballot] extends VoteCounter[B] {
   }
 
   def ballotsAreContinuing(
-      c: Candidate,
-      election: Election[B],
-      pendingWinners: List[Candidate]
+      c: C,
+      election: Election[C, B],
+      pendingWinners: List[C]
   ): Boolean = {
     var el       = election
     var ballotsC = false
@@ -103,10 +104,10 @@ abstract class STV[B <: Ballot] extends VoteCounter[B] {
 
   // TODO: Optimize: as soon as we found continuing candidate, we can simply attach the rest of the list
   def filterPreferences(
-      preferences: List[Candidate],
-      candidates: List[Candidate]
-  ): List[Candidate] = {
-    var newpreferences: List[Candidate] = Nil
+      preferences: List[C],
+      candidates: List[C]
+  ): List[C] = {
+    var newpreferences: List[C] = Nil
     for (c <- preferences) {
       candidates.exists(x => x == c) match {
         case true  =>

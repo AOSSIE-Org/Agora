@@ -1,7 +1,6 @@
 package org.aossie.agora.votecounter
 
 import org.aossie.agora.model._
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 
 import spire.math.Rational
 
@@ -10,10 +9,10 @@ import collection.mutable.{HashMap => MMap}
 /** Wiki : https://en.wikipedia.org/wiki/Dodgson%27s_method Implementation :
   * http://infosyncratic.nl/talks/2008-votingprocedures.pdf
   */
-object Dodgson extends VoteCounter[Ballot] {
+object Dodgson extends VoteCounter[Candidate, PreferenceBallot] {
 
   override def winners(
-      e: Election[Ballot],
+      e: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = {
@@ -47,7 +46,7 @@ object Dodgson extends VoteCounter[Ballot] {
   def getCondorcetWinnerIfExist(
       list: List[Int],
       candidates: List[Candidate],
-      election: Election[Ballot]
+      election: Election[Candidate, PreferenceBallot]
   ): Option[Candidate] = {
 
     val dodgsonWinner = candidates.find(c =>
@@ -63,7 +62,7 @@ object Dodgson extends VoteCounter[Ballot] {
   // returns an array where the value at index i represents total votes to param candidate against candidates(i)
   // this is all required to calculate if the param candidate is condorcet winner or not
   def getCandidateMajorityArray(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       candidate: Candidate,
       flipVector: List[Int],
       candidates: List[Candidate]
@@ -105,11 +104,14 @@ object Dodgson extends VoteCounter[Ballot] {
     }
   }
 
-  private val cache = new MMap[Election[Ballot], Election[Ballot]]()
+  private val cache =
+    new MMap[Election[Candidate, PreferenceBallot], Election[Candidate, PreferenceBallot]]()
 
-  def dispersed(election: Election[Ballot]): Election[Ballot] = {
+  def dispersed(
+      election: Election[Candidate, PreferenceBallot]
+  ): Election[Candidate, PreferenceBallot] = {
 
-    def disperseUtil(election: Election[Ballot]) = {
+    def disperseUtil(election: Election[Candidate, PreferenceBallot]) = {
       for {
         b <- election
         i <- 1 to b.weight.toInt

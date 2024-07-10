@@ -2,53 +2,56 @@ package org.aossie.agora.model
 
 import spire.math.Rational
 
-abstract class Ballot(val id: Int, val weight: Rational) {
+abstract class Ballot[+C <: Candidate](val id: Int, val weight: Rational) {
 
-  def firstVotes: Map[Candidate, Rational]
+  def firstVotes[CC >: C]: Map[CC, Rational]
 
 }
 
-class PreferenceBallot(
-    val preferences: List[Candidate],
+case class PreferenceBallot[+C <: Candidate](
+    val preferences: List[C],
     override val id: Int,
     override val weight: Rational
-) extends Ballot(id, weight) {
+) extends Ballot[C](id, weight) {
 
-  lazy val firstVotes = preferences.headOption match {
+  def firstVotes[CC >: C]: Map[CC, Rational] = preferences.headOption match {
     case Some(c) => Map(c -> Rational(1, 1))
     case None    => Map()
   }
 
 }
 
-class ScoreBallot(val scores: List[(Candidate, Rational)], override val id: Int, w: Rational)
-    extends Ballot(id, w) {
+case class ScoreBallot[+C <: Candidate](
+    val scores: List[(C, Rational)],
+    override val id: Int,
+    w: Rational
+) extends Ballot[C](id, w) {
 
   lazy val sortedScores = scores.sortWith((cs1, cs2) => cs1._2 > cs2._2)
 
-  lazy val firstVotes = sortedScores.headOption match {
+  def firstVotes[CC >: C]: Map[CC, Rational] = sortedScores.headOption match {
     case Some((c, s)) => Map(c -> Rational(1, 1))
     case None         => Map()
   }
 
 }
 
-class RankBallot(val ranks: List[(Candidate, Int)], override val id: Int, w: Rational)
-    extends Ballot(id, w) {
+case class RankBallot[+C <: Candidate](val ranks: List[(C, Int)], override val id: Int, w: Rational)
+    extends Ballot[C](id, w) {
 
   lazy val sortedRanks = ranks.sortWith((cs1, cs2) => cs1._2 < cs2._2)
 
-  lazy val firstVotes = sortedRanks.headOption match {
+  def firstVotes[CC >: C]: Map[CC, Rational] = sortedRanks.headOption match {
     case Some((c, s)) => Map(c -> Rational(1, 1))
     case None         => Map()
   }
 
 }
 
-class ApprovalBallot(val approvals: Set[Candidate], override val id: Int, w: Rational)
-    extends Ballot(id, w) {
+case class ApprovalBallot[C <: Candidate](val approvals: Set[C], override val id: Int, w: Rational)
+    extends Ballot[C](id, w) {
 
-  lazy val firstVotes = ???
+  def firstVotes[CC >: C]: Map[CC, Rational] = ???
 
 }
 

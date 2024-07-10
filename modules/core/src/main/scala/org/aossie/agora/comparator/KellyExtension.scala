@@ -8,13 +8,13 @@ import spire.math.Rational
 /*
   Link : https://drive.google.com/file/d/0B4uPp6wWiMpScEM2Q21kT2x1N3M/view?usp=sharing
  */
-object KellyExtension extends SetExtensionMethods[Ballot] with LazyLogging {
+object KellyExtension extends SetExtensionMethods with LazyLogging {
 
-  override def compare(
-      election: org.aossie.agora.model.Election[Ballot],
-      candidates: List[Candidate],
+  override def compare[C <: Candidate, B <: Ballot[C]](
+      election: org.aossie.agora.model.Election[B],
+      candidates: List[C],
       parameters: Parameters
-  ): Set[Candidate] = {
+  ): Set[C] = {
     // require that the sets are consistent with the candidates list
     require(
       parameters.comparisonSets.isDefined && parameters.comparisonSets.get.set1.forall(c =>
@@ -52,11 +52,11 @@ object KellyExtension extends SetExtensionMethods[Ballot] with LazyLogging {
     * @param setY
     * @return
     */
-  def kellyComparison(
+  def kellyComparison[C <: Candidate](
       matrix: Array[Array[Rational]],
-      setX: Set[Candidate],
-      setY: Set[Candidate],
-      candidates: List[Candidate]
+      setX: Set[C],
+      setY: Set[C],
+      candidates: List[C]
   ): Boolean = {
 
     val xRy = setX.forall(cand1 =>

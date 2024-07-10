@@ -2,7 +2,6 @@ package org.aossie.agora.votecounter
 
 import com.typesafe.scalalogging.LazyLogging
 import org.aossie.agora.model._
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 import org.aossie.agora.votecounter.common.PreferencePairwiseComparison
 
 import spire.math.Rational
@@ -12,17 +11,20 @@ import spire.math.Rational
   * round i + 1 is the winner w of round i, if w >(majority) xi+1, and is xi+1, if xi+1 >(majority)
   * w; and the ultimate winner is the winner of round m.
   */
-object SMC extends VoteCounter[Ballot] with PreferencePairwiseComparison with LazyLogging {
+object SMC
+    extends VoteCounter[Candidate, PreferenceBallot]
+    with PreferencePairwiseComparison[Candidate, PreferenceBallot]
+    with LazyLogging {
 
   def runVoteCounter(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       candidates: List[Candidate],
       param: Parameters,
       numVacancies: Int
-  ): Report[Ballot] = {
+  ): Report[Candidate, PreferenceBallot] = {
 
-    val result: Result         = new Result
-    val report: Report[Ballot] = new Report[Ballot]
+    val result: Result[Candidate]                   = new Result
+    val report: Report[Candidate, PreferenceBallot] = new Report
 
     print("\n INPUT ELECTION: \n")
     // printElection(election)
@@ -35,7 +37,7 @@ object SMC extends VoteCounter[Ballot] with PreferencePairwiseComparison with La
   }
 
   def smcWinner(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       param: Parameters,
       numVacancies: Int
@@ -70,7 +72,7 @@ object SMC extends VoteCounter[Ballot] with PreferencePairwiseComparison with La
   }
 
   override def winners(
-      e: Election[Ballot],
+      e: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = ???

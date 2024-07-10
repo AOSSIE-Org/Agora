@@ -2,7 +2,6 @@ package org.aossie.agora.votecounter
 
 import com.typesafe.scalalogging.LazyLogging
 import org.aossie.agora.model._
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 import org.aossie.agora.votecounter.common.PreferencePairwiseComparison
 
 import collection.mutable.{HashMap => MMap}
@@ -12,14 +11,17 @@ import spire.math.Rational
 /** Algorithm : https://www.cs.cmu.edu/~arielpro/mfai_papers/lecture6.pdf page-4 Variant : winning
   * votes => W = \arg \min_X ( \max_Y score(Y, X))
   */
-object Maximin extends VoteCounter[Ballot] with PreferencePairwiseComparison with LazyLogging {
+object Maximin
+    extends VoteCounter[Candidate, PreferenceBallot]
+    with PreferencePairwiseComparison[Candidate, PreferenceBallot]
+    with LazyLogging {
 
   private val rational0 = Rational(0, 1)
 
   private val majorityThreshold = Rational(1, 2)
 
   def winners(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = {
@@ -37,7 +39,7 @@ object Maximin extends VoteCounter[Ballot] with PreferencePairwiseComparison wit
   def getMaximinScores(
       pairwiseComparisons: Array[Array[Rational]],
       ccandidates: List[Candidate],
-      election: Election[Ballot]
+      election: Election[Candidate, PreferenceBallot]
   ): MMap[Candidate, Rational] = {
 
     val maximinScores = new MMap[Candidate, Rational]

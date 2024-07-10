@@ -1,26 +1,27 @@
 package org.aossie.agora.votecounter
 
 import org.aossie.agora.model._
-
 import spire.math.Rational
 import org.aossie.agora.votecounter.stv.Input
 
-abstract class VoteCounter[B <: Ballot] {
+import scala.language.higherKinds
+
+trait VoteCounter[C <: Candidate, B[CC >: C <: Candidate] <: Ballot[CC]] {
 
   def winners(
-      e: Election[B],
-      ccandidates: List[Candidate],
+      election: Election[C, B],
+      candidate: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)]
+  ): List[(C, Rational)]
 
   def runVoteCounter(
-      election: Election[B],
-      candidates: List[Candidate],
+      election: Election[C, B],
+      candidates: List[C],
       numVacancies: Int
-  ): Report[B] = {
+  ): Report[C, B] = {
 
-    val result: Result    = new Result
-    val report: Report[B] = new Report[B]
+    val result: Result[C]    = new Result
+    val report: Report[C, B] = new Report[C, B]
 
     var tls = election.firstVotes(candidates)
     result.addTotalsToHistory(tls)
@@ -32,5 +33,21 @@ abstract class VoteCounter[B <: Ballot] {
 
     report
   }
+
+}
+
+trait Algorithm[B[C <: Candidate] <: Ballot[C]] {
+
+  def winners[C <: Candidate](
+      election: Election[C, B],
+      candidates: List[C],
+      numVacancies: Int
+  ): List[(C, Rational)]
+
+  def runVoteCounter[C <: Candidate](
+      election: Election[C, B],
+      candidates: List[C],
+      numVacancies: Int
+  ): Report[C, B]
 
 }
