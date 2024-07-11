@@ -7,13 +7,13 @@ import spire.math.Rational
 /*
   Link : https://drive.google.com/file/d/0B4uPp6wWiMpSbWh2NGNfLXdiTTA/view?usp=sharing
  */
-object FishburnsExtension extends SetExtensionMethods {
+object FishburnsExtension extends SetExtensionMethods[Candidate, Ballot] {
 
-  override def compare[C <: Candidate, B <: Ballot[C]](
-      election: org.aossie.agora.model.Election[B],
-      candidates: List[C],
+  override def compare(
+      election: org.aossie.agora.model.Election[Candidate, Ballot],
+      candidates: List[Candidate],
       parameters: Parameters
-  ): Set[C] = {
+  ): Set[Candidate] = {
 
     // candidates in comparison sets should be consistent with the actual candidates
     require(
@@ -48,11 +48,11 @@ object FishburnsExtension extends SetExtensionMethods {
     * @param setY
     * @return
     */
-  def fishburnComparison[C <: Candidate](
+  def fishburnComparison(
       matrix: Array[Array[Rational]],
-      setX: Set[C],
-      setY: Set[C],
-      candidates: List[C]
+      setX: Set[Candidate],
+      setY: Set[Candidate],
+      candidates: List[Candidate]
   ): Boolean = {
 
     (setX -- setY).forall(x =>

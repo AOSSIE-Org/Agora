@@ -6,29 +6,29 @@ import org.aossie.agora.model._
 import spire.math.Rational
 import org.aossie.agora.votecounter.stv.Input
 
-class SimpleSTV
-    extends STV[PreferenceBallot]
+class SimpleSTV[C <: Candidate]
+    extends STV[C, PreferenceBallot]
     with DroopQuota
     with NoFractionInQuota
-    with NewWinnersNotOrdered[PreferenceBallot]
-    with SimpleSurplusDistributionTieResolution // not necessary because of NewWinnersNotOrdered
-    with SimpleExclusion
-    with UnfairExclusionTieResolution
-    with TransferValueWithDenominatorEqualToTotal
-    with VoteCounterWithAllBallotsInSurplusDistribution
-    with ExactWinnerRemoval {
+    with NewWinnersNotOrdered[C, PreferenceBallot]
+    with SimpleSurplusDistributionTieResolution[C] // not necessary because of NewWinnersNotOrdered
+    with SimpleExclusion[C]
+    with UnfairExclusionTieResolution[C]
+    with TransferValueWithDenominatorEqualToTotal[C]
+    with VoteCounterWithAllBallotsInSurplusDistribution[C]
+    with ExactWinnerRemoval[C] {
 
-  val result: Result = new Result
+  val result: Result[C] = new Result[C]
 
-  val report: Report[PreferenceBallot] = new Report[PreferenceBallot]
+  val report: Report[C, PreferenceBallot] = new Report[C, PreferenceBallot]
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   override def runVoteCounter(
-      election: Election[PreferenceBallot],
-      candidates: List[Candidate],
+      election: Election[C, PreferenceBallot],
+      candidates: List[C],
       numVacancies: Int
-  ): Report[PreferenceBallot] = {
+  ): Report[C, PreferenceBallot] = {
     val quota = cutQuotaFraction(computeQuota(election.length, numVacancies))
     println("Quota = " + quota)
     result.setQuota(quota)
@@ -53,15 +53,17 @@ class SimpleSTV
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   override def winners(
-      election: Election[PreferenceBallot],
-      ccandidates: List[Candidate],
+      election: Election[C, PreferenceBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = {
+  ): List[(C, Rational)] = {
 
     println(" \n NEW RECURSIVE CALL \n")
 
-    def mentionedCandidates[B <: PreferenceBallot](election: Election[B]): List[Candidate] = {
-      val set = new collection.mutable.HashSet[Candidate]()
+    def mentionedCandidates[B[C <: Candidate] <: PreferenceBallot[C]](
+        election: Election[C, B]
+    ): List[C] = {
+      val set = new collection.mutable.HashSet[C]()
       for (b <- election)
         for (c <- b.preferences)
           if (!set.exists(n => n == c)) set += c
@@ -80,7 +82,7 @@ class SimpleSTV
       quotaReached(tls, result.getQuota) match {
         case true =>
           println("The quota is reached.")
-          val ws: List[(Candidate, Rational)] = returnNewWinners(tls, result.getQuota)
+          val ws: List[(C, Rational)] = returnNewWinners(tls, result.getQuota)
           println("New winners: " + ws)
           result.addPendingWinners(ws.toList, None)
 
@@ -116,9 +118,9 @@ class SimpleSTV
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   def surplusesDistribution(
-      election: Election[PreferenceBallot],
+      election: Election[C, PreferenceBallot],
       numVacancies: Int
-  ): Election[PreferenceBallot] = {
+  ): Election[C, PreferenceBallot] = {
     println("Distribution of surpluses.")
     var newElection = election
     while (result.getPendingWinners.nonEmpty) {
@@ -130,10 +132,10 @@ class SimpleSTV
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   def tryToDistributeSurplusVotes(
-      election: Election[PreferenceBallot],
-      winner: Candidate,
+      election: Election[C, PreferenceBallot],
+      winner: C,
       ctotal: Rational
-  ): Election[PreferenceBallot] = {
+  ): Election[C, PreferenceBallot] = {
 
     val pendingWinners = result.getPendingWinners.map(x => x._1)
 
@@ -153,13 +155,20 @@ class SimpleSTV
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   def exclusion(
-      election: Election[PreferenceBallot],
-      candidate: Candidate,
+      election: Election[C, PreferenceBallot],
+      candidate: C,
       numVacancies: Int
-  ): Election[PreferenceBallot] = {
+  ): Election[C, PreferenceBallot] = {
     println("Exclusion of " + candidate)
     val ex = exclude(election, candidate, None, None)
     ex._1
   }
+
+  override def exclude(
+      election: Election[C, PreferenceBallot],
+      candidate: C,
+      value: Option[Rational],
+      newWinners: Option[List[C]]
+  ): (Election[C, PreferenceBallot], Set[PreferenceBallot[C]]) = ???
 
 }

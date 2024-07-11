@@ -3,8 +3,6 @@ package org.aossie.agora.votecounter
 import org.aossie.agora.model._
 import spire.math.Rational
 
-import scala.language.higherKinds
-
 sealed class Majority[C <: Candidate] extends VoteCounter[C, PreferenceBallot] {
 
   override def winners(

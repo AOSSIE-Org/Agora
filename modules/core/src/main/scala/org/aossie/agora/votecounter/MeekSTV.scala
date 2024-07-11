@@ -16,12 +16,12 @@ object MeekSTV
     with DroopQuota        // Imp
     with NoFractionInQuota // Imp
     with NewWinnersNotOrdered[Candidate, PreferenceBallot]
-    with SimpleSurplusDistributionTieResolution // not necessary because of NewWinnersNotOrdered
-    with SimpleExclusion
-    with UnfairExclusionTieResolution
-    with TransferValueWithDenominatorEqualToTotal
-    with VoteCounterWithAllBallotsInSurplusDistribution
-    with ExactWinnerRemoval {
+    with SimpleSurplusDistributionTieResolution[Candidate] // not necessary because of NewWinnersNotOrdered
+    with SimpleExclusion[Candidate]
+    with UnfairExclusionTieResolution[Candidate]
+    with TransferValueWithDenominatorEqualToTotal[Candidate]
+    with VoteCounterWithAllBallotsInSurplusDistribution[Candidate]
+    with ExactWinnerRemoval[Candidate] {
 
   val result: Result[Candidate] = new Result
 

@@ -4,9 +4,9 @@ import org.aossie.agora.model._
 import collection.mutable.{HashMap => MMap}
 import spire.math.Rational
 
-trait SimpleApproval {
+trait SimpleApproval[C <: Candidate] {
 
-  def countApprovals[C <: Candidate](
+  def countApprovals(
       election: Election[C, PreferenceBallot],
       candidates: List[C]
   ): MMap[C, Rational] = {

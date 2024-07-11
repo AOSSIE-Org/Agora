@@ -4,13 +4,13 @@ import org.aossie.agora.model._
 import org.aossie.agora.model.{PreferenceBallot => Ballot}
 import org.aossie.agora.votecounter._
 
-trait ACTExactWinnerRemoval extends STV[Candidate, ACTBallot] {
+trait ACTExactWinnerRemoval[C <: Candidate] extends STV[C, ACTBallot] {
 
   def removeWinnerWithoutSurplusFromElection(
-      election: Election[Candidate, ACTBallot],
-      winner: Candidate
-  ): Election[Candidate, ACTBallot] = {
-    var list: List[ACTBallot[Candidate]] = Nil
+      election: Election[C, ACTBallot],
+      winner: C
+  ): Election[C, ACTBallot] = {
+    var list: List[ACTBallot[C]] = Nil
     for (b <- election if !b.preferences.isEmpty)
       if (b.preferences.head.name != winner.name) {
         list = ACTBallot(
@@ -27,13 +27,13 @@ trait ACTExactWinnerRemoval extends STV[Candidate, ACTBallot] {
 }
 
 // exactly like ACTExactWinnerRemoval
-trait SenateExactWinnerRemoval extends STV[Candidate, ACTBallot] {
+trait SenateExactWinnerRemoval[C <: Candidate] extends STV[C, ACTBallot] {
 
   def removeWinnerWithoutSurplusFromElection(
-      election: Election[Candidate, ACTBallot],
-      winner: Candidate
-  ): Election[Candidate, ACTBallot] = {
-    var list: List[ACTBallot[Candidate]] = Nil
+      election: Election[C, ACTBallot],
+      winner: C
+  ): Election[C, ACTBallot] = {
+    var list: List[ACTBallot[C]] = Nil
     for (b <- election if !b.preferences.isEmpty)
       if (b.preferences.head.name != winner.name) {
         list = ACTBallot(
@@ -49,16 +49,17 @@ trait SenateExactWinnerRemoval extends STV[Candidate, ACTBallot] {
 
 }
 
-trait ExactWinnerRemoval extends STV[Candidate, Ballot] {
+trait ExactWinnerRemoval[C <: Candidate] extends STV[C, PreferenceBallot] {
 
   def removeWinnerWithoutSurplusFromElection(
-      election: Election[Candidate, Ballot],
-      winner: Candidate
-  ): Election[Candidate, Ballot] = {
-    var list: List[Ballot[Candidate]] = Nil
+      election: Election[C, Ballot],
+      winner: C
+  ): Election[C, Ballot] = {
+    var list: List[Ballot[C]] = Nil
     for (b <- election if !b.preferences.isEmpty)
       if (b.preferences.head.name != winner.name) {
-        list = Ballot(filterPreferences(b.preferences, winner :: List()), b.id, b.weight) :: list
+        list =
+          new Ballot(filterPreferences(b.preferences, winner :: List()), b.id, b.weight) :: list
       }
     Election(list)
   }

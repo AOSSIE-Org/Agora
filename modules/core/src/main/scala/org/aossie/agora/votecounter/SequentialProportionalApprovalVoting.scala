@@ -9,7 +9,7 @@ import spire.math.Rational
 
 object SequentialProportionalApprovalVoting
     extends VoteCounter[Candidate, PreferenceBallot]
-    with SimpleApproval {
+    with SimpleApproval[Candidate] {
 
   // following function removes winner and reduces weight on ballot to 1/(N+1)
   // where N is the number of winners in one single ballot choice list

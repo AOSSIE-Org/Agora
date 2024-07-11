@@ -8,7 +8,7 @@ abstract class Ballot[+C <: Candidate](val id: Int, val weight: Rational) {
 
 }
 
-case class PreferenceBallot[+C <: Candidate](
+class PreferenceBallot[+C <: Candidate](
     val preferences: List[C],
     override val id: Int,
     override val weight: Rational

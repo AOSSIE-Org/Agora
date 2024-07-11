@@ -27,19 +27,19 @@ import spire.math.Rational
 // i.e.:
 // if (tv > weight_i) then weight_(i+1) = weight_i else weight_(i+1) = tv
 //
-trait ACTSurplusDistribution extends STV[ACTBallot] {
+trait ACTSurplusDistribution[C <: Candidate] extends STV[C, ACTBallot] {
 
   def distributeSurplusVotes(
-      election: Election[ACTBallot],
-      candidate: Candidate,
+      election: Election[C, ACTBallot],
+      candidate: C,
       total: Rational,
       markings: Option[Set[Int]],
-      pendingWinners: List[Candidate],
+      pendingWinners: List[C],
       transferValue: Rational
-  ): (Election[ACTBallot], Set[ACTBallot], Option[Election[ACTBallot]]) = {
-    var list: List[ACTBallot]        = Nil
-    var listIgnored: List[ACTBallot] = Nil
-    var setExhausted: Set[ACTBallot] = Set()
+  ): (Election[C, ACTBallot], Set[ACTBallot[C]], Option[Election[C, ACTBallot]]) = {
+    var list: List[ACTBallot[C]]        = Nil
+    var listIgnored: List[ACTBallot[C]] = Nil
+    var setExhausted: Set[ACTBallot[C]] = Set()
     markings match {
       case None => throw new Exception("Last parcel is undetermined.")
       case Some(mrks) =>
@@ -98,19 +98,19 @@ trait ACTSurplusDistribution extends STV[ACTBallot] {
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Section 273 (9)
-trait SenateSurplusDistribution extends STV[ACTBallot] {
+trait SenateSurplusDistribution[C <: Candidate] extends STV[C, ACTBallot] {
 
   def distributeSurplusVotes(
-      election: Election[ACTBallot],
-      candidate: Candidate,
+      election: Election[C, ACTBallot],
+      candidate: C,
       total: Rational,
       markings: Option[Set[Int]],
-      pendingWinners: List[Candidate],
+      pendingWinners: List[C],
       transferValue: Rational
-  ): (Election[ACTBallot], Set[ACTBallot], Option[Election[ACTBallot]]) = {
-    var list: List[ACTBallot]        = Nil
-    var listIgnored: List[ACTBallot] = Nil
-    var setExhausted: Set[ACTBallot] = Set()
+  ): (Election[C, ACTBallot], Set[ACTBallot[C]], Option[Election[C, ACTBallot]]) = {
+    var list: List[ACTBallot[C]]        = Nil
+    var listIgnored: List[ACTBallot[C]] = Nil
+    var setExhausted: Set[ACTBallot[C]] = Set()
 
     for (b <- election if !b.preferences.isEmpty) {
       if (b.preferences.head == candidate) {
@@ -145,19 +145,20 @@ trait SenateSurplusDistribution extends STV[ACTBallot] {
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-trait ACTVoteCounterWithAllContinuingBallotsInSurplusDistribution extends STV[ACTBallot] {
+trait ACTVoteCounterWithAllContinuingBallotsInSurplusDistribution[C <: Candidate]
+    extends STV[C, ACTBallot] {
 
   def distributeSurplusVotes(
-      election: Election[ACTBallot],
-      candidate: Candidate,
+      election: Election[C, ACTBallot],
+      candidate: C,
       total: Rational,
       markings: Option[Set[Int]],
-      pendingWinners: List[Candidate],
+      pendingWinners: List[C],
       transferValue: Rational
-  ): (Election[ACTBallot], Set[ACTBallot], Option[Election[ACTBallot]]) = {
+  ): (Election[C, ACTBallot], Set[ACTBallot[C]], Option[Election[C, ACTBallot]]) = {
 
-    var list: List[ACTBallot]        = Nil
-    var setExhausted: Set[ACTBallot] = Set()
+    var list: List[ACTBallot[C]]        = Nil
+    var setExhausted: Set[ACTBallot[C]] = Set()
 
     for (b <- election if !b.preferences.isEmpty) {
 
@@ -207,19 +208,20 @@ trait ACTVoteCounterWithAllContinuingBallotsInSurplusDistribution extends STV[AC
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-trait VoteCounterWithAllContinuingBallotsInSurplusDistribution extends STV[Ballot] {
+trait VoteCounterWithAllContinuingBallotsInSurplusDistribution[C <: Candidate]
+    extends STV[C, Ballot] {
 
   def distributeSurplusVotes(
-      election: Election[Ballot],
-      candidate: Candidate,
+      election: Election[C, Ballot],
+      candidate: C,
       total: Rational,
       markings: Option[Set[Int]],
-      pendingWinners: List[Candidate],
+      pendingWinners: List[C],
       transferValue: Rational
-  ): (Election[Ballot], Set[Ballot], Option[Election[Ballot]]) = {
+  ): (Election[C, Ballot], Set[Ballot[C]], Option[Election[C, Ballot]]) = {
 
-    var list: List[Ballot]        = Nil
-    var setExhausted: Set[Ballot] = Set()
+    var list: List[Ballot[C]]        = Nil
+    var setExhausted: Set[Ballot[C]] = Set()
 
     for (b <- election if !b.preferences.isEmpty) {
 
@@ -251,19 +253,19 @@ trait VoteCounterWithAllContinuingBallotsInSurplusDistribution extends STV[Ballo
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-trait VoteCounterWithAllBallotsInSurplusDistribution extends STV[Ballot] {
+trait VoteCounterWithAllBallotsInSurplusDistribution[C <: Candidate] extends STV[C, Ballot] {
 
   def distributeSurplusVotes(
-      election: Election[Ballot],
-      candidate: Candidate,
+      election: Election[C, Ballot],
+      candidate: C,
       total: Rational,
       markings: Option[Set[Int]],
-      pendingWinners: List[Candidate],
+      pendingWinners: List[C],
       transferValue: Rational
-  ): (Election[Ballot], Set[Ballot], Option[Election[Ballot]]) = {
+  ): (Election[C, Ballot], Set[Ballot[C]], Option[Election[C, Ballot]]) = {
 
-    var list: List[Ballot]        = Nil
-    var setExhausted: Set[Ballot] = Set()
+    var list: List[Ballot[C]]        = Nil
+    var setExhausted: Set[Ballot[C]] = Set()
 
     for (b <- election if !b.preferences.isEmpty) {
 

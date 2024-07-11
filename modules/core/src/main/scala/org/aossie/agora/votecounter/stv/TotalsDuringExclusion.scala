@@ -6,11 +6,11 @@ import collection.Map
 
 import spire.math.Rational
 
-trait ACTTotalsDuringExclusion extends ACT {
+trait ACTTotalsDuringExclusion[C <: Candidate] extends ACT[C] {
 
   def computeIncorrectTotalofEVACS(
-      step: (Candidate, Rational),
-      newElectionWithoutFractionInTotals: Election[ACTBallot]
+      step: (C, Rational),
+      newElectionWithoutFractionInTotals: Election[C, ACTBallot]
   ): Option[Int] = {
     val roundedExcludedTotal = computeRoundedExcludedTotal(step, newElectionWithoutFractionInTotals)
     val previousTotalOfTheCandidate =
@@ -23,8 +23,8 @@ trait ACTTotalsDuringExclusion extends ACT {
   }
 
   def computeRoundedExcludedTotal(
-      step: (Candidate, Rational),
-      election: Election[ACTBallot]
+      step: (C, Rational),
+      election: Election[C, ACTBallot]
   ): Int = {
     var numOccurences = 0
     for (b <- election)
@@ -37,10 +37,10 @@ trait ACTTotalsDuringExclusion extends ACT {
   }
 
   def rewriteTotalOfCandidate(
-      totals: Map[Candidate, Rational],
-      candidate: Candidate,
+      totals: Map[C, Rational],
+      candidate: C,
       newTotal: Option[Int]
-  ): Map[Candidate, Rational] = {
+  ): Map[C, Rational] = {
     newTotal match {
       case Some(t) => totals + (candidate -> t)
       case None    => totals
@@ -50,18 +50,18 @@ trait ACTTotalsDuringExclusion extends ACT {
 }
 
 // Totals as the sum of weights of ballots in partial exclusion (in contrast to how it is done in EVACS)
-trait RegularTotalsDuringExclusion {
+trait RegularTotalsDuringExclusion[C <: Candidate] {
 
   def rewriteTotalOfCandidate(
-      totals: Map[Candidate, Rational],
-      candidate: Candidate,
+      totals: Map[C, Rational],
+      candidate: C,
       newTotal: Option[Int]
-  ): Map[Candidate, Rational] =
+  ): Map[C, Rational] =
     totals
 
   def computeIncorrectTotalofEVACS(
-      step: (Candidate, Rational),
-      newElectionWithoutFractionInTotals: Election[ACTBallot]
+      step: (C, Rational),
+      newElectionWithoutFractionInTotals: Election[C, ACTBallot]
   ): Option[Int] = None
 
 }

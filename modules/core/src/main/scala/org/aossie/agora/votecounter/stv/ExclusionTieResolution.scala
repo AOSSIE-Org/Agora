@@ -10,15 +10,15 @@ import spire.math.Rational
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-trait ExclusionTieResolution {
+trait ExclusionTieResolution[+C <: Candidate] {
 
-  def chooseCandidateForExclusion(totals: Map[Candidate, Rational]): (Candidate, Rational)
+  def chooseCandidateForExclusion[CC >: C](totals: Map[CC, Rational]): (CC, Rational)
 
 }
 
-trait UnfairExclusionTieResolution {
+trait UnfairExclusionTieResolution[+C <: Candidate] extends ExclusionTieResolution[C] {
 
-  def chooseCandidateForExclusion(totals: Map[Candidate, Rational]): (Candidate, Rational) = {
+  def chooseCandidateForExclusion[CC >: C](totals: Map[CC, Rational]): (CC, Rational) = {
     var min = Rational(Int.MaxValue, 1)
     for (kv <- totals) if (kv._2 < min) min = kv._2
     val equaltotals = totals.filter(_._2 == min)
@@ -27,15 +27,15 @@ trait UnfairExclusionTieResolution {
 
 }
 
-trait PriorRoundExclusionTieResolution {
+trait PriorRoundExclusionTieResolution[+C <: Candidate] {
 
-  def chooseCandidateForExclusion(
-      equalTotals: Map[Candidate, Rational],
-      priorRoundTotals: Map[Candidate, Rational]
-  ): (Candidate, Rational) = {
+  def chooseCandidateForExclusion[CC >: C](
+      equalTotals: Map[CC, Rational],
+      priorRoundTotals: Map[CC, Rational]
+  ): (CC, Rational) = {
     if (equalTotals.size > 1 && priorRoundTotals.nonEmpty) {
-      val equalCandidatesList          = equalTotals.toList.map(x => x._1)
-      var smallestCandidate: Candidate = equalCandidatesList.head
+      val equalCandidatesList   = equalTotals.toList.map(x => x._1)
+      var smallestCandidate: CC = equalCandidatesList.head
       for (c <- equalCandidatesList.tail) {
         if (
           (priorRoundTotals.getOrElse(c, Rational(0, 1))) < priorRoundTotals.getOrElse(
@@ -61,9 +61,7 @@ trait PriorRoundExclusionTieResolution {
 
 }
 
-trait ACTExclusionTieResolution[C <: Candidate, B[CC >: C <: Candidate] <: ACTBallot[CC]]
-    extends STV[C, B]
-    with ExclusionTieResolution {
+trait ACTExclusionTieResolution[C <: Candidate] extends STV[C, ACTBallot] {
 
   val result: Result[C]
 

@@ -7,13 +7,13 @@ import spire.math.Rational
 
 import scala.language.postfixOps
 
-class EgalitarianBrute(val fairness: Double = 2) extends Egalitarian[Ballot] {
+class EgalitarianBrute[C <: Candidate](val fairness: Double = 2) extends Egalitarian[C] {
 
   def winners(
-      e: Election[Ballot],
-      cs: List[Candidate],
+      e: Election[C, Ballot],
+      cs: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = {
+  ): List[(C, Rational)] = {
     val candidateSubsets    = cs.toSet.subsets(numVacancies)
     val bestCandidateSubset = candidateSubsets.maxBy(socialWelfare(e, _))
     bestCandidateSubset.map((_, Rational(1, 1))) toList

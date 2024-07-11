@@ -9,7 +9,7 @@ import spire.math.Rational
 
 object InstantExhaustiveBallot
     extends VoteCounter[Candidate, PreferenceBallot]
-    with SimpleExclusionWithFixedElectionSize {
+    with SimpleExclusionWithFixedElectionSize[Candidate] {
 
   override def winners(
       election: Election[Candidate, PreferenceBallot],

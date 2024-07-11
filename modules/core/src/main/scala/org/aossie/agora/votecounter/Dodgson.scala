@@ -112,12 +112,14 @@ object Dodgson extends VoteCounter[Candidate, PreferenceBallot] {
   ): Election[Candidate, PreferenceBallot] = {
 
     def disperseUtil(election: Election[Candidate, PreferenceBallot]) = {
-      for {
-        b <- election
-        i <- 1 to b.weight.toInt
-      } yield b
+      Election {
+        for {
+          b <- election
+          i <- 1 to b.weight.toInt
+        } yield b
+      }
     }
-    cache.getOrElseUpdate(election, disperseUtil(election))
+    cache.getOrElseUpdate(Election(election), disperseUtil(Election(election)))
   }
 
   def isCondorcetWinner(

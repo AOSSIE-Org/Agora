@@ -1,8 +1,9 @@
 package org.aossie.agora.comparator
 
 import org.aossie.agora.model.{PreferenceBallot => Ballot, _}
-
 import spire.math.Rational
+
+import scala.language.higherKinds
 
 /** A proper definition of strategyproofness for irresolute social choice functions requires the
   * specification of preferences over sets of alternatives. One way to obtain such preferences is to
@@ -12,18 +13,18 @@ import spire.math.Rational
   * set extension. This implementation includes two of the natural and well studied set extension
   * methods - Kellys and Fishburn's extension methods.
   */
-abstract class SetExtensionMethods {
+abstract class SetExtensionMethods[C <: Candidate, B[CC >: C <: Candidate] <: Ballot[CC]] {
 
   // will return the set that is preferred over another as given in the json parameters file
-  def compare[C <: Candidate, B <: Ballot[C]](
-      election: org.aossie.agora.model.Election[B],
+  def compare(
+      election: org.aossie.agora.model.Election[C, B],
       candidates: List[C],
       parameters: Parameters
   ): Set[C]
 
   // utility method for matrix where a[i][j] = x means candidate i has got #x votes against candidate j
-  def getPairwiseComparisons[C <: Candidate, B <: Ballot[C]](
-      election: Election[B],
+  def getPairwiseComparisons(
+      election: Election[C, B],
       candidates: List[C]
   ): Array[Array[Rational]] = {
 

@@ -3,6 +3,8 @@ package org.aossie.agora.votecounter
 import org.aossie.agora.model._
 import org.aossie.agora.model.{PreferenceBallot => Ballot}
 
+import scala.language.higherKinds
+
 //import scala.collection.mutable.{HashMap => MMap}
 
 import scala.collection.Map
@@ -36,22 +38,11 @@ abstract class STV[C <: Candidate, B[CC >: C <: Candidate] <: Ballot[CC]]
       markings: Option[Set[Int]],
       pendingWinners: List[C],
       transferValue: Rational
-  ): (Election[C, B], Set[B], Option[Election[C, B]])
+  ): (Election[C, B], Set[B[C]], Option[Election[C, B]])
 
   def resolveSurpluseDistributionTie(
       equaltotals: Map[C, Rational]
   ): List[(C, Rational)]
-
-  def chooseCandidateForExclusion(totals: Map[C, Rational]): (C, Rational)
-
-  def exclude(
-      election: Election[C, B],
-      candidate: C,
-      value: Option[Rational],
-      newWinners: Option[List[C]]
-  ): (Election[C, B], Set[B])
-
-  def removeWinnerWithoutSurplusFromElection(election: Election[C, B], winner: C): Election[C, B]
 
   // def run(e: Election[B], numVacancies: Int):   Report[B] = {
   //  val output = runVoteCounter(e: Election[B], numVacancies: Int)

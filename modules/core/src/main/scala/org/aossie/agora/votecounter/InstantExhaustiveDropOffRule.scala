@@ -9,7 +9,7 @@ import spire.math.Rational
 
 object InstantExhaustiveDropOffRule
     extends VoteCounter[Candidate, PreferenceBallot]
-    with SimpleExclusionWithFixedElectionSize {
+    with SimpleExclusionWithFixedElectionSize[Candidate] {
 
   var dropOffPercentage = Rational(0, 100)
 

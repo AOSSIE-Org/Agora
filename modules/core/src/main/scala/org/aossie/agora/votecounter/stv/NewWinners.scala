@@ -6,9 +6,11 @@ import org.aossie.agora.votecounter._
 import collection.Map
 import spire.math.Rational
 
+import scala.language.higherKinds
+
 trait NewWinnersOrderedByTotals[C <: Candidate, B[CC >: C <: Candidate] <: PreferenceBallot[CC]]
     extends STV[C, B]
-    with SurplusDistributionTieResolution {
+    with SurplusDistributionTieResolution[C] {
 
   def returnNewWinners(
       totals: Map[C, Rational],

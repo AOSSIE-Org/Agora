@@ -3,7 +3,9 @@ package org.aossie.agora.votecounter
 import org.aossie.agora.model._
 import spire.math.Rational
 
-object ApprovalRule extends VoteCounter[Candidate, PreferenceBallot] with SimpleApproval {
+object ApprovalRule
+    extends VoteCounter[Candidate, PreferenceBallot]
+    with SimpleApproval[Candidate] {
 
   override def winners(
       election: Election[Candidate, PreferenceBallot],
