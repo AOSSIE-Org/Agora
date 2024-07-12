@@ -8,8 +8,8 @@ import org.specs2.mutable.Specification
 /** Created by deepeshpandey on 27/06/17. */
 class CopelandTest extends Specification {
 
-  val expectedCopelandWinnerList  = List(Candidate("Nashville"))
-  val expectedCopelandWinnerList2 = List(Candidate("A"))
+  val expectedCopelandWinnerList  = List(new Candidate("Nashville"))
+  val expectedCopelandWinnerList2 = List(new Candidate("A"))
 
   "Copeland Test " should {
 

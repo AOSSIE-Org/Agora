@@ -8,7 +8,7 @@ import org.specs2.mutable.Specification
 /** Created by deepeshpandey on 21/03/17. */
 class MinimaxCondorcetTest extends Specification {
 
-  val expectedKemenyYoungWinnerList = List(Candidate("Nashville"))
+  val expectedKemenyYoungWinnerList = List(new Candidate("Nashville"))
 
   "MinimaxCondorcet Test " should {
 

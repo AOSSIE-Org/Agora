@@ -12,7 +12,7 @@ object StabilityAnalyser {
 
   def main(args: Array[String]): Unit = {
 
-    val report: Report[Ballot] = new Report[Ballot]
+    val report: Report[Candidate, Ballot] = new Report
 
     val (candidates, elections) = generateElections(20, 100, 5)
 
@@ -53,8 +53,8 @@ object StabilityAnalyser {
   }
 
   def analyseStability(
-      vcm: VoteCounter[Ballot],
-      electionsPair: List[List[Election[Ballot]]],
+      vcm: VoteCounter[Candidate, Ballot],
+      electionsPair: List[List[Election[Candidate, Ballot]]],
       candidates: List[Candidate]
   ): (String, Double, Double) = {
 
@@ -70,8 +70,8 @@ object StabilityAnalyser {
   }
 
   def stability(
-      vcm: VoteCounter[Ballot],
-      elections: List[Election[Ballot]],
+      vcm: VoteCounter[Candidate, Ballot],
+      elections: List[Election[Candidate, Ballot]],
       candidates: List[Candidate]
   ): Double = {
 
@@ -84,7 +84,11 @@ object StabilityAnalyser {
   }
 
   // generate n random election of m voters and c candidates
-  def generateElections(n: Int, m: Int, c: Int): (List[Candidate], List[Election[Ballot]]) = {
+  def generateElections(
+      n: Int,
+      m: Int,
+      c: Int
+  ): (List[Candidate], List[Election[Candidate, Ballot]]) = {
 
     require(c < 26)
 
@@ -95,14 +99,14 @@ object StabilityAnalyser {
     } yield {
       Election(for {
         j <- List.range(1, m)
-      } yield Ballot(Random.shuffle(candidates), i, 1))
+      } yield new Ballot(Random.shuffle(candidates), i, 1))
     }
 
     (candidates, elections)
   }
 
   // calculate the kendall tau distance between two profiles
-  def kendallTauDistance(profile: List[Election[Ballot]]): Int = {
+  def kendallTauDistance(profile: List[Election[Candidate, Ballot]]): Int = {
 
     var kTDistance = 0
 

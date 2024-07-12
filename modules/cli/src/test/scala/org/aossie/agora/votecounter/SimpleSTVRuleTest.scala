@@ -10,7 +10,7 @@ class SimpleSTVRuleTest extends Specification {
 
   // Winners in list in order of merit as expected from election results at https://en.wikipedia.org/wiki/Single_transferable_vote
   val expectedSimpleRuleWinnerList =
-    List(Candidate("Chocolate"), Candidate("Oranges"), Candidate("Strawberries"))
+    List(new Candidate("Chocolate"), new Candidate("Oranges"), new Candidate("Strawberries"))
 
   "SimpleSTVRule Test " should {
     // Election data taken from https://en.wikipedia.org/wiki/Single_transferable_vote

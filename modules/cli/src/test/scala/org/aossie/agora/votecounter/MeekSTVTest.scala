@@ -10,9 +10,9 @@ import spire.math.Rational
 class MeekSTVTest extends Specification {
 
   val expectedMeekSTVWinnerList = List(
-    Candidate("C"),
-    Candidate("A"),
-    Candidate("B")
+    new Candidate("C"),
+    new Candidate("A"),
+    new Candidate("B")
   ) // result is from OpaVote's page - http://blog.opavote.com/2017/04/meek-stv-explained.html
 
   "MeekSTV Test " should {

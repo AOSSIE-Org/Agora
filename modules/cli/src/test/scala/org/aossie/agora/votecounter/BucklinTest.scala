@@ -9,7 +9,7 @@ import org.specs2.mutable.Specification
 class BucklinTest extends Specification {
 
   // Test data obtained from https://en.wikipedia.org/wiki/Bucklin_voting#Example_application
-  val expectedBucklinWinnerList = List(Candidate("Nashville"))
+  val expectedBucklinWinnerList = List(new Candidate("Nashville"))
 
   "Bucklin Vote Test " should {
 

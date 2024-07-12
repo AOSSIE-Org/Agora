@@ -7,7 +7,7 @@ import org.specs2.mutable.Specification
 
 class PreferentialBlockVotingTest extends Specification {
 
-  val expectedPreferentialBlockVotingWinnerList = List(Candidate("Sue"))
+  val expectedPreferentialBlockVotingWinnerList = List(new Candidate("Sue"))
 
   "PreferentialBlockVoting Test " should {
 

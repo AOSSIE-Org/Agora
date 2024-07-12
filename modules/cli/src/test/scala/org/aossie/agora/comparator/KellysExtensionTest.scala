@@ -8,10 +8,10 @@ import org.specs2.mutable.Specification
 
 class KellysExtensionTest extends Specification {
 
-  val expectedKellySet1 = Set(Candidate("A"))
-  val expectedKellySet2 = Set(Candidate("A"), Candidate("B"))
-  val expectedKellySet3 = Set(Candidate("B"))
-  val expectedKellySet4 = Set(Candidate("B"), Candidate("C"))
+  val expectedKellySet1 = Set(new Candidate("A"))
+  val expectedKellySet2 = Set(new Candidate("A"), new Candidate("B"))
+  val expectedKellySet3 = Set(new Candidate("B"))
+  val expectedKellySet4 = Set(new Candidate("B"), new Candidate("C"))
 
   "UnconveredSet Test " should {
 

@@ -8,8 +8,8 @@ import org.specs2.mutable.Specification
 
 class FishburnsExtensionTest extends Specification {
 
-  val expectedFishburnSet1 = Set(Candidate("A"), Candidate("B"))
-  val expectedFishburnSet2 = Set(Candidate("A"), Candidate("B"), Candidate("C"))
+  val expectedFishburnSet1 = Set(new Candidate("A"), new Candidate("B"))
+  val expectedFishburnSet2 = Set(new Candidate("A"), new Candidate("B"), new Candidate("C"))
 
   "UnconveredSet Test " should {
 

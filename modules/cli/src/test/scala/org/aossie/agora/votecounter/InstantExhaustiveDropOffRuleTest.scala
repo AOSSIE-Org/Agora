@@ -7,7 +7,7 @@ import org.specs2.mutable.Specification
 
 class InstantExhaustiveDropOffRuleTest extends Specification {
 
-  val expectedInstantExhaustiveDropOffRuleWinnerList = List(Candidate("Knoxville"))
+  val expectedInstantExhaustiveDropOffRuleWinnerList = List(new Candidate("Knoxville"))
 
   "InstantExhaustiveDropOffRule Test " should {
 

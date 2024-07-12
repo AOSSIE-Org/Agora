@@ -9,7 +9,7 @@ import org.specs2.mutable.Specification
 class VetoTest extends Specification {
 
   // Test data as provided by http://democratix.dbai.tuwien.ac.at/examples/veto.php
-  val expectedVetoRuleWinnerList = List(Candidate("Banana"), Candidate("Cherry"))
+  val expectedVetoRuleWinnerList = List(new Candidate("Banana"), new Candidate("Cherry"))
 
   "VetoRule Test " should {
 

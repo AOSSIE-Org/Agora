@@ -7,9 +7,9 @@ import org.specs2.mutable.Specification
 
 class HybridPluralityPreferentialBlockVotingTest extends Specification {
 
-  val expectedHybridPluralityPreferentialBlockVotingWinnerList = List(Candidate("Sue"))
+  val expectedHybridPluralityPreferentialBlockVotingWinnerList = List(new Candidate("Sue"))
   val expectedHybridPluralityPreferentialBlockVotingWinnerList1 =
-    List(Candidate("Bill"), Candidate("Bob"))
+    List(new Candidate("Bill"), new Candidate("Bob"))
 
   "HybridPluralityPreferentialBlockVoting Test " should {
     "verify result" in {

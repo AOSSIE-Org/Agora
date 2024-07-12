@@ -8,7 +8,7 @@ import org.specs2.mutable.Specification
 /** Created by deepeshpandey on 03/06/17. */
 class InstantRunoff2RoundTest extends Specification {
 
-  val expectedRunoff2RoundMethodWinnerList = List(Candidate("icecream"))
+  val expectedRunoff2RoundMethodWinnerList = List(new Candidate("icecream"))
 
   "Runoff2Round Test " should {
 

@@ -9,7 +9,7 @@ import spire.math.Rational
 
 class SatisfactionApprovalVotingTest extends Specification {
 
-  val expectedSatisfactionApprovalWinnerList = List(Candidate("D"), Candidate("C"))
+  val expectedSatisfactionApprovalWinnerList = List(new Candidate("D"), new Candidate("C"))
 
   "SatisfactionApprovalVoting Test " should {
 

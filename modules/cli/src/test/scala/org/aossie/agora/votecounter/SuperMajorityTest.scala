@@ -12,7 +12,7 @@ import spire.math.Rational
 class SuperMajorityTest extends Specification {
 
   // From the file provided it can be seen that candidate A wins with 60% of the votes
-  val expectedSuperMajorityRuleWinnerList1 = List(Candidate("A"))
+  val expectedSuperMajorityRuleWinnerList1 = List(new Candidate("A"))
   val expectedSuperMajorityRuleWinnerList2 = List()
 
   "SuperMajorityRule Test " should {

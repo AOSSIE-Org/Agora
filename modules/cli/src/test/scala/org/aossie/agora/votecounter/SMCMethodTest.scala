@@ -9,7 +9,7 @@ import org.specs2.mutable.Specification
 /** Created by deepeshpandey on 06/08/17. */
 class SMCMethodTest extends Specification {
 
-  val smcWinnerList = List(Candidate("C"))
+  val smcWinnerList = List(new Candidate("C"))
 
   "SMC Test " should {
 

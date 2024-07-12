@@ -3,10 +3,8 @@ package org.aossie.agora
 import org.aossie.agora.votecounter._
 import org.aossie.agora.parser._
 import org.aossie.agora.model._
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 
 import scala.util.parsing.combinator._
-
 import spire.math.Rational
 
 sealed abstract class VoteCounterTableFormats
@@ -143,9 +141,14 @@ object Main extends RegexParsers {
         case "Senate" =>
           val election = PreferencesParser.read(c.directory + electionFile)
           val electionwithIds =
-            for (b <- election) yield Ballot(b.preferences, election.indexOf(b) + 1, Rational(1, 1))
-          var r = (new AustralianSenate).runVoteCounterGeneral(
-            electionwithIds,
+            for (b <- election)
+              yield new PreferenceBallot(
+                b.preferences,
+                election.indexOf(b) + 1,
+                Rational(1, 1)
+              )
+          val r = (new AustralianSenate).runVoteCounterGeneral(
+            Election(electionwithIds),
             candidates_in_order,
             c.nvacancies.toInt
           )

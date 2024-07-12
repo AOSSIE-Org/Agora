@@ -8,9 +8,10 @@ import org.specs2.mutable.Specification
 
 class BipartisanSetTest extends Specification {
 
-  val expectedBipartisanSet = Set(Candidate("A"), Candidate("B"), Candidate("C"))
+  val expectedBipartisanSet = Set(new Candidate("A"), new Candidate("B"), new Candidate("C"))
   val expectedBipartisanSet1 =
-    Set(Candidate("A"), Candidate("B"), Candidate("C"), Candidate("D"), Candidate("E"))
+    Set(new Candidate("A"), new Candidate("B"), new Candidate("C"), new Candidate("D"),
+      new Candidate("E"))
 
   "BipartisanSet Test " should {
 

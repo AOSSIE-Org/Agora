@@ -9,10 +9,10 @@ import org.specs2.mutable.Specification
 class BordaRuleTest extends Specification {
 
   val expectedBordaWinnerList = List(
-    Candidate("Nashville"),
-    Candidate("Chattanooga"),
-    Candidate("Memphis"),
-    Candidate("Knoxville")
+    new Candidate("Nashville"),
+    new Candidate("Chattanooga"),
+    new Candidate("Memphis"),
+    new Candidate("Knoxville")
   )
 
   "Borda Rule Test " should {

@@ -10,7 +10,7 @@ import spire.math.Rational
 class ProportionalApprovalVotingTest extends Specification {
 
   val expectedProportionalApprovalWinnerList =
-    List((Candidate("A"), Rational(61, 2)), (Candidate("C"), Rational(61, 2)))
+    List((new Candidate("A"), Rational(61, 2)), (new Candidate("C"), Rational(61, 2)))
 
   "ProportionalApprovalVoting Test " should {
 

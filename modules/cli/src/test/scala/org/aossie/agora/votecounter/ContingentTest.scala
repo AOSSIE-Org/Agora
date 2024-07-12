@@ -9,7 +9,7 @@ import org.specs2.mutable.Specification
 
 class ContingentTest extends Specification {
 
-  val expectedContingentWinner = List(Candidate("Catherine"))
+  val expectedContingentWinner = List(new Candidate("Catherine"))
 
   "Contingent Test " should {
 

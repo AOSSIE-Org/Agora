@@ -8,7 +8,7 @@ import org.specs2.mutable.Specification
 /** Test class for unconvered set for the preference profile in 21-example.e */
 class UncoveredSetTest extends Specification {
 
-  val expectedUncoveredSet = Set(Candidate("A"), Candidate("B"), Candidate("C"))
+  val expectedUncoveredSet = Set(new Candidate("A"), new Candidate("B"), new Candidate("C"))
 
   "UnconveredSet Test " should {
 

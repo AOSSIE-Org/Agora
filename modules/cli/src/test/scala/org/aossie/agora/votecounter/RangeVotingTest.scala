@@ -7,7 +7,7 @@ import org.specs2.mutable.Specification
 
 class RangeVotingTest extends Specification {
 
-  val expectedRangeVotingWinnerList = List(Candidate("Nashville"))
+  val expectedRangeVotingWinnerList = List(new Candidate("Nashville"))
 
   "RangeVoting Test " should {
 

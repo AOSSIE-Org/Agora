@@ -9,7 +9,7 @@ import spire.math.Rational
 
 class OklahomaMethodTest extends Specification {
 
-  val expectedOklahomaMethodWinnerList = List((Candidate("Nashville"), Rational(173, 3)))
+  val expectedOklahomaMethodWinnerList = List((new Candidate("Nashville"), Rational(173, 3)))
 
   "OklahomaMethod Test " should {
 

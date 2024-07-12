@@ -8,7 +8,7 @@ import org.specs2.mutable.Specification
 /** Created by deepeshpandey on 16/07/17. */
 class SmithSetTest extends Specification {
 
-  val expectedSmithSet = Set(Candidate("A"), Candidate("B"), Candidate("C"))
+  val expectedSmithSet = Set(new Candidate("A"), new Candidate("B"), new Candidate("C"))
 
   "SmithSet Test " should {
 

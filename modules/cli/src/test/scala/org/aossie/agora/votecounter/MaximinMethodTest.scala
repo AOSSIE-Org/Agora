@@ -7,7 +7,7 @@ import org.specs2.mutable.Specification
 
 class MaximinMethodTest extends Specification {
 
-  val expectedMaximinMethodWinnerList = List(Candidate("Nashville"))
+  val expectedMaximinMethodWinnerList = List(new Candidate("Nashville"))
 
   "Maximin Method Test " should {
 

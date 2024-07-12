@@ -78,7 +78,7 @@ object SetComparator {
 
     def callMethod(
         c: CompareConfig,
-        election: Election[Ballot],
+        election: Election[Candidate, Ballot],
         candidates_in_order: List[Candidate]
     ) = {
 

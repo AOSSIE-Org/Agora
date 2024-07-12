@@ -7,7 +7,7 @@ import org.specs2.mutable.Specification
 
 class InstantExhaustiveBallotTest extends Specification {
 
-  val expectedInstantExhaustiveBallotWinnerList = List(Candidate("Knoxville"))
+  val expectedInstantExhaustiveBallotWinnerList = List(new Candidate("Knoxville"))
 
   "InstantExhaustiveBallot Test " should {
 

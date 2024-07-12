@@ -10,7 +10,7 @@ import org.specs2.mutable.Specification
   */
 class DodgsonTest extends Specification {
 
-  val expectedDodgsonWinnerList = List(Candidate("B"))
+  val expectedDodgsonWinnerList = List(new Candidate("B"))
 
   "Dodgson Rule Test " should {
 

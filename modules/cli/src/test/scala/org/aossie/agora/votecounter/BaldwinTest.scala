@@ -7,7 +7,7 @@ import org.specs2.mutable.Specification
 
 class BaldwinTest extends Specification {
 
-  val expectedBaldwinWinnerList = List(Candidate("A"))
+  val expectedBaldwinWinnerList = List(new Candidate("A"))
 
   "Baldwin Test " should {
 

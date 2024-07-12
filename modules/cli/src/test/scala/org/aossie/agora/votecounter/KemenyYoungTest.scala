@@ -11,10 +11,10 @@ import org.specs2.mutable.Specification
 class KemenyYoungTest extends Specification {
 
   val expectedKemenyYoungWinnerList = List(
-    Candidate("Nashville"),
-    Candidate("Chattanooga"),
-    Candidate("Knoxville"),
-    Candidate("Memphis")
+    new Candidate("Nashville"),
+    new Candidate("Chattanooga"),
+    new Candidate("Knoxville"),
+    new Candidate("Memphis")
   )
 
   "KemenyYoung Test " should {
