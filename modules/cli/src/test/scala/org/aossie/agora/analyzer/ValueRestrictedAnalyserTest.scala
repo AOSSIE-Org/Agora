@@ -27,8 +27,8 @@ class ValueRestrictedAnalyserTest extends Specification {
 
   def valueRestrictedAnalyserVerification(electionFile: String, candidateFile: String): Boolean = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidateFile)
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
+    val candidates = CandidatesParser.read("./files/Examples/" + candidateFile)
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
 
     ValueRestrictedAnalyser.analyse(election, candidates)
   }

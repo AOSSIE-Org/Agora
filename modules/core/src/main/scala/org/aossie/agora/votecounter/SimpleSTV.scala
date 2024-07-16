@@ -164,11 +164,4 @@ class SimpleSTV[C <: Candidate]
     ex._1
   }
 
-  override def exclude(
-      election: Election[C, PreferenceBallot],
-      candidate: C,
-      value: Option[Rational],
-      newWinners: Option[List[C]]
-  ): (Election[C, PreferenceBallot], Set[PreferenceBallot[C]]) = ???
-
 }

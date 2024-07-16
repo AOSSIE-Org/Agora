@@ -60,10 +60,12 @@ lazy val commonSettings = Seq(
     if (scalaVersion.value.startsWith("2.12")) "-Ywarn-unused-import"
     else "-Wunused:imports"
   },
+
+
   libraryDependencies ++= Seq(
-    "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.7",
+    "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.0",
     "com.github.scopt" %% "scopt" % "4.1.0",
-    "org.specs2" %% "specs2-core" % "4.20.6" % "test,verification-test,bench",
+    "org.specs2" %% "specs2-core" % "4.20.8" % "test,verification-test,bench",
     "com.lihaoyi" %% "ammonite-ops" % "2.4.1",
     "ch.qos.logback" % "logback-classic" % "1.2.11",
     "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
@@ -71,7 +73,9 @@ lazy val commonSettings = Seq(
     "com.storm-enroute" %% "scalameter-core" % "0.19",
     "com.typesafe.play" %% "play-json" % "2.9.4",
     "org.typelevel" %% "spire" % "0.17.0"
-  )
+  ),
+
+  dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.0"
 )
 
 licenses := Seq("CC BY-NC-SA" -> url("http://creativecommons.org/licenses/by-nc-sa/4.0/"))

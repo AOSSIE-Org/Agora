@@ -58,9 +58,9 @@ class KellysExtensionTest extends Specification {
       parameterFile: String
   ): Set[Candidate] = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
-    val parameters = ParameterParser.parse("../Agora/files/Examples/" + parameterFile)
+    val candidates = CandidatesParser.read("./files/Examples/" + candidatesFile)
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
+    val parameters = ParameterParser.parse("./files/Examples/" + parameterFile)
 
     KellyExtension.compare(election, candidates, parameters)
   }

@@ -26,8 +26,8 @@ class KemenyYoungTest extends Specification {
 
   def kemenyYoungMethodVerification(electionFile: String): List[Candidate] = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/14-candidates.txt")
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
+    val candidates = CandidatesParser.read("./files/Examples/14-candidates.txt")
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
 
     KemenyYoung.winners(election, candidates, candidates.length).map(_._1)
   }

@@ -35,7 +35,7 @@ class SMCMethodTest extends Specification {
       paramFile: String
   ): List[Candidate] = {
 
-    val dir        = "../Agora/files/Examples/"
+    val dir        = "./files/Examples/"
     val candidates = CandidatesParser.read(dir + candidateFile)
     val election   = PreferencesParser.read(dir + electionFile)
     val param      = ParameterParser.parse(dir + paramFile)

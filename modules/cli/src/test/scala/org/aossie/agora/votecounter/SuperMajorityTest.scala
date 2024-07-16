@@ -40,9 +40,9 @@ class SuperMajorityTest extends Specification {
       parametersFile: String
   ): List[Candidate] = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
-    val parameters = ParameterParser.parse("../Agora/files/Examples/" + parametersFile)
+    val candidates = CandidatesParser.read("./files/Examples/" + candidatesFile)
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
+    val parameters = ParameterParser.parse("./files/Examples/" + parametersFile)
     SuperMajority
       .runVoteCounter(election, candidates, candidates.length, parameters)
       .getWinners

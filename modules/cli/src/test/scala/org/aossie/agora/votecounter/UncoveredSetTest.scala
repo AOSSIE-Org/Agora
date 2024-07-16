@@ -25,8 +25,8 @@ class UncoveredSetTest extends Specification {
       candidatesFile: String
   ): Set[Candidate] = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
+    val candidates = CandidatesParser.read("./files/Examples/" + candidatesFile)
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
 
     UncoveredSet.winners(election, candidates, candidates.length).map(_._1).toSet
   }

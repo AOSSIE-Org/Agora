@@ -16,8 +16,8 @@ class BaldwinTest extends Specification {
 
   def baldwinVerification(electionFile: String): List[Candidate] = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/13-candidates.txt")
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
+    val candidates = CandidatesParser.read("./files/Examples/13-candidates.txt")
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
 
     BaldwinMethod.winners(election, candidates, candidates.length).map(_._1)
   }

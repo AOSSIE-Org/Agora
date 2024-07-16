@@ -30,8 +30,8 @@ class SequentialProportionalApprovalVotingTest extends Specification {
       candidatesFile: String
   ): List[(Candidate, Rational)] = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
+    val candidates = CandidatesParser.read("./files/Examples/" + candidatesFile)
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
 
     SequentialProportionalApprovalVoting.winners(election, candidates, 3)
   }

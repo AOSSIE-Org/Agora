@@ -49,7 +49,8 @@ object Election {
       override def result()    = new Election[C, B](base.result())
     }
 
-  implicit def canBuildFrom[C <: Candidate, B[CC >: C <: Candidate] <: Ballot[CC]] =
+  implicit def canBuildFrom[C <: Candidate, B[CC >: C <: Candidate] <: Ballot[CC]]
+      : CanBuildFrom[Election[C, B], B[C], Election[C, B]] =
     new CanBuildFrom[Election[C, B], B[C], Election[C, B]] {
       def apply(from: Election[C, B]): Builder[B[C], Election[C, B]] = newBuilder[C, B]
       def apply(): Builder[B[C], Election[C, B]]                     = newBuilder[C, B]

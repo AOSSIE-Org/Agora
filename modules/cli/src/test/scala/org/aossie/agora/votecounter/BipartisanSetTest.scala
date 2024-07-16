@@ -37,9 +37,9 @@ class BipartisanSetTest extends Specification {
       paramFile: String
   ): Set[Candidate] = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
-    val param      = ParameterParser.parse("../Agora/files/Examples/" + paramFile)
+    val candidates = CandidatesParser.read("./files/Examples/" + candidatesFile)
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
+    val param      = ParameterParser.parse("./files/Examples/" + paramFile)
 
     BipartisanSet.bipartisanSet(election, candidates, param).map(_._1).toSet
   }

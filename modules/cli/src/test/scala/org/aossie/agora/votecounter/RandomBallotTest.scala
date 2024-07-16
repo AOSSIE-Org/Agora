@@ -76,8 +76,8 @@ class RandomBallotTest extends Specification {
       vacancies: Int
   ): List[Candidate] = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
+    val candidates = CandidatesParser.read("./files/Examples/" + candidatesFile)
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
 
     RandomBallot.randomBallotWinner(election, candidates, vacancies, seed).map(_._1)
   }
