@@ -1,7 +1,6 @@
 package org.aossie.agora.votecounter
 
 import org.aossie.agora.model._
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 import org.aossie.agora.votecounter.common.PreferencePairwiseComparison
 
 import scala.language.postfixOps
@@ -11,10 +10,12 @@ import org.aossie.agora.util.matrix.BaseMatrix
 
 /** Algorithm : http://wiki.electorama.com/wiki/Maximal_elements_algorithms#Floyd-Warshall_algorithm
   */
-object SmithSet extends VoteCounter[Ballot] with PreferencePairwiseComparison {
+object SmithSet
+    extends VoteCounter[Candidate, PreferenceBallot]
+    with PreferencePairwiseComparison[Candidate, PreferenceBallot] {
 
   override def winners(
-      e: Election[Ballot],
+      e: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = {
@@ -44,7 +45,7 @@ object SmithSet extends VoteCounter[Ballot] with PreferencePairwiseComparison {
     * @return
     */
   def getRelationMatrix(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       pairWiseComp: Array[Array[Rational]]
   ): Array[Array[Boolean]] = {

@@ -17,20 +17,20 @@ case object ExclusionBulk extends BulkExclusionType
 
 case object SurplusDistributionBulk extends BulkExclusionType
 
-class AustralianSenate
-    extends STVAustralia
-    with DroopQuota                                   // Section 273 (8)
-    with NoFractionInQuota                            // Section 273 (8)
-    with NewWinnersOrderedByTotals[ACTBallot]         // TODO
-    with SenateSurplusDistributionTieResolution       // Section 273 (22)
-    with ACTFractionLoss                              //
-    with SenateExclusion                              //   exactly like ACTExclusion
-    with SenateExactWinnerRemoval                     // exactly like ACTExactWinnerRemoval
-    with TransferValueWithDenominatorWithNumOfBallots // Section 273 (9)(a)
-    with SenateSurplusDistribution                    // Section 273 (9)(b)
-    with SenateNewWinnersDuringSurplusesDistribution
-    with SenateNewWinnersDuringExclusion
-    with UnfairExclusionTieResolution // TODO
+class AustralianSenate[C <: Candidate]
+    extends STVAustralia[C]
+    with DroopQuota                                      // Section 273 (8)
+    with NoFractionInQuota                               // Section 273 (8)
+    with NewWinnersOrderedByTotals[C, ACTBallot]         // TODO
+    with SenateSurplusDistributionTieResolution[C]       // Section 273 (22)
+    with ACTFractionLoss[C]                              //
+    with SenateExclusion[C]                              //   exactly like ACTExclusion
+    with SenateExactWinnerRemoval[C]                     // exactly like ACTExactWinnerRemoval
+    with TransferValueWithDenominatorWithNumOfBallots[C] // Section 273 (9)(a)
+    with SenateSurplusDistribution[C]                    // Section 273 (9)(b)
+    with SenateNewWinnersDuringSurplusesDistribution[C]
+    with SenateNewWinnersDuringExclusion[C]
+    with UnfairExclusionTieResolution[C] // TODO
     {
 
   // def declareNewWinnersWhileDistributingSurpluses(totals: Map[Candidate, Rational], election:Election[ACTBallot]):  List[(Candidate,Rational)]
@@ -40,33 +40,33 @@ class AustralianSenate
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // Section 273 (29)
-  def computeNotionalVotes(candidate: Candidate, totals: Map[Candidate, Rational]): Rational =
+  def computeNotionalVotes(candidate: C, totals: Map[C, Rational]): Rational =
     totals.filter(p => p._2 < totals(candidate)).foldLeft(Rational(0, 1))(_ + _._2)
 
   def computeAdjustedNotionalVotes(
-      candidate: Candidate,
-      totals: Map[Candidate, Rational],
+      candidate: C,
+      totals: Map[C, Rational],
       surplus: Option[Rational]
   ): Rational = {
     surplus match {
       case Some(s) =>
-        computeNotionalVotes(candidate: Candidate, totals: Map[Candidate, Rational]) + s
+        computeNotionalVotes(candidate: C, totals: Map[C, Rational]) + s
       case None => throw new Exception("Surplus is None in computeAdjustedNotionalVotes.")
     }
   }
 
   def computeShortfall(
-      candidate: Candidate,
-      totals: Map[Candidate, Rational],
+      candidate: C,
+      totals: Map[C, Rational],
       quota: Rational
   ): Rational =
     quota - totals(candidate)
 
-  def returnLeadingShortfall(totals: Map[Candidate, Rational], quota: Rational): Rational =
+  def returnLeadingShortfall(totals: Map[C, Rational], quota: Rational): Rational =
     quota - totals.valuesIterator.max
 
   def computeVacancyShortfall(
-      totals: Map[Candidate, Rational],
+      totals: Map[C, Rational],
       numRemainingVacancies: Int,
       quota: Rational
   ): Rational = {
@@ -80,13 +80,13 @@ class AustralianSenate
   }
 
   def returnCandidateA(
-      totals: Map[Candidate, Rational],
+      totals: Map[C, Rational],
       vacancyShortfall: Rational,
       bulktype: BulkExclusionType,
       surplus: Option[Rational]
-  ): Option[Candidate] = {
+  ): Option[C] = {
 
-    var pickedTotals: Map[Candidate, Rational] = Map()
+    var pickedTotals: Map[C, Rational] = Map()
     bulktype match {
       case ExclusionBulk =>
         pickedTotals = totals.filter(p => computeNotionalVotes(p._1, totals) >= vacancyShortfall) // Section 273 (13A)(a)
@@ -113,14 +113,14 @@ class AustralianSenate
   }
 
   def returnCandidateB(
-      totals: Map[Candidate, Rational],
-      candidateA: Option[Candidate],
+      totals: Map[C, Rational],
+      candidateA: Option[C],
       vacancyShortfall: Rational,
       bulktype: BulkExclusionType,
       surplus: Option[Rational]
-  ): Option[Candidate] = {
+  ): Option[C] = {
 
-    var totalsOfCandidatesPotentiallyB: Map[Candidate, Rational] = Map()
+    var totalsOfCandidatesPotentiallyB: Map[C, Rational] = Map()
     candidateA match {
       case Some(cA) =>
         totalsOfCandidatesPotentiallyB = totals.filter(p => p._2 < totals(cA))
@@ -154,13 +154,13 @@ class AustralianSenate
   }
 
   def returnCandidateC(
-      totals: Map[Candidate, Rational],
+      totals: Map[C, Rational],
       leadingShortFall: Rational,
       bulktype: BulkExclusionType,
       surplus: Option[Rational]
-  ): Option[Candidate] = {
+  ): Option[C] = {
 
-    var potentialCandidatesC: Map[Candidate, Rational] = Map()
+    var potentialCandidatesC: Map[C, Rational] = Map()
     bulktype match {
       case ExclusionBulk =>
         potentialCandidatesC =
@@ -178,18 +178,18 @@ class AustralianSenate
   }
 
   def selectCandidatesForBulkExclusion(
-      totals: Map[Candidate, Rational],
+      totals: Map[C, Rational],
       numRemainingVacancies: Int,
       quota: Rational,
       bulktype: BulkExclusionType,
       surplus: Option[Rational]
-  ): List[(Candidate, Rational)] = {
+  ): List[(C, Rational)] = {
 
     val orderedCandidates = totals.toList.sortBy(_._2) // TODO: sort appropriately
     println("orderedCandidates: " + orderedCandidates)
     val vacancyShortfall = computeVacancyShortfall(totals, numRemainingVacancies, quota)
     println("vacancyShortfall: " + vacancyShortfall)
-    var candidateB: Option[Candidate] = None
+    var candidateB: Option[C] = None
     bulktype match {
       case ExclusionBulk =>
         val candidateA = returnCandidateA(totals, vacancyShortfall, ExclusionBulk, None)
@@ -216,7 +216,7 @@ class AustralianSenate
         if (notionalVotesOfB < leadingShortfall) { // Section273 (13A)(c)
           orderedCandidates.take(orderedCandidates.indexOf(cB) + 1)
         } else { // Section273 (13A)(d)
-          var candidateC: Option[Candidate] = None
+          var candidateC: Option[C] = None
           bulktype match {
             case ExclusionBulk =>
               candidateC = returnCandidateC(totals, leadingShortfall, ExclusionBulk, None)
@@ -241,10 +241,10 @@ class AustralianSenate
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   def filterBallotsWithFirstPreferences(
-      election: Election[ACTBallot],
-      preferences: List[Candidate]
-  ): Election[ACTBallot] = {
-    var ballots: List[ACTBallot] = List()
+      election: Election[C, ACTBallot],
+      preferences: List[C]
+  ): Election[C, ACTBallot] = {
+    var ballots: List[ACTBallot[C]] = List()
     for (b <- election)
       if (b.preferences.take(preferences.length) == preferences) ballots = b :: ballots
     Election(ballots)
@@ -256,10 +256,10 @@ class AustralianSenate
 // - existence of ``Bulk exclusion''
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   def winners(
-      election: Election[ACTBallot],
-      ccandidates: List[Candidate],
+      election: Election[C, ACTBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = {
+  ): List[(C, Rational)] = {
 
     println(" \n NEW RECURSIVE CALL \n")
 
@@ -294,9 +294,9 @@ class AustralianSenate
       } else {
         if (numVacancies == 1 && ccandidates.length == 2) {
           println(TwoLastCandidatesForOneVacancy)
-          var ws: List[(Candidate, Rational)] = List()
-          val c1                              = ccandidates(0)
-          val c2                              = ccandidates(1)
+          var ws: List[(C, Rational)] = List()
+          val c1                      = ccandidates(0)
+          val c2                      = ccandidates(1)
           if (tls(c1) > tls(c2)) {
             ws = (c1, tls.getOrElse(c1, Rational(0, 1))) :: ws
           } else {
@@ -313,7 +313,7 @@ class AustralianSenate
         } else {
           quotaReached(tls, result.getQuota) match {
             case true =>
-              val ws: List[(Candidate, Rational)] =
+              val ws: List[(C, Rational)] =
                 returnNewWinners(tls, result.getQuota) // sorted! tie resolved!
               println("New winners: " + ws)
               result.addPendingWinners(ws.toList, None)
@@ -323,9 +323,9 @@ class AustralianSenate
               vacanciesFilled match {
                 case false =>
                   println("Vacancies: not yet filled.")
-                  val res                                     = surplusesDistribution(election, ccandidates, numVacancies - ws.length)
-                  val newElection: Election[ACTBallot]        = res._1
-                  val newWinners: List[(Candidate, Rational)] = res._2
+                  val res                                 = surplusesDistribution(election, ccandidates, numVacancies - ws.length)
+                  val newElection: Election[C, ACTBallot] = res._1
+                  val newWinners: List[(C, Rational)]     = res._2
 
                   val nws = ws.length + newWinners.length
                   println("Number of winners in this recursive call: " + nws)
@@ -345,9 +345,9 @@ class AustralianSenate
               // Section 273 (13)(b) => (13A) and (13)(a) => (13AA)
               val candidatesToExclude =
                 getCandidatesToExclude(tls, numVacancies, result.getQuota, ExclusionBulk, None)
-              val res                                     = exclusion(election, ccandidates, candidatesToExclude, numVacancies)
-              val newElection: Election[ACTBallot]        = res._1
-              val newWinners: List[(Candidate, Rational)] = res._2
+              val res                                 = exclusion(election, ccandidates, candidatesToExclude, numVacancies)
+              val newElection: Election[C, ACTBallot] = res._1
+              val newWinners: List[(C, Rational)]     = res._2
               println("New winners: " + newWinners)
               println("Number of winners in this recursive call: " + newWinners.length)
               if (newWinners.length == numVacancies) {
@@ -369,14 +369,14 @@ class AustralianSenate
   }
 
   def getCandidatesToExclude(
-      totals: Map[Candidate, Rational],
+      totals: Map[C, Rational],
       numRemainingVacancies: Int,
       quota: Rational,
       bulktype: BulkExclusionType,
       surplus: Option[Rational]
-  ): List[(Candidate, Rational)] = {
+  ): List[(C, Rational)] = {
 
-    var candidatesToExclude: List[(Candidate, Rational)] = List()
+    var candidatesToExclude: List[(C, Rational)] = List()
     val candidatesForBulkExclusion =
       selectCandidatesForBulkExclusion(totals, numRemainingVacancies, quota, bulktype, surplus)
     if (candidatesForBulkExclusion.nonEmpty) { // DO BULK EXCLUSION  -  Section 273 (13)(b) => (13A)
@@ -397,13 +397,13 @@ class AustralianSenate
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   def surplusesDistribution(
-      election: Election[ACTBallot],
-      ccandidates: List[Candidate],
+      election: Election[C, ACTBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): (Election[ACTBallot], List[(Candidate, Rational)]) = {
+  ): (Election[C, ACTBallot], List[(C, Rational)]) = {
     println(" \n Distribution of surpluses. \n ")
-    var newws: List[(Candidate, Rational)] = List()
-    var newElection                        = election
+    var newws: List[(C, Rational)] = List()
+    var newElection                = election
 
     while (result.getPendingWinners.nonEmpty && newws.length != numVacancies) {
       val (cand, ctotal, markings) =
@@ -424,8 +424,8 @@ class AustralianSenate
 
         println("\n Bulk exclusion: type 2. \n ")
         val res = exclusion(election, ccandidates, candidatesToExclude, numVacancies): (
-            Election[ACTBallot],
-            List[(Candidate, Rational)]
+            Election[C, ACTBallot],
+            List[(C, Rational)]
         )
         newElection = res._1
         newws = newws ::: res._2
@@ -445,12 +445,12 @@ class AustralianSenate
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // like ACT, but no fraction loss
   def tryToDistributeSurplusVotes(
-      election: Election[ACTBallot],
-      ccandidates: List[Candidate],
-      winner: Candidate,
+      election: Election[C, ACTBallot],
+      ccandidates: List[C],
+      winner: C,
       ctotal: Rational,
       markings: Option[Set[Int]]
-  ): (Election[ACTBallot], List[(Candidate, Rational)]) = {
+  ): (Election[C, ACTBallot], List[(C, Rational)]) = {
 
     val pendingWinners = result.getPendingWinners.map(x => x._1)
 
@@ -540,19 +540,19 @@ class AustralianSenate
 // similar to ACT's exclusion.
 // but it also implements bulk exclusion
   def exclusion(
-      election: Election[ACTBallot],
-      ccandidates: List[Candidate],
-      candidatesForExclusion: List[(Candidate, Rational)],
+      election: Election[C, ACTBallot],
+      ccandidates: List[C],
+      candidatesForExclusion: List[(C, Rational)],
       numVacancies: Int
-  ): (Election[ACTBallot], List[(Candidate, Rational)]) = {
+  ): (Election[C, ACTBallot], List[(C, Rational)]) = {
 
     println("Vacancies left: " + numVacancies)
 
-    var ws: List[(Candidate, Rational)]    = List()
-    var newws: List[(Candidate, Rational)] = List()
-    var newElection                        = election
-    var newElectionWithoutFractionInTotals = election
-    var exhaustedBallots: Set[ACTBallot]   = Set()
+    var ws: List[(C, Rational)]             = List()
+    var newws: List[(C, Rational)]          = List()
+    var newElection                         = election
+    var newElectionWithoutFractionInTotals  = election
+    var exhaustedBallots: Set[ACTBallot[C]] = Set()
 
     for (candidate <- candidatesForExclusion) {
 
@@ -607,7 +607,7 @@ class AustralianSenate
       }
     }
 
-    var dws: List[(Candidate, Rational)] = List()
+    var dws: List[(C, Rational)] = List()
     if (ws.nonEmpty) {
       val res = surplusesDistribution(
         newElection,

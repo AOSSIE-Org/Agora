@@ -8,24 +8,24 @@ import scala.util.Random
 
 import spire.math.Rational
 
-trait SurplusDistributionTieResolution {
+trait SurplusDistributionTieResolution[C <: Candidate] {
 
   def resolveSurpluseDistributionTie(
-      equaltotals: Map[Candidate, Rational]
-  ): List[(Candidate, Rational)]
+      equaltotals: Map[C, Rational]
+  ): List[(C, Rational)]
 
 }
 
 // Section 273 (22)
-trait SenateSurplusDistributionTieResolution
-    extends STV[ACTBallot]
-    with SurplusDistributionTieResolution {
+trait SenateSurplusDistributionTieResolution[C <: Candidate]
+    extends STV[C, ACTBallot]
+    with SurplusDistributionTieResolution[C] {
 
-  val result: Result
+  val result: Result[C]
 
   def resolveSurpluseDistributionTie(
-      totalsOfWinners: Map[Candidate, Rational]
-  ): List[(Candidate, Rational)] = {
+      totalsOfWinners: Map[C, Rational]
+  ): List[(C, Rational)] = {
     val candidates          = totalsOfWinners.map(_._1).toSet
     val listwithtieresolved = recOrder(candidates, result.getTotalsHistoryClone)
     val totals              = result.getTotalsHistoryClone.head
@@ -33,9 +33,9 @@ trait SenateSurplusDistributionTieResolution
   }
 
   def recOrder(
-      candidates: Set[Candidate],
-      totalshistory: List[Map[Candidate, Rational]]
-  ): List[Candidate] = {
+      candidates: Set[C],
+      totalshistory: List[Map[C, Rational]]
+  ): List[C] = {
     if (candidates.nonEmpty) {
       if (totalshistory.nonEmpty) {
         val totals = totalshistory.head
@@ -62,19 +62,19 @@ trait SenateSurplusDistributionTieResolution
 
 }
 
-trait ACTSurplusDistributionTieResolution
-    extends STV[ACTBallot]
-    with SurplusDistributionTieResolution {
+trait ACTSurplusDistributionTieResolution[C <: Candidate]
+    extends STV[C, ACTBallot]
+    with SurplusDistributionTieResolution[C] {
 
-  val result: Result
+  val result: Result[C]
 
   def recOrderIdentical(
-      equaltotals: List[Candidate],
-      totalshistory: List[Map[Candidate, Rational]]
-  ): List[Candidate] = {
+      equaltotals: List[C],
+      totalshistory: List[Map[C, Rational]]
+  ): List[C] = {
 
     if (totalshistory.nonEmpty) {
-      var biggestcandidate: Candidate = equaltotals.head
+      var biggestcandidate: C = equaltotals.head
       for (c <- equaltotals) {
         if (
           totalshistory.head.getOrElse(c, Rational(0, 1)) > totalshistory.head.getOrElse(
@@ -116,10 +116,10 @@ trait ACTSurplusDistributionTieResolution
   }
 
   def recOrderDifferent(
-      totalsOfWinners: Map[Candidate, Rational],
-      sortedlist: List[(Candidate, Rational)],
-      totalshistory: List[Map[Candidate, Rational]]
-  ): List[Candidate] = {
+      totalsOfWinners: Map[C, Rational],
+      sortedlist: List[(C, Rational)],
+      totalshistory: List[Map[C, Rational]]
+  ): List[C] = {
     if (sortedlist.nonEmpty) {
       var c        = sortedlist.head
       var equaltoc = totalsOfWinners.filter(_._2 == c._2)
@@ -152,8 +152,8 @@ trait ACTSurplusDistributionTieResolution
   }
 
   def resolveSurpluseDistributionTie(
-      totalsOfWinners: Map[Candidate, Rational]
-  ): List[(Candidate, Rational)] = {
+      totalsOfWinners: Map[C, Rational]
+  ): List[(C, Rational)] = {
     val sortedList = totalsOfWinners.toList.sortBy(x => x._2).reverse // >
     // println("sortedList: " + sortedList)
     val listwithtieresolved =
@@ -163,13 +163,13 @@ trait ACTSurplusDistributionTieResolution
 
 }
 
-trait SimpleSurplusDistributionTieResolution
-    extends STV[Ballot]
-    with SurplusDistributionTieResolution {
+trait SimpleSurplusDistributionTieResolution[C <: Candidate]
+    extends STV[C, Ballot]
+    with SurplusDistributionTieResolution[C] {
 
   def resolveSurpluseDistributionTie(
-      equaltotals: Map[Candidate, Rational]
-  ): List[(Candidate, Rational)] =
+      equaltotals: Map[C, Rational]
+  ): List[(C, Rational)] =
     equaltotals.toList.sortBy(x => x._2).reverse // >
 
 }

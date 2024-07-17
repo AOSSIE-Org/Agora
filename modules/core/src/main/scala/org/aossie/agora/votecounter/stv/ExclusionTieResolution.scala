@@ -2,24 +2,23 @@ package org.aossie.agora.votecounter.stv
 
 import org.aossie.agora.model._
 import org.aossie.agora.votecounter._
+
 import collection.Map
 import scala.util.Random
-
 import scala.language.postfixOps
-
 import spire.math.Rational
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-trait ExclusionTieResolution {
+trait ExclusionTieResolution[+C <: Candidate] {
 
-  def chooseCandidateForExclusion(totals: Map[Candidate, Rational]): (Candidate, Rational)
+  def chooseCandidateForExclusion[CC >: C](totals: Map[CC, Rational]): (CC, Rational)
 
 }
 
-trait UnfairExclusionTieResolution {
+trait UnfairExclusionTieResolution[+C <: Candidate] extends ExclusionTieResolution[C] {
 
-  def chooseCandidateForExclusion(totals: Map[Candidate, Rational]): (Candidate, Rational) = {
+  def chooseCandidateForExclusion[CC >: C](totals: Map[CC, Rational]): (CC, Rational) = {
     var min = Rational(Int.MaxValue, 1)
     for (kv <- totals) if (kv._2 < min) min = kv._2
     val equaltotals = totals.filter(_._2 == min)
@@ -28,15 +27,15 @@ trait UnfairExclusionTieResolution {
 
 }
 
-trait PriorRoundExclusionTieResolution {
+trait PriorRoundExclusionTieResolution[+C <: Candidate] {
 
-  def chooseCandidateForExclusion(
-      equalTotals: Map[Candidate, Rational],
-      priorRoundTotals: Map[Candidate, Rational]
-  ): (Candidate, Rational) = {
+  def chooseCandidateForExclusion[CC >: C](
+      equalTotals: Map[CC, Rational],
+      priorRoundTotals: Map[CC, Rational]
+  ): (CC, Rational) = {
     if (equalTotals.size > 1 && priorRoundTotals.nonEmpty) {
-      val equalCandidatesList          = equalTotals.toList.map(x => x._1)
-      var smallestCandidate: Candidate = equalCandidatesList.head
+      val equalCandidatesList   = equalTotals.toList.map(x => x._1)
+      var smallestCandidate: CC = equalCandidatesList.head
       for (c <- equalCandidatesList.tail) {
         if (
           (priorRoundTotals.getOrElse(c, Rational(0, 1))) < priorRoundTotals.getOrElse(
@@ -62,17 +61,17 @@ trait PriorRoundExclusionTieResolution {
 
 }
 
-trait ACTExclusionTieResolution extends STV[ACTBallot] with ExclusionTieResolution {
+trait ACTExclusionTieResolution[C <: Candidate] extends STV[C, ACTBallot] {
 
-  val result: Result
+  val result: Result[C]
 
   def recFindSmallest(
-      equaltotals: Map[Candidate, Rational],
-      totalshistory: List[Map[Candidate, Rational]]
-  ): Map[Candidate, Rational] = {
+      equaltotals: Map[C, Rational],
+      totalshistory: List[Map[C, Rational]]
+  ): Map[C, Rational] = {
     if (equaltotals.size > 1 && totalshistory.nonEmpty) {
-      val listequalcandidates          = equaltotals.toList.map(x => x._1)
-      var smallestcandidate: Candidate = listequalcandidates.head
+      val listequalcandidates  = equaltotals.toList.map(x => x._1)
+      var smallestcandidate: C = listequalcandidates.head
       for (c <- listequalcandidates.tail) {
         if (
           (totalshistory.head.getOrElse(c, Rational(0, 1))) < totalshistory.head.getOrElse(
@@ -95,7 +94,7 @@ trait ACTExclusionTieResolution extends STV[ACTBallot] with ExclusionTieResoluti
     }
   }
 
-  def chooseCandidateForExclusion(totals: Map[Candidate, Rational]): (Candidate, Rational) = {
+  def chooseCandidateForExclusion(totals: Map[C, Rational]): (C, Rational) = {
 
     var min = Rational(Int.MaxValue, 1)
     for (kv <- totals) if (kv._2 < min) min = kv._2

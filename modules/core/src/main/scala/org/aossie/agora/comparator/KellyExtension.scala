@@ -8,10 +8,10 @@ import spire.math.Rational
 /*
   Link : https://drive.google.com/file/d/0B4uPp6wWiMpScEM2Q21kT2x1N3M/view?usp=sharing
  */
-object KellyExtension extends SetExtensionMethods[Ballot] with LazyLogging {
+object KellyExtension extends SetExtensionMethods[Candidate, Ballot] with LazyLogging {
 
   override def compare(
-      election: org.aossie.agora.model.Election[Ballot],
+      election: org.aossie.agora.model.Election[Candidate, Ballot],
       candidates: List[Candidate],
       parameters: Parameters
   ): Set[Candidate] = {

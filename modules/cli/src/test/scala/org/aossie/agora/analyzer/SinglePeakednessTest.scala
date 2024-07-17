@@ -31,8 +31,8 @@ class SinglePeakednessTest extends Specification {
 
   def singlePeakednessVerification(electionFile: String, candidatesFile: String): Boolean = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
+    val candidates = CandidatesParser.read("./files/Examples/" + candidatesFile)
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
 
     SinglePeakAnalyser.analyse(election, candidates)
   }

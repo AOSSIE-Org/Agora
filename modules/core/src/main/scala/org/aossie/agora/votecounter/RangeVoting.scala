@@ -10,10 +10,10 @@ import spire.math.Rational
   * candidates over all voters TODO: Variant where average score of a candidate is used to compute
   * the winner
   */
-object RangeVoting extends VoteCounter[ScoreBallot] {
+object RangeVoting extends VoteCounter[Candidate, ScoreBallot] {
 
   def winners(
-      election: Election[ScoreBallot],
+      election: Election[Candidate, ScoreBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = {

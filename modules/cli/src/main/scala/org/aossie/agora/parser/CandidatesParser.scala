@@ -1,7 +1,5 @@
 package org.aossie.agora.parser
 
-import scala.util.Success
-
 import org.aossie.agora.model._
 
 object CandidatesParser extends LineParser[Candidate] {
@@ -10,7 +8,7 @@ object CandidatesParser extends LineParser[Candidate] {
 
   // the method line returns a Parser of type ACTBallotPapersDataStructure
   def line: Parser[Candidate] = name ~ opt(id) ~ opt(party) ^^ {
-    case ~(~(name, id), party) => Candidate(name, id, party)
+    case ~(~(name, id), party) => new Candidate(name, id, party)
     case _                     => throw new Exception
   }
 

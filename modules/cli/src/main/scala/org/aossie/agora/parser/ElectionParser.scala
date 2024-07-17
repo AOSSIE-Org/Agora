@@ -3,11 +3,12 @@ package org.aossie.agora.parser
 import org.aossie.agora.model._
 import scala.util.parsing.combinator._
 
-abstract class ElectionParser[T <: Ballot] extends LineParser[T] {
+abstract class ElectionParser[C <: Candidate, T[CC >: C <: Candidate] <: Ballot[CC]]
+    extends LineParser[T[C]] {
 
-  def line: Parser[T]
+  def line: Parser[T[C]]
 
-  def read(filename: String): Election[T] = Election(readLines(filename))
+  def read(filename: String): Election[C, T] = Election(readLines(filename))
 
 }
 

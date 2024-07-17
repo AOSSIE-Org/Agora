@@ -9,7 +9,7 @@ import spire.math.Rational
 
 class OklahomaMethodTest extends Specification {
 
-  val expectedOklahomaMethodWinnerList = List((Candidate("Nashville"), Rational(173, 3)))
+  val expectedOklahomaMethodWinnerList = List((new Candidate("Nashville"), Rational(173, 3)))
 
   "OklahomaMethod Test " should {
 
@@ -26,8 +26,8 @@ class OklahomaMethodTest extends Specification {
       candidatesFile: String
   ): List[(Candidate, Rational)] = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
+    val candidates = CandidatesParser.read("./files/Examples/" + candidatesFile)
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
 
     Oklahoma.winners(election, candidates, 1)
   }

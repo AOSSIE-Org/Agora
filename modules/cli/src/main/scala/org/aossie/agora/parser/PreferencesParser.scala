@@ -9,7 +9,7 @@ import scala.util.parsing.combinator._
 
 trait ElectionParsers extends RegexParsers {
 
-  def candidate: Parser[Candidate] = """[0-9A-Za-z\-\,\.\ \']*""".r ^^ { s => Candidate(s) }
+  def candidate: Parser[Candidate] = """[0-9A-Za-z\-\,\.\ \']*""".r ^^ { s => new Candidate(s) }
 
   def numerator: Parser[BigInt] = """[0-9]*""".r ^^ { s => BigInt(s) }
 
@@ -30,22 +30,25 @@ trait ElectionParsers extends RegexParsers {
 
 }
 
-object PreferencesParser extends ElectionParser[Ballot] with RegexParsers with ElectionParsers {
+object PreferencesParser
+    extends ElectionParser[Candidate, Ballot]
+    with RegexParsers
+    with ElectionParsers {
 
   def preferences: Parser[List[Candidate]] = repsep(candidate, ">")
 
-  def line: Parser[Ballot] = id ~ weight ~ preferences ^^ { case ~(~(i, w), prefs) =>
+  def line: Parser[Ballot[Candidate]] = id ~ weight ~ preferences ^^ { case ~(~(i, w), prefs) =>
     new Ballot(prefs, i, w)
   }
 
 }
 
 object PreferencesParserWithIndifference
-    extends ElectionParser[RankBallot]
+    extends ElectionParser[Candidate, RankBallot]
     with RegexParsers
     with ElectionParsers {
 
-  def line: Parser[RankBallot] = id ~ weight ~ preferences ^^ { case ~(~(i, w), prefs) =>
+  def line: Parser[RankBallot[Candidate]] = id ~ weight ~ preferences ^^ { case ~(~(i, w), prefs) =>
     RankBallot(prefs, i, w)
   }
 
@@ -71,11 +74,11 @@ object PreferencesParserWithIndifference
 }
 
 object PreferencesParserWithScore
-    extends ElectionParser[ScoreBallot]
+    extends ElectionParser[Candidate, ScoreBallot]
     with RegexParsers
     with ElectionParsers {
 
-  def line: Parser[ScoreBallot] = id ~ weight ~ opt("(") ~ preferences ~ opt(")") ^^ {
+  def line: Parser[ScoreBallot[Candidate]] = id ~ weight ~ opt("(") ~ preferences ~ opt(")") ^^ {
     case ~(~(~(~(i, w), _), prefs), _) =>
       ScoreBallot(prefs, i, w)
   }
@@ -96,11 +99,11 @@ object PreferencesParserWithScore
 }
 
 object PreferencesParserWithRank
-    extends ElectionParser[RankBallot]
+    extends ElectionParser[Candidate, RankBallot]
     with RegexParsers
     with ElectionParsers {
 
-  def line: Parser[RankBallot] = id ~ weight ~ opt("(") ~ preferences ~ opt(")") ^^ {
+  def line: Parser[RankBallot[Candidate]] = id ~ weight ~ opt("(") ~ preferences ~ opt(")") ^^ {
     case ~(~(~(~(i, w), _), prefs), _) =>
       RankBallot(prefs, i, w)
   }

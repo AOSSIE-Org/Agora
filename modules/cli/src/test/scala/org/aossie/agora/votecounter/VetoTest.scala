@@ -9,7 +9,7 @@ import org.specs2.mutable.Specification
 class VetoTest extends Specification {
 
   // Test data as provided by http://democratix.dbai.tuwien.ac.at/examples/veto.php
-  val expectedVetoRuleWinnerList = List(Candidate("Banana"), Candidate("Cherry"))
+  val expectedVetoRuleWinnerList = List(new Candidate("Banana"), new Candidate("Cherry"))
 
   "VetoRule Test " should {
 
@@ -24,8 +24,8 @@ class VetoTest extends Specification {
 
   def vetoRuleMethodVerification(electionFile: String, candidatesFile: String): List[Candidate] = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
+    val candidates = CandidatesParser.read("./files/Examples/" + candidatesFile)
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
 
     Veto.winners(election, candidates, 2).map(_._1)
   }

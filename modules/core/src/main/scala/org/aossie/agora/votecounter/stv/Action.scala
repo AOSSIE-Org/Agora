@@ -1,6 +1,6 @@
 package org.aossie.agora.votecounter.stv
 
-sealed abstract class Action
+sealed trait Action
 
 case object Exclusion extends Action
 

@@ -628,4 +628,8 @@ class AustralianSenate
     (newElection, ws ::: dws)
   }
 
+  override def chooseCandidateForExclusion(
+      totals: Map[Candidate, Rational]
+  ): (Candidate, Rational) = ???
+
 }

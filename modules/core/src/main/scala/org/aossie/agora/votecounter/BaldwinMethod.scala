@@ -4,15 +4,14 @@ import com.typesafe.scalalogging.LazyLogging
 import spire.math.Rational
 
 import org.aossie.agora.model._
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 
 import scala.collection.mutable.{HashMap => Map}
 
 /** Created by deepeshpandey on 09/03/17. */
-object BaldwinMethod extends VoteCounter[Ballot] with LazyLogging {
+object BaldwinMethod extends VoteCounter[Candidate, PreferenceBallot] with LazyLogging {
 
   def bordaScores(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       candidates: List[Candidate]
   ): Map[Candidate, Rational] = {
     val m = new Map[Candidate, Rational]
@@ -32,7 +31,7 @@ object BaldwinMethod extends VoteCounter[Ballot] with LazyLogging {
   }
 
   def winners(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       candidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = {

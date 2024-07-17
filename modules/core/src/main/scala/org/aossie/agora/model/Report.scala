@@ -5,19 +5,20 @@ import spire.math.Rational
 import org.aossie.agora.votecounter.stv.Action
 
 import scala.collection.Map
+import scala.language.higherKinds
 
-class Report[B <: Ballot] {
+class Report[C <: Candidate, B[CC >: C <: Candidate] <: Ballot[CC]] {
 
-  private var countHistory: List[Count[B]] = Nil
+  private var countHistory: List[Count[C, B]] = Nil
   // private var totals: Map[Candidate, Rational] = Map()
 
-  private var candidates: List[Candidate] = Nil
+  private var candidates: List[C] = Nil
 
   private var quota: Option[Rational] = None
 
   private var numVacancies: Option[Int] = None
 
-  private var winners: List[(Candidate, Rational)] = Nil
+  private var winners: List[(C, Rational)] = Nil
 
   private var stabilityAnalysis: List[(String, Double, Double)] = Nil
 
@@ -33,11 +34,11 @@ class Report[B <: Ballot] {
     countHistory.head.setLossByFraction(Rational(0, 1))
 
   def setLossByFraction(
-      oldtotals: Map[Candidate, Rational],
-      newtotals: Map[Candidate, Rational]
+      oldtotals: Map[C, Rational],
+      newtotals: Map[C, Rational]
   ): Unit = {
 
-    def sumTotals(totals: Map[Candidate, Rational]): Rational = {
+    def sumTotals(totals: Map[C, Rational]): Rational = {
       var sum: Rational = 0
       for (t <- totals) sum += t._2
       sum
@@ -52,7 +53,7 @@ class Report[B <: Ballot] {
     countHistory.head.setLossByFraction(sumoldtotals - sumnewtotals)
   }
 
-  def setIgnoredBallots(ignoredBallots: Election[B]): Unit =
+  def setIgnoredBallots(ignoredBallots: Election[C, B]): Unit =
     countHistory.head.setIgnoredBallots(ignoredBallots)
 
   def setNumVacancies(n: Int): Unit =
@@ -61,10 +62,10 @@ class Report[B <: Ballot] {
   def getNumVacancies: Option[Int] =
     numVacancies
 
-  def setCandidates(cands: List[Candidate]): Unit =
+  def setCandidates(cands: List[C]): Unit =
     candidates = cands
 
-  def getCandidates: List[Candidate] =
+  def getCandidates: List[C] =
     candidates
 
   def setQuota(q: Rational): Unit =
@@ -79,14 +80,14 @@ class Report[B <: Ballot] {
 
   def newCount(
       action: Action,
-      initiator: Option[Candidate],
-      relection: Option[Election[B]],
-      totals: Option[Map[Candidate, Rational]],
-      winners: Option[List[(Candidate, Rational)]],
-      exhaustedBallots: Option[Set[B]]
+      initiator: Option[C],
+      relection: Option[Election[C, B]],
+      totals: Option[Map[C, Rational]],
+      winners: Option[List[(C, Rational)]],
+      exhaustedBallots: Option[Set[B[C]]]
   ): Unit = {
 
-    val count = new Count[B]
+    val count = new Count[C, B]
 
     count.setAction(action)
 
@@ -119,13 +120,13 @@ class Report[B <: Ballot] {
     countHistory = count :: countHistory
   }
 
-  def getCountHistory: List[Count[B]] =
+  def getCountHistory: List[Count[C, B]] =
     countHistory
 
-  def setWinners(ws: List[(Candidate, Rational)]): Unit =
+  def setWinners(ws: List[(C, Rational)]): Unit =
     winners = ws
 
-  def getWinners: List[(Candidate, Rational)] =
+  def getWinners: List[(C, Rational)] =
     winners
 
   def writeWinners(file: String): Unit = {
@@ -155,12 +156,12 @@ class Report[B <: Ballot] {
     writer.close()
   }
 
-  def writeDistributionOfPreferencesACT(file: String, order: Option[List[Candidate]]): Unit = {
+  def writeDistributionOfPreferencesACT(file: String, order: Option[List[C]]): Unit = {
     val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)))
 
     val separator = ","
 
-    var tableorder: List[Candidate] = Nil
+    var tableorder: List[C] = Nil
     order match {
       case Some(o) => tableorder = o
       case None    => tableorder = candidates
@@ -207,12 +208,12 @@ class Report[B <: Ballot] {
 
   // scalastyle:off cyclomatic.complexity
   // scalastyle:off method.length
-  def writeDistributionOfPreferences(file: String, order: Option[List[Candidate]]): Unit = {
+  def writeDistributionOfPreferences(file: String, order: Option[List[C]]): Unit = {
     val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)))
 
     val separator = ","
 
-    var tableorder: List[Candidate] = Nil
+    var tableorder: List[C] = Nil
     order match {
       case Some(o) => tableorder = o
       case None    => tableorder = candidates

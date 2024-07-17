@@ -9,7 +9,7 @@ import org.specs2.mutable.Specification
 class BucklinTest extends Specification {
 
   // Test data obtained from https://en.wikipedia.org/wiki/Bucklin_voting#Example_application
-  val expectedBucklinWinnerList = List(Candidate("Nashville"))
+  val expectedBucklinWinnerList = List(new Candidate("Nashville"))
 
   "Bucklin Vote Test " should {
 
@@ -20,8 +20,8 @@ class BucklinTest extends Specification {
 
   def bucklinVerification(electionFile: String, candidatesFile: String): List[Candidate] = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
+    val candidates = CandidatesParser.read("./files/Examples/" + candidatesFile)
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
 
     Bucklin.winners(election, candidates, 1).map(_._1)
   }

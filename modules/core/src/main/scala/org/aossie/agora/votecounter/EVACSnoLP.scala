@@ -1,11 +1,12 @@
 package org.aossie.agora.votecounter
 
+import org.aossie.agora.model.Candidate
 import org.aossie.agora.votecounter.stv._
 
-class EVACSnoLP
-    extends ACT
-    with TransferValueWithDenominatorWithNumOfAllContinuingBallotsOrOne // instead of TransferValueWithDenominatorWithNumOfMarkedContinuingBallotsOrOne
-    with ACTVoteCounterWithAllContinuingBallotsInSurplusDistribution    // instead  ACTSurplusDistribution
-    with ACTNewWinnersDuringSurplusesDistribution
-    with ACTNewWinnersDuringExclusion
-    with ACTTotalsDuringExclusion {}
+class EVACSnoLP[C <: Candidate]
+    extends ACT[C]
+    with TransferValueWithDenominatorWithNumOfAllContinuingBallotsOrOne[C] // instead of TransferValueWithDenominatorWithNumOfMarkedContinuingBallotsOrOne
+    with ACTVoteCounterWithAllContinuingBallotsInSurplusDistribution[C]    // instead  ACTSurplusDistribution
+    with ACTNewWinnersDuringSurplusesDistribution[C]
+    with ACTNewWinnersDuringExclusion[C]
+    with ACTTotalsDuringExclusion[C]

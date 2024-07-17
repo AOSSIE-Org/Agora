@@ -7,7 +7,7 @@ import org.specs2.mutable.Specification
 
 class InstantExhaustiveBallotTest extends Specification {
 
-  val expectedInstantExhaustiveBallotWinnerList = List(Candidate("Knoxville"))
+  val expectedInstantExhaustiveBallotWinnerList = List(new Candidate("Knoxville"))
 
   "InstantExhaustiveBallot Test " should {
 
@@ -24,8 +24,8 @@ class InstantExhaustiveBallotTest extends Specification {
       candidatesFile: String
   ): List[Candidate] = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
+    val candidates = CandidatesParser.read("./files/Examples/" + candidatesFile)
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
 
     InstantExhaustiveBallot.winners(election, candidates, 1).map(_._1)
   }

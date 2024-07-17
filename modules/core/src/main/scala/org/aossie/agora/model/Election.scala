@@ -4,10 +4,13 @@ import scala.collection._
 import scala.collection.generic._
 import scala.collection.mutable.Builder
 import scala.collection.mutable.{HashMap => MMap}
-
 import spire.math.Rational
 
-class Election[+B <: Ballot](val ballots: Seq[B]) extends Seq[B] with SeqLike[B, Election[B]] {
+import scala.language.higherKinds
+
+class Election[C <: Candidate, B[CC >: C <: Candidate] <: Ballot[CC]](val ballots: Seq[B[C]])
+    extends Seq[B[C]]
+    with SeqLike[B[C], Election[C, B]] {
 
   override def companion = ballots.companion
 
@@ -21,8 +24,8 @@ class Election[+B <: Ballot](val ballots: Seq[B]) extends Seq[B] with SeqLike[B,
 
   override def toString = ballots.map(_.toString).mkString("\n")
 
-  def firstVotes(candidates: List[Candidate]): Map[Candidate, Rational] = {
-    val m = new MMap[Candidate, Rational]
+  def firstVotes(candidates: List[C]): Map[C, Rational] = {
+    val m = new MMap[C, Rational]
 
     for {
       b      <- ballots
@@ -38,19 +41,23 @@ class Election[+B <: Ballot](val ballots: Seq[B]) extends Seq[B] with SeqLike[B,
 
 object Election {
 
-  def newBuilder[B <: Ballot] = new mutable.Builder[B, Election[B]] {
-    private[this] val base = Seq().genericBuilder[B]
-    override def +=(e: B)  = { base += e; this }
-    override def clear()   = base.clear()
-    override def result()  = new Election[B](base.result())
-  }
+  def newBuilder[C <: Candidate, B[CC >: C <: Candidate] <: Ballot[CC]] =
+    new mutable.Builder[B[C], Election[C, B]] {
+      private[this] val base   = Seq().genericBuilder[B[C]]
+      override def +=(e: B[C]) = { base += e; this }
+      override def clear()     = base.clear()
+      override def result()    = new Election[C, B](base.result())
+    }
 
-  implicit def canBuildFrom[B <: Ballot] = new CanBuildFrom[Election[_], B, Election[B]] {
-    def apply(from: Election[_]): Builder[B, Election[B]] = newBuilder
-    def apply(): Builder[B, Election[B]]                  = newBuilder
-  }
+  implicit def canBuildFrom[C <: Candidate, B[CC >: C <: Candidate] <: Ballot[CC]]
+      : CanBuildFrom[Election[C, B], B[C], Election[C, B]] =
+    new CanBuildFrom[Election[C, B], B[C], Election[C, B]] {
+      def apply(from: Election[C, B]): Builder[B[C], Election[C, B]] = newBuilder[C, B]
+      def apply(): Builder[B[C], Election[C, B]]                     = newBuilder[C, B]
+    }
 
   // def apply[B <: Ballot](ballots: B*) = new Election(ballots)
-  def apply[B <: Ballot](ballots: Seq[B]) = new Election(ballots)
+  def apply[C <: Candidate, B[CC >: C <: Candidate] <: Ballot[CC]](ballots: Seq[B[C]]) =
+    new Election(ballots)
 
 }

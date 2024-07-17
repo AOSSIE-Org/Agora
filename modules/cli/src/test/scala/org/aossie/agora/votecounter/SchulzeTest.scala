@@ -11,7 +11,8 @@ import org.specs2.mutable.Specification
 class SchulzeTest extends Specification {
 
   val expectedSchulzeWinnerList =
-    List(Candidate("E"), Candidate("A"), Candidate("C"), Candidate("B"), Candidate("D"))
+    List(new Candidate("E"), new Candidate("A"), new Candidate("C"), new Candidate("B"),
+      new Candidate("D"))
 
   "Schulze Test" should {
     "verify result" in {
@@ -24,7 +25,7 @@ class SchulzeTest extends Specification {
 
   def schulzeMethodVerification(electionFile: String, candidatesFile: String): List[Candidate] = {
 
-    val dir        = "../Agora/files/Examples/"
+    val dir        = "./files/Examples/"
     val candidates = CandidatesParser.read(dir + candidatesFile)
     val election   = PreferencesParserWithRank.read(dir + electionFile)
 

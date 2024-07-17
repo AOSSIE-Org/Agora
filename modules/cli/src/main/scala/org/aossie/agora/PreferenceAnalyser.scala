@@ -68,7 +68,7 @@ object PreferenceAnalyser {
 
     def callMethod(
         c: PreferenceConfig,
-        election: Election[Ballot],
+        election: Election[Candidate, Ballot],
         candidates_in_order: List[Candidate]
     ) = {
 

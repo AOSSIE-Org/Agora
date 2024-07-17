@@ -7,7 +7,7 @@ import org.aossie.agora.model.{PreferenceBallot => Ballot}
 /** This analyser analyses for Sen's Value restricted preferences source link :
   * https://www.youtube.com/watch?v=F51U9Sv9QNo&t=26s
   */
-object ValueRestrictedAnalyser extends PreferenceAnalysisMethod[Ballot] {
+object ValueRestrictedAnalyser extends PreferenceAnalysisMethod[Candidate, Ballot] {
 
   /** assumption : voters preference relations are complete over set of candidates. for every
     * triplet of candidates check if any of value restricted conditions are true. For any triplet(A,
@@ -22,7 +22,7 @@ object ValueRestrictedAnalyser extends PreferenceAnalysisMethod[Ballot] {
     * @return
     */
   override def analyse(
-      election: org.aossie.agora.model.Election[Ballot],
+      election: Election[Candidate, Ballot],
       ccandidates: List[Candidate]
   ): Boolean = {
 
@@ -76,7 +76,10 @@ object ValueRestrictedAnalyser extends PreferenceAnalysisMethod[Ballot] {
     * @param election
     *   election file
     */
-  def valueRestrictedTriplet(triplet: List[Candidate], election: Election[Ballot]): Boolean = {
+  def valueRestrictedTriplet(
+      triplet: List[Candidate],
+      election: Election[Candidate, Ballot]
+  ): Boolean = {
 
     val tripletRankings = Array.ofDim[Int](3, 3)
 

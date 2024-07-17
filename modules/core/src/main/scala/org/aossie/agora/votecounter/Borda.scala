@@ -1,17 +1,18 @@
 package org.aossie.agora.votecounter
 
 import com.typesafe.scalalogging.LazyLogging
-import org.aossie.agora.model.Candidate
-import org.aossie.agora.model.Election
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
+import org.aossie.agora.model._
 
 import scala.collection.mutable.{HashMap => Map}
 import spire.math.Rational
 
 /** Created by deepeshpandey on 07/03/17. */
-object Borda extends VoteCounter[Ballot] with LazyLogging {
+object Borda extends VoteCounter[Candidate, PreferenceBallot] with LazyLogging {
 
-  def totals(election: Election[Ballot], candidates: List[Candidate]): Map[Candidate, Rational] = {
+  def totals(
+      election: Election[Candidate, PreferenceBallot],
+      candidates: List[Candidate]
+  ): Map[Candidate, Rational] = {
     val m             = new Map[Candidate, Rational]
     val numCandidates = candidates.length
 
@@ -30,7 +31,7 @@ object Borda extends VoteCounter[Ballot] with LazyLogging {
   }
 
   def winners(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = {

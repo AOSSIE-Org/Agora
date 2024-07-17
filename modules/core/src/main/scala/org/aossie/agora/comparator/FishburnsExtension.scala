@@ -7,10 +7,10 @@ import spire.math.Rational
 /*
   Link : https://drive.google.com/file/d/0B4uPp6wWiMpSbWh2NGNfLXdiTTA/view?usp=sharing
  */
-object FishburnsExtension extends SetExtensionMethods[Ballot] {
+object FishburnsExtension extends SetExtensionMethods[Candidate, Ballot] {
 
   override def compare(
-      election: org.aossie.agora.model.Election[Ballot],
+      election: org.aossie.agora.model.Election[Candidate, Ballot],
       candidates: List[Candidate],
       parameters: Parameters
   ): Set[Candidate] = {

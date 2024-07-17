@@ -2,24 +2,23 @@ package org.aossie.agora.votecounter
 
 import com.typesafe.scalalogging.LazyLogging
 import org.aossie.agora.model._
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 
 import scala.util.Random
 
 import spire.math.Rational
 
 /** Algorithm : https://en.wikipedia.org/wiki/Random_ballot */
-object RandomBallot extends VoteCounter[Ballot] with LazyLogging {
+object RandomBallot extends VoteCounter[Candidate, PreferenceBallot] with LazyLogging {
 
   override def winners(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] =
     randomBallotWinner(election, ccandidates, numVacancies, None)
 
   def randomBallotWinner(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int,
       seed: Option[Int]

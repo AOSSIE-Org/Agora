@@ -2,7 +2,6 @@ package org.aossie.agora.votecounter
 
 import com.typesafe.scalalogging.LazyLogging
 import org.aossie.agora.model._
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 import org.aossie.agora.votecounter.common.PreferencePairwiseComparison
 
 import spire.math.Rational
@@ -11,8 +10,8 @@ import spire.math.Rational
   * \min_X ( \max_Y score(Y, X))
   */
 object MinimaxCondorcet
-    extends VoteCounter[Ballot]
-    with PreferencePairwiseComparison
+    extends VoteCounter[Candidate, PreferenceBallot]
+    with PreferencePairwiseComparison[Candidate, PreferenceBallot]
     with LazyLogging {
 
   private val rational0 = Rational(0, 1)
@@ -20,7 +19,7 @@ object MinimaxCondorcet
   private val majorityThreshold = Rational(1, 2)
 
   def winners(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = {

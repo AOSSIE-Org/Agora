@@ -1,7 +1,6 @@
 package org.aossie.agora.votecounter
 
 import org.aossie.agora.model._
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 
 import scala.collection.mutable.{HashMap => MMap}
 
@@ -9,7 +8,7 @@ import spire.math.Rational
 
 /** * https://en.wikipedia.org/wiki/Proportional_approval_voting
   */
-object ProportionalApprovalVoting extends VoteCounter[Ballot] {
+object ProportionalApprovalVoting extends VoteCounter[Candidate, PreferenceBallot] {
 
   // following function calculates score, i.e., given N, it calculates summation 1 to 1/N
   def proportionalApprovalScore(nmatches: Int): Rational = {
@@ -23,7 +22,7 @@ object ProportionalApprovalVoting extends VoteCounter[Ballot] {
   // if N of the candidate preferences matches with any one candidate subset,
   // then score for that subset is summation 1 to 1/N
   def candidateSubsetTotals(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       candidates: List[Candidate],
       ccandSubsetList: List[List[Candidate]]
   ): List[(Candidate, Rational)] = {
@@ -64,7 +63,7 @@ object ProportionalApprovalVoting extends VoteCounter[Ballot] {
   }
 
   def winners(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = {

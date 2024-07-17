@@ -10,10 +10,10 @@ import scala.collection.mutable.ListBuffer
   * https://drive.google.com/file/d/0B4uPp6wWiMpSZ2FaTFFneGtJSDg/view when preferences are single
   * peaked there is always a unique condorcet winner
   */
-object SinglePeakAnalyser extends PreferenceAnalysisMethod[Ballot] {
+object SinglePeakAnalyser extends PreferenceAnalysisMethod[Candidate, Ballot] {
 
   def analyse(
-      election: org.aossie.agora.model.Election[Ballot],
+      election: Election[Candidate, Ballot],
       candidates: List[Candidate]
   ): Boolean = {
 
@@ -40,7 +40,7 @@ object SinglePeakAnalyser extends PreferenceAnalysisMethod[Ballot] {
     * @return
     */
   def getSinglePeakAxis(
-      election: Election[Ballot],
+      election: Election[Candidate, Ballot],
       candidates: List[Candidate]
   ): Option[List[Candidate]] = {
 
@@ -74,7 +74,7 @@ object SinglePeakAnalyser extends PreferenceAnalysisMethod[Ballot] {
   def singlePeakAxisAux(
       left: ListBuffer[Candidate],
       right: ListBuffer[Candidate],
-      election: Election[Ballot],
+      election: Election[Candidate, Ballot],
       candidates: List[Candidate]
   ): Option[List[Candidate]] = {
 
@@ -130,7 +130,7 @@ object SinglePeakAnalyser extends PreferenceAnalysisMethod[Ballot] {
     * @return
     */
   def existNrxl(
-      election: Election[Ballot],
+      election: Election[Candidate, Ballot],
       x: Candidate,
       l: Option[Candidate],
       r: Option[Candidate],
@@ -162,7 +162,10 @@ object SinglePeakAnalyser extends PreferenceAnalysisMethod[Ballot] {
     *   \- election
     * @return
     */
-  def isCompatibleAxis(axis: List[Candidate], election: Election[Ballot]): Boolean = {
+  def isCompatibleAxis(
+      axis: List[Candidate],
+      election: Election[Candidate, Ballot]
+  ): Boolean = {
 
     election.forall { b =>
       val prefs = b.preferences

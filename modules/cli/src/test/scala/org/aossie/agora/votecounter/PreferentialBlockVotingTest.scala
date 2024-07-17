@@ -7,7 +7,7 @@ import org.specs2.mutable.Specification
 
 class PreferentialBlockVotingTest extends Specification {
 
-  val expectedPreferentialBlockVotingWinnerList = List(Candidate("Sue"))
+  val expectedPreferentialBlockVotingWinnerList = List(new Candidate("Sue"))
 
   "PreferentialBlockVoting Test " should {
 
@@ -24,8 +24,8 @@ class PreferentialBlockVotingTest extends Specification {
       candidatesFile: String
   ): List[Candidate] = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
+    val candidates = CandidatesParser.read("./files/Examples/" + candidatesFile)
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
 
     PreferentialBlockVoting.winners(election, candidates, 1).map(_._1)
   }

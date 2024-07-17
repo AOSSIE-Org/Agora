@@ -9,7 +9,7 @@ import org.specs2.mutable.Specification
 
 class ContingentTest extends Specification {
 
-  val expectedContingentWinner = List(Candidate("Catherine"))
+  val expectedContingentWinner = List(new Candidate("Catherine"))
 
   "Contingent Test " should {
 
@@ -20,8 +20,8 @@ class ContingentTest extends Specification {
 
   def contingentMethodVerification(electionFile: String): List[Candidate] = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/15-candidates.txt")
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
+    val candidates = CandidatesParser.read("./files/Examples/15-candidates.txt")
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
 
     Contingent.winners(election, candidates, 1).map(_._1)
   }

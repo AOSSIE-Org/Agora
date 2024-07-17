@@ -7,7 +7,7 @@ import org.specs2.mutable.Specification
 
 class MaximinMethodTest extends Specification {
 
-  val expectedMaximinMethodWinnerList = List(Candidate("Nashville"))
+  val expectedMaximinMethodWinnerList = List(new Candidate("Nashville"))
 
   "Maximin Method Test " should {
 
@@ -21,8 +21,8 @@ class MaximinMethodTest extends Specification {
 
   def maximinMethodVerification(electionFile: String, candidatesFile: String): List[Candidate] = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/14-candidates.txt")
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
+    val candidates = CandidatesParser.read("./files/Examples/14-candidates.txt")
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
 
     Maximin.winners(election, candidates, 1).map(_._1)
   }

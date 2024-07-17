@@ -1,19 +1,18 @@
 package org.aossie.agora.votecounter
 
 import org.aossie.agora.model._
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 
 import scala.collection.mutable.{HashMap => MMap}
 
 import spire.math.Rational
 
 /** https://en.wikipedia.org/wiki/Contingent_vote */
-object Contingent extends VoteCounter[Ballot] {
+object Contingent extends VoteCounter[Candidate, PreferenceBallot] {
 
   val majorityThreshold = Rational(1, 2)
 
   override def winners(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = {

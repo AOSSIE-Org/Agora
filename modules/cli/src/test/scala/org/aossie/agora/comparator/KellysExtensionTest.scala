@@ -8,10 +8,10 @@ import org.specs2.mutable.Specification
 
 class KellysExtensionTest extends Specification {
 
-  val expectedKellySet1 = Set(Candidate("A"))
-  val expectedKellySet2 = Set(Candidate("A"), Candidate("B"))
-  val expectedKellySet3 = Set(Candidate("B"))
-  val expectedKellySet4 = Set(Candidate("B"), Candidate("C"))
+  val expectedKellySet1 = Set(new Candidate("A"))
+  val expectedKellySet2 = Set(new Candidate("A"), new Candidate("B"))
+  val expectedKellySet3 = Set(new Candidate("B"))
+  val expectedKellySet4 = Set(new Candidate("B"), new Candidate("C"))
 
   "UnconveredSet Test " should {
 
@@ -58,9 +58,9 @@ class KellysExtensionTest extends Specification {
       parameterFile: String
   ): Set[Candidate] = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
-    val parameters = ParameterParser.parse("../Agora/files/Examples/" + parameterFile)
+    val candidates = CandidatesParser.read("./files/Examples/" + candidatesFile)
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
+    val parameters = ParameterParser.parse("./files/Examples/" + parameterFile)
 
     KellyExtension.compare(election, candidates, parameters)
   }

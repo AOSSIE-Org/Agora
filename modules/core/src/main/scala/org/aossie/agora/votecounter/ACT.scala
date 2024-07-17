@@ -2,7 +2,6 @@ package org.aossie.agora.votecounter
 
 import org.aossie.agora.model._
 import org.aossie.agora.votecounter.stv._
-
 import spire.math.Rational
 
 //import collection.mutable.{HashMap => MMap}
@@ -12,62 +11,62 @@ import org.aossie.agora.votecounter.stv.ACTBallot
 
 import scala.collection.Map
 
-abstract class ACT
-    extends STVAustralia
+abstract class ACT[C <: Candidate]
+    extends STVAustralia[C]
     with DroopQuota
     with NoFractionInQuota
-    with NewWinnersOrderedByTotals[ACTBallot]
-    with ACTSurplusDistributionTieResolution
-    with ACTFractionLoss
-    with ACTExclusion
-    with ACTExclusionTieResolution
-    with ACTExactWinnerRemoval {
+    with NewWinnersOrderedByTotals[C, ACTBallot]
+    with ACTSurplusDistributionTieResolution[C]
+    with ACTFractionLoss[C]
+    with ACTExclusion[C]
+    with ACTExclusionTieResolution[C]
+    with ACTExactWinnerRemoval[C] {
 
-//  val result: Result = new Result
-//  val report: Report[ACTBallot] = new Report[ACTBallot]
+  //  val result: Result = new Result
+  //  val report: Report[ACTBallot] = new Report[ACTBallot]
 
   def declareNewWinnersWhileExcluding(
-      candidate: Candidate,
-      exhaustedBallots: Set[ACTBallot],
-      newtotals: Map[Candidate, Rational],
-      totalsWithoutNewWinners: Map[Candidate, Rational],
-      newElectionWithoutFractionInTotals: Election[ACTBallot]
-  ): List[(Candidate, Rational)]
+      candidate: C,
+      exhaustedBallots: Set[ACTBallot[C]],
+      newtotals: Map[C, Rational],
+      totalsWithoutNewWinners: Map[C, Rational],
+      newElectionWithoutFractionInTotals: Election[C, ACTBallot]
+  ): List[(C, Rational)]
 
   def declareNewWinnersWhileDistributingSurpluses(
-      totals: Map[Candidate, Rational],
-      election: Election[ACTBallot]
-  ): List[(Candidate, Rational)]
+      totals: Map[C, Rational],
+      election: Election[C, ACTBallot]
+  ): List[(C, Rational)]
 
   def rewriteTotalOfCandidate(
-      totals: Map[Candidate, Rational],
-      candidate: Candidate,
+      totals: Map[C, Rational],
+      candidate: C,
       newTotal: Option[Int]
-  ): Map[Candidate, Rational]
+  ): Map[C, Rational]
 
   def computeIncorrectTotalofEVACS(
-      step: (Candidate, Rational),
-      newElectionWithoutFractionInTotals: Election[ACTBallot]
+      step: (C, Rational),
+      newElectionWithoutFractionInTotals: Election[C, ACTBallot]
   ): Option[Int]
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   def filterBallotsWithFirstPreferences(
-      election: Election[ACTBallot],
-      preferences: List[Candidate]
-  ): Election[ACTBallot] = {
-    var ballots: List[ACTBallot] = List()
+      election: Election[C, ACTBallot],
+      preferences: List[C]
+  ): Election[C, ACTBallot] = {
+    var ballots: List[ACTBallot[C]] = List()
     for (b <- election)
       if (b.preferences.take(preferences.length) == preferences) ballots = b :: ballots
     Election(ballots)
   }
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   def winners(
-      election: Election[ACTBallot],
-      ccandidates: List[Candidate],
+      election: Election[C, ACTBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = {
+  ): List[(C, Rational)] = {
 
     println(" \n NEW RECURSIVE CALL \n")
 
@@ -99,7 +98,7 @@ abstract class ACT
       //      != e->electorate->num_seats) {
       // That is why we also check only equality here
       if (ccandidates.length == numVacancies) {
-        var ws: List[(Candidate, Rational)] = List()
+        var ws: List[(C, Rational)] = List()
         for (c <- ccandidates) ws = (c, tls.getOrElse(c, Rational(0, 1))) :: ws
         report.newCount(VictoryWithoutQuota, None, None, None, Some(ws), None)
         report.setLossByFractionToZero
@@ -107,7 +106,7 @@ abstract class ACT
       } else {
         quotaReached(tls, result.getQuota) match {
           case true =>
-            val ws: List[(Candidate, Rational)] =
+            val ws: List[(C, Rational)] =
               returnNewWinners(tls, result.getQuota) //  sorted! tie resolved!
             println("New winners: " + ws)
             result.addPendingWinners(ws.toList, Some(extractMarkings(election)))
@@ -117,9 +116,9 @@ abstract class ACT
             vacanciesFilled match {
               case false =>
                 println("Vacancies: not yet filled.")
-                val res                                     = surplusesDistribution(election, ccandidates, numVacancies - ws.length)
-                val newElection: Election[ACTBallot]        = res._1
-                val newWinners: List[(Candidate, Rational)] = res._2
+                val res                                 = surplusesDistribution(election, ccandidates, numVacancies - ws.length)
+                val newElection: Election[C, ACTBallot] = res._1
+                val newWinners: List[(C, Rational)]     = res._2
 
                 val nws = ws.length + newWinners.length
                 println("Number of winners in this recursive call: " + nws)
@@ -141,9 +140,9 @@ abstract class ACT
             println("Candidate to be excluded: " + leastVotedCandidate)
             result.addExcludedCandidate(leastVotedCandidate._1, leastVotedCandidate._2)
 
-            val res                                     = exclusion(election, ccandidates, leastVotedCandidate, numVacancies)
-            val newElection: Election[ACTBallot]        = res._1
-            val newWinners: List[(Candidate, Rational)] = res._2
+            val res                                 = exclusion(election, ccandidates, leastVotedCandidate, numVacancies)
+            val newElection: Election[C, ACTBallot] = res._1
+            val newWinners: List[(C, Rational)]     = res._2
 
             println("New winners: " + newWinners)
             println("Number of winners in this recursive call: " + newWinners.length)
@@ -165,9 +164,9 @@ abstract class ACT
     }
   }
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  def extractMarkings(election: Election[ACTBallot]): Set[Int] = {
+  def extractMarkings(election: Election[C, ACTBallot]): Set[Int] = {
     var markings: Set[Int] = Set()
     for (b <- election) {
       if (b.marking) {
@@ -177,16 +176,16 @@ abstract class ACT
     markings
   }
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   def surplusesDistribution(
-      election: Election[ACTBallot],
-      ccandidates: List[Candidate],
+      election: Election[C, ACTBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): (Election[ACTBallot], List[(Candidate, Rational)]) = {
+  ): (Election[C, ACTBallot], List[(C, Rational)]) = {
     println("Distribution of surpluses.")
-    var newws: List[(Candidate, Rational)] = List()
-    var newElection                        = election
+    var newws: List[(C, Rational)] = List()
+    var newElection                = election
 
     while (result.getPendingWinners.nonEmpty && newws.length != numVacancies) {
       val (cand, ctotal, markings) = result.takeAndRemoveFirstPendingWinner
@@ -201,12 +200,12 @@ abstract class ACT
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   def tryToDistributeSurplusVotes(
-      election: Election[ACTBallot],
-      ccandidates: List[Candidate],
-      winner: Candidate,
+      election: Election[C, ACTBallot],
+      ccandidates: List[C],
+      winner: C,
       ctotal: Rational,
       markings: Option[Set[Int]]
-  ): (Election[ACTBallot], List[(Candidate, Rational)]) = {
+  ): (Election[C, ACTBallot], List[(C, Rational)]) = {
 
     val pendingWinners = result.getPendingWinners.map(x => x._1)
 
@@ -281,18 +280,18 @@ abstract class ACT
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   def exclusion(
-      election: Election[ACTBallot],
-      ccandidates: List[Candidate],
-      candidate: (Candidate, Rational),
+      election: Election[C, ACTBallot],
+      ccandidates: List[C],
+      candidate: (C, Rational),
       numVacancies: Int
-  ): (Election[ACTBallot], List[(Candidate, Rational)]) = {
+  ): (Election[C, ACTBallot], List[(C, Rational)]) = {
     println("Vacancies left: " + numVacancies)
 
-    var ws: List[(Candidate, Rational)]    = List()
-    var newws: List[(Candidate, Rational)] = List()
-    var newElection                        = election
-    var newElectionWithoutFractionInTotals = election
-    var exhaustedBallots: Set[ACTBallot]   = Set()
+    var ws: List[(C, Rational)]             = List()
+    var newws: List[(C, Rational)]          = List()
+    var newElection                         = election
+    var newElectionWithoutFractionInTotals  = election
+    var exhaustedBallots: Set[ACTBallot[C]] = Set()
 
     if (candidate._2 == Rational(0, 1)) {
       println("Excluding candidate with zero votes: " + candidate)
@@ -360,7 +359,7 @@ abstract class ACT
       // TODO  distribute remaining votes
       // if (vacanciesFilled(ws.length, numVacancies)) {
       // }
-      var dws: List[(Candidate, Rational)] = List()
+      var dws: List[(C, Rational)] = List()
       if (ws.nonEmpty) {
         val res = surplusesDistribution(
           newElectionWithoutFractionInTotals,

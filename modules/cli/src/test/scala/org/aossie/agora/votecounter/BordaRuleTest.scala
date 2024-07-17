@@ -9,10 +9,10 @@ import org.specs2.mutable.Specification
 class BordaRuleTest extends Specification {
 
   val expectedBordaWinnerList = List(
-    Candidate("Nashville"),
-    Candidate("Chattanooga"),
-    Candidate("Memphis"),
-    Candidate("Knoxville")
+    new Candidate("Nashville"),
+    new Candidate("Chattanooga"),
+    new Candidate("Memphis"),
+    new Candidate("Knoxville")
   )
 
   "Borda Rule Test " should {
@@ -24,8 +24,8 @@ class BordaRuleTest extends Specification {
 
   def bordaRuleMethodVerification(electionFile: String): List[Candidate] = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/14-candidates.txt")
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
+    val candidates = CandidatesParser.read("./files/Examples/14-candidates.txt")
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
 
     Borda.winners(election, candidates, candidates.length).map(_._1)
   }

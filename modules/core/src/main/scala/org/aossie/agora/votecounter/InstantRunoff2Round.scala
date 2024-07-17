@@ -1,7 +1,6 @@
 package org.aossie.agora.votecounter
 
 import org.aossie.agora.model._
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 
 import scala.collection.mutable.{HashMap => Map}
 
@@ -13,10 +12,10 @@ import spire.math.Rational
   * times Assumptions : voters vote only once with preferential ballots Rounds : only 2 as per
   * 2-round voting
   */
-object InstantRunoff2Round extends VoteCounter[Ballot] {
+object InstantRunoff2Round extends VoteCounter[Candidate, PreferenceBallot] {
 
   override def winners(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = {
@@ -39,7 +38,7 @@ object InstantRunoff2Round extends VoteCounter[Ballot] {
   }
 
   def getSecondRoundWinner(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       rnd1Winners: List[Candidate],
       totalVoters: Int,

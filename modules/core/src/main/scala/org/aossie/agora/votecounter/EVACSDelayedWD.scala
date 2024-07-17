@@ -16,12 +16,13 @@
 
 package org.aossie.agora.votecounter
 
+import org.aossie.agora.model.Candidate
 import org.aossie.agora.votecounter.stv._
 
-class EVACSDelayedWD
-    extends ACT
-    with TransferValueWithDenominatorWithNumOfMarkedContinuingBallotsOrOne
-    with ACTSurplusDistribution
-    with NoNewWinnersDuringSurplusesDistribution
-    with NoNewWinnersDuringExclusion
-    with ACTTotalsDuringExclusion {}
+class EVACSDelayedWD[C <: Candidate]
+    extends ACT[C]
+    with TransferValueWithDenominatorWithNumOfMarkedContinuingBallotsOrOne[C]
+    with ACTSurplusDistribution[C]
+    with NoNewWinnersDuringSurplusesDistribution[C]
+    with NoNewWinnersDuringExclusion[C]
+    with ACTTotalsDuringExclusion[C]

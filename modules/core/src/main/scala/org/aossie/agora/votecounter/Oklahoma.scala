@@ -1,7 +1,6 @@
 package org.aossie.agora.votecounter
 
 import org.aossie.agora.model._
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 
 import scala.collection.mutable.{HashMap => MMap}
 
@@ -12,14 +11,14 @@ import spire.math.Rational
   * prefererences are not voided
   */
 
-object Oklahoma extends VoteCounter[Ballot] {
+object Oklahoma extends VoteCounter[Candidate, PreferenceBallot] {
 
   // following recursive function calculates totals and if total of any candidate exceeds half of election length
   // candidate wins, else next preferences are added, reducing their weights by 1/N,
   // where N denotes Nth preference on the ballot
   // that is, 1st preference has weight 1, 2nd preference has weight 1/2. 3rd preference has weight 1/3 and so on
   def oklahomaTotals(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       ccandScoreMap: MMap[Candidate, Rational],
       multiplier: Rational
@@ -33,9 +32,9 @@ object Oklahoma extends VoteCounter[Ballot] {
     if (sortedCandidateScoreMap.head._2 > (Rational(election.length, 2))) {
       sortedCandidateScoreMap.head :: List()
     } else {
-      var ballots: List[Ballot] = Nil
+      var ballots: List[PreferenceBallot[Candidate]] = Nil
       for (b <- election) {
-        ballots = new Ballot(
+        ballots = new PreferenceBallot(
           if (b.preferences != Nil) b.preferences.tail else Nil,
           b.id,
           b.weight
@@ -51,7 +50,7 @@ object Oklahoma extends VoteCounter[Ballot] {
   }
 
   override def winners(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = {

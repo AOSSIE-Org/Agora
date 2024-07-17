@@ -8,7 +8,7 @@ import org.specs2.mutable.Specification
 /** Test class for unconvered set for the preference profile in 21-example.e */
 class UncoveredSetTest extends Specification {
 
-  val expectedUncoveredSet = Set(Candidate("A"), Candidate("B"), Candidate("C"))
+  val expectedUncoveredSet = Set(new Candidate("A"), new Candidate("B"), new Candidate("C"))
 
   "UnconveredSet Test " should {
 
@@ -25,8 +25,8 @@ class UncoveredSetTest extends Specification {
       candidatesFile: String
   ): Set[Candidate] = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
+    val candidates = CandidatesParser.read("./files/Examples/" + candidatesFile)
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
 
     UncoveredSet.winners(election, candidates, candidates.length).map(_._1).toSet
   }

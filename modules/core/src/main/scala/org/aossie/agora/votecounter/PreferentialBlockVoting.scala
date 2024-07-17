@@ -2,18 +2,17 @@ package org.aossie.agora.votecounter
 
 import org.aossie.agora.votecounter.HybridPluralityPreferentialBlockVoting.exclude
 import org.aossie.agora.model._
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 
 import spire.math.Rational
 
 /** https://en.wikipedia.org/wiki/Preferential_block_voting */
 
-object PreferentialBlockVoting extends VoteCounter[Ballot] {
+object PreferentialBlockVoting extends VoteCounter[Candidate, PreferenceBallot] {
 
   val majorityThreshold = Rational(1, 2)
 
   override def winners(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = {

@@ -1,7 +1,6 @@
 package org.aossie.agora.votecounter
 
 import org.aossie.agora.model._
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 
 import scala.collection.mutable.{HashMap => MMap}
 
@@ -9,10 +8,10 @@ import spire.math.Rational
 
 /** https://en.wikipedia.org/wiki/Preferential_block_voting */
 
-object HybridPluralityPreferentialBlockVoting extends VoteCounter[Ballot] {
+object HybridPluralityPreferentialBlockVoting extends VoteCounter[Candidate, PreferenceBallot] {
 
   def totalsForFirstNVacancies(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): MMap[Candidate, Rational] = {
@@ -24,17 +23,20 @@ object HybridPluralityPreferentialBlockVoting extends VoteCounter[Ballot] {
     m
   }
 
-  def exclude(election: Election[Ballot], ccandidate: Candidate): Election[Ballot] = {
-    var list: List[Ballot] = Nil
+  def exclude(
+      election: Election[Candidate, PreferenceBallot],
+      ccandidate: Candidate
+  ): Election[Candidate, PreferenceBallot] = {
+    var list: List[PreferenceBallot[Candidate]] = Nil
     for (b <- election if !b.preferences.isEmpty)
-      list = new Ballot(b.preferences.filter(_ != ccandidate), b.id, b.weight) :: list
+      list = new PreferenceBallot(b.preferences.filter(_ != ccandidate), b.id, b.weight) :: list
     Election(list)
   }
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   override def winners(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = {

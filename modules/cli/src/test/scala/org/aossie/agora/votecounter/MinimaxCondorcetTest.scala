@@ -8,7 +8,7 @@ import org.specs2.mutable.Specification
 /** Created by deepeshpandey on 21/03/17. */
 class MinimaxCondorcetTest extends Specification {
 
-  val expectedKemenyYoungWinnerList = List(Candidate("Nashville"))
+  val expectedKemenyYoungWinnerList = List(new Candidate("Nashville"))
 
   "MinimaxCondorcet Test " should {
 
@@ -25,8 +25,8 @@ class MinimaxCondorcetTest extends Specification {
       candidatesFile: String
   ): List[Candidate] = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/14-candidates.txt")
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
+    val candidates = CandidatesParser.read("./files/Examples/14-candidates.txt")
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
 
     MinimaxCondorcet.winners(election, candidates, 1).map(_._1)
   }

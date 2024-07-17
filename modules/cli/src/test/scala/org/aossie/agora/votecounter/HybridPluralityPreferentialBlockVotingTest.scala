@@ -7,9 +7,9 @@ import org.specs2.mutable.Specification
 
 class HybridPluralityPreferentialBlockVotingTest extends Specification {
 
-  val expectedHybridPluralityPreferentialBlockVotingWinnerList = List(Candidate("Sue"))
+  val expectedHybridPluralityPreferentialBlockVotingWinnerList = List(new Candidate("Sue"))
   val expectedHybridPluralityPreferentialBlockVotingWinnerList1 =
-    List(Candidate("Bill"), Candidate("Bob"))
+    List(new Candidate("Bill"), new Candidate("Bob"))
 
   "HybridPluralityPreferentialBlockVoting Test " should {
     "verify result" in {
@@ -31,8 +31,8 @@ class HybridPluralityPreferentialBlockVotingTest extends Specification {
       candidatesFile: String
   ): List[Candidate] = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
+    val candidates = CandidatesParser.read("./files/Examples/" + candidatesFile)
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
 
     HybridPluralityPreferentialBlockVoting.winners(election, candidates, 1).map(_._1)
   }
@@ -42,8 +42,8 @@ class HybridPluralityPreferentialBlockVotingTest extends Specification {
       candidatesFile: String
   ): List[Candidate] = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
+    val candidates = CandidatesParser.read("./files/Examples/" + candidatesFile)
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
 
     HybridPluralityPreferentialBlockVoting.winners(election, candidates, 2).map(_._1)
   }

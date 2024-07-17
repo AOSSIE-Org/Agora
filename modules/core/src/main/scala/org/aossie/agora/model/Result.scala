@@ -1,20 +1,21 @@
 package org.aossie.agora.model
 
 import spire.math.Rational
+
 import scala.collection.Map
 
-class Result {
+class Result[C <: Candidate] {
 
   private var quota: Option[Rational] = None
 
-  private var excludedCandidates: List[(Candidate, Rational)] = Nil
+  private var excludedCandidates: List[(C, Rational)] = Nil
 
-  private var pendingWinners: List[(Candidate, Rational, Option[Set[Int]])] = Nil
+  private var pendingWinners: List[(C, Rational, Option[Set[Int]])] = Nil
 
-  private var totalsHistory: List[Map[Candidate, Rational]] =
+  private var totalsHistory: List[Map[C, Rational]] =
     Nil // required for ACT's ties resolutions
 
-  private var winners: List[(Candidate, Rational)] = Nil
+  private var winners: List[(C, Rational)] = Nil
 
   def clear: Unit = {
     quota = None
@@ -35,7 +36,7 @@ class Result {
   }
 
   def addPendingWinners(
-      pendWinners: List[(Candidate, Rational)],
+      pendWinners: List[(C, Rational)],
       markings: Option[Set[Int]]
   ): Unit = {
     if (pendWinners.nonEmpty) {
@@ -47,42 +48,42 @@ class Result {
     }
   }
 
-  def addPendingWinner(candidate: Candidate, total: Rational, markings: Option[Set[Int]]): Unit =
+  def addPendingWinner(candidate: C, total: Rational, markings: Option[Set[Int]]): Unit =
     // markings match {
     //   case Some(mrks) => pendingWinners = pendingWinners :+ (candidate, total, mrks) // !!! is it adding at the end of the list?
     //  case None => pendingWinners = pendingWinners :+ (candidate, total, None) // !!! is it adding at the end of the list?
     // }
     pendingWinners = pendingWinners :+ (candidate, total, markings)
 
-  def getPendingWinners: List[(Candidate, Rational, Option[Set[Int]])] =
+  def getPendingWinners: List[(C, Rational, Option[Set[Int]])] =
     pendingWinners
 
-  def takeAndRemoveFirstPendingWinner: (Candidate, Rational, Option[Set[Int]]) = {
+  def takeAndRemoveFirstPendingWinner: (C, Rational, Option[Set[Int]]) = {
     val h = pendingWinners.head
     pendingWinners = pendingWinners.tail
     h
   }
 
-  def takeButRetainFirstPendingWinner: (Candidate, Rational, Option[Set[Int]]) =
+  def takeButRetainFirstPendingWinner: (C, Rational, Option[Set[Int]]) =
     pendingWinners.head
 
-  def removePendingWinner(c: Candidate): Unit =
+  def removePendingWinner(c: C): Unit =
     pendingWinners = pendingWinners.filterNot(p => p._1.name == c.name)
 
-  def addExcludedCandidate(candidate: Candidate, total: Rational): Unit =
+  def addExcludedCandidate(candidate: C, total: Rational): Unit =
     excludedCandidates = (candidate, total) :: excludedCandidates
   // continuingCandidates = continuingCandidates diff List(candidate)
 
-  def addTotalsToHistory(totals: Map[Candidate, Rational]): Unit =
+  def addTotalsToHistory(totals: Map[C, Rational]): Unit =
     totalsHistory = totals :: totalsHistory
 
-  def getTotalsHistoryClone: List[Map[Candidate, Rational]] =
+  def getTotalsHistoryClone: List[Map[C, Rational]] =
     totalsHistory
 
-  def setWinners(ws: List[(Candidate, Rational)]): Unit =
+  def setWinners(ws: List[(C, Rational)]): Unit =
     winners = ws
 
-  def getWinners: List[(Candidate, Rational)] =
+  def getWinners: List[(C, Rational)] =
     winners
 
 }

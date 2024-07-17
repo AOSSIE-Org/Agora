@@ -8,8 +8,8 @@ import org.specs2.mutable.Specification
 /** Created by deepeshpandey on 27/06/17. */
 class CopelandTest extends Specification {
 
-  val expectedCopelandWinnerList  = List(Candidate("Nashville"))
-  val expectedCopelandWinnerList2 = List(Candidate("A"))
+  val expectedCopelandWinnerList  = List(new Candidate("Nashville"))
+  val expectedCopelandWinnerList2 = List(new Candidate("A"))
 
   "Copeland Test " should {
 
@@ -29,8 +29,8 @@ class CopelandTest extends Specification {
 
   def copelandMethodVerification(electionFile: String, candidatesFile: String): List[Candidate] = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
+    val candidates = CandidatesParser.read("./files/Examples/" + candidatesFile)
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
 
     Copeland.winners(election, candidates, 1).map(_._1)
   }

@@ -9,7 +9,7 @@ import org.specs2.mutable.Specification
 class MajorityRuleTest extends Specification {
 
   val expectedMajorityRuleWinnerList1 = List()
-  val expectedMajorityRuleWinnerList2 = List(Candidate("A"))
+  val expectedMajorityRuleWinnerList2 = List(new Candidate("A"))
 
   "MajorityRule Test " should {
 
@@ -33,8 +33,8 @@ class MajorityRuleTest extends Specification {
       candidatesFile: String
   ): List[Candidate] = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
+    val candidates = CandidatesParser.read("./files/Examples/" + candidatesFile)
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
 
     Majority.winners(election, candidates, candidates.length).map(_._1)
   }

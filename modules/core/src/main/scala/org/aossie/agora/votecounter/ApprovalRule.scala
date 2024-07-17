@@ -1,14 +1,14 @@
 package org.aossie.agora.votecounter
 
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 import org.aossie.agora.model._
-
 import spire.math.Rational
 
-object ApprovalRule extends VoteCounter[Ballot] with SimpleApproval {
+object ApprovalRule
+    extends VoteCounter[Candidate, PreferenceBallot]
+    with SimpleApproval[Candidate] {
 
   override def winners(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = {

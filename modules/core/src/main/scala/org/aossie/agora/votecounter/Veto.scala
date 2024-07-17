@@ -1,16 +1,14 @@
 package org.aossie.agora.votecounter
 
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
-import org.aossie.agora.model.Candidate
-import org.aossie.agora.model.Election
+import org.aossie.agora.model._
 import scala.collection.mutable.{HashMap => MMap}
 
-object Veto extends VoteCounter[Ballot] {
+object Veto extends VoteCounter[Candidate, PreferenceBallot] {
 
   import spire.math.Rational
 
   def winners(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = {

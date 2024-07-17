@@ -7,7 +7,7 @@ import org.specs2.mutable.Specification
 
 class RangeVotingTest extends Specification {
 
-  val expectedRangeVotingWinnerList = List(Candidate("Nashville"))
+  val expectedRangeVotingWinnerList = List(new Candidate("Nashville"))
 
   "RangeVoting Test " should {
 
@@ -21,7 +21,7 @@ class RangeVotingTest extends Specification {
 
   def rangeVotingMethod(electionFile: String, candidatesFile: String): List[Candidate] = {
 
-    val dir        = "../Agora/files/Examples/"
+    val dir        = "./files/Examples/"
     val candidates = CandidatesParser.read(dir + candidatesFile)
     val election   = PreferencesParserWithScore.read(dir + electionFile)
 

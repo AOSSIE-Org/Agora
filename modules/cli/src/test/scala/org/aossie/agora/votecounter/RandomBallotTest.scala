@@ -7,13 +7,14 @@ import org.specs2.mutable.Specification
 
 class RandomBallotTest extends Specification {
 
-  val expectedRandomBallotWinnerList1 = List(Candidate("E"), Candidate("C"))
-  val expectedRandomBallotWinnerList2 = List(Candidate("E"))
-  val expectedRandomBallotWinnerList3 = List(Candidate("D"), Candidate("E"))
-  val expectedRandomBallotWinnerList4 = List(Candidate("A"), Candidate("B"), Candidate("C"))
-  val expectedRandomBallotWinnerList5 = List(Candidate("D"), Candidate("E"))
+  val expectedRandomBallotWinnerList1 = List(new Candidate("E"), new Candidate("C"))
+  val expectedRandomBallotWinnerList2 = List(new Candidate("E"))
+  val expectedRandomBallotWinnerList3 = List(new Candidate("D"), new Candidate("E"))
+  val expectedRandomBallotWinnerList4 =
+    List(new Candidate("A"), new Candidate("B"), new Candidate("C"))
+  val expectedRandomBallotWinnerList5 = List(new Candidate("D"), new Candidate("E"))
   val expectedRandomBallotWinnerList6 =
-    List(Candidate("E"), Candidate("C"), Candidate("B"), Candidate("D"))
+    List(new Candidate("E"), new Candidate("C"), new Candidate("B"), new Candidate("D"))
 
   "RandomBallot Test " should {
 
@@ -75,8 +76,8 @@ class RandomBallotTest extends Specification {
       vacancies: Int
   ): List[Candidate] = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
+    val candidates = CandidatesParser.read("./files/Examples/" + candidatesFile)
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
 
     RandomBallot.randomBallotWinner(election, candidates, vacancies, seed).map(_._1)
   }

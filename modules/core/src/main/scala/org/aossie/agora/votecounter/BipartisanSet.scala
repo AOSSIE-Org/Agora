@@ -1,7 +1,6 @@
 package org.aossie.agora.votecounter
 
 import org.aossie.agora.model._
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 import org.aossie.agora.votecounter.common.PreferencePairwiseComparison
 
 import spire.math.Rational
@@ -13,19 +12,21 @@ import spire.math.Rational
   * Bipartisan Set is defined as : BP(A,PM) = {x∈A : p(x)>0, p balanced for (A,PM)} where PM is
   * majority graph
   */
-object BipartisanSet extends VoteCounter[Ballot] with PreferencePairwiseComparison {
+object BipartisanSet
+    extends VoteCounter[Candidate, PreferenceBallot]
+    with PreferencePairwiseComparison[Candidate, PreferenceBallot] {
 
   def runVoteCounter(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       candidates: List[Candidate],
       param: Parameters
-  ): Report[Ballot] = {
+  ): Report[Candidate, PreferenceBallot] = {
 
     // print("\n INPUT ELECTION: \n")
     // //printElection(election)
 
-    val result: Result         = new Result
-    val report: Report[Ballot] = new Report[Ballot]
+    val result: Result[Candidate]                   = new Result
+    val report: Report[Candidate, PreferenceBallot] = new Report[Candidate, PreferenceBallot]
 
     report.setCandidates(candidates)
 
@@ -36,7 +37,7 @@ object BipartisanSet extends VoteCounter[Ballot] with PreferencePairwiseComparis
 
   // scalastyle:off method.length
   def bipartisanSet(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       candidates: List[Candidate],
       parameters: Parameters
   ): List[(Candidate, Rational)] = {
@@ -114,7 +115,7 @@ object BipartisanSet extends VoteCounter[Ballot] with PreferencePairwiseComparis
   }
 
   override def winners(
-      e: Election[Ballot],
+      e: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = ???

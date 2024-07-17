@@ -1,22 +1,21 @@
 package org.aossie.agora.votecounter
 
 import org.aossie.agora.model._
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 import spire.math.Rational
 
-object SuperMajority extends VoteCounter[Ballot] {
+object SuperMajority extends VoteCounter[Candidate, PreferenceBallot] {
 
   def runVoteCounter(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       candidates: List[Candidate],
       numVacancies: Int,
       param: Parameters
-  ): Report[Ballot] = {
+  ): Report[Candidate, PreferenceBallot] = {
     // print("\n INPUT ELECTION: \n")
     // //printElection(election)
 
-    val result: Result         = new Result
-    val report: Report[Ballot] = new Report[Ballot]
+    val result: Result[Candidate]                   = new Result
+    val report: Report[Candidate, PreferenceBallot] = new Report
 
     report.setCandidates(candidates)
 
@@ -26,7 +25,7 @@ object SuperMajority extends VoteCounter[Ballot] {
   }
 
   def superMajority(
-      e: Election[Ballot],
+      e: Election[Candidate, PreferenceBallot],
       candidates: List[Candidate],
       numVacancies: Int,
       param: Parameters
@@ -45,7 +44,7 @@ object SuperMajority extends VoteCounter[Ballot] {
   }
 
   override def winners(
-      e: Election[Ballot],
+      e: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = ???

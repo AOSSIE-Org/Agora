@@ -3,17 +3,16 @@ package org.aossie.agora.votecounter
 import spire.math.Rational
 
 import org.aossie.agora.model._
-import org.aossie.agora.model.{PreferenceBallot => Ballot}
 
 import scala.collection.mutable.{HashMap => MMap}
 
 /** * https://en.wikipedia.org/wiki/Satisfaction_approval_voting
   */
 
-object SatisfactionApprovalVoting extends VoteCounter[Ballot] {
+object SatisfactionApprovalVoting extends VoteCounter[Candidate, PreferenceBallot] {
 
   def winners(
-      election: Election[Ballot],
+      election: Election[Candidate, PreferenceBallot],
       ccandidates: List[Candidate],
       numVacancies: Int
   ): List[(Candidate, Rational)] = {

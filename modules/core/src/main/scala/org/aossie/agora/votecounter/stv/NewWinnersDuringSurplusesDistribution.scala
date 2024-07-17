@@ -7,16 +7,16 @@ import collection.Map
 
 import spire.math.Rational
 
-trait ACTNewWinnersDuringSurplusesDistribution extends ACT {
+trait ACTNewWinnersDuringSurplusesDistribution[C <: Candidate] extends ACT[C] {
 
   def declareNewWinnersWhileDistributingSurpluses(
-      totals: Map[Candidate, Rational],
-      election: Election[ACTBallot]
-  ): List[(Candidate, Rational)] = {
-    var ws: List[(Candidate, Rational)] = List()
+      totals: Map[C, Rational],
+      election: Election[C, ACTBallot]
+  ): List[(C, Rational)] = {
+    var ws: List[(C, Rational)] = List()
     if (quotaReached(totals, result.getQuota)) {
       ws = returnNewWinners(totals, result.getQuota) // sorted for further surplus distribution!
-      result.addPendingWinners(ws.toList, Some(extractMarkings(election)))
+      result.addPendingWinners(ws, Some(extractMarkings(election)))
     }
     ws
   }
@@ -24,15 +24,15 @@ trait ACTNewWinnersDuringSurplusesDistribution extends ACT {
 }
 
 // Like ACTNewWinnersDuringSurplusesDistribution, but None instead of markings
-trait SenateNewWinnersDuringSurplusesDistribution extends STV[ACTBallot] {
+trait SenateNewWinnersDuringSurplusesDistribution[C <: Candidate] extends STV[C, ACTBallot] {
 
-  val result: Result
+  val result: Result[C]
 
   def declareNewWinnersWhileDistributingSurpluses(
-      totals: Map[Candidate, Rational],
-      election: Election[ACTBallot]
-  ): List[(Candidate, Rational)] = {
-    var ws: List[(Candidate, Rational)] = List()
+      totals: Map[C, Rational],
+      election: Election[C, ACTBallot]
+  ): List[(C, Rational)] = {
+    var ws: List[(C, Rational)] = List()
     if (quotaReached(totals, result.getQuota)) {
       ws = returnNewWinners(totals, result.getQuota) // sorted for further surplus distribution!
       result.addPendingWinners(ws.toList, None)
@@ -42,12 +42,12 @@ trait SenateNewWinnersDuringSurplusesDistribution extends STV[ACTBallot] {
 
 }
 
-trait NoNewWinnersDuringSurplusesDistribution {
+trait NoNewWinnersDuringSurplusesDistribution[C <: Candidate] {
 
   def declareNewWinnersWhileDistributingSurpluses(
-      totals: Map[Candidate, Rational],
-      election: Election[ACTBallot]
-  ): List[(Candidate, Rational)] =
+      totals: Map[C, Rational],
+      election: Election[C, ACTBallot]
+  ): List[(C, Rational)] =
     List()
 
 }

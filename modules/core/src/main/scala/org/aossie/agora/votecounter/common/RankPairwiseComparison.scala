@@ -1,17 +1,14 @@
 package org.aossie.agora.votecounter.common
 
-import org.aossie.agora.model.Candidate
-import org.aossie.agora.model.Election
-import org.aossie.agora.model.RankBallot
-
+import org.aossie.agora.model._
 import spire.math.Rational
 
-trait RankPairwiseComparison {
+trait RankPairwiseComparison[C <: Candidate, B[CC >: C <: Candidate] <: RankBallot[CC]] {
 
   // utility method for matrix where a[i][j] = x means candidate i has got #x votes against candidate j
   def pairwiseComparison(
-      election: Election[RankBallot],
-      candidates: List[Candidate]
+      election: Election[C, B],
+      candidates: List[C]
   ): Array[Array[Rational]] = {
     val responseMatrix = Array.fill(candidates.size, candidates.size)(Rational(0, 1))
 

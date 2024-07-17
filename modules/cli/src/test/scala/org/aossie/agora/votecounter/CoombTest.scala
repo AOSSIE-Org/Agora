@@ -9,9 +9,9 @@ import scala.collection.mutable.ListBuffer
 
 class CoombTest extends Specification {
 
-  val expectedCoombWinnerList = List(Candidate("Nashville"))
+  val expectedCoombWinnerList = List(new Candidate("Nashville"))
   val expectedCoombWinnerList1 = List(
-    Candidate("B")
+    new Candidate("B")
   ) // tie resolution test case both A/B could be a winner here
 
   "Coomb Test" should {
@@ -29,8 +29,8 @@ class CoombTest extends Specification {
 
   def coombMethodVerification(electionFile: String, candidatesFile: String): List[Candidate] = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
+    val candidates = CandidatesParser.read("./files/Examples/" + candidatesFile)
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
 
     Coomb.winners(election, candidates, 1).map(_._1)
 

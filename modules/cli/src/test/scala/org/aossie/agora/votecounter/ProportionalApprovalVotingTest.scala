@@ -10,7 +10,7 @@ import spire.math.Rational
 class ProportionalApprovalVotingTest extends Specification {
 
   val expectedProportionalApprovalWinnerList =
-    List((Candidate("A"), Rational(61, 2)), (Candidate("C"), Rational(61, 2)))
+    List((new Candidate("A"), Rational(61, 2)), (new Candidate("C"), Rational(61, 2)))
 
   "ProportionalApprovalVoting Test " should {
 
@@ -27,8 +27,8 @@ class ProportionalApprovalVotingTest extends Specification {
       candidatesFile: String
   ): List[(Candidate, Rational)] = {
 
-    val candidates = CandidatesParser.read("../Agora/files/Examples/" + candidatesFile)
-    val election   = PreferencesParser.read("../Agora/files/Examples/" + electionFile)
+    val candidates = CandidatesParser.read("./files/Examples/" + candidatesFile)
+    val election   = PreferencesParser.read("./files/Examples/" + electionFile)
 
     ProportionalApprovalVoting.winners(election, candidates, 2)
   }
