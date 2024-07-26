@@ -6,15 +6,15 @@ import org.aossie.agora.votecounter.stv.Input
 
 import scala.language.higherKinds
 
-trait VoteCounter[C <: Candidate, B[CC >: C <: Candidate] <: Ballot[CC]] {
+trait VoteCounter[B[C <: Candidate] <: Ballot[C]] {
 
-  def winners(
+  def winners[C <: Candidate](
       election: Election[C, B],
-      candidate: List[C],
+      candidates: List[C],
       numVacancies: Int
   ): List[(C, Rational)]
 
-  def runVoteCounter(
+  def runVoteCounter[C <: Candidate](
       election: Election[C, B],
       candidates: List[C],
       numVacancies: Int
@@ -33,21 +33,5 @@ trait VoteCounter[C <: Candidate, B[CC >: C <: Candidate] <: Ballot[CC]] {
 
     report
   }
-
-}
-
-trait Algorithm[B[C <: Candidate] <: Ballot[C]] {
-
-  def winners[C <: Candidate](
-      election: Election[C, B],
-      candidates: List[C],
-      numVacancies: Int
-  ): List[(C, Rational)]
-
-  def runVoteCounter[C <: Candidate](
-      election: Election[C, B],
-      candidates: List[C],
-      numVacancies: Int
-  ): Report[C, B]
 
 }

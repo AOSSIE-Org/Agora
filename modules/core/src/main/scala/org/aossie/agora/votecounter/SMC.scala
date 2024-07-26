@@ -12,8 +12,8 @@ import spire.math.Rational
   * w; and the ultimate winner is the winner of round m.
   */
 object SMC
-    extends VoteCounter[Candidate, PreferenceBallot]
-    with PreferencePairwiseComparison[Candidate, PreferenceBallot]
+    extends VoteCounter[PreferenceBallot]
+    with PreferencePairwiseComparison
     with LazyLogging {
 
   def runVoteCounter(
@@ -71,10 +71,10 @@ object SMC
 
   }
 
-  override def winners(
-      e: Election[Candidate, PreferenceBallot],
-      ccandidates: List[Candidate],
+  override def winners[C <: Candidate](
+      e: Election[C, PreferenceBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = ???
+  ): List[(C, Rational)] = ???
 
 }

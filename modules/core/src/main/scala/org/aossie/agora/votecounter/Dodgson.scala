@@ -9,13 +9,13 @@ import collection.mutable.{HashMap => MMap}
 /** Wiki : https://en.wikipedia.org/wiki/Dodgson%27s_method Implementation :
   * http://infosyncratic.nl/talks/2008-votingprocedures.pdf
   */
-object Dodgson extends VoteCounter[Candidate, PreferenceBallot] {
+object Dodgson extends VoteCounter[PreferenceBallot] {
 
-  override def winners(
-      e: Election[Candidate, PreferenceBallot],
-      ccandidates: List[Candidate],
+  override def winners[C <: Candidate](
+      e: Election[C, PreferenceBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = {
+  ): List[(C, Rational)] = {
 
     // find flip vector from min sum to max sum which satisfies condorcet condition
     val minDodgsonFlipList = List
@@ -43,11 +43,11 @@ object Dodgson extends VoteCounter[Candidate, PreferenceBallot] {
     }
   }
 
-  def getCondorcetWinnerIfExist(
+  def getCondorcetWinnerIfExist[C <: Candidate](
       list: List[Int],
-      candidates: List[Candidate],
-      election: Election[Candidate, PreferenceBallot]
-  ): Option[Candidate] = {
+      candidates: List[C],
+      election: Election[C, PreferenceBallot]
+  ): Option[C] = {
 
     val dodgsonWinner = candidates.find(c =>
       getCandidateMajorityArray(election, c, list, candidates) match {
@@ -61,11 +61,11 @@ object Dodgson extends VoteCounter[Candidate, PreferenceBallot] {
 
   // returns an array where the value at index i represents total votes to param candidate against candidates(i)
   // this is all required to calculate if the param candidate is condorcet winner or not
-  def getCandidateMajorityArray(
-      election: Election[Candidate, PreferenceBallot],
-      candidate: Candidate,
+  def getCandidateMajorityArray[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      candidate: C,
       flipVector: List[Int],
-      candidates: List[Candidate]
+      candidates: List[C]
   ): Option[Array[Int]] = {
 
     val dispersedElection = dispersed(election)
@@ -104,14 +104,14 @@ object Dodgson extends VoteCounter[Candidate, PreferenceBallot] {
     }
   }
 
-  private val cache =
-    new MMap[Election[Candidate, PreferenceBallot], Election[Candidate, PreferenceBallot]]()
+  private def cache[C <: Candidate] =
+    new MMap[Election[C, PreferenceBallot], Election[C, PreferenceBallot]]()
 
-  def dispersed(
-      election: Election[Candidate, PreferenceBallot]
-  ): Election[Candidate, PreferenceBallot] = {
+  def dispersed[C <: Candidate](
+      election: Election[C, PreferenceBallot]
+  ): Election[C, PreferenceBallot] = {
 
-    def disperseUtil(election: Election[Candidate, PreferenceBallot]) = {
+    def disperseUtil[C <: Candidate](election: Election[C, PreferenceBallot]) = {
       Election {
         for {
           b <- election

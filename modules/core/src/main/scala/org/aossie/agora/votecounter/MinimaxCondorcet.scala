@@ -10,19 +10,19 @@ import spire.math.Rational
   * \min_X ( \max_Y score(Y, X))
   */
 object MinimaxCondorcet
-    extends VoteCounter[Candidate, PreferenceBallot]
-    with PreferencePairwiseComparison[Candidate, PreferenceBallot]
+    extends VoteCounter[PreferenceBallot]
+    with PreferencePairwiseComparison
     with LazyLogging {
 
   private val rational0 = Rational(0, 1)
 
   private val majorityThreshold = Rational(1, 2)
 
-  def winners(
-      election: Election[Candidate, PreferenceBallot],
-      ccandidates: List[Candidate],
+  def winners[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = {
+  ): List[(C, Rational)] = {
 
     logger.info("Computing minimax Condorcet Winner")
 

@@ -8,7 +8,7 @@ import spire.math.Rational
 
 /** * https://en.wikipedia.org/wiki/Proportional_approval_voting
   */
-object ProportionalApprovalVoting extends VoteCounter[Candidate, PreferenceBallot] {
+object ProportionalApprovalVoting extends VoteCounter[PreferenceBallot] {
 
   // following function calculates score, i.e., given N, it calculates summation 1 to 1/N
   def proportionalApprovalScore(nmatches: Int): Rational = {
@@ -21,17 +21,17 @@ object ProportionalApprovalVoting extends VoteCounter[Candidate, PreferenceBallo
   // following function calculates totals for each candidate subsets in the follwoing manner
   // if N of the candidate preferences matches with any one candidate subset,
   // then score for that subset is summation 1 to 1/N
-  def candidateSubsetTotals(
-      election: Election[Candidate, PreferenceBallot],
-      candidates: List[Candidate],
-      ccandSubsetList: List[List[Candidate]]
-  ): List[(Candidate, Rational)] = {
-    val scoredCandidateSubsetMap = new MMap[List[Candidate], Rational]
+  def candidateSubsetTotals[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      candidates: List[C],
+      ccandSubsetList: List[List[C]]
+  ): List[(C, Rational)] = {
+    val scoredCandidateSubsetMap = new MMap[List[C], Rational]
     for (a <- ccandSubsetList) {
       for (b <- election) {
         scoredCandidateSubsetMap(a) = scoredCandidateSubsetMap.getOrElse(a, Rational(0, 1)) +
           proportionalApprovalScore(
-            b.preferences.length - b.preferences.toSet[Candidate].diff(a.toSet[Candidate]).size
+            b.preferences.length - b.preferences.toSet[C].diff(a.toSet[C]).size
           )
       }
     }
@@ -45,7 +45,7 @@ object ProportionalApprovalVoting extends VoteCounter[Candidate, PreferenceBallo
   }
 
   // generates subsets of length k of list of candidates in recursive manner
-  def candidateSubsetListGenerator(k: Int, candidates: List[Candidate]): List[List[Candidate]] = {
+  def candidateSubsetListGenerator[C <: Candidate](k: Int, candidates: List[C]): List[List[C]] = {
     candidates match {
       case Nil => Nil
       case head :: tail =>
@@ -62,11 +62,11 @@ object ProportionalApprovalVoting extends VoteCounter[Candidate, PreferenceBallo
     }
   }
 
-  def winners(
-      election: Election[Candidate, PreferenceBallot],
-      ccandidates: List[Candidate],
+  def winners[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = {
+  ): List[(C, Rational)] = {
     val ccandSubsetList = candidateSubsetListGenerator(numVacancies, ccandidates)
     candidateSubsetTotals(election, ccandidates, ccandSubsetList)
   }

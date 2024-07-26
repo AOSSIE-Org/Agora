@@ -11,18 +11,18 @@ import spire.math.Rational
   * prefererences are not voided
   */
 
-object Oklahoma extends VoteCounter[Candidate, PreferenceBallot] {
+object Oklahoma extends VoteCounter[PreferenceBallot] {
 
   // following recursive function calculates totals and if total of any candidate exceeds half of election length
   // candidate wins, else next preferences are added, reducing their weights by 1/N,
   // where N denotes Nth preference on the ballot
   // that is, 1st preference has weight 1, 2nd preference has weight 1/2. 3rd preference has weight 1/3 and so on
-  def oklahomaTotals(
-      election: Election[Candidate, PreferenceBallot],
-      ccandidates: List[Candidate],
-      ccandScoreMap: MMap[Candidate, Rational],
+  def oklahomaTotals[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      ccandidates: List[C],
+      ccandScoreMap: MMap[C, Rational],
       multiplier: Rational
-  ): List[(Candidate, Rational)] = {
+  ): List[(C, Rational)] = {
     val candidateScoreMap    = ccandScoreMap
     val candidateTotalScores = election.firstVotes(ccandidates)
     for (c <- ccandidates)
@@ -32,7 +32,7 @@ object Oklahoma extends VoteCounter[Candidate, PreferenceBallot] {
     if (sortedCandidateScoreMap.head._2 > (Rational(election.length, 2))) {
       sortedCandidateScoreMap.head :: List()
     } else {
-      var ballots: List[PreferenceBallot[Candidate]] = Nil
+      var ballots: List[PreferenceBallot[C]] = Nil
       for (b <- election) {
         ballots = new PreferenceBallot(
           if (b.preferences != Nil) b.preferences.tail else Nil,
@@ -49,12 +49,12 @@ object Oklahoma extends VoteCounter[Candidate, PreferenceBallot] {
     }
   }
 
-  override def winners(
-      election: Election[Candidate, PreferenceBallot],
-      ccandidates: List[Candidate],
+  override def winners[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = {
-    var ccandidateScoreMap = new MMap[Candidate, Rational]
+  ): List[(C, Rational)] = {
+    var ccandidateScoreMap = new MMap[C, Rational]
     var winner             = oklahomaTotals(election, ccandidates, ccandidateScoreMap, Rational(1, 1))
     winner
   }

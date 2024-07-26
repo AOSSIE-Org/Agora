@@ -10,19 +10,19 @@ import scala.collection.mutable.{HashMap => MMap}
 /** Algorithm : https://en.wikipedia.org/wiki/Coombs%27_method Note: This voting method requires
   * voters to rank all the candidates
   */
-object Coomb extends VoteCounter[Candidate, PreferenceBallot] with LazyLogging {
+object Coomb extends VoteCounter[PreferenceBallot] with LazyLogging {
 
   private val majorityThreshold = Rational(1, 2)
 
-  def winners(
-      election: Election[Candidate, PreferenceBallot],
-      ccandidates: List[Candidate],
+  def winners[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = {
+  ): List[(C, Rational)] = {
 
     logger.info("computing coomb winner")
 
-    val firstRankedMap = new MMap[Candidate, Rational]
+    val firstRankedMap = new MMap[C, Rational]
 
     // check if there is a majority winner
 
@@ -42,7 +42,7 @@ object Coomb extends VoteCounter[Candidate, PreferenceBallot] with LazyLogging {
     } else {
       // winner not found create the last ranked map and filter the highest last ranked candidate
 
-      val lastRankedMap = new MMap[Candidate, Rational]
+      val lastRankedMap = new MMap[C, Rational]
       for (b <- election if b.preferences.nonEmpty) {
 
         assert(

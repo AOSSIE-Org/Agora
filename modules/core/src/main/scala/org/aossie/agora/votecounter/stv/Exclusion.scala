@@ -137,7 +137,7 @@ trait SenateExclusion[C <: Candidate] extends STV[C, ACTBallot] {
 
 trait SimpleExclusion[C <: Candidate] extends STV[C, PreferenceBallot] {
 
-  def exclude(
+  def exclude[C <: Candidate](
       election: Election[C, PreferenceBallot],
       candidate: C,
       value: Option[Rational],
@@ -168,10 +168,10 @@ trait SimpleExclusion[C <: Candidate] extends STV[C, PreferenceBallot] {
 
 }
 
-trait SimpleExclusionWithFixedElectionSize[C <: Candidate] {
+trait SimpleExclusionWithFixedElectionSize {
 
   // Removes the candidate from the ballot but does not reduce the election size by removing empty ballots
-  def exclude(
+  def exclude[C <: Candidate](
       election: Election[C, PreferenceBallot],
       candidate: C
   ): Election[C, PreferenceBallot] = {

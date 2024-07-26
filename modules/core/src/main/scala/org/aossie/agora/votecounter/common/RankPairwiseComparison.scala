@@ -3,10 +3,10 @@ package org.aossie.agora.votecounter.common
 import org.aossie.agora.model._
 import spire.math.Rational
 
-trait RankPairwiseComparison[C <: Candidate, B[CC >: C <: Candidate] <: RankBallot[CC]] {
+trait RankPairwiseComparison {
 
   // utility method for matrix where a[i][j] = x means candidate i has got #x votes against candidate j
-  def pairwiseComparison(
+  def pairwiseComparison[C <: Candidate, B[CC >: C <: Candidate] <: RankBallot[CC]](
       election: Election[C, B],
       candidates: List[C]
   ): Array[Array[Rational]] = {

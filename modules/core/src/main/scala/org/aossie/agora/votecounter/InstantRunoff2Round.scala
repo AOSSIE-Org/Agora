@@ -12,13 +12,13 @@ import spire.math.Rational
   * times Assumptions : voters vote only once with preferential ballots Rounds : only 2 as per
   * 2-round voting
   */
-object InstantRunoff2Round extends VoteCounter[Candidate, PreferenceBallot] {
+object InstantRunoff2Round extends VoteCounter[PreferenceBallot] {
 
-  override def winners(
-      election: Election[Candidate, PreferenceBallot],
-      ccandidates: List[Candidate],
+  override def winners[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = {
+  ): List[(C, Rational)] = {
 
     val majorityRational = Rational(1, 2)
     val rnd1Winners      = election.firstVotes(ccandidates).toList.sortWith(_._2 > _._2).take(2)
@@ -37,15 +37,15 @@ object InstantRunoff2Round extends VoteCounter[Candidate, PreferenceBallot] {
 
   }
 
-  def getSecondRoundWinner(
-      election: Election[Candidate, PreferenceBallot],
-      ccandidates: List[Candidate],
-      rnd1Winners: List[Candidate],
+  def getSecondRoundWinner[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      ccandidates: List[C],
+      rnd1Winners: List[C],
       totalVoters: Int,
       numVacancies: Int
-  ): List[(Candidate, Rational)] = {
+  ): List[(C, Rational)] = {
 
-    val m = new Map[Candidate, Rational]
+    val m = new Map[C, Rational]
 
     for (c <- ccandidates) m(c) = 0
 

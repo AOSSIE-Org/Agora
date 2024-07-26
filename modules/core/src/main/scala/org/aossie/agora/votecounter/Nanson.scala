@@ -6,13 +6,13 @@ import org.aossie.agora.model._
 import spire.math.Rational
 
 /** https://en.wikipedia.org/wiki/Nanson%27s_method */
-object Nanson extends VoteCounter[Candidate, PreferenceBallot] {
+object Nanson extends VoteCounter[PreferenceBallot] {
 
-  def winners(
-      election: Election[Candidate, PreferenceBallot],
-      candidates: List[Candidate],
+  def winners[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      candidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = {
+  ): List[(C, Rational)] = {
 
     if (candidates.length == 1) {
       bordaScores(election, candidates).toList

@@ -8,19 +8,19 @@ import spire.math.Rational
 /** https://en.wikipedia.org/wiki/Exhaustive_ballot#Notes */
 
 object InstantExhaustiveDropOffRule
-    extends VoteCounter[Candidate, PreferenceBallot]
-    with SimpleExclusionWithFixedElectionSize[Candidate] {
+    extends VoteCounter[PreferenceBallot]
+    with SimpleExclusionWithFixedElectionSize {
 
   var dropOffPercentage = Rational(0, 100)
 
   val cutoffPercentage =
     25 // drop off of candidates in steps of 5% till 25% after which lowest scoring candidate is eliminated
 
-  def loser(
-      candidate: (Candidate, Rational),
+  def loser[C <: Candidate](
+      candidate: (C, Rational),
       total: Int,
       dropOffPercentage: Rational
-  ): Option[(Candidate, Rational)] = {
+  ): Option[(C, Rational)] = {
     if (dropOffPercentage.numerator * (100 / dropOffPercentage.denominator) > cutoffPercentage) {
       // println(" 25% dropoff rule crossed, eliminating the last candidate " + candidate._1)
       Some(candidate)
@@ -35,11 +35,11 @@ object InstantExhaustiveDropOffRule
     }
   }
 
-  override def winners(
-      election: Election[Candidate, PreferenceBallot],
-      ccandidates: List[Candidate],
+  override def winners[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = {
+  ): List[(C, Rational)] = {
 
     val majorityRational = Rational(1, 2)
     val incrememtSize =
@@ -53,7 +53,7 @@ object InstantExhaustiveDropOffRule
           dropOffPercentage.numerator * (100 / dropOffPercentage.denominator) + incrememtSize,
           100
         )
-        val losingCand: Option[(Candidate, Rational)] =
+        val losingCand: Option[(C, Rational)] =
           loser(tls.last, election.size, dropOffPercentage)
         losingCand match {
           case Some((c, _)) =>

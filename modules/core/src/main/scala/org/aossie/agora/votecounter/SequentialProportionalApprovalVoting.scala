@@ -8,16 +8,16 @@ import spire.math.Rational
   */
 
 object SequentialProportionalApprovalVoting
-    extends VoteCounter[Candidate, PreferenceBallot]
-    with SimpleApproval[Candidate] {
+    extends VoteCounter[PreferenceBallot]
+    with SimpleApproval {
 
   // following function removes winner and reduces weight on ballot to 1/(N+1)
   // where N is the number of winners in one single ballot choice list
-  def excludeWinner(
-      election: Election[Candidate, PreferenceBallot],
-      winner: (Candidate, Rational)
-  ): Election[Candidate, PreferenceBallot] = {
-    var ballots: List[PreferenceBallot[Candidate]] = Nil
+  def excludeWinner[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      winner: (C, Rational)
+  ): Election[C, PreferenceBallot] = {
+    var ballots: List[PreferenceBallot[C]] = Nil
     for (b <- election) {
       if (b.preferences.contains(winner._1)) {
         ballots = new PreferenceBallot(
@@ -32,15 +32,15 @@ object SequentialProportionalApprovalVoting
     Election(ballots)
   }
 
-  def winners(
-      election: Election[Candidate, PreferenceBallot],
-      ccandidates: List[Candidate],
+  def winners[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = {
-    var winnerList: List[(Candidate, Rational)] = Nil
-    var election1                               = election
-    var ccandidates1                            = ccandidates
-    var vacancies                               = numVacancies
+  ): List[(C, Rational)] = {
+    var winnerList: List[(C, Rational)] = Nil
+    var election1                       = election
+    var ccandidates1                    = ccandidates
+    var vacancies                       = numVacancies
     while (vacancies != 0) {
       val winner = countApprovals(election1, ccandidates1).toList.sortWith(_._2 > _._2).head
       winnerList = winner :: winnerList

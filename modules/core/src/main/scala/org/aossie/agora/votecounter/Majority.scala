@@ -3,9 +3,9 @@ package org.aossie.agora.votecounter
 import org.aossie.agora.model._
 import spire.math.Rational
 
-sealed class Majority[C <: Candidate] extends VoteCounter[C, PreferenceBallot] {
+object Majority extends VoteCounter[PreferenceBallot] {
 
-  override def winners(
+  override def winners[C <: Candidate](
       election: Election[C, PreferenceBallot],
       candidate: List[C],
       numVacancies: Int
@@ -23,22 +23,5 @@ sealed class Majority[C <: Candidate] extends VoteCounter[C, PreferenceBallot] {
         t > (election.length / 2)
       } // only select the alternative that has more than half the votes
   }
-
-}
-
-object Majority extends Algorithm[PreferenceBallot] {
-
-  def winners[C <: Candidate](
-      election: Election[C, PreferenceBallot],
-      candidates: List[C],
-      numVacancies: Int
-  ): List[(C, Rational)] = new Majority[C].winners(election, candidates, numVacancies)
-
-  override def runVoteCounter[C <: Candidate](
-      election: Election[C, PreferenceBallot],
-      candidates: List[C],
-      numVacancies: Int
-  ): Report[C, PreferenceBallot] =
-    new Majority[C].runVoteCounter(election, candidates, numVacancies)
 
 }
