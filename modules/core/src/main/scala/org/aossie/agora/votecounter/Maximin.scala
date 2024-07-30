@@ -13,7 +13,7 @@ import spire.math.Rational
   */
 object Maximin
     extends VoteCounter[PreferenceBallot]
-    with PreferencePairwiseComparison
+    with PreferencePairwiseComparison[PreferenceBallot]
     with LazyLogging {
 
   private val rational0 = Rational(0, 1)

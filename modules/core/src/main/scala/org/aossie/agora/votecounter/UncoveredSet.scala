@@ -17,7 +17,7 @@ import org.aossie.agora.util.matrix.BaseMatrix
   */
 object UncoveredSet
     extends VoteCounter[PreferenceBallot]
-    with PreferencePairwiseComparison
+    with PreferencePairwiseComparison[PreferenceBallot]
     with LazyLogging {
 
   override def winners[C <: Candidate](

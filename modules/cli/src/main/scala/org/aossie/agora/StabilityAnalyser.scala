@@ -52,8 +52,8 @@ object StabilityAnalyser {
 
   }
 
-  def analyseStability(
-      vcm: VoteCounter[Candidate, Ballot],
+  def analyseStability[C <: Candidate](
+      vcm: VoteCounter[Ballot],
       electionsPair: List[List[Election[Candidate, Ballot]]],
       candidates: List[Candidate]
   ): (String, Double, Double) = {
@@ -69,10 +69,10 @@ object StabilityAnalyser {
 
   }
 
-  def stability(
-      vcm: VoteCounter[Candidate, Ballot],
-      elections: List[Election[Candidate, Ballot]],
-      candidates: List[Candidate]
+  def stability[C <: Candidate](
+      vcm: VoteCounter[Ballot],
+      elections: List[Election[C, Ballot]],
+      candidates: List[C]
   ): Double = {
 
     val winnerEA        = vcm.winners(elections(0), candidates, 1)
@@ -106,7 +106,7 @@ object StabilityAnalyser {
   }
 
   // calculate the kendall tau distance between two profiles
-  def kendallTauDistance(profile: List[Election[Candidate, Ballot]]): Int = {
+  def kendallTauDistance[C <: Candidate](profile: List[Election[C, Ballot]]): Int = {
 
     var kTDistance = 0
 

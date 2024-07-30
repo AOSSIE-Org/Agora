@@ -3,12 +3,13 @@ package org.aossie.agora.votecounter.common
 import org.aossie.agora.model._
 import spire.math.Rational
 
-trait PreferencePairwiseComparison {
+import scala.language.higherKinds
+
+trait PreferencePairwiseComparison[B[C <: Candidate] <: PreferenceBallot[C]] {
 
   // utility method for matrix where a[i][j] = x means candidate i has got #x votes against candidate j
   def pairwiseComparison[
-      C <: Candidate,
-      B[CC >: C <: Candidate] <: PreferenceBallot[CC]
+      C <: Candidate
   ](
       election: Election[C, B],
       candidates: List[C]

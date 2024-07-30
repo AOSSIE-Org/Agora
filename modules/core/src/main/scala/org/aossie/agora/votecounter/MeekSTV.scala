@@ -11,25 +11,25 @@ import collection.mutable.{HashMap => MMap}
 import spire.math.Rational
 import org.aossie.agora.votecounter.stv.Input
 
-object MeekSTV
-    extends STV[Candidate, PreferenceBallot]
+class MeekSTV[C <: Candidate]
+    extends STV[C, PreferenceBallot]
     with DroopQuota        // Imp
     with NoFractionInQuota // Imp
-    with NewWinnersNotOrdered[Candidate, PreferenceBallot]
-    with SimpleSurplusDistributionTieResolution[Candidate] // not necessary because of NewWinnersNotOrdered
-    with SimpleExclusion[Candidate]
-    with UnfairExclusionTieResolution[Candidate]
-    with TransferValueWithDenominatorEqualToTotal[Candidate]
-    with VoteCounterWithAllBallotsInSurplusDistribution[Candidate]
-    with ExactWinnerRemoval[Candidate] {
+    with NewWinnersNotOrdered[C, PreferenceBallot]
+    with SimpleSurplusDistributionTieResolution[C] // not necessary because of NewWinnersNotOrdered
+    with SimpleExclusion[C]
+    with UnfairExclusionTieResolution[C]
+    with TransferValueWithDenominatorEqualToTotal[C]
+    with VoteCounterWithAllBallotsInSurplusDistribution[C]
+    with ExactWinnerRemoval[C] {
 
-  val result: Result[Candidate] = new Result
+  val result: Result[C] = new Result
 
-  val report: Report[Candidate, PreferenceBallot] = new Report
+  val report: Report[C, PreferenceBallot] = new Report
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  def runVoteCounter[C <: Candidate](
+  override def runVoteCounter(
       election: Election[C, PreferenceBallot],
       candidates: List[C],
       numVacancies: Int
@@ -137,7 +137,7 @@ object MeekSTV
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  def winners[C <: Candidate](
+  override def winners(
       election: Election[C, PreferenceBallot],
       ccandidates: List[C],
       numVacancies: Int

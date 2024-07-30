@@ -10,7 +10,9 @@ import org.aossie.agora.util.matrix.BaseMatrix
 
 /** Algorithm : http://wiki.electorama.com/wiki/Maximal_elements_algorithms#Floyd-Warshall_algorithm
   */
-object SmithSet extends VoteCounter[PreferenceBallot] with PreferencePairwiseComparison {
+object SmithSet
+    extends VoteCounter[PreferenceBallot]
+    with PreferencePairwiseComparison[PreferenceBallot] {
 
   override def winners[C <: Candidate](
       e: Election[C, PreferenceBallot],

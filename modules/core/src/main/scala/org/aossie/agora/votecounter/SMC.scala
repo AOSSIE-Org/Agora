@@ -13,7 +13,7 @@ import spire.math.Rational
   */
 object SMC
     extends VoteCounter[PreferenceBallot]
-    with PreferencePairwiseComparison
+    with PreferencePairwiseComparison[PreferenceBallot]
     with LazyLogging {
 
   def runVoteCounter(

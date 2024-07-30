@@ -14,7 +14,7 @@ import spire.math.Rational
   */
 object BipartisanSet
     extends VoteCounter[PreferenceBallot]
-    with PreferencePairwiseComparison[Candidate, PreferenceBallot] {
+    with PreferencePairwiseComparison[PreferenceBallot] {
 
   def runVoteCounter(
       election: Election[Candidate, PreferenceBallot],

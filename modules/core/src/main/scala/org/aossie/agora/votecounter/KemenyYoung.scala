@@ -57,8 +57,8 @@ object KemenyYoung extends VoteCounter[PreferenceBallot] {
 
     // permute the list and check for the maximum kemeny ranking
 
-    var maxRankingScore = 0
-    var maxRanking      = new Array[C](ccandidates.length)
+    var maxRankingScore     = 0
+    var maxRanking: List[C] = Nil
 
     ccandidates.permutations.toList.foreach { ranking =>
       var currentRankingScore = 0
@@ -77,11 +77,11 @@ object KemenyYoung extends VoteCounter[PreferenceBallot] {
 
       if (currentRankingScore > maxRankingScore) {
         maxRankingScore = currentRankingScore
-        maxRanking = ranking.toArray
+        maxRanking = ranking
       }
     }
 
-    maxRanking.map(candidate => (candidate, rationalZero)).toList.take(numVacancies)
+    maxRanking.map(candidate => (candidate, rationalZero)).take(numVacancies)
   }
 
 }

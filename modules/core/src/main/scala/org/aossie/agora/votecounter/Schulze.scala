@@ -6,7 +6,7 @@ import org.aossie.agora.votecounter.common.RankPairwiseComparison
 import spire.math.Rational
 
 /** Algorithm : https://en.wikipedia.org/wiki/Schulze_method */
-object Schulze extends VoteCounter[RankBallot] with RankPairwiseComparison {
+object Schulze extends VoteCounter[RankBallot] with RankPairwiseComparison[RankBallot] {
 
   override def winners[C <: Candidate](
       election: Election[C, RankBallot],
