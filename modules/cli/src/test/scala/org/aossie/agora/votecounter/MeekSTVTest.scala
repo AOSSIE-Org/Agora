@@ -27,7 +27,7 @@ class MeekSTVTest extends Specification {
     val candidates = CandidatesParser.read("./files/Examples/" + candidatesFile)
     val election   = PreferencesParser.read("./files/Examples/" + electionFile)
 
-    MeekSTV.winners(election, candidates, 3).map(_._1)
+    new MeekSTV().winners(election, candidates, 3).map(_._1)
   }
 
 }

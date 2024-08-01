@@ -8,17 +8,17 @@ import org.aossie.agora.model._
 import scala.collection.mutable.{HashMap => MMap}
 
 /** Algorithm : https://en.wikipedia.org/wiki/Copeland%27s_method */
-object Copeland extends VoteCounter[Candidate, PreferenceBallot] with LazyLogging {
+object Copeland extends VoteCounter[PreferenceBallot] with LazyLogging {
 
-  def winners(
-      election: Election[Candidate, PreferenceBallot],
-      ccandidates: List[Candidate],
+  def winners[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = {
+  ): List[(C, Rational)] = {
 
     logger.info("Computing Copeland winner")
 
-    val candidatesNetScores = new MMap[Candidate, Rational]
+    val candidatesNetScores = new MMap[C, Rational]
     val majorityRational    = Rational(1, 2)
     val totalVoters         = election.weight
 

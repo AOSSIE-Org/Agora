@@ -13,8 +13,8 @@ import spire.math.Rational
   * majority graph
   */
 object BipartisanSet
-    extends VoteCounter[Candidate, PreferenceBallot]
-    with PreferencePairwiseComparison[Candidate, PreferenceBallot] {
+    extends VoteCounter[PreferenceBallot]
+    with PreferencePairwiseComparison[PreferenceBallot] {
 
   def runVoteCounter(
       election: Election[Candidate, PreferenceBallot],
@@ -114,10 +114,10 @@ object BipartisanSet
     }.map { case (cand, prob) => (cand, Rational(prob)) }
   }
 
-  override def winners(
-      e: Election[Candidate, PreferenceBallot],
-      ccandidates: List[Candidate],
+  override def winners[C <: Candidate](
+      e: Election[C, PreferenceBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = ???
+  ): List[(C, Rational)] = ???
 
 }

@@ -10,15 +10,15 @@ import spire.math.Rational
   * candidates over all voters TODO: Variant where average score of a candidate is used to compute
   * the winner
   */
-object RangeVoting extends VoteCounter[Candidate, ScoreBallot] {
+object RangeVoting extends VoteCounter[ScoreBallot] {
 
-  def winners(
-      election: Election[Candidate, ScoreBallot],
-      ccandidates: List[Candidate],
+  def winners[C <: Candidate](
+      election: Election[C, ScoreBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = {
+  ): List[(C, Rational)] = {
 
-    val candidateScores = new MMap[Candidate, Rational]
+    val candidateScores = new MMap[C, Rational]
 
     for (b <- election) {
       b.scores.foreach { case (candidate, score) =>

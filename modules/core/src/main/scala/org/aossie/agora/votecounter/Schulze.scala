@@ -6,15 +6,13 @@ import org.aossie.agora.votecounter.common.RankPairwiseComparison
 import spire.math.Rational
 
 /** Algorithm : https://en.wikipedia.org/wiki/Schulze_method */
-object Schulze
-    extends VoteCounter[Candidate, RankBallot]
-    with RankPairwiseComparison[Candidate, RankBallot] {
+object Schulze extends VoteCounter[RankBallot] with RankPairwiseComparison[RankBallot] {
 
-  override def winners(
-      election: Election[Candidate, RankBallot],
-      ccandidates: List[Candidate],
+  override def winners[C <: Candidate](
+      election: Election[C, RankBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = {
+  ): List[(C, Rational)] = {
 
     // FIXME: when ranked ballot is converted to ballot, ties are arbitrarily broken, and this affects the result of Schulze's algorithm.
     val electionResponse = pairwiseComparison(election, ccandidates)
@@ -60,12 +58,12 @@ object Schulze
     schulzeMatrix
   }
 
-  def schulzeWinnerRanking(
+  def schulzeWinnerRanking[C <: Candidate](
       schulzeMatrix: Array[Array[Rational]],
-      candidates: List[Candidate]
-  ): List[(Candidate, Rational)] = {
+      candidates: List[C]
+  ): List[(C, Rational)] = {
 
-    def better(candA: Candidate, candB: Candidate) =
+    def better(candA: C, candB: C) =
       schulzeMatrix(candidates.indexOf(candA))(candidates.indexOf(candB)) > schulzeMatrix(
         candidates.indexOf(candB)
       )(candidates.indexOf(candA))

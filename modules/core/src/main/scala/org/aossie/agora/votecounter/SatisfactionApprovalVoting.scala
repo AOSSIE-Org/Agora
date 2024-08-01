@@ -9,15 +9,15 @@ import scala.collection.mutable.{HashMap => MMap}
 /** * https://en.wikipedia.org/wiki/Satisfaction_approval_voting
   */
 
-object SatisfactionApprovalVoting extends VoteCounter[Candidate, PreferenceBallot] {
+object SatisfactionApprovalVoting extends VoteCounter[PreferenceBallot] {
 
-  def winners(
-      election: Election[Candidate, PreferenceBallot],
-      ccandidates: List[Candidate],
+  def winners[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = {
+  ): List[(C, Rational)] = {
     // following code makes use of additive satisfcation property of Satisfaction Approval Voting
-    val candidateScoreMap = new MMap[Candidate, Rational]
+    val candidateScoreMap = new MMap[C, Rational]
     for (b <- election if !b.preferences.isEmpty)
       for (c <- b.preferences)
         candidateScoreMap(c) = Rational(1, b.preferences.size) + candidateScoreMap.getOrElse(c, 0)

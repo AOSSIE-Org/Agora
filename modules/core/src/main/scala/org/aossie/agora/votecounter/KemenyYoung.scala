@@ -7,20 +7,20 @@ import scala.collection.mutable.{HashMap => Map}
 import spire.math.Rational
 
 /** Created by deepeshpandey on 10/03/17. */
-object KemenyYoung extends VoteCounter[Candidate, PreferenceBallot] {
+object KemenyYoung extends VoteCounter[PreferenceBallot] {
 
   private val rationalZero = Rational(0, 1)
 
   // scalastyle:off cyclomatic.complexity
   // scalastyle:off method.length
-  def winners(
-      election: Election[Candidate, PreferenceBallot],
-      ccandidates: List[Candidate],
+  def winners[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = {
+  ): List[(C, Rational)] = {
 
-    var tallyTable       = new Map[Map[Candidate, Candidate], Integer]
-    var candidatePairKey = new Map[Candidate, Candidate]
+    var tallyTable       = new Map[Map[C, C], Integer]
+    var candidatePairKey = new Map[C, C]
     val candidates       = ccandidates.zipWithIndex
 
     // initialise the tally table
@@ -28,7 +28,7 @@ object KemenyYoung extends VoteCounter[Candidate, PreferenceBallot] {
       candidates.foreach { case (c2, i2) =>
         if (i2 != i1) {
 
-          var candidatePair = new Map[Candidate, Candidate]
+          var candidatePair = new Map[C, C]
           candidatePair(c1) = c2
           tallyTable(candidatePair) = 0
         }
@@ -57,8 +57,8 @@ object KemenyYoung extends VoteCounter[Candidate, PreferenceBallot] {
 
     // permute the list and check for the maximum kemeny ranking
 
-    var maxRankingScore = 0
-    var maxRanking      = new Array[Candidate](ccandidates.length)
+    var maxRankingScore     = 0
+    var maxRanking: List[C] = Nil
 
     ccandidates.permutations.toList.foreach { ranking =>
       var currentRankingScore = 0
@@ -67,7 +67,7 @@ object KemenyYoung extends VoteCounter[Candidate, PreferenceBallot] {
       currentRanking.foreach { case (c1, i1) =>
         currentRanking.foreach { case (c2, i2) =>
           if (i1 < i2) {
-            var candidatePairKey = new Map[Candidate, Candidate]
+            var candidatePairKey = new Map[C, C]
             candidatePairKey.put(c1, c2)
             currentRankingScore = currentRankingScore + tallyTable.get(candidatePairKey).get
           }
@@ -77,11 +77,11 @@ object KemenyYoung extends VoteCounter[Candidate, PreferenceBallot] {
 
       if (currentRankingScore > maxRankingScore) {
         maxRankingScore = currentRankingScore
-        maxRanking = ranking.toArray
+        maxRanking = ranking
       }
     }
 
-    maxRanking.map(candidate => (candidate, rationalZero)).toList.take(numVacancies)
+    maxRanking.map(candidate => (candidate, rationalZero)).take(numVacancies)
   }
 
 }

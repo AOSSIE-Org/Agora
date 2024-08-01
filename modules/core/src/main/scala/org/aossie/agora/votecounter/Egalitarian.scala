@@ -3,7 +3,7 @@ package org.aossie.agora.votecounter
 import org.aossie.agora.model._
 import spire.math._
 
-abstract class Egalitarian[C <: Candidate] extends VoteCounter[C, PreferenceBallot] {
+abstract class Egalitarian[C <: Candidate] extends VoteCounterWithCandidate[C, PreferenceBallot] {
 
   val fairness: Double
 

@@ -12,7 +12,7 @@ import scala.collection.Map
 import spire.math.Rational
 
 abstract class STV[C <: Candidate, B[CC >: C <: Candidate] <: Ballot[CC]]
-    extends VoteCounter[C, B] {
+    extends VoteCounterWithCandidate[C, B] {
 
   def computeQuota(numVotes: Int, numVacancies: Int): Rational
 

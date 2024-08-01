@@ -7,13 +7,13 @@ import scala.collection.mutable.{HashMap => Map}
 import spire.math.Rational
 
 /** Created by deepeshpandey on 07/03/17. */
-object Borda extends VoteCounter[Candidate, PreferenceBallot] with LazyLogging {
+object Borda extends VoteCounter[PreferenceBallot] with LazyLogging {
 
-  def totals(
-      election: Election[Candidate, PreferenceBallot],
-      candidates: List[Candidate]
-  ): Map[Candidate, Rational] = {
-    val m             = new Map[Candidate, Rational]
+  def totals[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      candidates: List[C]
+  ): Map[C, Rational] = {
+    val m             = new Map[C, Rational]
     val numCandidates = candidates.length
 
     for (b <- election if !b.preferences.isEmpty) {
@@ -30,11 +30,11 @@ object Borda extends VoteCounter[Candidate, PreferenceBallot] with LazyLogging {
     m
   }
 
-  def winners(
-      election: Election[Candidate, PreferenceBallot],
-      ccandidates: List[Candidate],
+  def winners[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = {
+  ): List[(C, Rational)] = {
 
     logger.info("Borda rule computation called")
 

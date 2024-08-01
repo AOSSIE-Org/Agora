@@ -11,14 +11,14 @@ import org.aossie.agora.util.matrix.BaseMatrix
 /** Algorithm : http://wiki.electorama.com/wiki/Maximal_elements_algorithms#Floyd-Warshall_algorithm
   */
 object SmithSet
-    extends VoteCounter[Candidate, PreferenceBallot]
-    with PreferencePairwiseComparison[Candidate, PreferenceBallot] {
+    extends VoteCounter[PreferenceBallot]
+    with PreferencePairwiseComparison[PreferenceBallot] {
 
-  override def winners(
-      e: Election[Candidate, PreferenceBallot],
-      ccandidates: List[Candidate],
+  override def winners[C <: Candidate](
+      e: Election[C, PreferenceBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = {
+  ): List[(C, Rational)] = {
 
     val pairWiseComp = pairwiseComparison(e, ccandidates)
 
@@ -44,9 +44,9 @@ object SmithSet
     * @param pairWiseComp
     * @return
     */
-  def getRelationMatrix(
-      election: Election[Candidate, PreferenceBallot],
-      ccandidates: List[Candidate],
+  def getRelationMatrix[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      ccandidates: List[C],
       pairWiseComp: Array[Array[Rational]]
   ): Array[Array[Boolean]] = {
 

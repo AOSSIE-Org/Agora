@@ -8,21 +8,21 @@ import scala.util.Random
 import spire.math.Rational
 
 /** Algorithm : https://en.wikipedia.org/wiki/Random_ballot */
-object RandomBallot extends VoteCounter[Candidate, PreferenceBallot] with LazyLogging {
+object RandomBallot extends VoteCounter[PreferenceBallot] with LazyLogging {
 
-  override def winners(
-      election: Election[Candidate, PreferenceBallot],
-      ccandidates: List[Candidate],
+  override def winners[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] =
+  ): List[(C, Rational)] =
     randomBallotWinner(election, ccandidates, numVacancies, None)
 
-  def randomBallotWinner(
-      election: Election[Candidate, PreferenceBallot],
-      ccandidates: List[Candidate],
+  def randomBallotWinner[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      ccandidates: List[C],
       numVacancies: Int,
       seed: Option[Int]
-  ): List[(Candidate, Rational)] = {
+  ): List[(C, Rational)] = {
 
     logger.info("computing random ballot winner")
 

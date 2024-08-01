@@ -11,29 +11,29 @@ import collection.mutable.{HashMap => MMap}
 import spire.math.Rational
 import org.aossie.agora.votecounter.stv.Input
 
-object MeekSTV
-    extends STV[Candidate, PreferenceBallot]
+class MeekSTV[C <: Candidate]
+    extends STV[C, PreferenceBallot]
     with DroopQuota        // Imp
     with NoFractionInQuota // Imp
-    with NewWinnersNotOrdered[Candidate, PreferenceBallot]
-    with SimpleSurplusDistributionTieResolution[Candidate] // not necessary because of NewWinnersNotOrdered
-    with SimpleExclusion[Candidate]
-    with UnfairExclusionTieResolution[Candidate]
-    with TransferValueWithDenominatorEqualToTotal[Candidate]
-    with VoteCounterWithAllBallotsInSurplusDistribution[Candidate]
-    with ExactWinnerRemoval[Candidate] {
+    with NewWinnersNotOrdered[C, PreferenceBallot]
+    with SimpleSurplusDistributionTieResolution[C] // not necessary because of NewWinnersNotOrdered
+    with SimpleExclusion[C]
+    with UnfairExclusionTieResolution[C]
+    with TransferValueWithDenominatorEqualToTotal[C]
+    with VoteCounterWithAllBallotsInSurplusDistribution[C]
+    with ExactWinnerRemoval[C] {
 
-  val result: Result[Candidate] = new Result
+  val result: Result[C] = new Result
 
-  val report: Report[Candidate, PreferenceBallot] = new Report
+  val report: Report[C, PreferenceBallot] = new Report
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   override def runVoteCounter(
-      election: Election[Candidate, PreferenceBallot],
-      candidates: List[Candidate],
+      election: Election[C, PreferenceBallot],
+      candidates: List[C],
       numVacancies: Int
-  ): Report[Candidate, PreferenceBallot] = {
+  ): Report[C, PreferenceBallot] = {
 
     print("\n INPUT ELECTION: \n")
     // printElection(election)
@@ -53,12 +53,12 @@ object MeekSTV
     report
   }
 
-  def totalsMeek(
-      election: Election[Candidate, PreferenceBallot],
-      ccandidates: List[Candidate],
-      keepFactor: MMap[Candidate, Rational]
-  ): MMap[Candidate, Rational] = {
-    val scoreMap = new MMap[Candidate, Rational]
+  def totalsMeek[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      ccandidates: List[C],
+      keepFactor: MMap[C, Rational]
+  ): MMap[C, Rational] = {
+    val scoreMap = new MMap[C, Rational]
 
     for (b <- election if !b.preferences.isEmpty) {
       var multiplier = Rational(1, 1)
@@ -70,12 +70,12 @@ object MeekSTV
     scoreMap
   }
 
-  def surplusCandidates(totals: MMap[Candidate, Rational], quota: Rational): Int = {
+  def surplusCandidates[C <: Candidate](totals: MMap[C, Rational], quota: Rational): Int = {
     val surplusCandidatesNumber = totals.filter(x => x._2 >= quota).size
     surplusCandidatesNumber
   }
 
-  def surplusQuantity(totals: MMap[Candidate, Rational], quota: Rational): Rational = {
+  def surplusQuantity[C <: Candidate](totals: MMap[C, Rational], quota: Rational): Rational = {
     val surplusAmount: Rational =
       (Rational(0, 1) /: (totals.filter(_._2 >= quota).map(_._2))) { (surplus, t) =>
         surplus + t - quota
@@ -83,12 +83,12 @@ object MeekSTV
     surplusAmount
   }
 
-  def winnersList(
-      election: Election[Candidate, PreferenceBallot],
-      ccandidates: List[Candidate],
+  def winnersList[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      ccandidates: List[C],
       numVacancies: Int,
-      keepFactor: MMap[Candidate, Rational]
-  ): List[(Candidate, Rational)] = {
+      keepFactor: MMap[C, Rational]
+  ): List[(C, Rational)] = {
 
     println(" \n NEW RECURSIVE CALL \n")
 
@@ -138,15 +138,15 @@ object MeekSTV
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   override def winners(
-      election: Election[Candidate, PreferenceBallot],
-      ccandidates: List[Candidate],
+      election: Election[C, PreferenceBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = {
+  ): List[(C, Rational)] = {
     val quota = cutQuotaFraction(computeQuota(election.length, numVacancies))
     // println("Quota = " + quota)
     result.setQuota(quota)
 
-    val keepFactor = new MMap[Candidate, Rational]
+    val keepFactor = new MMap[C, Rational]
     for (c <- ccandidates)
       keepFactor(c) = Rational(1, 1)
 

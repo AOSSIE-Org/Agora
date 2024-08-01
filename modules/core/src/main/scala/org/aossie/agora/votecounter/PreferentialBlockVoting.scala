@@ -7,19 +7,19 @@ import spire.math.Rational
 
 /** https://en.wikipedia.org/wiki/Preferential_block_voting */
 
-object PreferentialBlockVoting extends VoteCounter[Candidate, PreferenceBallot] {
+object PreferentialBlockVoting extends VoteCounter[PreferenceBallot] {
 
   val majorityThreshold = Rational(1, 2)
 
-  override def winners(
-      election: Election[Candidate, PreferenceBallot],
-      ccandidates: List[Candidate],
+  override def winners[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = {
-    var winnerlist: List[(Candidate, Rational)] = Nil
-    var vacancies                               = numVacancies
-    var ccandidates1                            = ccandidates
-    var election1                               = election
+  ): List[(C, Rational)] = {
+    var winnerlist: List[(C, Rational)] = Nil
+    var vacancies                       = numVacancies
+    var ccandidates1                    = ccandidates
+    var election1                       = election
     while (vacancies != 0) {
       val sortedCandList = election1.firstVotes(ccandidates1).toList.sortWith(_._2 > _._2)
       if (

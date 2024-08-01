@@ -8,13 +8,13 @@ import org.aossie.agora.model._
 import scala.collection.mutable.{HashMap => Map}
 
 /** Created by deepeshpandey on 09/03/17. */
-object BaldwinMethod extends VoteCounter[Candidate, PreferenceBallot] with LazyLogging {
+object BaldwinMethod extends VoteCounter[PreferenceBallot] with LazyLogging {
 
-  def bordaScores(
-      election: Election[Candidate, PreferenceBallot],
-      candidates: List[Candidate]
-  ): Map[Candidate, Rational] = {
-    val m = new Map[Candidate, Rational]
+  def bordaScores[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      candidates: List[C]
+  ): Map[C, Rational] = {
+    val m = new Map[C, Rational]
 
     for (b <- election if !b.preferences.isEmpty) {
       // need to take the size of the list first and then calculate the borda scores
@@ -30,11 +30,11 @@ object BaldwinMethod extends VoteCounter[Candidate, PreferenceBallot] with LazyL
     m
   }
 
-  def winners(
-      election: Election[Candidate, PreferenceBallot],
-      candidates: List[Candidate],
+  def winners[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      candidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = {
+  ): List[(C, Rational)] = {
 
     logger.info("Baldwin rule method called")
 

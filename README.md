@@ -61,8 +61,8 @@ Example:
 ```
 1 1/1 A  
 2 1/1 A > B  
-3 1/1 B > A > C  
-4 1/1 C  
+3 1/1 B > A > CC  
+4 1/1 CC  
 ```
 
 ### Candidates
@@ -79,7 +79,7 @@ Example:
 ```
 A
 B
-C
+CC
 ```
 
 

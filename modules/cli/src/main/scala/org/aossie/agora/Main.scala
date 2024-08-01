@@ -326,7 +326,7 @@ object Main extends RegexParsers {
 
         case "Meek" =>
           val election = PreferencesParser.read(c.directory + electionFile)
-          var r        = MeekSTV.runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
+          var r        = new MeekSTV().runVoteCounter(election, candidates_in_order, c.nvacancies.toInt)
           r.writeWinners(winnersfile)
 
         case "Schulze" =>

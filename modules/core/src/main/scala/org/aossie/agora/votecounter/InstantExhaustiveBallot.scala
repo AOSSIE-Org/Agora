@@ -8,14 +8,14 @@ import spire.math.Rational
 /** https://en.wikipedia.org/wiki/Exhaustive_ballot */
 
 object InstantExhaustiveBallot
-    extends VoteCounter[Candidate, PreferenceBallot]
-    with SimpleExclusionWithFixedElectionSize[Candidate] {
+    extends VoteCounter[PreferenceBallot]
+    with SimpleExclusionWithFixedElectionSize {
 
-  override def winners(
-      election: Election[Candidate, PreferenceBallot],
-      ccandidates: List[Candidate],
+  override def winners[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = {
+  ): List[(C, Rational)] = {
 
     val ct             = election.firstVotes(ccandidates)
     val sortedCandList = ct.toList.sortWith(_._2 < _._2)

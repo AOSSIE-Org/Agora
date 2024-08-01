@@ -12,19 +12,19 @@ import spire.math.Rational
   * votes => W = \arg \min_X ( \max_Y score(Y, X))
   */
 object Maximin
-    extends VoteCounter[Candidate, PreferenceBallot]
-    with PreferencePairwiseComparison[Candidate, PreferenceBallot]
+    extends VoteCounter[PreferenceBallot]
+    with PreferencePairwiseComparison[PreferenceBallot]
     with LazyLogging {
 
   private val rational0 = Rational(0, 1)
 
   private val majorityThreshold = Rational(1, 2)
 
-  def winners(
-      election: Election[Candidate, PreferenceBallot],
-      ccandidates: List[Candidate],
+  def winners[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = {
+  ): List[(C, Rational)] = {
 
     logger.info("Computing maximin Condorcet Winner")
 
@@ -36,13 +36,13 @@ object Maximin
 
   }
 
-  def getMaximinScores(
+  def getMaximinScores[C <: Candidate](
       pairwiseComparisons: Array[Array[Rational]],
-      ccandidates: List[Candidate],
-      election: Election[Candidate, PreferenceBallot]
-  ): MMap[Candidate, Rational] = {
+      ccandidates: List[C],
+      election: Election[C, PreferenceBallot]
+  ): MMap[C, Rational] = {
 
-    val maximinScores = new MMap[Candidate, Rational]
+    val maximinScores = new MMap[C, Rational]
 
     for (c <- ccandidates)
       maximinScores(c) = Rational(election.size, 1)

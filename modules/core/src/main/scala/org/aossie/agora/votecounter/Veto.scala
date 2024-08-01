@@ -3,16 +3,16 @@ package org.aossie.agora.votecounter
 import org.aossie.agora.model._
 import scala.collection.mutable.{HashMap => MMap}
 
-object Veto extends VoteCounter[Candidate, PreferenceBallot] {
+object Veto extends VoteCounter[PreferenceBallot] {
 
   import spire.math.Rational
 
-  def winners(
-      election: Election[Candidate, PreferenceBallot],
-      ccandidates: List[Candidate],
+  def winners[C <: Candidate](
+      election: Election[C, PreferenceBallot],
+      ccandidates: List[C],
       numVacancies: Int
-  ): List[(Candidate, Rational)] = {
-    val candidateScoreMap = new MMap[Candidate, Rational]
+  ): List[(C, Rational)] = {
+    val candidateScoreMap = new MMap[C, Rational]
     for (c <- ccandidates) candidateScoreMap(c) = Rational(0, 1)
 
     for (ballot <- election) {
