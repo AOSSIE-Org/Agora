@@ -3,7 +3,6 @@ package org.aossie.agora.votecounter
 import org.aossie.agora.model.Candidate
 import org.aossie.agora.parser.CandidatesParser
 import org.aossie.agora.parser.PreferencesParser
-import org.aossie.agora.votecounter.Bucklin
 import org.specs2.mutable.Specification
 
 class BucklinTest extends Specification {

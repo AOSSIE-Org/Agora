@@ -77,7 +77,7 @@ class MeekSTV[C <: Candidate]
 
   def surplusQuantity[C <: Candidate](totals: MMap[C, Rational], quota: Rational): Rational = {
     val surplusAmount: Rational =
-      (Rational(0, 1) /: (totals.filter(_._2 >= quota).map(_._2))) { (surplus, t) =>
+      totals.filter(_._2 >= quota).map(_._2).foldLeft(Rational(0, 1)) { (surplus, t) =>
         surplus + t - quota
       }
     surplusAmount

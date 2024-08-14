@@ -1,10 +1,10 @@
 package org.aossie.agora.votecounter
 
 import org.aossie.agora.model._
-
 import spire.math.Rational
 
 import collection.mutable.{HashMap => MMap}
+import scala.collection.SeqView
 
 /** Wiki : https://en.wikipedia.org/wiki/Dodgson%27s_method Implementation :
   * http://infosyncratic.nl/talks/2008-votingprocedures.pdf
@@ -18,24 +18,24 @@ object Dodgson extends VoteCounter[PreferenceBallot] {
   ): List[(C, Rational)] = {
 
     // find flip vector from min sum to max sum which satisfies condorcet condition
-    val minDodgsonFlipList = List
-      .fill(e.weight.toInt)(0 to ccandidates.length)
-      .flatten
-      .view
-      .combinations(e.weight.toInt)
-      .flatMap(_.permutations)
-      .toList
-      .sortBy(_.sum)
-      .view
+    val minDodgsonFlipList: SeqView[List[Int]] =
+      List
+        .fill(e.weight.toInt)(0 to ccandidates.length)
+        .flatten
+        .view
+        .combinations(e.weight.toInt)
+        .flatMap(_.toList.permutations)
+        .toList
+        .sortBy(_.sum)
+        .view
 
-    val minDodgsonFlip = minDodgsonFlipList.find(list =>
-      getCondorcetWinnerIfExist(list.force, ccandidates, e).nonEmpty
-    )
+    val minDodgsonFlip =
+      minDodgsonFlipList.find(list => getCondorcetWinnerIfExist(list, ccandidates, e).nonEmpty)
 
     // find the dodgson winner based on this flip vector
     minDodgsonFlip match {
       case Some(list) =>
-        getCondorcetWinnerIfExist(list.force, ccandidates, e) match {
+        getCondorcetWinnerIfExist(list, ccandidates, e) match {
           case Some(candidate) => List((candidate, Rational(list.sum, 1)))
           case None            => List()
         }

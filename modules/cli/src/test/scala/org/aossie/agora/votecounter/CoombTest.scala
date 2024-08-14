@@ -5,8 +5,6 @@ import org.aossie.agora.parser.PreferencesParser
 import org.aossie.agora.model.Candidate
 import org.specs2.mutable.Specification
 
-import scala.collection.mutable.ListBuffer
-
 class CoombTest extends Specification {
 
   val expectedCoombWinnerList = List(new Candidate("Nashville"))

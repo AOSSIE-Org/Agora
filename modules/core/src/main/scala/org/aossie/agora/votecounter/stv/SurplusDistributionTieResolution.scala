@@ -87,9 +87,11 @@ trait ACTSurplusDistributionTieResolution[C <: Candidate]
         p._2 == totalshistory.head(biggestcandidate) && equaltotals.toSet.contains(p._1) == true
       }
       val lbiggestcandidates = biggestcandidates.toList.map(x => x._1)
-      val totalsofremainingcandidates = totalshistory.head.filterKeys(k =>
-        lbiggestcandidates.toSet.contains(k) == false && equaltotals.toSet.contains(k) == true
-      )
+      val totalsofremainingcandidates = totalshistory.head
+        .filterKeys(k =>
+          lbiggestcandidates.toSet.contains(k) == false && equaltotals.toSet.contains(k) == true
+        )
+        .toMap
       val listoftotalsofremainingcandidates =
         totalsofremainingcandidates.toList.sortBy(x => x._2).reverse
       if (biggestcandidates.size > 1) {

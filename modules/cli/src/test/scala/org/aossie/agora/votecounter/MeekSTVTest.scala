@@ -5,8 +5,6 @@ import org.aossie.agora.parser.PreferencesParser
 import org.aossie.agora.model.Candidate
 import org.specs2.mutable.Specification
 
-import spire.math.Rational
-
 class MeekSTVTest extends Specification {
 
   val expectedMeekSTVWinnerList = List(

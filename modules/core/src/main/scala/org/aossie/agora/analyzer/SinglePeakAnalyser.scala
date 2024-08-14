@@ -22,7 +22,7 @@ object SinglePeakAnalyser extends PreferenceAnalysisMethod[Candidate, Ballot] {
     getSinglePeakAxis(election, candidates) match {
       case Some(axis) =>
         if (isCompatibleAxis(axis, election)) {
-          println("Single Peaked with respect to ", axis.mkString(" > "))
+          println("Single Peaked with respect to " + axis.mkString(" > "))
           true
         } else {
           println("\n\nNot Single Peaked!\n\n")

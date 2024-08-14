@@ -60,7 +60,7 @@ object SMC
     val candOrderList =
       param.comparisonOrder.get.map(name => ccandidates.find(cand => cand.name == name).get)
 
-    List((candOrderList.head /: candOrderList.tail)((cA, cB) => {
+    List(candOrderList.tail.foldLeft(candOrderList.head)((cA, cB) => {
       if (
         electionResponse(ccandidates.indexOf(cA))(
           ccandidates.indexOf(cB)

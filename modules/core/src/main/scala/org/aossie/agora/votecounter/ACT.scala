@@ -236,7 +236,7 @@ abstract class ACT[C <: Candidate]
 
         val newtotalsWithoutFraction = newElectionWithoutFractionInTotals.firstVotes(ccandidates)
         val newtotalsWithoutFractionWithoutpendingwinners =
-          newtotalsWithoutFraction.filterKeys(!pendingWinners.contains(_))
+          newtotalsWithoutFraction.filterKeys(!pendingWinners.contains(_)).toMap
 
         result.removePendingWinner(winner)
 
@@ -337,7 +337,7 @@ abstract class ACT[C <: Candidate]
         // simulating EVACS's incorrect total as a result of partial exclusion
 
         val totalsWithoutNewWinners =
-          totalsWithIncorrectValueForCandidate.filterKeys(k => !ws.map(_._1).contains(k))
+          totalsWithIncorrectValueForCandidate.filterKeys(k => !ws.map(_._1).contains(k)).toMap
         // excluding winners that are already identified in the while-loop
 
         result.addTotalsToHistory(totalsWithIncorrectValueForCandidate)
