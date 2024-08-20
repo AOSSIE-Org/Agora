@@ -135,7 +135,9 @@ class Report[C <: Candidate, B[CC >: C <: Candidate] <: Ballot[CC]] {
     var sw = ""
     println("\n WINNERS \n")
     for (w <- winners) {
-      println(w._1 + ": " + w._2.numerator.toFloat / w._2.denominator.toFloat + "\n")
+      println(
+        w._1.toString + ": " + (w._2.numerator.toFloat / w._2.denominator.toFloat).toString + "\n"
+      )
       sw = sw + w._1 + ": " + w._2.numerator.toFloat / w._2.denominator.toFloat + "\n"
     }
     writer.write(sw)
@@ -177,7 +179,8 @@ class Report[C <: Candidate, B[CC >: C <: Candidate] <: Ballot[CC]] {
       if (countnum == 1) {
         for (c <- tableorder) {
           if (count.getTotals.exists(_._1 == c)) {
-            line += count.getTotals(c).numerator / count.getTotals(c).denominator + separator
+            line += (count.getTotals(c).numerator / count.getTotals(c).denominator)
+              .toString() + separator
           } else {
             line += separator
           }
@@ -189,7 +192,8 @@ class Report[C <: Candidate, B[CC >: C <: Candidate] <: Ballot[CC]] {
 
       for (c <- tableorder) {
         if (count.getTotals.exists(_._1 == c)) {
-          line += count.getTotals(c).numerator / count.getTotals(c).denominator + separator
+          line += (count.getTotals(c).numerator / count.getTotals(c).denominator)
+            .toString() + separator
         } else {
           line += separator
         }
@@ -221,7 +225,7 @@ class Report[C <: Candidate, B[CC >: C <: Candidate] <: Ballot[CC]] {
 
     writer.write("Count" + separator)
     var countnum = -1
-    tableorder.foreach(c => writer.write(c + separator))
+    tableorder.foreach(c => writer.write(c.toString + separator))
     writer.write(
       "Initiator" + separator +
         "Action" + separator +
@@ -241,7 +245,8 @@ class Report[C <: Candidate, B[CC >: C <: Candidate] <: Ballot[CC]] {
 
       for (c <- tableorder) {
         if (count.getTotals.exists(_._1 == c)) {
-          line += count.getTotals(c).numerator / count.getTotals(c).denominator + separator
+          line += (count.getTotals(c).numerator / count.getTotals(c).denominator)
+            .toString() + separator
         } else {
           line += separator
         }
@@ -249,9 +254,9 @@ class Report[C <: Candidate, B[CC >: C <: Candidate] <: Ballot[CC]] {
 
       var winners = ""
       for (w <- count.getWinners if count.getWinners.nonEmpty)
-        winners += w._1 + " (" + w._2 + "); "
+        winners += w._1.toString + " (" + w._2 + "); "
 
-      line += count.getInitiator + separator + count.getAction + separator + winners + separator + count.getLossByFraction.toInt + separator
+      line += count.getInitiator.toString + separator + count.getAction + separator + winners + separator + count.getLossByFraction.toInt + separator
 
       val exhaustedBallots = count.getExhaustedBallots
       val ignoredBallots   = count.getIgnoredBallots

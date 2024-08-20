@@ -8,10 +8,10 @@ case class MajorityBonus(jackpot: Double, bonus: Double)
 object MajorityBonus {
 
   implicit val majorityBonusReader: Reads[MajorityBonus] =
-    (__ \ "jackpot").read[Double].and((__ \ "bonus").read[Double])(MajorityBonus.apply _)
+    (__ \ "jackpot").read[Double].and((__ \ "bonus").read[Double])(MajorityBonus.apply)
 
   implicit val majorityBonusWriter: Writes[MajorityBonus] =
-    (__ \ "jackpot").write[Double].and((__ \ "bonus").write[Double])(unlift(MajorityBonus.unapply))
+    (__ \ "jackpot").write[Double].and((__ \ "bonus").write[Double])(m => (m.jackpot, m.bonus))
 
 }
 
@@ -20,12 +20,11 @@ case class ComparisonSets(set1: Array[String], set2: Array[String])
 object ComparisonSets {
 
   implicit val comparisonSetsReader: Reads[ComparisonSets] =
-    (__ \ "set1").read[Array[String]].and((__ \ "set2").read[Array[String]])(ComparisonSets.apply _)
+    (__ \ "set1").read[Array[String]].and((__ \ "set2").read[Array[String]])(ComparisonSets.apply)
 
-  implicit val comparisonSetsWriter: Writes[ComparisonSets] =
-    (__ \ "set1")
-      .write[Array[String]]
-      .and((__ \ "set2").write[Array[String]])(unlift(ComparisonSets.unapply))
+  implicit val comparisonSetsWriter: Writes[ComparisonSets] = (__ \ "set1")
+    .write[Array[String]]
+    .and((__ \ "set2").write[Array[String]])(s => (s.set1, s.set2))
 
 }
 
@@ -61,6 +60,6 @@ object Parameters {
       .and((__ \ "majority_bonus").readNullable[MajorityBonus])
       .and((__ \ "probability_distribution").readNullable[Array[Map[String, Double]]])
       .and((__ \ "comparison_sets").readNullable[ComparisonSets])
-      .and((__ \ "majorityPercentage").readNullable[Double])(Parameters.apply _)
+      .and((__ \ "majorityPercentage").readNullable[Double])(Parameters.apply)
 
 }

@@ -105,7 +105,7 @@ object BipartisanSet
     }
 
     // check if p is a balanced probability distribution => p is balanced if (p(x)>0 ⇔ mp(x)=0) and (p(x)=0 ⇔ mp(x)<0)
-    require(balancedProbabilityDistribution, "probability distribution is not balanced!")
+    require(balancedProbabilityDistribution(), "probability distribution is not balanced!")
 
     // BP(A,PM) = {x∈A : p(x)>0, p balanced for (A,PM)} where PM is majority graph
     candidatesProbabilities.filter { case (cand, prob) =>

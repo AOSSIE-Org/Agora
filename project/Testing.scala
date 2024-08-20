@@ -13,14 +13,14 @@ object Testing {
     Seq(
       fork in VerificationTest := false,
       parallelExecution in VerificationTest := false,
-      scalaSource in VerificationTest := baseDirectory.value / "src/test/scala/agora")
+      scalaSource in VerificationTest := baseDirectory.value / "modules/cli/src/test/scala/org/aossie/agora")
 
   private lazy val performanceTestSettings =
     inConfig(PerformanceTest)(Defaults.testSettings) ++
     Seq(
       fork in PerformanceTest := false,
       parallelExecution in PerformanceTest := false,
-      scalaSource in PerformanceTest := baseDirectory.value / "src/test/scala/performance")
+      scalaSource in PerformanceTest := baseDirectory.value / "modules/cli/src/test/scala/org/aossie/agora/performance")
   
 
   lazy val testAllQuick = TaskKey[Unit]("test-all-quick")

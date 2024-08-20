@@ -488,7 +488,7 @@ class AustralianSenate[C <: Candidate]
         val newtotalsWithoutFraction = newElectionWithoutFractionInTotals.firstVotes(ccandidates)
 
         val newtotalsWithoutFractionWithoutpendingwinners =
-          newtotalsWithoutFraction.filterKeys(k => !pendingWinners.contains(k))
+          newtotalsWithoutFraction.filterKeys(k => !pendingWinners.contains(k)).toMap
 
         println("winner " + winner)
 
@@ -588,7 +588,7 @@ class AustralianSenate[C <: Candidate]
           val totalsAfterFractionLoss = newElectionWithoutFractionInTotals.firstVotes(ccandidates)
 
           val totalsWithoutNewWinners =
-            totalsAfterFractionLoss.filterKeys(k => !ws.map(_._1).contains(k))
+            totalsAfterFractionLoss.filterKeys(k => !ws.map(_._1).contains(k)).toMap
           // excluding winners that are already identified in the while-loop
 
           result.addTotalsToHistory(totalsWithoutNewWinners)

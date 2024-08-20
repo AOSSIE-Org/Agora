@@ -15,11 +15,11 @@ abstract class Egalitarian[C <: Candidate] extends VoteCounterWithCandidate[C, P
   def utilityIndividual(b: PreferenceBallot[C], c: C, numCandidates: Int): Int =
     numCandidates - rank(b, c, numCandidates)
 
-  def utilitySet(b: PreferenceBallot[C], cs: Traversable[C]): Int =
+  def utilitySet(b: PreferenceBallot[C], cs: Iterable[C]): Int =
     cs.map(c => utilityIndividual(b, c, cs.size)).reduce(_ + _)
 
-  def socialWelfare(e: Election[C, PreferenceBallot], cs: Traversable[C]): Rational = {
-    (Rational(0, 1) /: e.ballots) { (acc, b) =>
+  def socialWelfare(e: Election[C, PreferenceBallot], cs: Iterable[C]): Rational = {
+    e.ballots.foldLeft(Rational(0, 1)) { (acc, b) =>
       acc + (b.weight) * pow(utilitySet(b, cs), 1 / fairness)
     }
   }

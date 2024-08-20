@@ -18,7 +18,7 @@ object Nanson extends VoteCounter[PreferenceBallot] {
       bordaScores(election, candidates).toList
     } else {
       var cbs     = bordaScores(election, candidates) // borda scores of candidates
-      val average = (Rational(0, 1) /: candidates)(_ + cbs(_)) / Rational(candidates.length)
+      val average = candidates.foldLeft(Rational(0, 1))(_ + cbs(_)) / Rational(candidates.length)
       winners(election, candidates.filter(x => cbs(x) > average), numVacancies)
     }
   }

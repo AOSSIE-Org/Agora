@@ -1,10 +1,8 @@
 package org.aossie.agora.votecounter
 
-import ammonite.ops._
 import org.specs2.mutable.Specification
 
 import org.aossie.agora.Main;
-import scala.collection.mutable
 
 /** This class executes all vote counting methods. Its purpose is merely to check that Agora
   * compiles and does not throw any obvious run-time exceptions.
@@ -25,7 +23,7 @@ class RunAllMethods extends Specification {
   def run(method: String): Boolean = {
     (1 to 13)
       .map(i => str(i))
-      .map { i: String =>
+      .map { i =>
         test(method, s"$i-example.txt", s"$i-candidates.txt")
       }
       .reduce((b1, b2) => b1 && b2)
