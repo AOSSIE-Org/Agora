@@ -4,7 +4,7 @@ lazy val scala213 = "2.13.14"
 lazy val scala304 = "3.4.2"
 lazy val supportedScalaVersions = List(scala213, scala304)
 
-ThisBuild / name := "countvotes"
+ThisBuild / name := "agora"
 ThisBuild / organization := "AOSSIE"
 ThisBuild / version := "1.2"
 ThisBuild / scalaVersion := scala304
